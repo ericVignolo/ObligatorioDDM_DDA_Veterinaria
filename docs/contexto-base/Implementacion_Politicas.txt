@@ -1,0 +1,277 @@
+ESPECIFICACIÓN COMPLEMENTARIA — PRIVACIDAD, CUMPLIMIENTO Y PUBLICACIÓN
+=====================================================================
+
+Versión: 1.0
+Fecha de incorporación: 2026-09-22
+Estado: Aprobada para incorporar al análisis funcional y técnico
+Ámbito: Blazor, aplicación móvil React Native, API ASP.NET Core, almacenamiento,
+servicios externos y contenido público.
+
+1. PROPÓSITO
+------------
+
+Este documento convierte el checklist inicial de cumplimiento y riesgos en
+requisitos verificables para el desarrollo y la salida a producción. Complementa
+la matriz canónica y no reemplaza la redacción de RF, RN-01 a RN-42 ni RNF ya
+documentada en MATRIZ_REQUISITOS.md.
+
+Los textos legales finales deberán adecuarse a la identidad y funcionamiento
+reales de la clínica y validarse antes de la publicación. La implementación
+técnica no sustituye la revisión jurídica correspondiente.
+
+2. CRITERIOS DE APLICACIÓN
+--------------------------
+
+- Obligatorio: debe cumplirse antes de publicar la funcionalidad afectada.
+- Condicional: se exige únicamente cuando se utilice la tecnología o contenido
+  indicado, pero debe evaluarse y dejarse documentada la decisión.
+- No aplicable: solo puede declararse después de una revisión documentada.
+- Bloqueante de publicación: impide liberar la funcionalidad mientras no se
+  cumpla o se retire el elemento que origina el riesgo.
+
+La privacidad y los consentimientos no son responsabilidades exclusivas de la
+interfaz. La API será la autoridad para validar y registrar las decisiones del
+usuario, y la base de datos conservará la trazabilidad necesaria.
+
+3. REQUISITOS CLASIFICADOS
+--------------------------
+
+### PC-RF-01 — Información legal pública
+
+Clasificación: Requerimiento funcional
+Prioridad: Must
+Aplicación: Obligatoria
+Componentes: Blazor y React Native; contenido provisto por la API cuando sea
+conveniente para mantener una única versión.
+
+El visitante podrá consultar, sin autenticarse:
+
+- identificación del responsable o negocio, razón social y medios de contacto;
+- Política de Privacidad vigente;
+- Términos y Condiciones vigentes;
+- Política de Cookies cuando corresponda.
+
+Criterios de aceptación:
+
+- La información es accesible desde el área pública y desde los formularios que
+  recolectan datos.
+- Se muestra el número de versión o fecha de vigencia de cada documento.
+- Los enlaces continúan disponibles antes y después de iniciar sesión.
+
+### PC-RF-02 — Gestión de decisiones y permisos opcionales
+
+Clasificación: Requerimiento funcional
+Prioridad: Should
+Aplicación: Obligatoria cuando existan tratamientos opcionales
+Componentes: React Native, Blazor y API.
+
+El cliente autenticado podrá consultar y modificar desde su perfil las
+preferencias opcionales que admitan revocación, sin confundirlas con términos
+obligatorios ni con consentimientos clínicos ya firmados.
+
+Criterios de aceptación:
+
+- El estado mostrado coincide con el registrado por la API.
+- Revocar una preferencia detiene el tratamiento futuro asociado.
+- La revocación no altera la validez de las operaciones realizadas anteriormente.
+
+### PC-RN-01 — Consentimientos separados y trazables
+
+Clasificación: Regla de negocio
+Tipo: Bloqueante
+Aplicación: Obligatoria
+
+Cada aceptación se presenta según una finalidad específica. No se agrupan en un
+único checkbox los términos obligatorios, el marketing, las notificaciones, las
+cookies no esenciales ni los consentimientos clínicos.
+
+La API registra como mínimo: usuario o sujeto, finalidad, documento y versión,
+respuesta, fecha y hora, canal y evidencia técnica necesaria. Las opciones
+facultativas no aparecen premarcadas. Cuando una aceptación sea requisito para
+continuar, la interfaz debe explicar por qué.
+
+### PC-RN-02 — Activación de cookies y seguimiento no esenciales
+
+Clasificación: Regla de negocio
+Tipo: Bloqueante
+Aplicación: Condicional
+
+Las cookies, rastreadores, píxeles o SDK no esenciales no se activan hasta que el
+usuario tome la decisión requerida. Rechazar debe ser tan accesible como aceptar,
+y la preferencia debe poder modificarse posteriormente.
+
+Las cookies o mecanismos estrictamente necesarios para seguridad, sesión o una
+función solicitada se documentan por separado y no se presentan como opcionales.
+
+### PC-RN-03 — Afirmaciones y reseñas verificables
+
+Clasificación: Regla de negocio
+Tipo: Bloqueante de publicación
+Aplicación: Condicional al contenido publicado
+
+No se publican reseñas ficticias, indicadores engañosos, sellos no obtenidos ni
+afirmaciones sobre servicios, resultados o profesionales que no puedan
+demostrarse. Cada reseña o afirmación deberá contar con origen y autorización
+documentados cuando corresponda.
+
+Si el producto no muestra reseñas ni afirmaciones promocionales, este requisito
+se registra como no aplicable, pero no se elimina.
+
+### PC-RNF-01 — Minimización y finalidad de datos
+
+Clasificación: Requerimiento no funcional — Legal/privacidad
+Aplicación: Obligatoria
+
+Cada formulario y endpoint recolecta únicamente los datos necesarios para su
+finalidad declarada. Antes de implementar un campo se documentan su propósito,
+obligatoriedad, acceso, plazo de conservación y destino.
+
+Criterios de aceptación:
+
+- Los campos opcionales se identifican como tales.
+- No se solicitan datos por utilidad hipotética futura.
+- Los datos no se reutilizan para una finalidad incompatible sin la base y la
+  información correspondientes.
+
+### PC-RNF-02 — Inventario de analítica y terceros
+
+Clasificación: Requerimiento no funcional — Seguridad y privacidad
+Aplicación: Condicional
+
+Antes de incorporar Analytics, mapas, CAPTCHA, fuentes remotas, chat, videos,
+pagos, notificaciones, publicidad o cualquier script/SDK externo se documentan:
+
+- proveedor, finalidad y datos transmitidos;
+- cookies, identificadores o permisos utilizados;
+- ubicación del tratamiento y terceros receptores conocidos;
+- mecanismo de activación y fundamento aplicable;
+- procedimiento de desactivación y eliminación;
+- impacto sobre la Política de Privacidad y la Política de Cookies.
+
+No se transmite a herramientas de analítica contenido clínico, credenciales,
+tokens ni otros datos sensibles. Todo tercero no inventariado bloquea la
+publicación de la funcionalidad que lo utiliza.
+
+### PC-RNF-03 — Accesibilidad verificable
+
+Clasificación: Requerimiento no funcional — Usabilidad/accesibilidad
+Aplicación: Obligatoria
+
+Se mantiene el objetivo WCAG 2.1 AA definido en RNF-USA-04. Como criterios
+explícitos de verificación:
+
+- navegación completa mediante teclado, con orden de foco lógico y foco visible;
+- contraste suficiente en texto, iconos informativos y controles;
+- botones y enlaces con nombres claros que describan su acción o destino;
+- etiquetas, instrucciones y errores asociados programáticamente a cada campo;
+- ausencia de bloqueos por teclado en menús, diálogos y formularios;
+- áreas táctiles adecuadas en la aplicación móvil.
+
+La revisión combina comprobaciones automáticas con pruebas manuales de teclado y
+lector de pantalla en los recorridos principales.
+
+### PC-RNF-04 — Alternativas textuales para imágenes
+
+Clasificación: Requerimiento no funcional — Accesibilidad
+Aplicación: Obligatoria
+
+- Las imágenes informativas tendrán un texto alternativo que comunique su
+  contenido o propósito.
+- Las imágenes funcionales comunicarán la acción que ejecutan.
+- Las imágenes decorativas tendrán alternativa vacía o se excluirán del árbol de
+  accesibilidad.
+- No se repetirá información ya expresada por texto adyacente.
+
+Las imágenes clínicas aportadas por usuarios o personal se tratarán según su
+contexto y permisos; no se expondrán públicamente para satisfacer este requisito.
+
+### PC-RNF-05 — Derechos de autor y procedencia de recursos
+
+Clasificación: Requerimiento no funcional — Legal
+Aplicación: Obligatoria
+
+Toda imagen, icono, fuente, audio, video u otro recurso incorporado al producto
+debe ser propio, contar con licencia compatible o disponer de autorización. Se
+mantendrá un registro de procedencia, autor, licencia, atribución requerida y
+fecha de incorporación.
+
+Un recurso sin procedencia comprobable no podrá incluirse en la versión publicada.
+
+### PC-RNF-06 — Revisión normativa y de riesgos
+
+Clasificación: Requerimiento no funcional — Legal/proceso
+Aplicación: Obligatoria
+
+Antes de producción se revisarán, como mínimo:
+
+- cumplimiento de la Ley N.º 18.331 y normativa uruguaya aplicable;
+- inscripción o regularización de bases de datos cuando corresponda;
+- mecanismos de acceso, rectificación, actualización, supresión y oposición;
+- conservación y disociación de información clínica;
+- transferencias o servicios de terceros;
+- procedimiento ante incidentes de seguridad;
+- condiciones específicas de consentimientos clínicos, pagos y comunicaciones;
+- otros riesgos legales derivados de las funciones efectivamente implementadas.
+
+Las conclusiones, responsables y pendientes se documentarán. Los plazos legales y
+las obligaciones sectoriales que todavía no estén confirmados permanecerán
+parametrizables o pendientes, sin inventar valores.
+
+4. DECISIONES DE IMPLEMENTACIÓN
+-------------------------------
+
+1. La API ASP.NET Core centraliza el registro y la validación de consentimientos.
+2. Blazor y React Native muestran los mismos documentos vigentes y envían las
+   decisiones a la API; ningún cliente mantiene una autoridad independiente.
+3. Las políticas se versionan. Una nueva versión no invalida silenciosamente una
+   aceptación anterior: se define si requiere nueva aceptación y se conserva el
+   historial.
+4. Los consentimientos clínicos firmados se conservan como documentos históricos
+   y no se confunden con preferencias revocables.
+5. El banner de cookies se implementará únicamente después de inventariar las
+   tecnologías realmente utilizadas por la web.
+6. En móvil, el equivalente al análisis de cookies se realiza sobre SDK,
+   identificadores, permisos y seguimiento.
+7. La privacidad, la accesibilidad y la procedencia de recursos forman parte de
+   los criterios de aceptación y de las pruebas, no de una revisión tardía.
+
+5. TRAZABILIDAD CON LA MATRIZ CANÓNICA
+--------------------------------------
+
+- PC-RF-01 amplía RNF-LEG-03 y se incorpora como RF-VIS-10.
+- PC-RF-02 complementa RF-CLI-18 y se incorpora como RF-CLI-20.
+- PC-RN-01 se incorpora como RN-43.
+- PC-RN-02 se incorpora como RN-44.
+- PC-RN-03 se incorpora como RN-45.
+- PC-RNF-01 amplía RNF-LEG-01 y se incorpora como RNF-LEG-06.
+- PC-RNF-02 se incorpora como RNF-SEG-13.
+- PC-RNF-03 precisa RNF-USA-04; no lo sustituye.
+- PC-RNF-04 se incorpora como RNF-USA-06.
+- PC-RNF-05 se incorpora como RNF-LEG-07.
+- PC-RNF-06 se incorpora como RNF-LEG-08.
+
+6. PUERTAS DE SALIDA A PRODUCCIÓN
+---------------------------------
+
+La publicación requiere evidencia de:
+
+- políticas vigentes y accesibles;
+- identidad y contacto reales del responsable;
+- inventario de campos, finalidades, terceros, cookies y SDK;
+- consentimiento registrado y preferencias modificables cuando corresponda;
+- pruebas de teclado, contraste, foco y alternativas textuales;
+- licencias o autorizaciones de recursos;
+- ausencia de reseñas o afirmaciones falsas o indemostrables;
+- revisión normativa documentada y pendientes aceptados por el responsable;
+- pruebas de autorización, privacidad y no exposición de información clínica.
+
+7. PENDIENTES PARA DEFINIR ANTES DEL DISEÑO FINAL
+-------------------------------------------------
+
+- Identidad legal y datos de contacto definitivos de la clínica.
+- Contenido y versiones iniciales de Privacidad, Términos y Cookies.
+- Proveedores concretos de analítica, mapas, CAPTCHA, pagos y notificaciones.
+- Finalidades y plazos de conservación por categoría de datos.
+- Preferencias opcionales disponibles en el perfil del cliente.
+- Uso o descarte de reseñas y afirmaciones promocionales.
+- Responsable de la validación jurídica y de la aprobación de publicación.
