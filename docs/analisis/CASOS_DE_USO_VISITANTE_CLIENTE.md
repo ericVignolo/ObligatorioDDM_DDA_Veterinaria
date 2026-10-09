@@ -1,8 +1,8 @@
 # Casos de uso — Visitante y Cliente
 
-Versión: 0.2
+Versión: 0.3
 
-Fecha: 2026-09-26
+Fecha: 2026-10-02
 
 Estado: Borrador funcional para validación
 
@@ -169,13 +169,15 @@ Los casos de uso describen cómo interactúan los actores con el sistema, incluy
 
 ### CU-CLI-02 — Agendar turno
 
+Detalle de conexión con la atención: [FLUJO_RESERVA_CONSULTA.md](FLUJO_RESERVA_CONSULTA.md). Allí se proponen los estados, permisos y criterios de transición a CU-VET-01 sin cambiar el identificador de este caso.
+
 | Campo | Especificación |
 |---|---|
 | Actor principal | Cliente |
 | Objetivo | Confirmar una reserva válida para una mascota. |
 | Disparador | El cliente selecciona “Agendar turno”. |
 | Precondiciones | Sesión válida, cuenta verificada y responsabilidad vigente sobre al menos una mascota. |
-| Postcondición de éxito | Se crea exactamente un turno confirmado o en el estado inicial definido y se muestra constancia. |
+| Postcondición de éxito | Para la reserva ordinaria sin seña, se propone crear exactamente un turno Confirmado y mostrar constancia (RC-D01). La variante condicionada por seña se especificará por separado; aún no crea una consulta clínica. |
 | Postcondición mínima | No queda una reserva parcial ni se producen solapamientos. |
 
 **Flujo principal**
@@ -203,6 +205,8 @@ Los casos de uso describen cómo interactúan los actores con el sistema, incluy
 **Reglas:** RN-01 a RN-09, RN-35, RN-36, RN-38.  
 **Calidad:** RNF-CON-01, 02, 05 a 09; RNF-REN-02; RNF-USA-01, 02.  
 **Nota:** el recorrido visible tendrá un máximo de cuatro pasos; las validaciones internas no cuentan como pasos de usuario.
+
+**Precisión pendiente:** RNF-USA-01 dice “desde el ingreso”. El tratamiento de registro o alta previa de un animal al medir esos pasos se cierra en P-RC-01 del recorrido integrado. El comportamiento posterior es llegada por Recepción, inicio por Veterinario y cierre clínico; el pago tiene un ciclo propio.
 
 ### CU-CLI-03 — Cancelar o reprogramar turno
 
@@ -467,8 +471,8 @@ Preguntas pendientes:
 
 ## 8. Próxima iteración
 
-1. Validar el catálogo y los once casos esenciales detallados.
-2. Resolver los pendientes de registro, alertas sanitarias y parámetros todavía abiertos de las alertas de asistencia.
-3. Completar los casos resumidos de Visitante y Cliente.
-4. Derivar pantallas, endpoints y pruebas a partir de los casos aprobados.
-5. Repetir el proceso para Veterinario, después Recepcionista y Administrador.
+1. Revisar [ALCANCE_ENTREGA.md](ALCANCE_ENTREGA.md) y resolver las decisiones P-RC del recorrido [Reserva y consulta](FLUJO_RESERVA_CONSULTA.md), que ya incorpora CU-VET-01 — Realizar consulta.
+2. Completar la especificación de registro y los casos de Recepción “Cobrar consulta” y del Veterinario “Internar animal”.
+3. Resolver alertas sanitarias y parámetros abiertos de asistencia; completar los casos resumidos de Visitante y Cliente.
+4. Derivar pantallas, contratos y pruebas a partir de los casos aprobados y completar el mapa móvil y Blazor.
+5. Extender el catálogo e historias para los restantes procesos de Veterinario, Recepcionista y Administrador.

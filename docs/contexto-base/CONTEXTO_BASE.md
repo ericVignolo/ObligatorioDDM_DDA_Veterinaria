@@ -1,6 +1,6 @@
 # Contexto base — Sistema de gestión veterinaria
 
-Actualizado: 2026-09-26
+Actualizado: 2026-10-08
 
 Este documento consolida el contexto recuperado del proyecto de ChatGPT `ObligatorioDDM_DDA`. Es la referencia operativa para continuar el trabajo en la carpeta local `ObligatorioVeterinaria`.
 
@@ -27,7 +27,9 @@ El flujo general mencionado en los planes es:
 - Los requisitos adicionales de privacidad, consentimiento, accesibilidad, terceros, derechos de autor y publicación fueron incorporados desde `Implementacion_Politicas.txt`.
 - El plan de implementación visual, las alternativas evaluadas y la decisión inicial de diseño móvil están documentados en `Diseño.md`.
 - Se incorporó la primera especificación funcional de alertas y asistencia, con cuatro niveles, prioridad, reevaluación, GPS, asignación, seguimiento, costos y atención de animales de cualquier especie. Permanecen abiertos sus parámetros operativos y la especificación adicional de registro y alertas sanitarias.
-- El próximo frente acordado es funcional: incorporar los requisitos adicionales y construir el mapa de navegación, empezando por Visitante y Cliente y después Veterinario.
+- El 2026-10-02 se confirmó un equipo de dos integrantes, con apoyo de Codex. No hay fecha límite real establecida; las diez semanas del plan original son una referencia histórica, no un plazo comprometido. La dedicación efectiva se estimará por hito.
+- El frente inmediato acordado es cerrar la tabla de alcance de la entrega y desarrollar “Realizar consulta” conectado con “Reservar turno”, incluyendo estados, permisos, historia clínica, stock y cargos. Después se completarán los restantes casos y el mapa móvil.
+- Repositorio indicado por el usuario: https://github.com/ericVignolo/ObligatorioDDM_DDA_Veterinaria (coincide con el remoto `origin` local). Compartirlo como referencia no constituye una solicitud de publicación.
 
 ## 3. Reglas técnicas obligatorias
 
@@ -75,6 +77,23 @@ Veterinaria.sln
 ```
 
 `Veterinaria.Contracts` concentrará los DTO y contratos REST compartidos conceptualmente por ambos clientes. React Native no dependerá del código C#.
+
+### Organización física del repositorio y ramas (2026-10-08)
+
+Se conserva la arquitectura de una única API y dos clientes. La solución .NET podrá estar en la raíz del repositorio y agrupar proyectos ubicados en carpetas distintas:
+
+```text
+ObligatorioVeterinaria/
+├── api/          API ASP.NET Core, Application, Domain, Infrastructure y Contracts
+├── desktop/      interfaz Blazor/C# para computadora
+├── mobile/       aplicación React Native (cuando se inicie el frente móvil)
+├── tests/        pruebas de la API, el dominio y la integración
+└── docs/         análisis, decisiones, diseño y evidencia
+```
+
+Primero se trabaja en la rama `feature/escritorio-api`: interfaz de ordenador y API compartida. La futura rama móvil se creará a partir de esta base integrada o de `main` después de fusionarla, de modo que React Native consuma la misma API sin duplicar reglas. Las ramas organizan el trabajo; no representan bases de datos ni APIs independientes.
+
+La creación de carpetas y rama es una decisión técnica de organización y no prueba todavía ningún RF. Antes de considerar un requisito implementado se exigirá código funcional y pruebas pertinentes. Siguen pendientes la especificación de registro, el pseudocódigo restante y las decisiones abiertas antes del diseño visual definitivo y del código de producto.
 
 El documento original desarrolla estrategias específicas para SQL Server y las conversaciones usan Entity Framework Core como base del plan técnico. La selección debe formalizarse al cerrar las fundaciones, pero las reglas de integridad y concurrencia no dependen de la interfaz elegida.
 
@@ -139,7 +158,7 @@ En la documentación histórica, “mascota” identifica al paciente asociado a
 - Registro de atención y consultas.
 - Historia clínica.
 - Vacunación.
-- Consultas firmadas/inmutables, mencionadas como regla crítica pendiente de recuperar con su redacción exacta.
+- Consultas firmadas e inmutables según RN-12, RN-13, RN-14 y RN-20; correcciones mediante enmiendas.
 
 ### Internación
 
@@ -148,7 +167,7 @@ En la documentación histórica, “mascota” identifica al paciente asociado a
 ### Inventario
 
 - Gestión de inventario.
-- Stock no negativo y FEFO fueron mencionados como reglas críticas; falta recuperar su definición canónica.
+- Stock no negativo, FEFO, vencimientos, mínimos y movimientos trazables según RN-26 a RN-31.
 
 ### Comunicaciones
 
@@ -168,7 +187,7 @@ En la documentación histórica, “mascota” identifica al paciente asociado a
 
 ### Facturación y administración
 
-- Facturación con restricciones de negocio aún pendientes de recuperar en detalle.
+- Cargos, tarifas históricas y comprobantes según RN-32 a RN-36. Se distingue el cargo generado al cerrar la atención del cobro posterior; falta completar el caso de uso de cobro.
 - Administración e indicadores en Blazor.
 
 ### Capacidades móviles adicionales
@@ -268,7 +287,7 @@ Esta lista es solo un resumen. La redacción verificable completa está en `MATR
 2. **Identidad y seguridad:** usuarios, roles, permisos, autenticación, estrategia de tokens si corresponde, autorización, auditoría y baja lógica.
 3. **Núcleo funcional:** clientes/responsables, mascotas, veterinarios, especies/razas, servicios, tipos de cita, recursos y tablas maestras. Comenzar primeras pantallas Blazor en paralelo.
 4. **Módulos:** agenda/disponibilidad → historia clínica → internación → inventario → comunicaciones → facturación.
-5. **Reglas críticas y robustez:** RN-01 a RN-42, concurrencia, transacciones, idempotencia y garantías en base de datos.
+5. **Reglas críticas y robustez:** RN-01 a RN-59 según módulo, concurrencia, transacciones, idempotencia y garantías en base de datos; se implementan con cada módulo y se verifican integralmente al cierre.
 6. **Blazor completo:** paneles por rol, agenda, fichas clínicas, internación, inventario, administración, facturación e indicadores.
 7. **Integración y defensa:** pruebas, seguridad, datos de demostración, documentación y UML actualizado.
 
@@ -321,6 +340,8 @@ Si una regla cambia, registrar qué reemplaza, la fecha y el impacto sobre API, 
 
 ## 14. Pendientes inmediatos
 
+El orden de trabajo vigente se organiza por H0–H5 en `../analisis/ALCANCE_ENTREGA.md`; estos hitos no renumeran la columna Fase de la matriz original. El primer paquete funcional es `../analisis/FLUJO_RESERVA_CONSULTA.md`. Sus decisiones derivadas de estados, permisos, reservas de stock y cierre atómico son propuestas explícitas de comportamiento/técnica, sujetas a las preguntas acotadas del propio documento. No modifican la clasificación ni la redacción de los requisitos canónicos.
+
 1. Completar la especificación de registro, alertas sanitarias y los parámetros pendientes del módulo de asistencia; privacidad y consentimientos ya fueron incorporados desde `Implementacion_Politicas.txt`.
 2. Confirmar formalmente el motor de base de datos y la estrategia concreta para impedir solapamientos de intervalos variables.
 3. Construir y validar el mapa funcional de Visitante y Cliente, respetando los RF-VIS y RF-CLI.
@@ -336,8 +357,13 @@ Se incorporaron como borradores para validación los primeros artefactos funcion
 - `docs/analisis/HISTORIAS_USUARIO_VISITANTE_CLIENTE.md`: backlog con 35 historias, criterios de aceptación y trazabilidad.
 - `docs/analisis/CASOS_DE_USO_VISITANTE_CLIENTE.md`: catálogo de 25 casos de uso y especificación detallada de 11 recorridos esenciales.
 - `docs/analisis/ESPECIFICACION_ALERTAS_ASISTENCIA.md`: clasificación, estados, flujos, pseudocódigo, privacidad, excepciones y pruebas del nuevo módulo.
+- `docs/analisis/ALCANCE_ENTREGA.md`: tabla operativa de entrega base y extensiones, asignación de los 74 RF a hitos, límites y evidencia esperada.
+- `docs/analisis/FLUJO_RESERVA_CONSULTA.md`: detalle conectado de CU-CLI-02 y CU-VET-01 (Realizar consulta), estados, permisos, datos, pseudocódigo y criterios de aceptación.
+- `docs/analisis/HISTORIAS_USUARIO_ATENCION.md`: historias derivadas del recorrido de atención, sin agregar RF a la matriz.
 
 Estos documentos no sustituyen la matriz canónica. Permanecen en estado de borrador hasta resolver los pendientes de registro, parámetros abiertos, pseudocódigo restante, alcance y casos resumidos.
+
+La tabla de alcance del 2026-10-02 fija una base operativa para planificar por hitos; no declara aprobados por el profesor los detalles nuevos ni terminada la Fase 1. Conserva todos los RF Must y las RN/RNF aplicables. Postergar una obligación vigente requiere una revisión explícita de contexto y matriz; la devolución docente aporta criterios, no elimina requisitos automáticamente.
 
 ## 15. Fuentes de esta recuperación
 

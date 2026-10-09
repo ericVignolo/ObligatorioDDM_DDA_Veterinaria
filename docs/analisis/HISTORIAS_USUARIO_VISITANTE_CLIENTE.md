@@ -1,8 +1,8 @@
 # Historias de usuario — Visitante y Cliente
 
-Versión: 0.2
+Versión: 0.3
 
-Fecha: 2026-09-26
+Fecha: 2026-10-02
 
 Estado: Borrador funcional para validación
 
@@ -27,6 +27,8 @@ Formato de historia:
 > Como **[actor]**, quiero **[capacidad]**, para **[beneficio]**.
 
 Los criterios se expresan de forma resumida con `Dado / Cuando / Entonces`. La prioridad y la fase se heredan de la matriz canónica.
+
+La entrega base/extensiones y los hitos operativos se consultan en [ALCANCE_ENTREGA.md](ALCANCE_ENTREGA.md); no reemplazan la prioridad ni la fase original. El recorrido del personal se inicia en [HISTORIAS_USUARIO_ATENCION.md](HISTORIAS_USUARIO_ATENCION.md).
 
 ## 3. Épicas
 
@@ -191,6 +193,8 @@ Los criterios se expresan de forma resumida con `Dado / Cuando / Entonces`. La p
 4. Si otro usuario ocupa el horario, no se crea una reserva duplicada; se conservan las selecciones compatibles y se muestran horarios actualizados.
 
 **Trazabilidad:** RF-CLI-02; RN-01 a RN-05, RN-07, RN-08, RN-35, RN-36, RN-38; RNF-CON-01, RNF-CON-02, RNF-USA-01. Prioridad: Must. Fase: 3.
+
+**Conexión con la atención:** [FLUJO_RESERVA_CONSULTA.md](FLUJO_RESERVA_CONSULTA.md), CU-CLI-02 y CU-VET-01. La reserva ordinaria Confirmada habilita llegada e inicio de consulta; no genera por sí misma un cargo clínico. Ver CA-RC-01/CA-RC-02 y pendiente P-RC-01 sobre cómo medir los cuatro pasos cuando hay registro previo.
 
 ### HU-CLI-03 — Cancelar o reprogramar turno
 

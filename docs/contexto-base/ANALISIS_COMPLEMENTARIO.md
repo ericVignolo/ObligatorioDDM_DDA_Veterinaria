@@ -2,12 +2,13 @@
 
 Fuente: `docs/fuentes/Analisis_Clinica_Veterinaria.docx`, versión 1.0, setiembre de 2026.
 
-Actualizado: 2026-09-26 con el alcance confirmado de alertas y asistencia veterinaria.
+Actualizado: 2026-10-02 con la confirmación del equipo, planificación por hitos y primer recorrido integrado.
 
 ## Supuestos de trabajo
 
-- Duración estimada: 10 semanas.
-- Equipo: 2 personas con dedicación parcial.
+- Plazo real: todavía no establecido (confirmado por el usuario el 2026-10-02). Diez semanas fue el supuesto inicial y se conserva solo como referencia histórica.
+- Equipo confirmado: 2 integrantes, con apoyo de Codex en análisis, desarrollo y revisión. La disponibilidad horaria de cada integrante queda por estimar; no se presupone una tercera dedicación humana.
+- Plan operativo: H0–H5, con alcance y criterios de salida en `../analisis/ALCANCE_ENTREGA.md`. Se revisará duración después del primer incremento integrado.
 - Clínica de referencia: una sucursal, entre 2 y 4 veterinarios, recepción, internación, quirófano y estética.
 - El modelo de datos debe admitir múltiples sucursales aunque la primera implementación use una.
 - La solución incluye una interfaz responsiva para la clínica y una aplicación móvil para clientes y veterinarios.
@@ -54,7 +55,7 @@ Recepcionista debe permanecer separado de Administrador en permisos y diagramas.
 4. **Semanas 7 y 8:** reglas bloqueantes, concurrencia, transacciones, idempotencia y pruebas adversas.
 5. **Semanas 9 y 10:** UML, pruebas formales, manuales, despliegue de demostración y preparación de la defensa.
 
-Este cronograma es la base académica. El orden operativo vigente se divide además en dos frentes: API + Blazor y React Native + Figma, según `CONTEXTO_BASE.md`.
+Este cronograma se conserva como referencia del documento original y de la columna Fase de la matriz; sus semanas no son fechas comprometidas. Desde el 2026-10-02, el orden operativo se organiza por hitos en `../analisis/ALCANCE_ENTREGA.md`, conservando los frentes API + Blazor y React Native + Figma de `CONTEXTO_BASE.md`.
 
 ## Ocho funcionalidades propuestas
 
@@ -67,7 +68,7 @@ Este cronograma es la base académica. El orden operativo vigente se divide adem
 7. **Modo sin conexión para Veterinario:** agenda y pacientes del día, registro local y sincronización con política de conflictos.
 8. **QR y ficha pública de emergencia:** datos mínimos, alergias críticas, contacto protegido y modo extraviada.
 
-Para un equipo de dos personas en diez semanas, el documento prioriza consentimiento, receta y facturación. Seguimiento postoperatorio, tablero, modo sin conexión y QR pueden quedar parcialmente implementados y declararse como trabajo futuro. La priorización definitiva debe respetar la matriz MoSCoW.
+El documento original, bajo el supuesto de diez semanas, priorizaba consentimiento, receta y facturación. La tabla operativa del 2026-10-02 distingue entrega base y extensiones: conserva las obligaciones vigentes y selecciona indicadores básicos como parte de la base. Una función parcial no se declara cumplida; se identifica por separado su alcance pendiente. No se ha confirmado un plazo de diez semanas.
 
 ## Arquitectura recuperada
 
@@ -174,7 +175,7 @@ Cada regla de negocio debe contar con al menos una prueba asociada.
 
 | Riesgo | Impacto | Mitigación |
 |---|---|---|
-| Alcance excesivo para dos personas y diez semanas | Alto | Cerrar MoSCoW al final de la Fase 1. |
+| Alcance excesivo para dos integrantes y plazo todavía desconocido | Alto | Fijar alcance por hitos, medir el primer incremento y revisar compromisos cuando exista fecha real. |
 | El móvil consume más tiempo del previsto | Alto | Reducir alcance móvil antes de afectar la API o las funciones Must. |
 | Cambios tardíos en el modelo | Medio | Migraciones y revisión formal al cerrar la Fase 1. |
 | Documentación postergada | Alto | Entregar documentación en cada fase. |
