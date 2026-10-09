@@ -1,6 +1,6 @@
 # Contexto base — Sistema de gestión veterinaria
 
-Actualizado: 2026-10-08
+Actualizado: 2026-10-09
 
 Este documento consolida el contexto recuperado del proyecto de ChatGPT `ObligatorioDDM_DDA`. Es la referencia operativa para continuar el trabajo en la carpeta local `ObligatorioVeterinaria`.
 
@@ -30,7 +30,8 @@ El flujo general mencionado en los planes es:
 - El 2026-10-02 se confirmó un equipo de dos integrantes, con apoyo de Codex. No hay fecha límite real establecida; las diez semanas del plan original son una referencia histórica, no un plazo comprometido. La dedicación efectiva se estimará por hito.
 - El frente inmediato acordado es cerrar la tabla de alcance de la entrega y desarrollar “Realizar consulta” conectado con “Reservar turno”, incluyendo estados, permisos, historia clínica, stock y cargos. Después se completarán los restantes casos y el mapa móvil.
 - Repositorio indicado por el usuario: https://github.com/ericVignolo/ObligatorioDDM_DDA_Veterinaria (coincide con el remoto `origin` local). Al compartirlo inicialmente como referencia no se había solicitado publicación.
-- El 2026-10-09 Eric delegó en Diego las decisiones aún abiertas del proyecto y pidió subir la documentación al repositorio. Las decisiones ya confirmadas por Eric se conservan; Diego registrará las restantes con fecha, justificación e impacto antes de implementar el módulo afectado. Eric y Codex mantendrán y revisarán la documentación. La rama compartida de este frente es `feature/escritorio-api`; esto no significa fusionar a `main`.
+- El 2026-10-09 Eric delegó en Diego las decisiones aún abiertas del proyecto y pidió subir la documentación al repositorio. Las decisiones ya confirmadas por Eric se conservan; Diego registrará las restantes con fecha, justificación e impacto antes de implementar el módulo afectado. Eric y Codex mantendrán y revisarán la documentación.
+- El 2026-10-09 Eric pidió separar una rama `desktop` y trabajar primero en la experiencia de escritorio. La API queda para una etapa posterior de integración; la arquitectura final de una única API no cambia. Hasta entonces, cualquier recorrido interactivo de Blazor será un prototipo con datos de demostración, no una implementación productiva de persistencia, permisos o reglas críticas.
 
 ## 3. Reglas técnicas obligatorias
 
@@ -79,7 +80,7 @@ Veterinaria.sln
 
 `Veterinaria.Contracts` concentrará los DTO y contratos REST compartidos conceptualmente por ambos clientes. React Native no dependerá del código C#.
 
-### Organización física del repositorio y ramas (2026-10-08)
+### Organización física del repositorio y ramas (actualizado 2026-10-09)
 
 Se conserva la arquitectura de una única API y dos clientes. La solución .NET podrá estar en la raíz del repositorio y agrupar proyectos ubicados en carpetas distintas:
 
@@ -92,7 +93,9 @@ ObligatorioVeterinaria/
 └── docs/         análisis, decisiones, diseño y evidencia
 ```
 
-Primero se trabaja en la rama `feature/escritorio-api`: interfaz de ordenador y API compartida. La futura rama móvil se creará a partir de esta base integrada o de `main` después de fusionarla, de modo que React Native consuma la misma API sin duplicar reglas. Las ramas organizan el trabajo; no representan bases de datos ni APIs independientes.
+`feature/escritorio-api` conserva la preparación y documentación anteriores. La nueva rama `desktop` nace de ese estado y concentra el trabajo inicial de Blazor: estructura de pantallas, navegación y recorridos interactivos con datos de demostración. **No** introduce acceso directo a la BD ni implementa allí autenticación, autorización, transacciones o reglas críticas. Cuando se inicie la etapa de API, se integrará desde la base de `desktop` o desde la rama principal una vez fusionada; React Native consumirá esa misma API. Las ramas organizan el trabajo, no representan arquitecturas finales distintas.
+
+Decisión técnica de secuenciación: primero se valida el comportamiento de escritorio y su interfaz con sustitutos de datos explícitamente temporales; después se conectan esos recorridos a contratos versionados de la API. Un flujo simulado puede demostrar UX, pero no satisface por sí solo los RF/RN/RNF que requieren datos reales, seguridad o concurrencia. Antes de diseño visual definitivo o código de producto sigue vigente el cierre de especificaciones y decisiones indicado en AGENTS.md.
 
 La creación de carpetas y rama es una decisión técnica de organización y no prueba todavía ningún RF. Antes de considerar un requisito implementado se exigirá código funcional y pruebas pertinentes. Siguen pendientes la especificación de registro, el pseudocódigo restante y las decisiones abiertas antes del diseño visual definitivo y del código de producto.
 
