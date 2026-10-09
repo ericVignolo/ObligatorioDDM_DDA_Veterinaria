@@ -2,6 +2,8 @@
 
 Fuente: `docs/fuentes/Analisis_Clinica_Veterinaria.docx`, versión 1.0, setiembre de 2026.
 
+Actualizado: 2026-09-26 con el alcance confirmado de alertas y asistencia veterinaria.
+
 ## Supuestos de trabajo
 
 - Duración estimada: 10 semanas.
@@ -19,6 +21,7 @@ Dentro del alcance:
 - Internación con seguimiento visible para el responsable.
 - Inventario por lote, vencimiento y alertas.
 - Notificaciones por correo y push.
+- Alertas de orientación o asistencia para uno o varios animales de cualquier especie, con cuatro niveles de prioridad, ubicación consentida, asignación profesional y seguimiento del traslado.
 
 Fuera del alcance declarado:
 
@@ -35,11 +38,11 @@ La facturación interna, la cuenta corriente y los pagos en línea sí aparecen 
 | Actor | Autenticación | Responsabilidad principal |
 |---|---|---|
 | Visitante | No requiere | Consulta información pública y evalúa los servicios. |
-| Cliente | Correo y contraseña; 2FA opcional | Gestiona mascotas y turnos, consulta historia clínica y sigue internaciones. |
-| Veterinario | Credencial institucional y matrícula | Registra actos médicos, recetas y diagnósticos; publica novedades. |
-| Recepcionista | Credencial institucional | Gestiona agenda, admisión, cobros y contacto con clientes. |
-| Administrador | Credencial institucional y 2FA obligatorio | Configura usuarios, inventario y tarifas; consulta indicadores. |
-| Sistema temporal | No aplica | Ejecuta recordatorios y alertas programadas. |
+| Cliente | Correo y contraseña; 2FA opcional | Gestiona animales y turnos, consulta historia clínica, sigue internaciones y solicita orientación o asistencia. |
+| Veterinario | Credencial institucional y matrícula | Registra actos médicos, recetas y diagnósticos; publica novedades y acepta asistencias compatibles con su competencia y guardia. |
+| Recepcionista | Credencial institucional | Gestiona agenda, admisión, cobros, la cola verde/amarilla/naranja y las excepciones que requieren contacto. |
+| Administrador | Credencial institucional y 2FA obligatorio | Configura usuarios, inventario, tarifas, cobertura, guardias, competencias y equipamiento; consulta indicadores. |
+| Sistema temporal | No aplica | Ejecuta recordatorios, reevaluaciones de 24 horas, alertas y tareas programadas. |
 
 Recepcionista debe permanecer separado de Administrador en permisos y diagramas.
 
@@ -77,6 +80,8 @@ Componentes contemplados:
 - Almacenamiento de archivos separado de la base.
 - Canal en tiempo real para internación.
 - Procesador de tareas para recordatorios, alertas y correo.
+- Servicio de tiempo real para estados y ubicación durante asistencias activas.
+- Proveedor de mapas y rutas aislado tras una interfaz de infraestructura y limitado a los datos mínimos.
 
 Capas:
 
@@ -95,6 +100,7 @@ Patrones propuestos que siguen siendo compatibles con el stack vigente:
 - Strategy para duración y tarifa.
 - Specification para disponibilidad.
 - Observer o publicación/suscripción para internación y alertas.
+- State para el ciclo de la solicitud de asistencia y Strategy para clasificación, selección profesional y cálculo tarifario.
 - DTO para el contrato de API.
 - Inyección de dependencias.
 
@@ -116,7 +122,8 @@ Diagramas obligatorios:
 - Clases de dominio con multiplicidades y relación N:M Cliente–Mascota.
 - Modelo entidad-relación físico con tipos, claves, índices y restricciones.
 - Secuencias de agenda concurrente, cierre de consulta, internación en tiempo real y receta.
-- Máquinas de estado de Turno e Internación.
+- Secuencias de creación, escalamiento por empeoramiento, asignación y seguimiento de asistencia.
+- Máquinas de estado de Turno, Internación y Solicitud de asistencia.
 - Actividades de atención completa y procedimiento quirúrgico.
 - Componentes de clientes, API, base, archivos, tiempo real, tareas y correo.
 - Despliegue con nodos, protocolos y puertos.
@@ -151,6 +158,15 @@ Casos de referencia recuperados:
 | CP-13 | Bloqueo de cirugía sin consentimiento. |
 | CP-14 | Rechazo de una segunda internación activa. |
 | CP-15 | Denegación de un enlace de radiografía vencido o anónimo. |
+| CP-16 | Solicitud amarilla pendiente que empeora, pasa a roja y activa guardia inmediatamente. |
+| CP-17 | Traspaso de cierre: todas las naranjas pendientes quedan antes que las amarillas del día siguiente. |
+| CP-18 | Reevaluación a las 24 horas sin reducción ni cierre automático por falta de respuesta. |
+| CP-19 | Solicitud roja fuera de horario con búsqueda de guardia y escalamiento a Recepción si no hay elegibles. |
+| CP-20 | GPS rechazado con dirección manual válida y bloqueo de visita cuando no existe ningún destino. |
+| CP-21 | Tiempo estimado y mapa ocultos hasta la aceptación profesional y seguimiento detenido al finalizar. |
+| CP-22 | Reintentos de red sin duplicar solicitud, aceptación ni aviso de empeoramiento. |
+| CP-23 | Solicitud grupal o de especie no doméstica que filtra veterinarios por competencia y equipamiento. |
+| CP-24 | Deuda o falla de pago que no bloquea ni demora la creación de una solicitud roja. |
 
 Cada regla de negocio debe contar con al menos una prueba asociada.
 
@@ -164,6 +180,11 @@ Cada regla de negocio debe contar con al menos una prueba asociada.
 | Documentación postergada | Alto | Entregar documentación en cada fase. |
 | Datos de demostración insuficientes | Medio | Mantener un juego realista desde la Fase 1. |
 | Servicios externos fallan durante la defensa | Medio | Modo demostración con integraciones simuladas y evidencia de respaldo. |
+| La clínica promete cobertura roja sin una guardia realmente disponible | Alto | Configurar guardias, mostrar disponibilidad real, escalar a Recepción y no prometer asignación ni llegada antes de la aceptación. |
+| Una clasificación automática se interpreta como diagnóstico | Alto | Presentarla como orientación preliminar, permitir solo elevación automática y exigir revisión profesional trazada para reducirla. |
+| Exposición indebida de ubicaciones de clientes o profesionales | Alto | Consentimiento específico, minimización, autorización, auditoría, cese del seguimiento y conservación definida. |
+| Cuestionarios diseñados solo para perros y gatos | Alto | Modelar especies y grupos, validar preguntas con profesionales y filtrar asignación por competencia y equipamiento. |
+| Alcance técnico de mapas, tiempo real y guardias supera el cronograma | Alto | Proteger primero creación, prioridad, escalamiento y contacto; planificar mapa en tiempo real como incremento verificable sin degradar el flujo seguro. |
 
 ## Datos para la demostración
 

@@ -1,6 +1,6 @@
 # Contexto base — Sistema de gestión veterinaria
 
-Actualizado: 2026-09-22
+Actualizado: 2026-09-26
 
 Este documento consolida el contexto recuperado del proyecto de ChatGPT `ObligatorioDDM_DDA`. Es la referencia operativa para continuar el trabajo en la carpeta local `ObligatorioVeterinaria`.
 
@@ -23,10 +23,10 @@ El flujo general mencionado en los planes es:
 - No se ha creado todavía la solución .NET, la aplicación React Native ni el archivo de Figma.
 - No se debe comenzar todavía el diseño visual definitivo.
 - El documento original `docs/fuentes/Analisis_Clinica_Veterinaria.docx` ya fue revisado e incorporado al contexto.
-- La especificación contiene 62 RF, 42 RN y 55 RNF recuperados del documento original, más 2 RF, 3 RN y 5 RNF complementarios incorporados; su texto canónico está en `MATRIZ_REQUISITOS.md`.
+- La especificación contiene 62 RF, 42 RN y 55 RNF recuperados del documento original, más 12 RF, 17 RN y 10 RNF complementarios incorporados; su texto canónico está en `MATRIZ_REQUISITOS.md`.
 - Los requisitos adicionales de privacidad, consentimiento, accesibilidad, terceros, derechos de autor y publicación fueron incorporados desde `Implementacion_Politicas.txt`.
 - El plan de implementación visual, las alternativas evaluadas y la decisión inicial de diseño móvil están documentados en `Diseño.md`.
-- Continúan pendientes los requisitos adicionales de pseudocódigo, registro y alertas que entregue el usuario.
+- Se incorporó la primera especificación funcional de alertas y asistencia, con cuatro niveles, prioridad, reevaluación, GPS, asignación, seguimiento, costos y atención de animales de cualquier especie. Permanecen abiertos sus parámetros operativos y la especificación adicional de registro y alertas sanitarias.
 - El próximo frente acordado es funcional: incorporar los requisitos adicionales y construir el mapa de navegación, empezando por Visitante y Cliente y después Veterinario.
 
 ## 3. Reglas técnicas obligatorias
@@ -92,7 +92,7 @@ Cliente y Veterinario son los roles móviles principales mencionados. Recepcioni
 
 - Un visitante puede navegar, conocer la aplicación y explorar los servicios sin iniciar sesión.
 - Las acciones que operan sobre información personal o reservan servicios son protegidas.
-- Ejemplos confirmados de acciones protegidas: gestionar/agendar para una mascota y reservar/agendar servicios.
+- Ejemplos confirmados de acciones protegidas: gestionar/agendar para un animal, reservar servicios y crear o seguir una solicitud de asistencia.
 - Si un visitante intenta una acción protegida, el sistema debe llevarlo a iniciar sesión o registrarse.
 - Tras autenticarse, el flujo debe permitirle continuar la acción que estaba realizando, evitando perder su intención.
 - El registro deberá contemplar los consentimientos y alertas que el usuario suministrará, incluyendo privacidad y aceptaciones obligatorias.
@@ -122,6 +122,8 @@ Cliente y Veterinario son los roles móviles principales mencionados. Recepcioni
 - Carnet sanitario y vacunas.
 - Adjuntos/archivos.
 - Estado o información de internación.
+
+En la documentación histórica, “mascota” identifica al paciente asociado a un responsable. El alcance vigente no se limita a animales domésticos: incluye animales de granja, producción, equinos, aves, reptiles y demás especies configuradas, así como solicitudes que involucren grupos de animales.
 
 ### Agenda
 
@@ -153,6 +155,17 @@ Cliente y Veterinario son los roles móviles principales mencionados. Recepcioni
 - Notificaciones dentro del flujo principal.
 - Notificaciones push como capacidad móvil prevista.
 
+### Alertas y asistencia veterinaria
+
+- Solicitud de visita al lugar u orientación para trasladar uno o varios animales a la clínica.
+- Clasificación preliminar combinada en cuatro niveles: rojo, naranja, amarillo y verde.
+- Prioridad `rojo → naranja → amarillo → verde`; al día siguiente, naranja precede a amarillo.
+- Aviso de empeoramiento iniciado por el cliente en cualquier momento y reevaluación solicitada a las 24 horas si continúa pendiente.
+- Gestión ordinaria por Recepción y circuito inmediato de profesionales elegibles o de guardia para nivel rojo.
+- Ubicación GPS consentida o dirección manual, estados, notificaciones, mapa y tiempo estimado después de la aceptación profesional.
+- Costo informado sin bloquear una solicitud roja por deuda previa o falla de pago.
+- Especificación detallada y pseudocódigo en `../analisis/ESPECIFICACION_ALERTAS_ASISTENCIA.md`.
+
 ### Facturación y administración
 
 - Facturación con restricciones de negocio aún pendientes de recuperar en detalle.
@@ -178,6 +191,11 @@ APP MÓVIL
 │
 ├── Cliente
 │   ├── Inicio
+│   ├── Asistencia
+│   │   ├── Nueva solicitud
+│   │   ├── Solicitudes activas
+│   │   ├── Estado, notificaciones y mapa
+│   │   └── Informar empeoramiento
 │   ├── Mis mascotas
 │   │   ├── Detalle
 │   │   ├── Historia clínica
@@ -192,6 +210,10 @@ APP MÓVIL
 │
 └── Veterinario
     ├── Inicio
+    ├── Solicitudes de asistencia
+    │   ├── Alertas rojas elegibles
+    │   ├── Aceptar o rechazar
+    │   └── Traslado y estados
     ├── Mi agenda
     ├── Paciente
     ├── Historia clínica
@@ -219,10 +241,10 @@ Comportamiento propuesto al confirmar un turno:
 
 La especificación canónica se encuentra en `MATRIZ_REQUISITOS.md` e incluye:
 
-- 62 requerimientos funcionales: 9 de Visitante, 19 de Cliente, 15 de Veterinario, 7 de Recepcionista y 12 de Administrador.
-- 42 reglas de negocio completas y clasificadas como bloqueantes o de advertencia.
-- 55 requerimientos no funcionales de seguridad, concurrencia, base de datos, rendimiento, disponibilidad, usabilidad, mantenibilidad y legalidad.
-- 2 RF, 3 RN y 5 RNF complementarios de privacidad, consentimiento, seguimiento, accesibilidad, licencias y revisión normativa.
+- 74 requerimientos funcionales: 10 de Visitante, 25 de Cliente, 17 de Veterinario, 9 de Recepcionista y 13 de Administrador.
+- 59 reglas de negocio clasificadas como bloqueantes o de advertencia.
+- 65 requerimientos no funcionales de seguridad, concurrencia, base de datos, rendimiento, disponibilidad, usabilidad, mantenibilidad y legalidad.
+- Los complementos abarcan privacidad, consentimiento, seguimiento, accesibilidad, licencias, revisión normativa y alertas de asistencia.
 
 Al implementar o diseñar un flujo, se deben conservar sus identificadores y rastrear cada pantalla, endpoint, validación y prueba a los RF, RN y RNF afectados.
 
@@ -281,7 +303,7 @@ src/
 └── utils/
 ```
 
-La decisión visual inicial se encuentra en `Diseño.md`: dirección clínica cálida, verde petróleo y coral, tipografía Inter, navegación inferior funcional y navegación contextual dentro de cada mascota. La alta fidelidad permanece condicionada al cierre de pseudocódigo, registro y alertas.
+La decisión visual inicial se encuentra en `Diseño.md`: dirección clínica cálida, verde petróleo y coral, tipografía Inter, navegación inferior funcional y navegación contextual dentro de cada mascota. La alta fidelidad permanece condicionada al cierre de registro, pseudocódigo restante y parámetros abiertos de alertas.
 
 ## 13. Método para incorporar nuevos requisitos
 
@@ -299,11 +321,11 @@ Si una regla cambia, registrar qué reemplaza, la fecha y el impacto sobre API, 
 
 ## 14. Pendientes inmediatos
 
-1. Incorporar los documentos adicionales de pseudocódigo, registro y alertas; privacidad y consentimientos ya fueron incorporados desde `Implementacion_Politicas.txt`.
+1. Completar la especificación de registro, alertas sanitarias y los parámetros pendientes del módulo de asistencia; privacidad y consentimientos ya fueron incorporados desde `Implementacion_Politicas.txt`.
 2. Confirmar formalmente el motor de base de datos y la estrategia concreta para impedir solapamientos de intervalos variables.
 3. Construir y validar el mapa funcional de Visitante y Cliente, respetando los RF-VIS y RF-CLI.
 4. Construir y validar el mapa funcional del Veterinario, respetando los RF-VET.
-5. Definir pseudocódigo, estados, errores, consentimientos y reanudación de acciones protegidas antes del diseño visual definitivo.
+5. Completar el pseudocódigo restante, estados, errores, consentimientos y reanudación de acciones protegidas antes del diseño visual definitivo; asistencia ya cuenta con una primera especificación.
 6. Preparar trazabilidad entre RF, RN, RNF, pantallas, endpoints y casos de prueba.
 7. Actualizar UML y justificación de patrones para que coincidan con Blazor/C# + API .NET + React Native + Figma.
 
@@ -311,10 +333,11 @@ Si una regla cambia, registrar qué reemplaza, la fecha y el impacto sobre API, 
 
 Se incorporaron como borradores para validación los primeros artefactos funcionales de Visitante y Cliente:
 
-- `docs/analisis/HISTORIAS_USUARIO_VISITANTE_CLIENTE.md`: backlog con 30 historias, criterios de aceptación y trazabilidad.
-- `docs/analisis/CASOS_DE_USO_VISITANTE_CLIENTE.md`: catálogo de 23 casos de uso y especificación detallada de 9 recorridos esenciales.
+- `docs/analisis/HISTORIAS_USUARIO_VISITANTE_CLIENTE.md`: backlog con 35 historias, criterios de aceptación y trazabilidad.
+- `docs/analisis/CASOS_DE_USO_VISITANTE_CLIENTE.md`: catálogo de 25 casos de uso y especificación detallada de 11 recorridos esenciales.
+- `docs/analisis/ESPECIFICACION_ALERTAS_ASISTENCIA.md`: clasificación, estados, flujos, pseudocódigo, privacidad, excepciones y pruebas del nuevo módulo.
 
-Estos documentos no sustituyen la matriz canónica. Permanecen en estado de borrador hasta resolver los pendientes de registro, alertas y pseudocódigo, validar el alcance y completar los casos resumidos.
+Estos documentos no sustituyen la matriz canónica. Permanecen en estado de borrador hasta resolver los pendientes de registro, parámetros abiertos, pseudocódigo restante, alcance y casos resumidos.
 
 ## 15. Fuentes de esta recuperación
 

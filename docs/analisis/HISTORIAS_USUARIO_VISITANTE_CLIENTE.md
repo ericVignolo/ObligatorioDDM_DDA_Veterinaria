@@ -1,8 +1,11 @@
 # Historias de usuario — Visitante y Cliente
 
-Versión: 0.1  
-Fecha: 2026-09-22  
-Estado: Borrador funcional para validación  
+Versión: 0.2
+
+Fecha: 2026-09-26
+
+Estado: Borrador funcional para validación
+
 Fuente canónica: `../contexto-base/MATRIZ_REQUISITOS.md`
 
 ## 1. Propósito y alcance
@@ -12,10 +15,10 @@ Este documento transforma los requerimientos funcionales de Visitante y Cliente 
 La primera versión comprende:
 
 - 10 historias de Visitante (`HU-VIS`).
-- 20 historias de Cliente (`HU-CLI`).
+- 25 historias de Cliente (`HU-CLI`).
 - criterios transversales para autenticación, privacidad, accesibilidad, seguridad y manejo de errores.
 
-Los detalles pendientes sobre registro, alertas y pseudocódigo se señalan expresamente y deberán incorporarse antes de aprobar el backlog.
+Los detalles pendientes sobre registro, alertas sanitarias y pseudocódigo se señalan expresamente. Las decisiones funcionales confirmadas para alertas de asistencia se desarrollan en `ESPECIFICACION_ALERTAS_ASISTENCIA.md`.
 
 ## 2. Convenciones
 
@@ -37,6 +40,7 @@ Los criterios se expresan de forma resumida con `Dado / Cuando / Entonces`. La p
 | EP-06 | Consentimientos y comunicaciones | El cliente gestiona consentimientos, avisos y canales de contacto. |
 | EP-07 | Servicios complementarios | El cliente accede a pagos, seguimiento, tratamientos y encuestas según el alcance aprobado. |
 | EP-08 | Derechos y privacidad | El cliente administra preferencias y solicitudes relativas a sus datos. |
+| EP-09 | Alertas y asistencia | El cliente solicita orientación o visita, comunica cambios de gravedad y sigue la asignación y llegada del profesional. |
 
 ## 4. Historias de Visitante
 
@@ -406,6 +410,74 @@ Los criterios se expresan de forma resumida con `Dado / Cuando / Entonces`. La p
 
 **Trazabilidad:** RF-CLI-20; RN-43, RN-44; RNF-LEG-01, RNF-LEG-03. Prioridad: Should. Fase: 3.
 
+### HU-CLI-21 — Solicitar orientación o asistencia
+
+**Historia:** Como cliente, quiero solicitar orientación o asistencia veterinaria para uno o varios animales, para recibir una respuesta priorizada según el estado y las condiciones reales del caso.
+
+**Criterios de aceptación:**
+
+1. Puedo solicitar una visita al lugar u orientación para trasladar al animal a la clínica.
+2. La solicitud admite un animal registrado, datos mínimos de uno no registrado o un grupo de animales de cualquier especie.
+3. Indico gravedad percibida, síntomas, cantidad afectada y riesgos relevantes; el cuestionario se adapta a la especie o categoría.
+4. El sistema asigna un nivel preliminar rojo, naranja, amarillo o verde sin presentarlo como diagnóstico.
+5. Una solicitud roja activa el circuito de guardia aunque la clínica esté fuera de su horario habitual.
+
+**Trazabilidad:** RF-CLI-21; RN-46 a RN-49, RN-54, RN-59; RNF-USA-07. Prioridad: Must. Fase: 3.
+
+### HU-CLI-22 — Proporcionar ubicación para la asistencia
+
+**Historia:** Como cliente, quiero compartir mi GPS o ingresar una dirección manual, para que la clínica pueda localizar a los animales respetando mi privacidad.
+
+**Criterios de aceptación:**
+
+1. Antes de activar el GPS se informa finalidad, destinatarios y duración del uso y se registra la decisión aplicable.
+2. Puedo rechazar el GPS e ingresar dirección y referencias manuales.
+3. Si no proporciono ningún destino, no puedo confirmar una visita, pero puedo solicitar orientación o coordinar el traslado.
+4. Si la ubicación no puede validarse o está fuera de cobertura, la solicitud se escala a Recepción y no se descarta silenciosamente.
+
+**Trazabilidad:** RF-CLI-22; RN-55, RN-56; RNF-SEG-14, RNF-DIS-05, RNF-LEG-09. Prioridad: Must. Fase: 3.
+
+### HU-CLI-23 — Seguir la asignación y llegada
+
+**Historia:** Como cliente, quiero recibir estados y notificaciones y consultar el recorrido del veterinario, para poder atender a los animales sin mirar permanentemente el teléfono.
+
+**Criterios de aceptación:**
+
+1. Antes de la aceptación profesional veo el estado real de la solicitud, sin nombre ni tiempo de llegada inventados.
+2. Después de la aceptación veo el veterinario asignado y un tiempo estimado identificado como tal.
+3. Desde el inicio del traslado puedo consultar el mapa y recibo notificaciones de cambios relevantes.
+4. El seguimiento de la ubicación profesional termina al llegar, cancelar o finalizar la asistencia.
+5. Si falla el mapa o una notificación, el estado, la dirección textual y el contacto continúan disponibles.
+
+**Trazabilidad:** RF-CLI-23; RN-53, RN-57; RNF-DIS-05, RNF-USA-02, RNF-LEG-09. Prioridad: Must. Fase: 3.
+
+### HU-CLI-24 — Informar empeoramiento y reevaluar
+
+**Historia:** Como cliente, quiero informar inmediatamente que uno o varios animales empeoraron y responder reevaluaciones de solicitudes demoradas, para que la prioridad refleje la situación actual.
+
+**Criterios de aceptación:**
+
+1. Mientras la solicitud está activa, la acción “Informar empeoramiento” permanece visible y accesible.
+2. Al informar nuevos síntomas, la API reevalúa y puede elevar inmediatamente la prioridad, incluso de amarillo o naranja a rojo.
+3. Cada cambio conserva nivel anterior, nivel nuevo, fecha y causa.
+4. Si la solicitud sigue pendiente 24 horas después de su creación, recibo una pregunta de reevaluación.
+5. No responder la reevaluación no reduce el nivel ni cierra la solicitud automáticamente.
+
+**Trazabilidad:** RF-CLI-24; RN-50 a RN-52; RNF-CON-10, RNF-USA-07. Prioridad: Must. Fase: 3.
+
+### HU-CLI-25 — Conocer el costo de la asistencia
+
+**Historia:** Como cliente, quiero conocer el costo o cómo se calculará antes de confirmar, para decidir con información suficiente sin demorar una urgencia crítica.
+
+**Criterios de aceptación:**
+
+1. Se muestra la tarifa vigente, una estimación o las variables que impedirían determinar todavía un importe definitivo.
+2. La aceptación queda vinculada a la solicitud y versión tarifaria aplicable.
+3. Una deuda previa o una falla de pago no bloquea la creación ni el escalamiento de una solicitud roja.
+4. El cargo definitivo conserva trazabilidad respecto de la asistencia prestada.
+
+**Trazabilidad:** RF-CLI-25; RN-33, RN-36, RN-58; RNF-USA-02. Prioridad: Must. Fase: 3.
+
 ## 6. Criterios transversales de aceptación
 
 Aplican a todas las historias afectadas:
@@ -442,7 +514,7 @@ Una historia está terminada cuando:
 ## 9. Pendientes para aprobar este backlog
 
 1. Completar la especificación de registro: campos, verificación, recuperación, caducidades, reenvíos y mensajes.
-2. Completar el catálogo de alertas: evento, destinatario, anticipación, repetición, canal, contenido y condiciones de cancelación.
-3. Definir pseudocódigo de agenda, reanudación de intención, alta de mascota, internación, consentimientos y derechos sobre datos.
+2. Completar el catálogo de alertas sanitarias y los parámetros pendientes de las alertas de asistencia: destinatarios, tiempos objetivo, canales, reiteración, tarifas y cancelación.
+3. Definir pseudocódigo de agenda, reanudación de intención, alta de animales, internación, consentimientos y derechos sobre datos; el pseudocódigo inicial de asistencia ya se encuentra en `ESPECIFICACION_ALERTAS_ASISTENCIA.md`.
 4. Confirmar el alcance de las historias Should y Could para la entrega académica.
 5. Validar estas historias con los interesados antes de convertirlas en compromiso de implementación.

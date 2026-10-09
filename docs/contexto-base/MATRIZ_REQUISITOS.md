@@ -2,6 +2,8 @@
 
 Fuente canónica: `docs/fuentes/Analisis_Clinica_Veterinaria.docx`, versión 1.0, setiembre de 2026.
 
+Complementos incorporados: `Implementacion_Politicas.txt` y decisiones funcionales sobre alertas y asistencia confirmadas el 2026-09-26. El detalle conductual del nuevo módulo se mantiene en `../analisis/ESPECIFICACION_ALERTAS_ASISTENCIA.md`.
+
 Esta matriz conserva los requerimientos recuperados del documento original. Las decisiones técnicas posteriores sobre Blazor, ASP.NET Core, React Native y Figma prevalecen cuando el documento recomienda un stack diferente.
 
 ## Requerimientos funcionales del visitante
@@ -43,6 +45,11 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RF-CLI-18 | Configurar por qué canal desea recibir cada tipo de notificación. | Should | 3 |
 | RF-CLI-19 | Solicitar la exportación o eliminación de sus datos personales. | Should | 4 |
 | RF-CLI-20 | Consultar y modificar desde su perfil las preferencias opcionales de privacidad, comunicaciones o seguimiento que admitan revocación. | Should | 3 |
+| RF-CLI-21 | Solicitar orientación o asistencia veterinaria a domicilio para uno o varios animales, indicando especie o categoría, cantidad afectada, síntomas, gravedad percibida y modalidad requerida. | Must | 3 |
+| RF-CLI-22 | Compartir con consentimiento explícito su ubicación GPS durante una solicitud de asistencia o, alternativamente, ingresar dirección y referencias manuales. | Must | 3 |
+| RF-CLI-23 | Consultar el estado de la solicitud y, después de la aceptación de un veterinario, recibir el tiempo estimado de llegada, notificaciones de avance y el recorrido habilitado en el mapa. | Must | 3 |
+| RF-CLI-24 | Informar en cualquier momento que uno o varios animales empeoraron y responder la reevaluación solicitada cuando una alerta permanezca pendiente durante 24 horas. | Must | 3 |
+| RF-CLI-25 | Conocer y aceptar el costo o el criterio de cálculo de la asistencia antes de confirmarla, salvo las excepciones definidas para no demorar una urgencia de nivel rojo. | Must | 3 |
 
 ## Requerimientos funcionales del veterinario
 
@@ -63,6 +70,8 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RF-VET-13 | Agregar una enmienda a un registro firmado. El texto original nunca se modifica ni se borra. | Must | 4 |
 | RF-VET-14 | Operar la aplicación móvil sin conexión durante visitas a domicilio y sincronizar al recuperar la red. | Could | 4 |
 | RF-VET-15 | Consultar sus propios indicadores: consultas realizadas, patologías frecuentes y tasa de ausencias. | Could | 4 |
+| RF-VET-16 | Recibir solicitudes de asistencia compatibles con las especies, cantidad de animales, competencias, equipamiento, disponibilidad o guardia y zona del profesional; aceptar o rechazar la asignación. | Must | 3 |
+| RF-VET-17 | Confirmar o modificar con motivo registrado la clasificación de gravedad, actualizar los estados del traslado y compartir su ubicación únicamente durante la asistencia asignada. | Must | 3 |
 
 ## Requerimientos funcionales del recepcionista
 
@@ -75,6 +84,8 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RF-REC-05 | Registrar cobros, medios de pago y emitir el comprobante. | Must | 4 |
 | RF-REC-06 | Marcar ausencias sin aviso y aplicar la política de la clínica. | Should | 4 |
 | RF-REC-07 | Reenviar comunicaciones al cliente, como resumen, carnet o comprobante, bajo pedido. | Could | 4 |
+| RF-REC-08 | Consultar y gestionar la cola de asistencias verde, amarilla y naranja, visualizar profesionales elegibles y asignarlos respetando prioridad, horario y capacidades requeridas. | Must | 3 |
+| RF-REC-09 | Recibir escalaciones cuando no haya veterinario disponible, la ubicación esté fuera de cobertura o no pueda validarse, y contactar al solicitante para coordinar una alternativa. | Must | 3 |
 
 ## Requerimientos funcionales del administrador
 
@@ -92,6 +103,7 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RF-ADM-10 | Parametrizar la ventana de cancelación, antelación máxima, umbrales de stock y días de aviso de refuerzo. | Should | 4 |
 | RF-ADM-11 | Ejecutar y verificar respaldos, y exportar datos en formato abierto. | Should | 5 |
 | RF-ADM-12 | Administrar sucursales y asignar personal y recursos a cada una. | Could | 5 |
+| RF-ADM-13 | Configurar horarios y zonas de cobertura de asistencia, guardias, competencias por especie, equipamiento, tarifas y parámetros de reevaluación y escalamiento. | Must | 3 |
 
 ## Reglas de negocio de agenda y turnos
 
@@ -173,6 +185,25 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RN-44 | Las cookies, rastreadores o SDK no esenciales no se activan antes de la decisión requerida; rechazar debe ser tan accesible como aceptar y la preferencia debe poder modificarse. | Bloqueante |
 | RN-45 | No se publican reseñas ficticias, sellos no obtenidos ni afirmaciones sobre servicios, resultados o profesionales que no tengan origen y respaldo verificables. | Bloqueante |
 
+## Reglas de solicitudes de orientación y asistencia
+
+| ID | Regla | Tipo |
+|---|---|---|
+| RN-46 | La clasificación preliminar combina la gravedad percibida por el cliente con un cuestionario de orientación adaptado a la especie y cantidad de animales; antes de la revisión profesional, el sistema puede elevar pero no reducir el nivel indicado por el cliente. Esta clasificación no constituye un diagnóstico. | Bloqueante |
+| RN-47 | Los cuatro niveles se ordenan de mayor a menor prioridad: rojo, naranja, amarillo y verde. El color siempre se acompaña de nombre, descripción e indicación accesible. | Bloqueante |
+| RN-48 | Las solicitudes verdes se gestionan dentro del horario de la clínica. Las amarillas y naranjas también se gestionan dentro del horario; si no se atienden antes del cierre, pasan pendientes al siguiente día de atención con las naranjas por encima de las amarillas y, dentro del mismo nivel, por antigüedad. | Bloqueante |
+| RN-49 | Una solicitud roja tiene prioridad máxima y activa el circuito de guardia sin depender del horario habitual; nunca se difiere automáticamente al día siguiente. | Bloqueante |
+| RN-50 | Toda solicitud que continúe pendiente al cumplirse 24 horas desde su creación debe pedir al cliente una reevaluación del estado. La falta de respuesta no reduce el nivel ni cierra la solicitud automáticamente. | Bloqueante |
+| RN-51 | El cliente puede informar empeoramiento en cualquier momento. La API registra el evento, repite la evaluación de inmediato y eleva la prioridad cuando corresponda, incluso de amarillo o naranja a rojo. | Bloqueante |
+| RN-52 | Solo un veterinario puede reducir una clasificación preliminar; debe registrar el motivo. Todo cambio de nivel conserva valor anterior, valor nuevo, autor, fecha y motivo o respuestas que lo originaron. | Bloqueante |
+| RN-53 | El tiempo estimado de llegada se muestra únicamente después de que un veterinario acepta la asistencia; debe identificarse como estimación y actualizarse cuando cambien las condiciones disponibles. | Bloqueante |
+| RN-54 | La elegibilidad para asignar una asistencia considera especie o categoría, cantidad de animales, competencia profesional, equipamiento, disponibilidad o guardia y zona de cobertura antes de utilizar la proximidad como criterio. | Bloqueante |
+| RN-55 | Si no hay un veterinario elegible, la ubicación está fuera de cobertura o no puede validarse, la solicitud no se descarta silenciosamente: se escala a Recepción para contactar al cliente y coordinar guardia, traslado, punto de encuentro u otra alternativa disponible. | Bloqueante |
+| RN-56 | Una visita a domicilio exige ubicación GPS consentida o una dirección manual validable. Si el cliente no proporciona ninguna ubicación, puede recibir orientación o coordinar el traslado a la clínica, pero no confirmar una visita sin destino. | Bloqueante |
+| RN-57 | La ubicación del veterinario se comparte con el cliente únicamente desde el inicio del traslado de una asistencia aceptada hasta la llegada, cancelación o finalización; el estado también se comunica mediante notificaciones para no exigir el seguimiento permanente del mapa. | Bloqueante |
+| RN-58 | La asistencia genera un cargo conforme a la tarifa o criterio vigente e informado. Una deuda previa o una falla de pago no bloquea la creación ni el escalamiento de una solicitud roja. | Bloqueante |
+| RN-59 | Una solicitud puede involucrar un animal individual o un grupo de animales de cualquier especie. La asignación y el cuestionario no pueden presuponer que se trata únicamente de perros o gatos. | Bloqueante |
+
 ## Requerimientos no funcionales de seguridad
 
 | ID | Requerimiento |
@@ -190,6 +221,7 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RNF-SEG-11 | No registrar datos sensibles en logs: contraseñas, tokens ni contenido clínico. |
 | RNF-SEG-12 | Leer credenciales y cadenas de conexión desde variables de entorno o un gestor de secretos. |
 | RNF-SEG-13 | Inventariar y revisar antes de su activación todo script, SDK o servicio externo, documentando proveedor, finalidad, datos transmitidos, permisos, mecanismo de desactivación e impacto en privacidad; nunca enviarle contenido clínico, credenciales ni tokens. |
+| RNF-SEG-14 | Restringir y auditar el acceso a ubicaciones precisas de clientes y profesionales; no incluir coordenadas en logs, analítica ni notificaciones visibles desde una pantalla bloqueada. |
 
 ## Requerimientos no funcionales de concurrencia
 
@@ -204,6 +236,7 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RNF-CON-07 | Mantener transacciones breves y nunca esperar al usuario con bloqueos abiertos. |
 | RNF-CON-08 | Usar read committed con versionado de filas por defecto y elevarlo solo cuando sea necesario. |
 | RNF-CON-09 | Probar dos reservas simultáneas y verificar que exactamente una tenga éxito. |
+| RNF-CON-10 | Hacer idempotentes la creación de solicitudes, la aceptación de asignaciones y los avisos de empeoramiento para que reintentos de red no dupliquen asistencias, despachos ni cambios de prioridad. |
 
 ## Requerimientos no funcionales de base de datos
 
@@ -233,6 +266,7 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RNF-DIS-02 | Probar una restauración al menos una vez durante el proyecto. |
 | RNF-DIS-03 | Objetivo de punto de recuperación de una hora y recuperación del servicio en cuatro horas. |
 | RNF-DIS-04 | Si falla el tiempo real, las novedades de internación siguen disponibles al recargar. |
+| RNF-DIS-05 | Si fallan el mapa, el cálculo de ruta o las notificaciones push, el estado de la asistencia, la dirección textual y las alternativas de llamada deben continuar disponibles. |
 
 ## Requerimientos no funcionales de usabilidad y mantenibilidad
 
@@ -244,6 +278,7 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RNF-USA-04 | Contraste, área táctil y teclado cumplen WCAG 2.1 AA. |
 | RNF-USA-05 | La interfaz usa español rioplatense, fechas y moneda locales. |
 | RNF-USA-06 | Proporcionar alternativas textuales según el propósito de cada imagen: descripción para contenido informativo, nombre de acción para imágenes funcionales y alternativa vacía o exclusión del árbol de accesibilidad para imágenes decorativas. |
+| RNF-USA-07 | Comunicar cada nivel de asistencia mediante texto, icono y prioridad, sin depender solo del color, y mantener siempre visible la acción para informar empeoramiento mientras la solicitud esté activa. |
 | RNF-MAN-01 | Separación estricta de capas; ninguna regla reside en controladores o interfaces. |
 | RNF-MAN-02 | Cobertura automatizada mínima de 60 % en servicios de dominio. |
 | RNF-MAN-03 | Convenciones de nombres y estilo verificadas en integración continua. |
@@ -262,9 +297,10 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RNF-LEG-06 | Documentar para cada dato recolectado su finalidad, obligatoriedad, acceso, conservación y destino, limitando formularios y endpoints a los datos necesarios. |
 | RNF-LEG-07 | Usar únicamente imágenes, iconos, fuentes y demás recursos propios, autorizados o con licencia compatible, conservando evidencia de procedencia y atribución. |
 | RNF-LEG-08 | Realizar y documentar antes de producción una revisión de normativa uruguaya aplicable, bases de datos, derechos de los titulares, conservación clínica, terceros, incidentes y riesgos de las funciones efectivamente implementadas. |
+| RNF-LEG-09 | Informar finalidad, destinatarios, duración y conservación del uso de ubicación de clientes y profesionales, obtener la decisión exigible antes de compartirla y cesar el seguimiento al finalizar su finalidad operativa. |
 
 ## Totales
 
-- 64 requerimientos funcionales: 62 recuperados del documento original y 2 complementarios.
-- 45 reglas de negocio: 42 recuperadas del documento original y 3 complementarias.
-- 60 requerimientos no funcionales: 55 recuperados del documento original y 5 complementarios.
+- 74 requerimientos funcionales: 62 recuperados del documento original y 12 complementarios.
+- 59 reglas de negocio: 42 recuperadas del documento original y 17 complementarias.
+- 65 requerimientos no funcionales: 55 recuperados del documento original y 10 complementarios.

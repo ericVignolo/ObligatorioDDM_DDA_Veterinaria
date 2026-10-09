@@ -1,8 +1,11 @@
 # Casos de uso — Visitante y Cliente
 
-Versión: 0.1  
-Fecha: 2026-09-22  
-Estado: Borrador funcional para validación  
+Versión: 0.2
+
+Fecha: 2026-09-26
+
+Estado: Borrador funcional para validación
+
 Fuentes: `../contexto-base/MATRIZ_REQUISITOS.md` y `HISTORIAS_USUARIO_VISITANTE_CLIENTE.md`
 
 ## 1. Propósito
@@ -19,6 +22,9 @@ Los casos de uso describen cómo interactúan los actores con el sistema, incluy
 | Sistema temporal | Proceso que genera recordatorios, alertas y tareas programadas. |
 | Pasarela de pago | Servicio externo condicional para pagos en línea. |
 | Personal de la clínica | Actor secundario en solicitudes, internaciones y seguimiento. |
+| Recepcionista | Gestiona solicitudes no rojas y excepciones que requieren contacto o coordinación humana. |
+| Veterinario | Revisa la gravedad, acepta asistencias compatibles y actualiza el traslado y la atención. |
+| Proveedor de mapas | Calcula ruta y tiempo estimado con los datos mínimos autorizados. |
 
 ## 3. Catálogo general
 
@@ -47,6 +53,8 @@ Los casos de uso describen cómo interactúan los actores con el sistema, incluy
 | CU-CLI-16 | Responder encuesta | Cliente | RF-CLI-17 | Could |
 | CU-CLI-17 | Gestionar notificaciones y privacidad | Cliente | RF-CLI-18, 20 | Should |
 | CU-CLI-18 | Solicitar exportación o eliminación | Cliente | RF-CLI-19 | Should |
+| CU-CLI-19 | Solicitar orientación o asistencia veterinaria | Cliente | RF-CLI-21, 22, 25 | Must |
+| CU-CLI-20 | Seguir la asistencia e informar empeoramiento | Cliente | RF-CLI-23, 24 | Must |
 
 ## 4. Relaciones principales
 
@@ -57,6 +65,8 @@ Los casos de uso describen cómo interactúan los actores con el sistema, incluy
 - `CU-CLI-05`, `CU-CLI-06`, `CU-CLI-08` y `CU-CLI-10` incluyen verificar responsabilidad sobre la mascota.
 - `CU-CLI-07` consulta las preferencias administradas en `CU-CLI-17`.
 - `CU-CLI-11` usa una pasarela externa únicamente si se implementa el pago en línea.
+- `CU-CLI-19` incluye clasificar preliminarmente, proporcionar ubicación y aceptar el costo o su criterio.
+- `CU-CLI-20` extiende `CU-CLI-19` cuando existe una solicitud activa y puede elevar su prioridad en cualquier momento.
 
 ## 5. Especificaciones detalladas del recorrido esencial
 
@@ -327,6 +337,91 @@ Los casos de uso describen cómo interactúan los actores con el sistema, incluy
 **Calidad:** RNF-SEG-10, RNF-LEG-01, 03, 06.  
 **Pendiente:** catálogo definitivo de eventos, canales y decisiones facultativas.
 
+### CU-CLI-19 — Solicitar orientación o asistencia veterinaria
+
+| Campo | Especificación |
+|---|---|
+| Actor principal | Cliente |
+| Actores secundarios | Recepcionista, Veterinario, Sistema temporal y Proveedor de mapas |
+| Objetivo | Solicitar visita u orientación para uno o varios animales y obtener una respuesta priorizada y trazable. |
+| Disparador | El cliente selecciona “Solicitar asistencia”. |
+| Precondiciones | Sesión válida y cuenta verificada; medio de contacto vigente. |
+| Postcondición de éxito | Solicitud creada una sola vez, clasificada y ubicada en el circuito de asignación correspondiente. |
+| Postcondición mínima | No se promete profesional ni tiempo de llegada inexistentes; los datos y decisiones ingresados quedan protegidos. |
+
+**Flujo principal**
+
+1. El cliente elige visita al lugar u orientación para trasladarse a la clínica.
+2. Selecciona un animal, registra datos mínimos o indica un grupo y su cantidad.
+3. Informa especie o categoría, síntomas, riesgos y gravedad percibida.
+4. El sistema presenta el cuestionario aplicable y calcula una clasificación preliminar.
+5. La clasificación conserva como mínimo la gravedad indicada por el cliente y puede elevarla según las respuestas.
+6. El sistema explica el uso de la ubicación; el cliente comparte GPS o ingresa dirección y referencias.
+7. Se muestra costo, estimación o criterio de cálculo y el cliente confirma.
+8. La API valida y crea la solicitud de forma idempotente.
+9. Si es roja, activa guardia y busca veterinarios elegibles; en otro nivel, la publica en el tablero de Recepción.
+10. El sistema confirma el nivel, el estado real y las acciones disponibles, incluida “Informar empeoramiento”.
+
+**Alternativas y excepciones**
+
+- A1. El GPS es rechazado: se solicita dirección manual sin impedir la orientación.
+- A2. No se proporciona ningún destino: no se confirma visita; se permite orientación o coordinación de traslado.
+- A3. La ubicación está fuera de cobertura o no puede validarse: se escala a Recepción para contacto.
+- A4. No existe veterinario elegible: se escala a Recepción sin inventar asignación ni estimación.
+- A5. Existe deuda o falla el pago: si la solicitud es roja, se crea y escala igualmente.
+- A6. La red reintenta la confirmación: la clave de idempotencia evita una segunda solicitud.
+- A7. Se trata de varios animales: se conserva cantidad y contexto grupal y se exige competencia profesional compatible.
+
+**Reglas:** RN-36, RN-46 a RN-49, RN-54 a RN-56, RN-58, RN-59.
+
+**Calidad:** RNF-SEG-13, 14; RNF-CON-10; RNF-DIS-05; RNF-USA-02, 07; RNF-LEG-06, 09.
+
+**Detalle complementario:** `ESPECIFICACION_ALERTAS_ASISTENCIA.md`.
+
+### CU-CLI-20 — Seguir la asistencia e informar empeoramiento
+
+| Campo | Especificación |
+|---|---|
+| Actor principal | Cliente |
+| Actores secundarios | Recepcionista, Veterinario, Sistema temporal y Proveedor de mapas |
+| Objetivo | Conocer el estado de la asistencia y elevar la prioridad cuando cambie el estado de los animales. |
+| Disparador | El cliente abre una solicitud activa, recibe una actualización o selecciona “Informar empeoramiento”. |
+| Precondiciones | Solicitud activa y autorización vigente sobre ella. |
+| Postcondición de éxito | Se presenta el estado vigente o se registra y procesa el empeoramiento una sola vez. |
+| Postcondición mínima | Una falla de mapa o notificación no oculta el estado ni reduce o cierra la solicitud. |
+
+**Flujo principal de seguimiento**
+
+1. La API devuelve nivel, estado e historial visible.
+2. Antes de la aceptación, la interfaz informa que todavía no existe un profesional confirmado.
+3. El veterinario acepta la asistencia.
+4. El sistema muestra profesional y tiempo estimado de llegada.
+5. Cuando comienza el traslado, habilita mapa y notificaciones de avance.
+6. Al llegar, cancelar o finalizar, cesa el seguimiento de ubicación profesional.
+
+**Flujo de empeoramiento**
+
+1. El cliente selecciona “Informar empeoramiento” en cualquier momento de la solicitud activa.
+2. Registra nuevos síntomas o respuestas para uno o varios animales.
+3. La API guarda el evento de forma idempotente y reevalúa inmediatamente.
+4. Si corresponde, eleva el nivel, reordena la cola y notifica a Recepción y profesionales.
+5. Si alcanza rojo, activa el circuito de guardia sin esperar el horario de la clínica.
+6. El cliente recibe confirmación del nuevo estado.
+
+**Reevaluación temporal**
+
+- Al cumplirse 24 horas desde la creación y continuar pendiente, el sistema pregunta si el estado se mantuvo o empeoró.
+- La falta de respuesta no reduce el nivel ni cierra la solicitud.
+- Una reducción solo puede efectuarla un veterinario y exige motivo.
+
+**Alternativas:** mapa no disponible; notificación fallida; estimación modificada; reasignación; solicitud fuera de cobertura; coordinación telefónica; reintento de aviso de empeoramiento.
+
+**Reglas:** RN-47 a RN-53, RN-55, RN-57.
+
+**Calidad:** RNF-SEG-14; RNF-CON-10; RNF-DIS-05; RNF-USA-07; RNF-LEG-09.
+
+**Detalle complementario:** `ESPECIFICACION_ALERTAS_ASISTENCIA.md`.
+
 ## 6. Fichas resumidas para completar en la siguiente iteración
 
 Los siguientes casos ya poseen objetivo y trazabilidad en el catálogo, pero requieren detallar sus flujos después de resolver las decisiones indicadas:
@@ -347,6 +442,8 @@ Los siguientes casos ya poseen objetivo y trazabilidad en el catálogo, pero req
 | CU-CLI-15 | Duración del seguimiento, participantes y criterios de urgencia. |
 | CU-CLI-16 | Momento, anonimato, duplicados y eventual publicación. |
 | CU-CLI-18 | Verificación de identidad, plazos y estados de la solicitud. |
+| CU-CLI-19 | Cuestionarios por especie, tiempos objetivo, estrategia de guardia, zonas, tarifas y política de cancelación. |
+| CU-CLI-20 | Repetición posterior a la reevaluación de 24 horas y canales operativos obligatorios. |
 
 ## 7. Plantilla para los próximos casos de uso
 
@@ -370,8 +467,8 @@ Preguntas pendientes:
 
 ## 8. Próxima iteración
 
-1. Validar el catálogo y los nueve casos esenciales detallados.
-2. Resolver los pendientes de registro, alertas y pseudocódigo.
+1. Validar el catálogo y los once casos esenciales detallados.
+2. Resolver los pendientes de registro, alertas sanitarias y parámetros todavía abiertos de las alertas de asistencia.
 3. Completar los casos resumidos de Visitante y Cliente.
 4. Derivar pantallas, endpoints y pruebas a partir de los casos aprobados.
 5. Repetir el proceso para Veterinario, después Recepcionista y Administrador.

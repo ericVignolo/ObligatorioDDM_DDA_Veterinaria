@@ -1,9 +1,12 @@
 # Plan de implementación de diseño en Figma
 
-Versión: 1.0  
-Fecha: 2026-09-22  
-Estado: Decisión de diseño aprobada para planificación y wireframes  
-Alcance inicial: aplicación móvil React Native para Visitante y Cliente  
+Versión: 1.1
+
+Fecha: 2026-09-26
+
+Estado: Decisión de diseño aprobada para planificación y wireframes
+
+Alcance inicial: aplicación móvil React Native para Visitante y Cliente
 
 ## 1. Propósito
 
@@ -14,7 +17,7 @@ El diseño debe transmitir confianza clínica, cercanía con las mascotas, clari
 La implementación se divide en dos niveles:
 
 1. Arquitectura, flujos y wireframes, que pueden comenzar con los requisitos actuales.
-2. Diseño visual de alta fidelidad, que comenzará después de cerrar los requisitos pendientes de pseudocódigo, registro y alertas.
+2. Diseño visual de alta fidelidad, que comenzará después de cerrar los requisitos pendientes de pseudocódigo, registro y los parámetros abiertos de alertas.
 
 Este documento complementa `CONTEXTO_BASE.md`, `MATRIZ_REQUISITOS.md` e `Implementacion_Politicas.txt`. No sustituye sus requisitos canónicos.
 
@@ -30,6 +33,8 @@ Este documento complementa `CONTEXTO_BASE.md`, `MATRIZ_REQUISITOS.md` e `Impleme
 - Diseñar estados de carga, vacío, error, concurrencia, permisos y sesión expirada.
 - Incorporar accesibilidad, privacidad y trazabilidad desde los wireframes.
 - No usar color como único medio para comunicar un estado.
+- Representar animales domésticos, de granja, equinos, aves, reptiles y otros pacientes sin diseñar la experiencia exclusivamente alrededor de perros y gatos.
+- Mantener visible la acción para informar empeoramiento durante toda solicitud de asistencia activa.
 
 ## 3. Opciones de dirección visual
 
@@ -93,6 +98,19 @@ Estos colores son independientes de la paleta de marca:
 
 Los estados deben acompañarse con texto, icono o ambos. Los contrastes definitivos se verificarán según WCAG 2.1 AA antes de aprobar los componentes.
 
+### 3.5 Niveles de alertas de asistencia
+
+La clasificación operativa utiliza cuatro niveles independientes de la paleta de marca:
+
+| Prioridad | Color inicial | Comunicación obligatoria |
+|---|---|---|
+| Rojo | `#B42318` | “Rojo — atención crítica”, icono y acción inmediata. |
+| Naranja | `#C2410C` | “Naranja — urgencia alta”, icono y posición prioritaria. |
+| Amarillo | `#A16207` | “Amarillo — atención prioritaria”, icono y expectativa de espera. |
+| Verde | `#15803D` | “Verde — situación estable”, icono y siguiente paso. |
+
+Estos valores son provisionales hasta validar contraste en todos los componentes. El orden y el significado nunca dependen únicamente del color.
+
 ## 4. Opciones tipográficas
 
 ### 4.1 Inter
@@ -155,6 +173,7 @@ Visitante:
 Cliente:
 
 - Inicio.
+- Asistencia, como acción prioritaria desde Inicio y acceso a solicitudes activas.
 - Mascotas.
 - Turnos.
 - Notificaciones.
@@ -245,6 +264,22 @@ Cliente
 │   ├── Alertas importantes
 │   ├── Mascotas
 │   └── Acciones rápidas
+│       └── Solicitar asistencia
+├── Asistencia
+│   ├── Nueva solicitud
+│   │   ├── Visita al lugar u orientación para traslado
+│   │   ├── Animal individual o grupo
+│   │   ├── Síntomas y gravedad percibida
+│   │   ├── Preguntas adaptadas
+│   │   ├── GPS consentido o dirección manual
+│   │   └── Costo y confirmación
+│   ├── Solicitudes activas
+│   └── Detalle de solicitud
+│       ├── Nivel, estado e historial
+│       ├── Informar empeoramiento
+│       ├── Profesional y tiempo estimado después de aceptar
+│       ├── Mapa durante el traslado
+│       └── Contacto con Recepción
 ├── Mascotas
 │   ├── Listado
 │   ├── Registrar mascota
@@ -316,6 +351,8 @@ Si el horario deja de estar disponible por concurrencia, la interfaz conservará
 - Próximos turnos e historial.
 - Flujo completo de agenda.
 - Cancelación y reprogramación.
+- Solicitud de asistencia: modalidad, animales, gravedad, ubicación y costo.
+- Estado de asistencia, reevaluación, empeoramiento, notificaciones y mapa.
 - Notificaciones.
 - Perfil y preferencias.
 
@@ -334,6 +371,9 @@ Si el horario deja de estar disponible por concurrencia, la interfaz conservará
 Se diseñará después de validar Visitante y Cliente:
 
 - agenda diaria y semanal;
+- alertas rojas elegibles y solicitudes asignadas;
+- aceptación o rechazo, confirmación de gravedad y motivo de reclasificación;
+- estados de preparación, traslado, llegada y atención;
 - paciente e historia clínica;
 - registro de atención;
 - vacunación y adjuntos;
@@ -496,12 +536,14 @@ Tratamiento de imágenes:
 - Diagramar Visitante y Cliente.
 - Identificar acciones públicas y protegidas.
 - Definir reanudación de intención después de autenticarse.
+- Diagramar el flujo completo de asistencia y sus variantes de horario, cobertura, ubicación, especies y grupos.
 
 ### Fase 2 — Wireframes
 
 - Crear pantallas en escala de grises.
 - Validar jerarquía y cantidad de pasos.
 - Probar agenda, alta de mascota y acceso clínico.
+- Probar los cuatro niveles sin depender solo del color, el aviso de empeoramiento, la reevaluación de 24 horas y la degradación sin mapa.
 - Revisar errores, permisos y concurrencia.
 
 ### Fase 3 — Fundamentos y componentes
@@ -518,7 +560,7 @@ Tratamiento de imágenes:
 - Incorporar textos reales o representativos.
 - Completar estados y casos especiales.
 
-Esta fase está condicionada al cierre de pseudocódigo, registro y alertas.
+Esta fase está condicionada al cierre de registro, pseudocódigo restante y parámetros abiertos de alertas.
 
 ### Fase 5 — Prototipo y validación
 
@@ -534,6 +576,13 @@ Se probarán como mínimo estos recorridos:
 8. Cliente modifica preferencias.
 9. Cliente sigue una internación.
 10. Cliente cancela o reprograma.
+11. Cliente solicita visita para un animal individual y comparte GPS con consentimiento.
+12. Cliente solicita asistencia para un grupo de animales e ingresa dirección rural manual.
+13. Una alerta amarilla informa empeoramiento, pasa a roja y activa guardia.
+14. Una alerta naranja queda pendiente al cierre y aparece antes que las amarillas del día siguiente.
+15. El veterinario acepta, inicia el traslado y el cliente alterna entre notificaciones y mapa.
+16. No hay veterinario elegible o la ubicación está fuera de cobertura y Recepción coordina una alternativa.
+17. Una solicitud pendiente cumple 24 horas y pide reevaluación sin cerrarse por falta de respuesta.
 
 ### Fase 6 — Entrega a desarrollo
 
@@ -557,7 +606,7 @@ Se probarán como mínimo estos recorridos:
 - Base de diseño: 390 px, validada desde 360 px.
 - Orden de trabajo: Visitante → autenticación → Cliente → Veterinario.
 - Método: arquitectura → wireframes → validación → componentes → alta fidelidad → prototipo → entrega.
-- Alta fidelidad: condicionada al cierre de pseudocódigo, registro y alertas.
+- Alta fidelidad: condicionada al cierre de registro, pseudocódigo restante y parámetros abiertos de alertas.
 
 ## 20. Criterio de aprobación
 
@@ -569,6 +618,9 @@ El diseño estará listo para desarrollo cuando:
 - todos los estados relevantes estén representados;
 - los componentes cumplan contraste, foco y área táctil;
 - las decisiones de privacidad sean claras y trazables;
+- los niveles rojo, naranja, amarillo y verde se comprendan sin depender del color;
+- el cliente pueda informar empeoramiento desde cualquier estado activo pertinente;
+- la ubicación y el tiempo estimado solo aparezcan durante las etapas autorizadas;
 - las variables y componentes puedan trasladarse a React Native;
 - exista trazabilidad con los requisitos vigentes;
 - no queden recursos visuales sin licencia o procedencia conocida.
