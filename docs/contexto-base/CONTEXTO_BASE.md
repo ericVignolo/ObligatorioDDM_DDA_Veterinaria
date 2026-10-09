@@ -360,6 +360,10 @@ Se incorporaron como borradores para validación los primeros artefactos funcion
 - `docs/analisis/ALCANCE_ENTREGA.md`: tabla operativa de entrega base y extensiones, asignación de los 74 RF a hitos, límites y evidencia esperada.
 - `docs/analisis/FLUJO_RESERVA_CONSULTA.md`: detalle conectado de CU-CLI-02 y CU-VET-01 (Realizar consulta), estados, permisos, datos, pseudocódigo y criterios de aceptación.
 - `docs/analisis/HISTORIAS_USUARIO_ATENCION.md`: historias derivadas del recorrido de atención, sin agregar RF a la matriz.
+- `docs/analisis/ESPECIFICACION_CATALOGO_SERVICIOS_API.md`: propuesta acotada del primer contrato público API → Blazor para RF-VIS-01, con decisiones D-CAT-01 a 03 y pruebas.
+- `docs/analisis/DECISIONES_PARA_DESARROLLO.md`: orden de preguntas que desbloquean catálogo, registro, reserva y consulta para el trabajo con Diego.
+- `docs/analisis/ESPECIFICACION_REGISTRO_CLIENTE.md`: borrador de flujo, pseudocódigo, preguntas y pruebas del registro con reanudación de intención protegida.
+- `docs/analisis/RECORRIDO_API_RESERVA_CONSULTA.md`: mapa propuesto de operaciones API desde reservar turno hasta firmar consulta y dejar cargo/correo pendientes.
 
 Estos documentos no sustituyen la matriz canónica. Permanecen en estado de borrador hasta resolver los pendientes de registro, parámetros abiertos, pseudocódigo restante, alcance y casos resumidos.
 
