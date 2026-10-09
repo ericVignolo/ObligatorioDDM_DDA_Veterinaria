@@ -2,7 +2,7 @@
 
 Fecha: 2026-10-08
 
-Estado: borrador para validar con Eric y entregar a Diego; no implementado.
+Estado: borrador; Diego cierra las decisiones pendientes y registra su justificación; no implementado.
 
 ## Propósito y límite
 

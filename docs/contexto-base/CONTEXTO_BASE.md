@@ -29,7 +29,8 @@ El flujo general mencionado en los planes es:
 - Se incorporó la primera especificación funcional de alertas y asistencia, con cuatro niveles, prioridad, reevaluación, GPS, asignación, seguimiento, costos y atención de animales de cualquier especie. Permanecen abiertos sus parámetros operativos y la especificación adicional de registro y alertas sanitarias.
 - El 2026-10-02 se confirmó un equipo de dos integrantes, con apoyo de Codex. No hay fecha límite real establecida; las diez semanas del plan original son una referencia histórica, no un plazo comprometido. La dedicación efectiva se estimará por hito.
 - El frente inmediato acordado es cerrar la tabla de alcance de la entrega y desarrollar “Realizar consulta” conectado con “Reservar turno”, incluyendo estados, permisos, historia clínica, stock y cargos. Después se completarán los restantes casos y el mapa móvil.
-- Repositorio indicado por el usuario: https://github.com/ericVignolo/ObligatorioDDM_DDA_Veterinaria (coincide con el remoto `origin` local). Compartirlo como referencia no constituye una solicitud de publicación.
+- Repositorio indicado por el usuario: https://github.com/ericVignolo/ObligatorioDDM_DDA_Veterinaria (coincide con el remoto `origin` local). Al compartirlo inicialmente como referencia no se había solicitado publicación.
+- El 2026-10-09 Eric delegó en Diego las decisiones aún abiertas del proyecto y pidió subir la documentación al repositorio. Las decisiones ya confirmadas por Eric se conservan; Diego registrará las restantes con fecha, justificación e impacto antes de implementar el módulo afectado. Eric y Codex mantendrán y revisarán la documentación. La rama compartida de este frente es `feature/escritorio-api`; esto no significa fusionar a `main`.
 
 ## 3. Reglas técnicas obligatorias
 

@@ -2,7 +2,7 @@
 
 Fecha: 2026-10-08
 
-Estado: borrador en conversación; faltan decisiones de Eric antes de fijar DTO/endpoints.
+Estado: borrador; Diego cierra las decisiones pendientes antes de fijar DTO/endpoints.
 
 ## Alcance y trazabilidad
 

@@ -2,7 +2,9 @@
 
 Fecha: 2026-10-08
 
-Estado: mapa de contrato para conversar con Diego; no congelado ni implementado.
+Estado: mapa de contrato para cierre por Diego; no congelado ni implementado.
+
+Responsable de cerrar P-RC-01 a P-RC-08: Diego, por decisión de Eric del 2026-10-09. Cada cierre debe quedar documentado antes de implementar la operación afectada.
 
 Este documento **no sustituye** [FLUJO_RESERVA_CONSULTA.md](FLUJO_RESERVA_CONSULTA.md), que contiene estados, permisos, pseudocódigo, excepciones y criterios de aceptación. Las rutas siguientes son decisiones técnicas **propuestas** para hacer visible qué consume cada interfaz. Su forma final depende de P-RC-01 a P-RC-08, especialmente agenda, permisos, stock, firma, tarifas y base de datos.
 

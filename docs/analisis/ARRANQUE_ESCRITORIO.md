@@ -31,6 +31,8 @@ Un RF pasa a “implementado” cuando existe un recorrido funcional en el canal
 
 Para coordinar el primer incremento con Diego, consultar [contrato propuesto del catálogo](ESPECIFICACION_CATALOGO_SERVICIOS_API.md), [registro de Cliente](ESPECIFICACION_REGISTRO_CLIENTE.md), [recorrido API de reserva a consulta](RECORRIDO_API_RESERVA_CONSULTA.md) y [decisiones pendientes](DECISIONES_PARA_DESARROLLO.md). Son borradores trazables; no levantan por sí mismos la condición de cierre de H0 indicada en el punto 1.
 
+Desde el 2026-10-09, Diego es responsable de cerrar las decisiones restantes y registrar el motivo y el impacto de cada elección. Eric y Codex revisan la documentación y la implementación; no se reabren tácitamente las decisiones ya confirmadas por Eric.
+
 La interfaz pública en ordenador debe conservar navegación sin inicio de sesión. Las acciones protegidas solicitan acceso y retoman la intención original. Las reglas permanecen en la API/dominio. La interfaz de ordenador no consulta la base directamente.
 
 ## Qué sigue abierto
