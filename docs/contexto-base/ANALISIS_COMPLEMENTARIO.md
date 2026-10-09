@@ -2,7 +2,7 @@
 
 Fuente: `docs/fuentes/Analisis_Clinica_Veterinaria.docx`, versión 1.0, setiembre de 2026.
 
-Actualizado: 2026-10-02 con la confirmación del equipo, planificación por hitos y primer recorrido integrado.
+Actualizado: 2026-10-09 con la elección de MySQL y la secuencia `desktop` → integración API.
 
 ## Supuestos de trabajo
 
@@ -12,6 +12,7 @@ Actualizado: 2026-10-02 con la confirmación del equipo, planificación por hito
 - Clínica de referencia: una sucursal, entre 2 y 4 veterinarios, recepción, internación, quirófano y estética.
 - El modelo de datos debe admitir múltiples sucursales aunque la primera implementación use una.
 - La solución incluye una interfaz responsiva para la clínica y una aplicación móvil para clientes y veterinarios.
+- DT-BD-01: MySQL será el motor de la futura base relacional. Durante la primera etapa `desktop` solo habrá datos de demostración; Blazor no accede directamente a MySQL. La versión, proveedor y estrategia de exclusión de intervalos se decidirán antes de implementar agenda real.
 
 ## Alcance funcional
 

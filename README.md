@@ -18,4 +18,6 @@ Las carpetas de código delimitan responsabilidades. Aún no contienen proyectos
 
 El trabajo inicial de ordenador se realiza en `desktop`, derivada de `feature/escritorio-api`. Primero se validará la experiencia Blazor con datos de demostración; la API común se integrará después y será compartida con la aplicación móvil. El [arranque del frente de ordenador](docs/analisis/ARRANQUE_ESCRITORIO.md) distingue los prototipos de los requisitos realmente implementados.
 
+MySQL está elegido para la futura base de datos, sin conexión directa desde Blazor. El [primer flujo y árbol binario de decisiones](docs/diagramas/INICIO_ESCRITORIO.md) documenta el recorrido público de catálogo a reserva como borrador funcional.
+
 La [matriz de requisitos](docs/contexto-base/MATRIZ_REQUISITOS.md) es la fuente canónica. La [tabla de alcance](docs/analisis/ALCANCE_ENTREGA.md) organiza la entrega por hitos sin modificar la prioridad original.

@@ -25,7 +25,7 @@ Este documento **no sustituye** [FLUJO_RESERVA_CONSULTA.md](FLUJO_RESERVA_CONSUL
 
 - `GET` públicos del catálogo no autorizan reserva. El login/registro retoma la intención, pero la disponibilidad se recalcula antes de confirmar.
 - La API, no Blazor ni React Native, hace las transiciones y aplica autorización por rol y relación con el animal/turno. Los identificadores enviados por el cliente no prueban titularidad.
-- Dos intentos incompatibles de reserva no pueden tener éxito ambos. La estrategia concreta de BD para intervalos está pendiente en P-RC-08.
+- Dos intentos incompatibles de reserva no pueden tener éxito ambos. MySQL está elegido como motor futuro (DT-BD-01); la estrategia concreta de intervalos está pendiente en P-RC-08.
 - El borrador puede guardarse; la historia visible al Cliente incorpora la consulta firmada. Tras firmar, las correcciones clínicas son enmiendas; el cargo tiene corrección contable separada.
 - Un error al cerrar no puede dejar firma sin cargo o consumir stock parcialmente. Una caída posterior del correo no revierte el cierre; el mensaje permanece pendiente de reintento.
 - Los detalles de `400/401/403/404/409` y del cuerpo de error siguen la convención común de API aún por fijar. No publicar diagnóstico ni contenido clínico en errores o logs.

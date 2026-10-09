@@ -10,7 +10,7 @@ Eric delegó el 2026-10-09 en Diego las **decisiones aún abiertas**. Eric y Cod
 |---|---|---|---|
 | 1 | Catálogo API | D-CAT-01 **cerrada: siempre «Desde»**; D-CAT-02 **parcial: visible sin reserva en línea**; D-CAT-03 convenciones comunes; D-CAT-04 **parcial: ocultar sin precio publicable** | Diego cierra lo restante. [Especificación del catálogo](ESPECIFICACION_CATALOGO_SERVICIOS_API.md). |
 | 2 | Registro | D-REG-01 **parcial: siete campos obligatorios definidos**; D-REG-02 **parcial: código por correo**; D-REG-03 recuperación; D-REG-04 documentos/decisiones; D-REG-05 reanudación segura | Diego cierra lo restante. [Especificación de registro](ESPECIFICACION_REGISTRO_CLIENTE.md). |
-| 3 | Reserva | P-RC-01 medición de pasos; P-RC-02 seña, expiración, espera, ausencia, cancelación y sobreturnos; P-RC-08 motor de BD y exclusión de solapamientos | Diego. [Flujo](FLUJO_RESERVA_CONSULTA.md) y [recorrido API](RECORRIDO_API_RESERVA_CONSULTA.md). |
+| 3 | Reserva | P-RC-01 medición de pasos; P-RC-02 seña, expiración, espera, ausencia, cancelación y sobreturnos; P-RC-08 **parcial: MySQL elegido**, pendiente versión/proveedor y exclusión de solapamientos | Diego cierra lo restante. [Flujo](FLUJO_RESERVA_CONSULTA.md) y [recorrido API](RECORRIDO_API_RESERVA_CONSULTA.md). |
 | 4 | Consulta clínica | P-RC-03 stock; P-RC-04 atención interrumpida/correcciones; P-RC-05 permisos; P-RC-06 campos/firma/consentimiento; P-RC-07 responsable económico, tarifa y redondeo | Diego. [Flujo](FLUJO_RESERVA_CONSULTA.md) y [recorrido API](RECORRIDO_API_RESERVA_CONSULTA.md). |
 | 5 | Después del primer recorrido | Cobro por Recepción, internación, alertas sanitarias y parámetros de asistencia | Diego cuando se aborde cada módulo. No ampliar el primer endpoint a estos procesos. |
 
@@ -21,6 +21,8 @@ Eric delegó el 2026-10-09 en Diego las **decisiones aún abiertas**. Eric y Cod
 3. **Respondida 2026-10-08:** verificar mediante código enviado al correo; faltan caducidad y límites de intentos/reenvíos (**D-REG-02**, RN-38).
 
 También quedó confirmado que un servicio puede mostrarse sin reserva en línea, con «Consultar/llamar» (**D-CAT-02 parcial**). Diego define los criterios restantes de publicación.
+
+El 2026-10-09 Eric eligió MySQL como motor de la futura base de datos (**DT-BD-01**, P-RC-08 parcial); Diego define los detalles restantes de persistencia y concurrencia.
 
 ## Regla práctica para Diego
 

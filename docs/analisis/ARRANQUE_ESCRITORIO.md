@@ -26,19 +26,23 @@ Un RF pasa a “implementado” cuando existe un recorrido funcional en el canal
 
 1. Completar la especificación de registro y los puntos P-RC que afectan identidad, agenda, permisos, base de datos, consumo y cierre. Cerrar también las decisiones abiertas necesarias de los módulos que se incorporen. Esto completa H0 antes de iniciar código de producto conforme a [AGENTS.md](../../AGENTS.md).
 2. Una vez cerrado H0, preparar Blazor bajo `desktop/` y ensayar un recorrido pequeño de catálogo público con datos de demostración. Las interacciones de escritorio se pueden validar como prototipo, sin presentar permisos, reservas, stock o cobros simulados como funcionalidad productiva.
-3. En la etapa posterior, preparar la solución .NET y API/capas bajo `api/`, seleccionar motor de BD y estrategia de intervalos antes de implementar agenda real, y conectar el catálogo y los demás recorridos a contratos versionados. Solo entonces verificar RF-VIS-01 y continuar con registro/roles/animal, reserva (H1), consulta y cobro (H2).
+3. En la etapa posterior, preparar la solución .NET y API/capas bajo `api/`, conectar MySQL según DT-BD-01 y definir la estrategia de intervalos antes de implementar agenda real. Conectar el catálogo y los demás recorridos a contratos versionados. Solo entonces verificar RF-VIS-01 y continuar con registro/roles/animal, reserva (H1), consulta y cobro (H2).
 4. Mantener por módulo la trazabilidad RF → caso de uso → endpoint → pantalla → prueba. Revisar el tiempo real invertido tras el primer incremento antes de comprometer fechas.
 
 Para coordinar el primer incremento con Diego, consultar [contrato propuesto del catálogo](ESPECIFICACION_CATALOGO_SERVICIOS_API.md), [registro de Cliente](ESPECIFICACION_REGISTRO_CLIENTE.md), [recorrido API de reserva a consulta](RECORRIDO_API_RESERVA_CONSULTA.md) y [decisiones pendientes](DECISIONES_PARA_DESARROLLO.md). Son borradores trazables; no levantan por sí mismos la condición de cierre de H0 indicada en el punto 1.
 
 Desde el 2026-10-09, Diego es responsable de cerrar las decisiones restantes y registrar el motivo y el impacto de cada elección. Eric y Codex revisan la documentación y la implementación; no se reabren tácitamente las decisiones ya confirmadas por Eric.
 
+El primer [flujo y árbol binario de decisiones del escritorio](../diagramas/INICIO_ESCRITORIO.md) están en borrador Mermaid para revisar antes del diseño visual definitivo. Representan el comportamiento objetivo; durante `desktop` las operaciones que requieren API se ensayarán solo como simulación explícita.
+
 La interfaz pública en ordenador debe conservar navegación sin inicio de sesión. En el prototipo se puede simular la solicitud de acceso y la reanudación de intención; la autenticación y autorización reales permanecen pendientes de la API/dominio. La interfaz de ordenador no consulta la base directamente.
+
+En la etapa `desktop` sí se pueden comprobar navegación, validaciones de presentación, selección de opciones, cambios de estado visibles y mensajes de éxito/error usando datos de demostración reproducibles. Cada prueba debe distinguir «respuesta visual correcta» de «regla de negocio garantizada». No se guardan datos reales ni se simula que una reserva, firma clínica o cobro persista después de cerrar el prototipo.
 
 ## Qué sigue abierto
 
 - Registro, alertas sanitarias, pseudocódigo restante y decisiones P-RC-01 a P-RC-08 del recorrido de reserva/consulta.
 - Parámetros del módulo de asistencia y mapas de navegación definitivos.
-- Motor de base de datos, solución .NET, pruebas ejecutables y fecha real de entrega.
+- Versión/proveedor de MySQL, exclusión de intervalos de agenda, solución .NET, pruebas ejecutables y fecha real de entrega.
 
 La tabla de alcance mantiene los 47 RF Must en la base. No se rebajan por comenzar por ordenador; la rama móvil posterior completará los canales y funciones que le corresponden.

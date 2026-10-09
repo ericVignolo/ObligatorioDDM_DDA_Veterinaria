@@ -183,7 +183,7 @@ Auditar inicio, guardados relevantes, firma, enmiendas, cambios de estado, consu
 
 ## 7. Modelo de dominio inicial
 
-Modelo conceptual para discutir el futuro DER; los tipos físicos, índices concretos y migraciones se decidirán después de elegir formalmente motor y estrategia de intervalos.
+Modelo conceptual para discutir el futuro DER; MySQL fue elegido en DT-BD-01. Los tipos físicos, índices concretos, migraciones y estrategia de intervalos se decidirán antes de implementar agenda real.
 
 | Concepto | Relaciones y datos esenciales | Restricción |
 |---|---|---|
@@ -366,6 +366,6 @@ Especificación de pruebas futuras; estas pruebas aún no fueron ejecutadas sobr
 | P-RC-05 | Requerimiento no funcional: autorización | Alcance de lectura entre colegas, reasignación, reemplazo del autor y permisos de cobro adicionales. |
 | P-RC-06 | Pseudocódigo y consentimiento | Campos clínicos obligatorios por especie, confirmaciones, mecanismo concreto de firma y consentimiento; no elegir validez jurídica ni proveedor por omisión. |
 | P-RC-07 | Pseudocódigo/comportamiento | Responsable económico, tarifas incluidas/adicionales, unidad, redondeo, moneda y política de correcciones contables. |
-| P-RC-08 | Decisión técnica | Confirmar motor relacional y estrategia de exclusión de intervalos variables, índices/aislamiento y reintentos. |
+| P-RC-08 | Decisión técnica | **Parcial:** MySQL confirmado por Eric (DT-BD-01). Diego debe definir versión/proveedor y estrategia de exclusión de intervalos variables, índices/aislamiento y reintentos. |
 
 Las filas anteriores delimitan lo necesario para cerrar este recorrido; no eliminan los pendientes globales de registro y asistencia. Próximo documento funcional: CU de Recepción “Cobrar consulta”, con cobro, aplicación a cargos y comprobantes, seguido del ingreso/alta de internación.

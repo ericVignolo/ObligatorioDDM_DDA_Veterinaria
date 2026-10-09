@@ -32,6 +32,7 @@ El flujo general mencionado en los planes es:
 - Repositorio indicado por el usuario: https://github.com/ericVignolo/ObligatorioDDM_DDA_Veterinaria (coincide con el remoto `origin` local). Al compartirlo inicialmente como referencia no se había solicitado publicación.
 - El 2026-10-09 Eric delegó en Diego las decisiones aún abiertas del proyecto y pidió subir la documentación al repositorio. Las decisiones ya confirmadas por Eric se conservan; Diego registrará las restantes con fecha, justificación e impacto antes de implementar el módulo afectado. Eric y Codex mantendrán y revisarán la documentación.
 - El 2026-10-09 Eric pidió separar una rama `desktop` y trabajar primero en la experiencia de escritorio. La API queda para una etapa posterior de integración; la arquitectura final de una única API no cambia. Hasta entonces, cualquier recorrido interactivo de Blazor será un prototipo con datos de demostración, no una implementación productiva de persistencia, permisos o reglas críticas.
+- **DT-BD-01 — Decisión técnica (2026-10-09):** Eric confirmó **MySQL** como motor de la futura base de datos. Esta elección no adelanta la persistencia durante la etapa `desktop`: Blazor continuará sin acceso directo a MySQL y, cuando exista, se conectará a través de la API. Quedan pendientes la versión del motor, proveedor de acceso y la estrategia concreta para impedir solapamientos de agenda.
 
 ## 3. Reglas técnicas obligatorias
 
@@ -99,7 +100,7 @@ Decisión técnica de secuenciación: primero se valida el comportamiento de esc
 
 La creación de carpetas y rama es una decisión técnica de organización y no prueba todavía ningún RF. Antes de considerar un requisito implementado se exigirá código funcional y pruebas pertinentes. Siguen pendientes la especificación de registro, el pseudocódigo restante y las decisiones abiertas antes del diseño visual definitivo y del código de producto.
 
-El documento original desarrolla estrategias específicas para SQL Server y las conversaciones usan Entity Framework Core como base del plan técnico. La selección debe formalizarse al cerrar las fundaciones, pero las reglas de integridad y concurrencia no dependen de la interfaz elegida.
+El documento original desarrolla estrategias específicas para SQL Server y las conversaciones usan Entity Framework Core como base del plan técnico. La elección posterior de **MySQL** por Eric reemplaza la alternativa de SQL Server; cualquier técnica específica del motor se debe revisar antes de aplicarla. La versión, el proveedor de acceso, índices/aislamiento y la exclusión de intervalos variables se formalizarán antes de implementar agenda real. Las reglas de integridad y concurrencia no dependen de la interfaz elegida.
 
 ## 5. Roles identificados
 
@@ -368,6 +369,7 @@ Se incorporaron como borradores para validación los primeros artefactos funcion
 - `docs/analisis/DECISIONES_PARA_DESARROLLO.md`: orden de preguntas que desbloquean catálogo, registro, reserva y consulta para el trabajo con Diego.
 - `docs/analisis/ESPECIFICACION_REGISTRO_CLIENTE.md`: borrador de flujo, pseudocódigo, preguntas y pruebas del registro con reanudación de intención protegida.
 - `docs/analisis/RECORRIDO_API_RESERVA_CONSULTA.md`: mapa propuesto de operaciones API desde reservar turno hasta firmar consulta y dejar cargo/correo pendientes.
+- `docs/diagramas/INICIO_ESCRITORIO.md`: primer flujo de catálogo/acceso/reserva y árbol binario de decisiones para el siguiente paso, con límites claros de la simulación sin API.
 
 Estos documentos no sustituyen la matriz canónica. Permanecen en estado de borrador hasta resolver los pendientes de registro, parámetros abiertos, pseudocódigo restante, alcance y casos resumidos.
 
