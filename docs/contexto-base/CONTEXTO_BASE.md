@@ -1,6 +1,6 @@
 # Contexto base — Sistema de gestión veterinaria
 
-Actualizado: 2026-10-09
+Actualizado: 2026-10-20
 
 Este documento consolida el contexto recuperado del proyecto de ChatGPT `ObligatorioDDM_DDA`. Es la referencia operativa para continuar el trabajo en la carpeta local `ObligatorioVeterinaria`.
 
@@ -32,6 +32,7 @@ El flujo general mencionado en los planes es:
 - Repositorio indicado por el usuario: https://github.com/ericVignolo/ObligatorioDDM_DDA_Veterinaria (coincide con el remoto `origin` local). Al compartirlo inicialmente como referencia no se había solicitado publicación.
 - El 2026-10-09 Eric delegó en Diego las decisiones aún abiertas del proyecto y pidió subir la documentación al repositorio. Las decisiones ya confirmadas por Eric se conservan; Diego registrará las restantes con fecha, justificación e impacto antes de implementar el módulo afectado. Eric y Codex mantendrán y revisarán la documentación.
 - El 2026-10-09 Eric pidió separar una rama `desktop` y trabajar primero en la experiencia de escritorio. La API queda para una etapa posterior de integración; la arquitectura final de una única API no cambia. Hasta entonces, cualquier recorrido interactivo de Blazor será un prototipo con datos de demostración, no una implementación productiva de persistencia, permisos o reglas críticas.
+- **DT-ORG-02 — Secuencia de trabajo y ramas (2026-10-20):** Eric definió organizar la construcción en cuatro ramas acumulativas: `main` (base estable), `desktop` (aplicación de escritorio), `desktop-mobile` (escritorio más móvil) y `desktop-mobile-api` (ambos clientes integrados con la API). La secuencia será sección A — escritorio, sección B — aplicación móvil, sección C — integración e implementación de la API. La lectura de Git confirmó que `main` y `desktop` existen; `desktop-mobile` y `desktop-mobile-api` todavía no existen y sus nombres son propuestas. Falta acordar la ascendencia/merge de las ramas respecto de `feature/escritorio-api`. Esta secuencia no crea arquitecturas separadas: al final habrá una única API ASP.NET Core compartida por Blazor y React Native. Los clientes A/B usarán datos ficticios y adaptadores temporales; antes de C no se declararán persistencia real, autenticación/autorización garantizadas ni reglas críticas implementadas. La API se conecta a MySQL y reemplaza los adaptadores simulados durante C. El plan detallado está en `docs/analisis/PLAN_TAREAS_PROYECTO.md`.
 - **DT-BD-01 — Decisión técnica (2026-10-09):** Eric confirmó **MySQL** como motor de la futura base de datos. Esta elección no adelanta la persistencia durante la etapa `desktop`: Blazor continuará sin acceso directo a MySQL y, cuando exista, se conectará a través de la API. Quedan pendientes la versión del motor, proveedor de acceso y la estrategia concreta para impedir solapamientos de agenda.
 
 ## 3. Reglas técnicas obligatorias
@@ -94,9 +95,9 @@ ObligatorioVeterinaria/
 └── docs/         análisis, decisiones, diseño y evidencia
 ```
 
-`feature/escritorio-api` conserva la preparación y documentación anteriores. La nueva rama `desktop` nace de ese estado y concentra el trabajo inicial de Blazor: estructura de pantallas, navegación y recorridos interactivos con datos de demostración. **No** introduce acceso directo a la BD ni implementa allí autenticación, autorización, transacciones o reglas críticas. Cuando se inicie la etapa de API, se integrará desde la base de `desktop` o desde la rama principal una vez fusionada; React Native consumirá esa misma API. Las ramas organizan el trabajo, no representan arquitecturas finales distintas.
+`feature/escritorio-api` conserva la preparación y documentación anteriores. La sección A continúa en `desktop`; la sección B agrega React Native en `desktop-mobile`; la sección C integra API y persistencia en `desktop-mobile-api`, según DT-ORG-02 y `docs/analisis/PLAN_TAREAS_PROYECTO.md`. En A/B se permiten sustitutos de datos explícitamente temporales. No se introduce acceso directo a MySQL ni se acreditan por simulación autenticación, autorización, persistencia, transacciones o reglas críticas. Las ramas organizan el trabajo; no representan arquitecturas finales distintas.
 
-Decisión técnica de secuenciación: primero se valida el comportamiento de escritorio y su interfaz con sustitutos de datos explícitamente temporales; después se conectan esos recorridos a contratos versionados de la API. Un flujo simulado puede demostrar UX, pero no satisface por sí solo los RF/RN/RNF que requieren datos reales, seguridad o concurrencia. Antes de diseño visual definitivo o código de producto sigue vigente el cierre de especificaciones y decisiones indicado en AGENTS.md.
+La API se implementará al llegar a C y será compartida por Blazor y React Native. Un flujo simulado puede demostrar UX, pero no satisface por sí solo los RF/RN/RNF que requieren datos reales, seguridad o concurrencia. Antes de diseño visual definitivo o código de producto sigue vigente el cierre de especificaciones y decisiones indicado en AGENTS.md.
 
 La creación de carpetas y rama es una decisión técnica de organización y no prueba todavía ningún RF. Antes de considerar un requisito implementado se exigirá código funcional y pruebas pertinentes. Siguen pendientes la especificación de registro, el pseudocódigo restante y las decisiones abiertas antes del diseño visual definitivo y del código de producto.
 
@@ -286,48 +287,15 @@ Al implementar o diseñar un flujo, se deben conservar sus identificadores y ras
 
 Esta lista es solo un resumen. La redacción verificable completa está en `MATRIZ_REQUISITOS.md`.
 
-## 11. Plan A — API + Blazor
+## 11. Plan de construcción por secciones A, B y C
 
-1. **Fundación:** solución .NET, capas, entidades, base de datos, Entity Framework Core, DTO/contratos, migraciones, ambientes, Swagger/OpenAPI, errores, logging y pruebas.
-2. **Identidad y seguridad:** usuarios, roles, permisos, autenticación, estrategia de tokens si corresponde, autorización, auditoría y baja lógica.
-3. **Núcleo funcional:** clientes/responsables, mascotas, veterinarios, especies/razas, servicios, tipos de cita, recursos y tablas maestras. Comenzar primeras pantallas Blazor en paralelo.
-4. **Módulos:** agenda/disponibilidad → historia clínica → internación → inventario → comunicaciones → facturación.
-5. **Reglas críticas y robustez:** RN-01 a RN-59 según módulo, concurrencia, transacciones, idempotencia y garantías en base de datos; se implementan con cada módulo y se verifican integralmente al cierre.
-6. **Blazor completo:** paneles por rol, agenda, fichas clínicas, internación, inventario, administración, facturación e indicadores.
-7. **Integración y defensa:** pruebas, seguridad, datos de demostración, documentación y UML actualizado.
+La secuencia de ramas del 2026-10-20 sustituye el orden de implementación de los planes A/B anteriores, sin cambiar la arquitectura final:
 
-## 12. Plan B — React Native + Figma
+1. **Sección A — escritorio:** primero Blazor con inicio, catálogo de servicios, información pública y, después, identidad/perfiles y los recorridos de Cliente, Recepción, Veterinario y Administración. Los adaptadores usan datos sintéticos; no prueban persistencia ni reglas de servidor.
+2. **Sección B — móvil:** diseñar en Figma y construir React Native con experiencias Cliente/Veterinario sobre las decisiones y contratos funcionales documentados. Hasta C, cualquier respuesta de datos permanece demostrativa.
+3. **Sección C — API e integración:** implementar la API ASP.NET Core, capas de dominio/aplicación/infraestructura/contratos, persistencia MySQL, autenticación/autorización, reglas críticas y conexión de ambos clientes a la misma API.
 
-1. **Requisitos y comportamiento:** incorporar documentos del usuario; clasificar RF, RN, RNF, UX, pseudocódigo y consentimientos. La última aclaración establece que el pseudocódigo debe preceder al diseño visual definitivo.
-2. **Definición funcional:** mapa de navegación y user flows, primero Cliente y luego Veterinario.
-3. **Wireframes y Figma:** estructura en escala de grises, navegación, formularios, jerarquía y estados; después design system y UI de alta fidelidad.
-4. **Prototipo navegable:** validar recorridos, alertas, estados y acciones protegidas.
-5. **Fundación React Native:** navegación, tema, componentes, estado, cliente HTTP, almacenamiento seguro de token, sesión, ambientes y errores.
-6. **Integración:** autenticación/usuarios → mascotas → agenda → funciones clínicas → internación → notificaciones.
-7. **Adaptación y pruebas:** tamaños de pantalla, carga/error/sin conexión, expiración de sesión, permisos, concurrencia y flujos completos.
-
-Organización React Native propuesta:
-
-```text
-src/
-├── api/
-├── components/
-├── features/
-│   ├── auth/
-│   ├── pets/
-│   ├── appointments/
-│   ├── clinicalHistory/
-│   └── hospitalization/
-├── navigation/
-├── screens/
-├── services/
-├── hooks/
-├── store/
-├── theme/
-└── utils/
-```
-
-La decisión visual inicial se encuentra en `Diseño.md`: dirección clínica cálida, verde petróleo y coral, tipografía Inter, navegación inferior funcional y navegación contextual dentro de cada mascota. La alta fidelidad permanece condicionada al cierre de registro, pseudocódigo restante y parámetros abiertos de alertas.
+La secuencia no permite iniciar código de producto antes de cerrar la puerta H0. El inventario completo de tareas está en `../analisis/PLAN_TAREAS_PROYECTO.md`; H0–H5 sigue siendo la planificación funcional de `../analisis/ALCANCE_ENTREGA.md`. La decisión visual inicial móvil de `Diseño.md` se aplica después de validar mapa, flujos, estados, pseudocódigo y requisitos.
 
 ## 13. Método para incorporar nuevos requisitos
 
@@ -348,12 +316,12 @@ Si una regla cambia, registrar qué reemplaza, la fecha y el impacto sobre API, 
 El orden de trabajo vigente se organiza por H0–H5 en `../analisis/ALCANCE_ENTREGA.md`; estos hitos no renumeran la columna Fase de la matriz original. El primer paquete funcional es `../analisis/FLUJO_RESERVA_CONSULTA.md`. Sus decisiones derivadas de estados, permisos, reservas de stock y cierre atómico son propuestas explícitas de comportamiento/técnica, sujetas a las preguntas acotadas del propio documento. No modifican la clasificación ni la redacción de los requisitos canónicos.
 
 1. Completar la especificación de registro, alertas sanitarias y los parámetros pendientes del módulo de asistencia; privacidad y consentimientos ya fueron incorporados desde `Implementacion_Politicas.txt`.
-2. Confirmar formalmente el motor de base de datos y la estrategia concreta para impedir solapamientos de intervalos variables.
-3. Construir y validar el mapa funcional de Visitante y Cliente, respetando los RF-VIS y RF-CLI.
-4. Construir y validar el mapa funcional del Veterinario, respetando los RF-VET.
-5. Completar el pseudocódigo restante, estados, errores, consentimientos y reanudación de acciones protegidas antes del diseño visual definitivo; asistencia ya cuenta con una primera especificación.
-6. Preparar trazabilidad entre RF, RN, RNF, pantallas, endpoints y casos de prueba.
-7. Actualizar UML y justificación de patrones para que coincidan con Blazor/C# + API .NET + React Native + Figma.
+2. Conservar DT-BD-01: MySQL está confirmado. Antes de C faltan versión/proveedor compatibles y estrategia concreta para impedir solapamientos de intervalos variables.
+3. Construir y validar los mapas funcionales de Visitante, Cliente, Veterinario y Recepción para A/B, respetando los RF de la matriz.
+4. Completar el pseudocódigo restante, estados, errores, consentimientos y reanudación de acciones protegidas antes del diseño visual definitivo; asistencia ya cuenta con una primera especificación.
+5. Preparar trazabilidad entre RF, RN, RNF, pantallas, endpoints y casos de prueba.
+6. Actualizar UML y justificación de patrones para Blazor/C# + API .NET + React Native + Figma.
+7. Seguir el inventario numerado A/B/C de `../analisis/PLAN_TAREAS_PROYECTO.md`, que organiza las ramas y conserva los hitos funcionales H0–H5.
 
 ## 14.1 Artefactos funcionales derivados
 
