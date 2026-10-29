@@ -28,7 +28,7 @@ Como Veterinario, quiero registrar los hallazgos, diagnóstico y tratamiento en 
 - Si otra sesión modificó el borrador, mi versión antigua produce un conflicto comprensible y no sobrescribe la información guardada.
 - Si intento cerrar sin diagnóstico presuntivo o definitivo, la operación se rechaza y mis datos guardados permanecen.
 
-Trazabilidad: RF-VET-02; RN-20; RNF-CON-05, RNF-USA-02. Must; fase canónica 3; H2. CU-VET-01, CA-RC-04, CA-RC-14. Pendiente de obligatoriedad clínica por especie: P-RC-06.
+Trazabilidad: RF-VET-02; RN-20; RNF-CON-05, RNF-USA-02. Must; fase canónica 3; H2. CU-VET-01, CA-RC-04, CA-RC-14. Obligatorios para firmar: motivo y diagnóstico (P-RC-06, cerrada).
 
 ## 3. HU-VET-03 — Adjuntar estudios
 
@@ -85,7 +85,7 @@ Como Recepcionista, quiero registrar la llegada del animal y consultar la sala d
 - La operación no inicia por sí sola el acto veterinario ni permite editar la historia clínica.
 - Una llegada o atención ya registrada impide marcar simultáneamente ese turno como Ausente sin un procedimiento de corrección trazable.
 
-Trazabilidad: RF-REC-02; RN-11; RNF-SEG-05. Should seleccionado para la base; fase canónica 3; H1. CU-VET-01 como precondición de llegada. Pendientes: cálculo del tiempo de espera, tolerancia de ausencia y correcciones en P-RC-02/P-RC-04.
+Trazabilidad: RF-REC-02; RN-11; RNF-SEG-05. Should seleccionado para la base; fase canónica 3; H1. CU-VET-01 como precondición de llegada. Tiempo de espera, tolerancia de ausencia y correcciones: P-RC-02 y P-RC-04 (cerradas).
 
 ## 8. Preparación y terminación
 

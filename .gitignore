@@ -16,3 +16,6 @@ mobile/dist/
 !.env.example
 desktop.ini
 Thumbs.db
+
+# Archivos temporales de revisión
+.tmp_doc_review/
