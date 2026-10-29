@@ -1,0 +1,18 @@
+@* Reservar (acción protegida) o Consultar/llamar si no admite reserva en línea (D-CAT-02). *@
+@if (Servicio.ReservableEnLinea)
+{
+    <a class="boton boton--primario" href="@($"acceso?accion=reservar&servicio={Servicio.Id}")">
+        Reservar turno<span class="visualmente-oculto"> de @Servicio.Nombre</span>
+    </a>
+}
+else
+{
+    <a class="boton boton--secundario" href="tel:@ClinicaDemo.TelefonoE164">
+        Consultar o llamar<span class="visualmente-oculto"> por @Servicio.Nombre</span>
+    </a>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public ServicioPublicoDto Servicio { get; set; } = default!;
+}

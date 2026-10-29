@@ -1,0 +1,93 @@
+@page "/servicios"
+@inject ICatalogoServicios Catalogo
+
+@* A-003 — Catálogo público paginado (RF-VIS-01, HU-VIS-01, CAT-01 a CAT-06). *@
+
+<PageTitle>Servicios · @ClinicaDemo.Nombre</PageTitle>
+
+<h1>Servicios</h1>
+<p class="introduccion">
+    Los precios son de referencia y se muestran «Desde». El importe final depende del animal y de la atención realizada.
+</p>
+
+@if (error is not null)
+{
+    <div class="alerta alerta--error" role="alert">
+        <p>@error</p>
+        <p><a href="servicios">Volver a la primera página</a> o llamanos al <a href="tel:@ClinicaDemo.TelefonoE164">@ClinicaDemo.Telefono</a>.</p>
+    </div>
+}
+else if (pagina is null)
+{
+    <p>Cargando servicios…</p>
+}
+else if (pagina.Items.Count == 0)
+{
+    <div class="alerta" role="status">
+        <p>No hay servicios para mostrar en esta página.</p>
+        <p>Consultanos al <a href="tel:@ClinicaDemo.TelefonoE164">@ClinicaDemo.Telefono</a> o escribinos a @ClinicaDemo.Correo.</p>
+    </div>
+}
+else
+{
+    <p class="resultado" role="status">
+        @pagina.TotalItems @(pagina.TotalItems == 1 ? "servicio" : "servicios")
+        @if (pagina.TotalPages > 1)
+        {
+            <text> · página @pagina.Page de @pagina.TotalPages</text>
+        }
+    </p>
+
+    <div class="grilla">
+        @foreach (var servicio in pagina.Items)
+        {
+            <TarjetaServicio Servicio="servicio" />
+        }
+    </div>
+
+    @if (pagina.TotalPages > 1)
+    {
+        <nav class="paginacion" aria-label="Páginas del catálogo">
+            @if (pagina.HayAnterior)
+            {
+                <a href="@Enlace(pagina.Page - 1)" rel="prev">← Anterior</a>
+            }
+            <span aria-current="page">Página @pagina.Page</span>
+            @if (pagina.HaySiguiente)
+            {
+                <a href="@Enlace(pagina.Page + 1)" rel="next">Siguiente →</a>
+            }
+        </nav>
+    }
+}
+
+@code {
+    [SupplyParameterFromQuery(Name = "pagina")]
+    public int? NumeroPagina { get; set; }
+
+    [SupplyParameterFromQuery(Name = "tamano")]
+    public int? Tamano { get; set; }
+
+    private PaginaDto<ServicioPublicoDto>? pagina;
+    private string? error;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        error = null;
+        pagina = null;
+        try
+        {
+            pagina = await Catalogo.ListarAsync(
+                NumeroPagina ?? 1,
+                Tamano ?? PaginaDto<ServicioPublicoDto>.PageSizePorDefecto);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            // CAT-06: parámetros inválidos → mensaje comprensible, sin jerga (RNF-USA-02).
+            error = "La página que pediste no es válida.";
+        }
+    }
+
+    private string Enlace(int numero) =>
+        Tamano is null ? $"servicios?pagina={numero}" : $"servicios?pagina={numero}&tamano={Tamano}";
+}

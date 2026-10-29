@@ -53,9 +53,9 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 
 ### A.1 Fundación y páginas públicas
 
-- [ ] **A-001 — Preparar estructura de escritorio.** Crear el cascarón Blazor, navegación, estilos base y configuración local de demostración, conforme al H0 aprobado.
-- [ ] **A-002 — Crear página de inicio.** Presentar identidad de la clínica, navegación pública, servicios destacados, contacto, ubicación y acceso visible a urgencias/políticas; probar tamaños de computadora acordados.
-- [ ] **A-003 — Crear catálogo de servicios.** Mostrar servicios configurables con descripción y requisitos; incluir datos ficticios de revisión clínica, vacunación y desparasitación distinguidas, y rehabilitación equina solo como servicio condicional.
+- [~] **A-001 — Preparar estructura de escritorio.** Crear el cascarón Blazor, navegación, estilos base y configuración local de demostración, conforme al H0 aprobado. *En curso (Diego): esqueleto Blazor (.NET 10) y `Veterinaria.Contracts` en la rama `diego/a-001-esqueleto-blazor` (2026-10-29), pendiente de revisión.*
+- [~] **A-002 — Crear página de inicio.** Presentar identidad de la clínica, navegación pública, servicios destacados, contacto, ubicación y acceso visible a urgencias/políticas; probar tamaños de computadora acordados. *En curso (Diego): inicio público con servicios destacados, urgencias y contacto; pendiente de revisión.*
+- [~] **A-003 — Crear catálogo de servicios.** Mostrar servicios configurables con descripción y requisitos; incluir datos ficticios de revisión clínica, vacunación y desparasitación distinguidas, y rehabilitación equina solo como servicio condicional. *En curso (Diego): catálogo paginado y detalle con datos ficticios que respetan D-CAT-01 a 04; pendiente de revisión.*
 - [ ] **A-004 — Crear páginas públicas de profesionales y clínica.** Mostrar únicamente datos aprobados para publicación, horarios informativos, vías de contacto, ubicación, cobertura y políticas.
 - [ ] **A-005 — Definir acceso a urgencias y políticas.** Presentar orientación clara, niveles informativos y enlaces públicos; no simular una garantía de atención ni sustituir un diagnóstico.
 

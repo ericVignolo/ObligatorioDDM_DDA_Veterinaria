@@ -1,0 +1,10 @@
+@* Precio de referencia rotulado siempre «Desde» (D-CAT-01). No es el cargo final (RN-33). *@
+<span class="precio">Desde <strong>@Formatear(Precio)</strong></span>
+
+@code {
+    [Parameter, EditorRequired]
+    public PrecioReferenciaDto Precio { get; set; } = default!;
+
+    private static string Formatear(PrecioReferenciaDto p) =>
+        p.Moneda == "UYU" ? $"$ {p.Importe:N0}" : $"{p.Moneda} {p.Importe:N0}";
+}

@@ -1,0 +1,40 @@
+@page "/acceso"
+@inject ICatalogoServicios Catalogo
+
+@* Punto de entrada de las acciones protegidas. El registro, el ingreso y la
+   reanudación de la intención (A-006 a A-011) se construyen en el próximo paso. *@
+
+<PageTitle>Ingresar · @ClinicaDemo.Nombre</PageTitle>
+
+<h1>Ingresá o creá tu cuenta</h1>
+
+@if (Accion == "reservar")
+{
+    <p class="introduccion">
+        Para reservar @(servicio is null ? "un turno" : $"«{servicio.Nombre}»") necesitás una cuenta verificada.
+        Después de ingresar vas a volver a esta reserva.
+    </p>
+}
+else
+{
+    <p class="introduccion">Con tu cuenta podés registrar tus animales y reservar turnos.</p>
+}
+
+<div class="alerta" role="status">
+    <p><strong>En construcción.</strong> El registro y el ingreso se agregan en el próximo paso del prototipo (tareas A-006 a A-011).</p>
+</div>
+
+<p><a href="servicios">← Volver a servicios</a></p>
+
+@code {
+    [SupplyParameterFromQuery(Name = "accion")]
+    public string? Accion { get; set; }
+
+    [SupplyParameterFromQuery(Name = "servicio")]
+    public Guid? ServicioId { get; set; }
+
+    private ServicioPublicoDto? servicio;
+
+    protected override async Task OnParametersSetAsync() =>
+        servicio = ServicioId is { } id ? await Catalogo.ObtenerAsync(id) : null;
+}

@@ -1,0 +1,15 @@
+<article class="tarjeta">
+    <h3 class="tarjeta__titulo">
+        <a href="@($"servicios/{Servicio.Id}")">@Servicio.Nombre</a>
+    </h3>
+    <p class="tarjeta__texto">@Servicio.Descripcion</p>
+    <div class="tarjeta__pie">
+        <PrecioDesde Precio="Servicio.PrecioReferencia" />
+        <AccionServicio Servicio="Servicio" />
+    </div>
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public ServicioPublicoDto Servicio { get; set; } = default!;
+}

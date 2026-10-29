@@ -1,0 +1,47 @@
+@page "/servicios/{Id:guid}"
+@inject ICatalogoServicios Catalogo
+
+@* Detalle público de un servicio (GET /api/v1/servicios/{id}; CAT-02, CAT-03). *@
+
+@if (cargando)
+{
+    <p>Cargando…</p>
+}
+else if (servicio is null)
+{
+    <PageTitle>Servicio no disponible · @ClinicaDemo.Nombre</PageTitle>
+    <h1>Servicio no disponible</h1>
+    <p>Este servicio no existe o ya no está publicado.</p>
+    <p><a href="servicios">Ver los servicios disponibles</a></p>
+}
+else
+{
+    <PageTitle>@servicio.Nombre · @ClinicaDemo.Nombre</PageTitle>
+    <p class="miga"><a href="servicios">← Servicios</a></p>
+    <h1>@servicio.Nombre</h1>
+    <p class="introduccion">@servicio.Descripcion</p>
+    <p><PrecioDesde Precio="servicio.PrecioReferencia" /></p>
+    <p class="nota">
+        Precio de referencia. El importe final se calcula con la tarifa vigente el día de la atención.
+    </p>
+    <AccionServicio Servicio="servicio" />
+    @if (!servicio.ReservableEnLinea)
+    {
+        <p class="nota">Este servicio se coordina con la clínica; no se reserva en línea.</p>
+    }
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private ServicioPublicoDto? servicio;
+    private bool cargando = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        cargando = true;
+        servicio = await Catalogo.ObtenerAsync(Id);
+        cargando = false;
+    }
+}

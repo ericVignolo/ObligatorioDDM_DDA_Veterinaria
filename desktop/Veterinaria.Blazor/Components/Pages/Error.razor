@@ -1,0 +1,23 @@
+﻿@page "/Error"
+@using System.Diagnostics
+
+<PageTitle>Error · @ClinicaDemo.Nombre</PageTitle>
+
+<h1>Algo salió mal</h1>
+<p>No pudimos completar lo que pediste. Probá de nuevo en unos minutos o llamanos al <a href="tel:@ClinicaDemo.TelefonoE164">@ClinicaDemo.Telefono</a>.</p>
+
+@if (ShowRequestId)
+{
+    <p class="nota">Código para soporte: <code>@RequestId</code></p>
+}
+
+@code {
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    private string? RequestId { get; set; }
+    private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+
+    protected override void OnInitialized() =>
+        RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+}

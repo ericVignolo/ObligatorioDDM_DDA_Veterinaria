@@ -1,0 +1,49 @@
+﻿@inherits LayoutComponentBase
+
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+
+<div class="aviso-demo" role="note">
+    Prototipo con datos de demostración: la clínica, los servicios y los precios son ficticios.
+</div>
+
+<header class="encabezado">
+    <div class="contenedor encabezado__fila">
+        <a class="marca" href="">
+            <span class="marca__icono" aria-hidden="true">✚</span>
+            <span>@ClinicaDemo.Nombre</span>
+        </a>
+        <nav aria-label="Navegación principal">
+            <ul class="menu">
+                <li><NavLink href="" Match="NavLinkMatch.All">Inicio</NavLink></li>
+                <li><NavLink href="servicios">Servicios</NavLink></li>
+                <li><NavLink href="urgencias">Urgencias</NavLink></li>
+                <li><NavLink class="menu__acceso" href="acceso">Ingresar</NavLink></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main id="contenido" class="contenedor principal">
+    @Body
+</main>
+
+<footer class="pie">
+    <div class="contenedor pie__fila">
+        <div>
+            <strong>@ClinicaDemo.Nombre</strong><br />
+            @ClinicaDemo.Direccion<br />
+            Tel. <a href="tel:@ClinicaDemo.TelefonoE164">@ClinicaDemo.Telefono</a> · @ClinicaDemo.Correo
+        </div>
+        <div>
+            <span class="pie__titulo">Información legal</span><br />
+            Política de Privacidad v1.0 · Términos y Condiciones v1.0<br />
+            <small>Textos pendientes; se publican antes del registro (RF-VIS-10).</small>
+        </div>
+    </div>
+</footer>
+
+<div id="blazor-error-ui" data-nosnippet>
+    Ocurrió un error inesperado.
+    <a href="." class="reload">Recargar</a>
+    <span class="dismiss" aria-label="Cerrar">🗙</span>
+</div>

@@ -1,0 +1,70 @@
+﻿@page "/"
+@inject ICatalogoServicios Catalogo
+
+@* A-002 — Inicio público (RF-VIS-01, 03, 06, 07, 10). Navegación sin cuenta. *@
+
+<PageTitle>Inicio · @ClinicaDemo.Nombre</PageTitle>
+
+<section class="portada">
+    <h1>@ClinicaDemo.Nombre</h1>
+    <p class="portada__lema">@ClinicaDemo.Lema</p>
+    <div class="portada__acciones">
+        <a class="boton boton--primario" href="servicios">Ver servicios</a>
+        <a class="boton boton--secundario" href="acceso?accion=registro">Crear cuenta</a>
+    </div>
+</section>
+
+<section class="urgencia" aria-labelledby="titulo-urgencia">
+    <h2 id="titulo-urgencia"><span aria-hidden="true">⚠</span> ¿Es una urgencia?</h2>
+    <p>
+        Llamá a la guardia: <a class="urgencia__telefono" href="tel:@ClinicaDemo.TelefonoGuardiaE164">@ClinicaDemo.TelefonoGuardia</a>.
+        <a href="urgencias">Ver qué hacer mientras tanto</a>.
+    </p>
+</section>
+
+<section aria-labelledby="titulo-destacados">
+    <div class="seccion__encabezado">
+        <h2 id="titulo-destacados">Servicios destacados</h2>
+        <a href="servicios">Ver todos</a>
+    </div>
+
+    @if (destacados is null)
+    {
+        <p>Cargando servicios…</p>
+    }
+    else if (destacados.Items.Count == 0)
+    {
+        <p>Por ahora no hay servicios publicados. Consultanos al <a href="tel:@ClinicaDemo.TelefonoE164">@ClinicaDemo.Telefono</a>.</p>
+    }
+    else
+    {
+        <div class="grilla">
+            @foreach (var servicio in destacados.Items)
+            {
+                <TarjetaServicio Servicio="servicio" />
+            }
+        </div>
+    }
+</section>
+
+<section class="contacto" aria-labelledby="titulo-contacto">
+    <h2 id="titulo-contacto">Dónde estamos</h2>
+    <dl class="datos">
+        <dt>Dirección</dt>
+        <dd>@ClinicaDemo.Direccion</dd>
+        <dt>Horario</dt>
+        <dd>@ClinicaDemo.Horario</dd>
+        <dt>Teléfono</dt>
+        <dd><a href="tel:@ClinicaDemo.TelefonoE164">@ClinicaDemo.Telefono</a></dd>
+        <dt>Correo</dt>
+        <dd>@ClinicaDemo.Correo</dd>
+    </dl>
+    <p class="nota">El mapa se incorpora cuando se elija proveedor (RNF-SEG-13).</p>
+</section>
+
+@code {
+    private PaginaDto<ServicioPublicoDto>? destacados;
+
+    protected override async Task OnInitializedAsync() =>
+        destacados = await Catalogo.ListarAsync(page: 1, pageSize: 3);
+}
