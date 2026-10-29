@@ -1,7 +1,7 @@
 # Interfaz para computadora
 
-Aquí se ubicará `Veterinaria.Blazor`, la interfaz principal de ordenador. Consumirá la API común para información pública y operaciones autorizadas de Recepción, Veterinario y Administración.
+`Veterinaria.Blazor`: interfaz de Visitante, Cliente, Recepción, Veterinario y Administración. Se construye en la sección A (rama `desktop`) con datos de demostración y se conecta a la API en la sección C.
 
-Una acción visible en Blazor no concede permisos por sí misma: la API valida cada operación. Los primeros recorridos se trazan desde [Reserva y consulta](../docs/analisis/FLUJO_RESERVA_CONSULTA.md).
+Reglas que aplican: [principios vigentes](../docs/contexto-base/CONTEXTO_BASE.md#31-principios-vigentes).
 
-La rama `desktop` prioriza esta interfaz. Una vez cerradas las especificaciones necesarias, sus recorridos podrán prototiparse con datos de demostración y una capa de acceso reemplazable. Eso no equivale a persistencia, seguridad ni reglas de negocio reales: la integración posterior debe consumir la única API compartida. Todavía no hay proyecto ejecutable ni diseño visual definitivo.
+Primer recorrido a construir: [catálogo → acceso → reserva](../docs/diagramas/INICIO_ESCRITORIO.md), con las decisiones ya cerradas de [registro](../docs/analisis/ESPECIFICACION_REGISTRO_CLIENTE.md) y [reserva/consulta](../docs/analisis/FLUJO_RESERVA_CONSULTA.md). Tareas: A-001 en adelante en el [plan de tareas](../docs/analisis/PLAN_TAREAS_PROYECTO.md).

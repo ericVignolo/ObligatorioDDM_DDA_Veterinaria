@@ -194,7 +194,7 @@ La entrega base/extensiones y los hitos operativos se consultan en [ALCANCE_ENTR
 
 **Trazabilidad:** RF-CLI-02; RN-01 a RN-05, RN-07, RN-08, RN-35, RN-36, RN-38; RNF-CON-01, RNF-CON-02, RNF-USA-01. Prioridad: Must. Fase: 3.
 
-**Conexión con la atención:** [FLUJO_RESERVA_CONSULTA.md](FLUJO_RESERVA_CONSULTA.md), CU-CLI-02 y CU-VET-01. La reserva ordinaria Confirmada habilita llegada e inicio de consulta; no genera por sí misma un cargo clínico. Ver CA-RC-01/CA-RC-02 y pendiente P-RC-01 sobre cómo medir los cuatro pasos cuando hay registro previo.
+**Conexión con la atención:** [FLUJO_RESERVA_CONSULTA.md](FLUJO_RESERVA_CONSULTA.md), CU-CLI-02 y CU-VET-01. La reserva ordinaria Confirmada habilita llegada e inicio de consulta; no genera por sí misma un cargo clínico. Ver CA-RC-01/CA-RC-02 y P-RC-01, que define cómo se miden los cuatro pasos cuando hay registro previo.
 
 ### HU-CLI-03 — Cancelar o reprogramar turno
 

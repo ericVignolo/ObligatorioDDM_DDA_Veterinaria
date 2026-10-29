@@ -111,7 +111,7 @@ Las referencias del documento a MVC para web, MVVM como decisión móvil y a man
 ## Estrategias de concurrencia
 
 - Índice o restricción única para espacios de agenda de granularidad fija.
-- Bloqueo pesimista para intervalos variables cuando sea necesario.
+- Bloqueo pesimista para intervalos variables cuando sea necesario. **Elegido para MySQL** (DT-BD-02 en `CONTEXTO_BASE.md`): `SELECT … FOR UPDATE` sobre profesional, animal y recursos; los bloques fijos se descartan porque las duraciones varían.
 - Concurrencia optimista para fichas y formularios editables.
 - Actualización condicional atómica para stock.
 - Clave de idempotencia para confirmaciones, pagos y reintentos.
@@ -176,7 +176,7 @@ Cada regla de negocio debe contar con al menos una prueba asociada.
 
 | Riesgo | Impacto | Mitigación |
 |---|---|---|
-| Alcance excesivo para dos integrantes y plazo todavía desconocido | Alto | Fijar alcance por hitos, medir el primer incremento y revisar compromisos cuando exista fecha real. |
+| Alcance excesivo para dos integrantes y plazo todavía desconocido | Alto | Fijar alcance por hitos, medir el primer incremento y aplicar los recortes ordenados de `../analisis/PLAN_B_ALCANCE.md` según su disparador. |
 | El móvil consume más tiempo del previsto | Alto | Reducir alcance móvil antes de afectar la API o las funciones Must. |
 | Cambios tardíos en el modelo | Medio | Migraciones y revisión formal al cerrar la Fase 1. |
 | Documentación postergada | Alto | Entregar documentación en cada fase. |

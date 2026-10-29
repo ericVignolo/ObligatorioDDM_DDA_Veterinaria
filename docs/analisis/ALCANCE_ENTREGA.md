@@ -152,6 +152,8 @@ Codex apoya documentación, implementación autorizada, revisión y pruebas. Las
 
 ## 7. Criterio de cierre del alcance
 
+Si el tiempo no alcanza, el orden de recortes y su disparador están en [PLAN_B_ALCANCE.md](PLAN_B_ALCANCE.md). Hasta que se aplique un recorte allí registrado, esta tabla sigue vigente sin cambios.
+
 La clasificación de los 74 RF queda completa en esta versión. Quedan abiertas la duración, la asignación nominal, los parámetros clínicos/operativos y la aprobación de las decisiones de diseño de cada flujo. Al completar H1 se revisan esfuerzo real, defectos y carga restante; cuando el profesor confirme fecha o rúbrica se ajustan los hitos con trazabilidad.
 
 Próximo paquete de detalle: [Reserva y consulta](FLUJO_RESERVA_CONSULTA.md), acompañado por [historias de atención](HISTORIAS_USUARIO_ATENCION.md). Después se completarán “Internar animal”, “Cobrar consulta” y los casos del personal para asistencia.
