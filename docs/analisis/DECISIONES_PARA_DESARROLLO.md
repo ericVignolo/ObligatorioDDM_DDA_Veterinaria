@@ -13,7 +13,8 @@ Eric delegó en Diego el 2026-10-09 las decisiones abiertas. El 2026-10-29 Diego
 | 5 | Persistencia | DT-BD-01 (MySQL, Eric 2026-10-09), DT-BD-02 y P-RC-08 | Cerradas (Diego 2026-10-29) | [Contexto base, DT-BD-02](../contexto-base/CONTEXTO_BASE.md#2-estado-actual) |
 | 6 | Organización | DT-ORG-02 y G-011 (flujo de ramas) | Cerradas (secciones: Eric 2026-10-20; ramas: Diego 2026-10-29) | [Plan de tareas, sección 2](PLAN_TAREAS_PROYECTO.md#2-ramas-previstas) |
 | 7 | Alcance | Plan B de recortes | Vigente como contingencia, sin recortes aplicados | [Plan B](PLAN_B_ALCANCE.md) |
-| 8 | Después del primer recorrido | Cobro por Recepción, internación, alertas sanitarias, parámetros de asistencia | Abiertas | Se deciden al abordar cada módulo. |
+| 8 | Después del primer recorrido | Cobro por Recepción, internación, avisos de refuerzo, parámetros de asistencia, proveedores | Cerradas (Eric 2026-10-31) | [Decisiones del 31/10](DECISIONES_ERIC_2026-10-31.md) |
+| 9 | Persistencia | Revisión de DT-BD-02 (Pomelo / EF Core 10) | Abierta, decide Diego | [Decisiones del 31/10](DECISIONES_ERIC_2026-10-31.md#delegado-en-diego) |
 
 ## Qué habilita este cierre
 

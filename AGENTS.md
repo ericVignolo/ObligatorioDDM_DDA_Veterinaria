@@ -23,12 +23,15 @@ Antes de planificar, diseñar o implementar, leer:
 
 ## Punto de continuación
 
-Actualizado: 2026-10-29.
+Actualizado: 2026-10-31.
+
+- **Primero, si trabaja Diego:** decidir el proveedor MySQL de DT-BD-02 (Pomelo solo soporta EF Core 9, sin soporte desde el 2026-11-10). Ver `docs/analisis/DECISIONES_ERIC_2026-10-31.md`.
+- Fase: construcción, sección A (DT-ORG-04, 2026-10-31).
 
 - Equipo: Eric y Diego, con apoyo de asistentes de IA. Sin fecha de entrega real todavía.
 - Decisiones del primer recorrido (catálogo → registro → reserva → consulta) cerradas por Diego: ver `docs/analisis/DECISIONES_PARA_DESARROLLO.md`.
-- Base de datos: MySQL 8.4 LTS, EF Core 9 con Pomelo, agenda protegida con `SELECT … FOR UPDATE` (DT-BD-01 y DT-BD-02).
+- Base de datos: MySQL 8.4 LTS; proveedor de EF Core en revisión (DT-BD-02); agenda protegida con `SELECT … FOR UPDATE` (DT-BD-01 y DT-BD-02).
 - Ramas: secciones A (`desktop`), B (`desktop-mobile`) y C (`desktop-mobile-api`), encadenadas, con merge a `main` al aprobar cada una; trabajo diario en ramas cortas con PR (DT-ORG-02).
 - Plan B de alcance listo, sin recortes aplicados: `docs/analisis/PLAN_B_ALCANCE.md`.
 - Siguiente paso: sección A, tareas A-001 a A-003 de `docs/analisis/PLAN_TAREAS_PROYECTO.md` (esqueleto Blazor y catálogo con datos de demostración).
-- Siguen abiertos: cobro por Recepción, internación, alertas sanitarias y parámetros de asistencia; se cierran antes de sus propias pantallas.
+- Cobro, internación, avisos de refuerzo, parámetros de asistencia y proveedores: decididos el 2026-10-31 (`docs/analisis/DECISIONES_ERIC_2026-10-31.md`). Cada módulo los incorpora a su especificación al abordarse.
