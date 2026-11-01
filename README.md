@@ -12,12 +12,14 @@ Proyecto académico de dos integrantes. La interfaz principal para computadora s
 | [`tests/`](tests/README.md) | Pruebas del dominio, API, base de datos e integración. |
 | [`docs/`](docs/contexto-base/CONTEXTO_BASE.md) | Contexto, requisitos, casos de uso, historias y decisiones. |
 
-Las carpetas de código delimitan responsabilidades. Aún no contienen proyectos ejecutables. La solución .NET se agregará en la raíz cuando se cierre la especificación pendiente para iniciar el código de producto.
+Las carpetas de código todavía no tienen proyectos ejecutables. Las reglas comunes a todo el proyecto están en los [principios vigentes](docs/contexto-base/CONTEXTO_BASE.md#31-principios-vigentes).
 
 ## Orden de trabajo
 
-El trabajo inicial de ordenador se realiza en `desktop`, derivada de `feature/escritorio-api`. Primero se validará la experiencia Blazor con datos de demostración; la API común se integrará después y será compartida con la aplicación móvil. El [arranque del frente de ordenador](docs/analisis/ARRANQUE_ESCRITORIO.md) distingue los prototipos de los requisitos realmente implementados.
+- **Sección A — escritorio** (rama `desktop`): Blazor con datos de demostración. Es la sección activa.
+- **Sección B — móvil** (rama `desktop-mobile`): React Native y Figma.
+- **Sección C — API e integración** (rama `desktop-mobile-api`): API ASP.NET Core con MySQL 8.4 y conexión de ambos clientes.
 
-MySQL está elegido para la futura base de datos, sin conexión directa desde Blazor. El [primer flujo y árbol binario de decisiones](docs/diagramas/INICIO_ESCRITORIO.md) documenta el recorrido público de catálogo a reserva como borrador funcional.
+Cada sección sale de la anterior y se mezcla a `main` al aprobarse; el trabajo diario va en ramas cortas con PR. Las decisiones del primer recorrido están cerradas: ver el [tablero de decisiones](docs/analisis/DECISIONES_PARA_DESARROLLO.md). Si el tiempo no alcanza, se aplica el [plan B de alcance](docs/analisis/PLAN_B_ALCANCE.md).
 
-La [matriz de requisitos](docs/contexto-base/MATRIZ_REQUISITOS.md) es la fuente canónica. La [tabla de alcance](docs/analisis/ALCANCE_ENTREGA.md) organiza la entrega por hitos sin modificar la prioridad original.
+La [matriz de requisitos](docs/contexto-base/MATRIZ_REQUISITOS.md) es la fuente canónica. La [tabla de alcance](docs/analisis/ALCANCE_ENTREGA.md) organiza la entrega por hitos y el [plan de tareas](docs/analisis/PLAN_TAREAS_PROYECTO.md) el orden de construcción.

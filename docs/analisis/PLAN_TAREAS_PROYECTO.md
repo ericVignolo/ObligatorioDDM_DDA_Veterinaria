@@ -1,6 +1,6 @@
 # Plan de tareas del proyecto veterinario
 
-Fecha: 2026-10-20
+Fecha: 2026-10-20 (actualizado 2026-10-29)
 
 Estado: plan de trabajo inicial. Las tareas están pendientes salvo que este documento se actualice con evidencia. Este plan organiza la construcción por ramas; no reemplaza la redacción canónica ni la prioridad de los RF, RN y RNF en `../contexto-base/MATRIZ_REQUISITOS.md`.
 
@@ -16,10 +16,10 @@ Los mockups, navegaciones y respuestas simuladas de A/B permiten validar experie
 |---|---|---|
 | `main` (existe) | Base estable del repositorio y documentación aprobada. | Cambios integrados y revisados; no se considera una rama de trabajo de producto. |
 | `desktop` (existe) | Aplicación de escritorio Blazor/C# de la sección A, inicialmente con datos de demostración. | Recorridos de escritorio aprobados en presentación y estados; sin afirmar persistencia o seguridad de servidor. |
-| `desktop-mobile` (propuesta) | Sección A más aplicación React Native y diseño móvil Figma de la sección B. | Recorridos de ambos clientes demostrables con adaptadores temporales y contratos acordados. |
-| `desktop-mobile-api` (propuesta) | Secciones A y B conectadas a la API ASP.NET Core y MySQL de la sección C. | API única, autorización y reglas aplicadas en servidor; pruebas, seguridad y evidencia de entrega completas. |
+| `desktop-mobile` (se crea desde `desktop`) | Sección A más aplicación React Native y diseño móvil Figma de la sección B. | Recorridos de ambos clientes demostrables con adaptadores temporales y contratos acordados. |
+| `desktop-mobile-api` (se crea desde `desktop-mobile`) | Secciones A y B conectadas a la API ASP.NET Core y MySQL de la sección C. | API única, autorización y reglas aplicadas en servidor; pruebas, seguridad y evidencia de entrega completas. |
 
-Git confirma que `main` y `desktop` existen; las dos ramas siguientes todavía no existen. Antes de crearlas se debe acordar su ascendencia/merge respecto de `feature/escritorio-api` (G-011). Las ramas representan estados del producto, no APIs ni reglas distintas. Blazor y React Native nunca se conectan directamente a MySQL.
+Flujo acordado (G-011, Diego 2026-10-29): cada rama de sección sale de la anterior cuando esta se aprueba, y al aprobarse se mezcla a `main` por PR. El trabajo diario va en ramas cortas `<nombre>/<tarea>` con PR contra la rama de la sección activa; cada PR lo revisa el otro integrante. `feature/escritorio-api` queda congelada: ya está contenida en `desktop`. Las ramas representan estados del producto, no arquitecturas distintas (ver DT-ORG-02 en `CONTEXTO_BASE.md`).
 
 ## 3. Estados de tareas
 
@@ -32,11 +32,11 @@ Cada tarea que implemente comportamiento debe enlazarse a sus RF/RN/RNF, caso de
 
 ## 4. Tareas globales — H0 y coordinación
 
-Estas tareas preceden al diseño visual definitivo y al código de producto, de acuerdo con `AGENTS.md` y `ARRANQUE_ESCRITORIO.md`.
+Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se programa cuando sus decisiones están cerradas. G-002, G-003 y G-011 ya permiten empezar el primer recorrido.
 
 - [ ] **G-001 — Confirmar alcance de la entrega.** Repasar todos los RF de la matriz, su prioridad y ubicación H0–H5; registrar extensiones separadamente sin degradar los Must.
-- [ ] **G-002 — Cerrar especificación de registro.** Resolver finalidad, acceso, conservación y destino de cada campo; formato de documento/dirección/teléfono; vigencia y reintentos del código; recuperación; documentos/versiones y tiempo de reanudación de intención.
-- [ ] **G-003 — Cerrar el recorrido Reservar turno → Realizar consulta.** Resolver P-RC-01 a P-RC-08, incluyendo colisiones, identidad, permisos, estados, consumo, cierre e idempotencia conforme a `FLUJO_RESERVA_CONSULTA.md`.
+- [x] **G-002 — Cerrar especificación de registro.** Cerrada por Diego el 2026-10-29 (`ESPECIFICACION_REGISTRO_CLIENTE.md`). Resolver finalidad, acceso, conservación y destino de cada campo; formato de documento/dirección/teléfono; vigencia y reintentos del código; recuperación; documentos/versiones y tiempo de reanudación de intención.
+- [x] **G-003 — Cerrar el recorrido Reservar turno → Realizar consulta.** Cerrada por Diego el 2026-10-29 (`FLUJO_RESERVA_CONSULTA.md`, sección 11). Resolver P-RC-01 a P-RC-08, incluyendo colisiones, identidad, permisos, estados, consumo, cierre e idempotencia conforme a `FLUJO_RESERVA_CONSULTA.md`.
 - [ ] **G-004 — Completar casos de uso pendientes.** Detallar Cobrar consulta, Internar animal, alertas sanitarias, permisos de Recepción/Veterinario y los casos resumidos que se incorporen a la entrega.
 - [ ] **G-005 — Resolver decisiones de asistencia.** Definir parámetros operativos pendientes: cuestionarios profesionales por especie/categoría, tiempos, guardia, cobertura, costos, cancelación, reevaluaciones posteriores y conservación de ubicación.
 - [ ] **G-006 — Completar pseudocódigos.** Especificar comportamiento normal, alternativas, errores, permisos, idempotencia y reintentos para registro, agenda, consulta, cobro, vacunas, internación, consentimiento, derechos y asistencia.
@@ -44,8 +44,8 @@ Estas tareas preceden al diseño visual definitivo y al código de producto, de 
 - [ ] **G-008 — Revisar dominio y datos.** Revisar entidades/relaciones y DER MySQL como propuesta; validar historia, múltiples responsables, especies/grupos, turnos, consultas, vacunas, internación, inventario, cargos, pagos, consentimiento, alertas y auditoría. No crear migraciones hasta la sección C.
 - [ ] **G-009 — Definir catálogo y datos de demostración.** Preparar datos sintéticos reproducibles, incluyendo casos de caballo y oveja, 30 Clientes, 50 animales y 200 consultas históricas para el conjunto completo previsto. Confirmar servicios, profesionales, horarios y tarifas ficticios.
 - [ ] **G-010 — Trazar criterios de aceptación.** Asociar cada RF Must y RN/RNF aplicable a escenarios positivos, negativos, concurrentes y de recuperación. Mantener separados requisitos de prototipo y requisitos cuya conformidad depende de la API.
-- [ ] **G-011 — Acordar flujo de ramas.** Revisar ramas existentes, confirmar nombres propuestos, base de cada rama, reglas de revisión y cuándo integrar de nuevo a `main`.
-- [ ] **G-012 — Puerta de salida H0.** Verificar que la especificación de registro esté completa, se haya definido el pseudocódigo restante y todas las decisiones abiertas estén documentadas con categoría, responsable, impacto y estado. Resolver antes del diseño final o código de producto cualquier pendiente que pueda cambiar comportamiento, reglas, permisos o alcance; registrar responsables y fecha real cuando exista.
+- [x] **G-011 — Acordar flujo de ramas.** Cerrada por Diego el 2026-10-29 (sección 2 y DT-ORG-02). Revisar ramas existentes, confirmar nombres propuestos, base de cada rama, reglas de revisión y cuándo integrar de nuevo a `main`.
+- [~] **G-012 — Puerta de salida H0.** Cumplida para el primer recorrido (DT-ORG-03); pendiente para cobro, internación, alertas sanitarias y asistencia. Verificar que la especificación de registro esté completa, se haya definido el pseudocódigo restante y todas las decisiones abiertas estén documentadas con categoría, responsable, impacto y estado. Resolver antes del diseño final o código de producto cualquier pendiente que pueda cambiar comportamiento, reglas, permisos o alcance; registrar responsables y fecha real cuando exista.
 
 ## 5. Sección A — Aplicación de escritorio
 
@@ -196,7 +196,7 @@ C-001…C-041 (API única + MySQL + integración de ambos clientes)
 Revisión de entrega en H5 y merge acordado a main
 ```
 
-Las tareas de documentación y preparación pueden avanzar en paralelo cuando no dependan de una decisión abierta. No empezar código de producto antes de completar la puerta H0. No crear migraciones ni conectar a MySQL durante A/B. El diseño y las pruebas funcionales de prototipo no reemplazan pruebas de API, autorización, transacciones o persistencia en C.
+Las tareas de documentación y preparación pueden avanzar en paralelo cuando no dependan de una decisión abierta. Cada recorrido se programa cuando cerró su propia puerta H0 (DT-ORG-03). No crear migraciones ni conectar a MySQL durante A/B. El diseño y las pruebas funcionales de prototipo no reemplazan pruebas de API, autorización, transacciones o persistencia en C.
 
 ## 9. Criterio de finalización del proyecto
 

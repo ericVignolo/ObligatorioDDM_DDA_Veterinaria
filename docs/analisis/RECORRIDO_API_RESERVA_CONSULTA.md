@@ -2,9 +2,9 @@
 
 Fecha: 2026-10-08
 
-Estado: mapa de contrato para cierre por Diego; no congelado ni implementado.
+Estado: mapa de contrato con las decisiones P-RC-01 a P-RC-08 cerradas (2026-10-29); no implementado.
 
-Responsable de cerrar P-RC-01 a P-RC-08: Diego, por decisión de Eric del 2026-10-09. Cada cierre debe quedar documentado antes de implementar la operación afectada.
+Las decisiones están en la [sección 11 del flujo](FLUJO_RESERVA_CONSULTA.md#11-decisiones-cerradas) y DT-BD-02. Formato de errores y paginación: D-CAT-03.
 
 Este documento **no sustituye** [FLUJO_RESERVA_CONSULTA.md](FLUJO_RESERVA_CONSULTA.md), que contiene estados, permisos, pseudocódigo, excepciones y criterios de aceptación. Las rutas siguientes son decisiones técnicas **propuestas** para hacer visible qué consume cada interfaz. Su forma final depende de P-RC-01 a P-RC-08, especialmente agenda, permisos, stock, firma, tarifas y base de datos.
 
@@ -25,15 +25,9 @@ Este documento **no sustituye** [FLUJO_RESERVA_CONSULTA.md](FLUJO_RESERVA_CONSUL
 
 - `GET` públicos del catálogo no autorizan reserva. El login/registro retoma la intención, pero la disponibilidad se recalcula antes de confirmar.
 - La API, no Blazor ni React Native, hace las transiciones y aplica autorización por rol y relación con el animal/turno. Los identificadores enviados por el cliente no prueban titularidad.
-- Dos intentos incompatibles de reserva no pueden tener éxito ambos. MySQL está elegido como motor futuro (DT-BD-01); la estrategia concreta de intervalos está pendiente en P-RC-08.
+- Dos intentos incompatibles de reserva no pueden tener éxito ambos: la API bloquea profesional, animal y recursos con `SELECT … FOR UPDATE` antes de validar e insertar (DT-BD-02).
 - El borrador puede guardarse; la historia visible al Cliente incorpora la consulta firmada. Tras firmar, las correcciones clínicas son enmiendas; el cargo tiene corrección contable separada.
 - Un error al cerrar no puede dejar firma sin cargo o consumir stock parcialmente. Una caída posterior del correo no revierte el cierre; el mensaje permanece pendiente de reintento.
-- Los detalles de `400/401/403/404/409` y del cuerpo de error siguen la convención común de API aún por fijar. No publicar diagnóstico ni contenido clínico en errores o logs.
+- Los errores `400/401/403/404/409` usan Problem Details según D-CAT-03. No publicar diagnóstico ni contenido clínico en errores o logs.
 
-## Próxima ronda de decisiones para cerrar este contrato
-
-1. Reserva: P-RC-01 y P-RC-02 — pasos, seña, vencimiento, cancelación y estados excepcionales.
-2. Consulta: P-RC-03 a P-RC-07 — stock, interrupción, permisos, firma y responsable económico.
-3. Persistencia: P-RC-08 — motor relacional, exclusión de intervalos y reintentos.
-
-**Estado de requisitos:** `RF-CLI-02` y los RF de consulta están especificados parcialmente en el flujo integrado, no implementados. El catálogo público se podrá verificar de forma separada; este recorrido requiere pruebas de concurrencia, autorización, transacción e idempotencia antes de darse por cumplido.
+**Estado de requisitos:** `RF-CLI-02` y los RF de consulta están especificados con sus decisiones cerradas, no implementados. Las rutas marcadas «por fijar» se definen al escribir el contrato OpenAPI en la sección C. El recorrido requiere pruebas de concurrencia, autorización, transacción e idempotencia antes de darse por cumplido.

@@ -4,7 +4,7 @@ Versión: 0.1
 
 Fecha: 2026-10-02
 
-Estado: Especificación funcional propuesta para revisión; no autoriza todavía código de producto.
+Estado: Especificación funcional con P-RC-01 a P-RC-08 **cerradas por Diego el 2026-10-29** (sección 11). No implementada.
 
 Fuentes: [matriz canónica](../contexto-base/MATRIZ_REQUISITOS.md), [alcance de entrega](ALCANCE_ENTREGA.md), [CU-CLI-02 existente](CASOS_DE_USO_VISITANTE_CLIENTE.md#cu-cli-02--agendar-turno) y [historias de atención](HISTORIAS_USUARIO_ATENCION.md).
 
@@ -26,7 +26,7 @@ Los identificadores RF, RN y RNF remiten al texto exacto de la matriz. Las sigui
 | RC-D04 | Decisión técnica propuesta | Idempotencia persistida para reservar, iniciar, registrar consumo y cerrar; versión optimista en borradores, unicidad del vínculo turno–consulta y garantías de disponibilidad en BD. RT-08, RNF-CON-01, RNF-CON-05 y estrategia del análisis complementario. |
 | RC-D05 | Decisión técnica propuesta | Reservar existencias por lote durante la consulta; consumo contable definitivo al cierre atómico. Disponibilidad descuenta reservas; un uso real no se libera por caducidad automática. RF-VET-06, RN-26 a RN-30, RNF-CON-03. Validar operativa con el equipo antes de implementar. |
 | RC-D06 | Decisión técnica propuesta | Guardar el mensaje pendiente de correo en la misma BD/transacción del cierre; un procesador lo envía después con reintentos. RNF-CON-03, RNF-CON-04. |
-| RC-D07 | Diseño/UX | Reserva ordinaria en cuatro pasos visibles: animal; tipo/profesional; fecha/hora; revisión/confirmación. Definir en P-RC-01 cómo se mide “desde el ingreso” cuando interviene registro. RNF-USA-01. |
+| RC-D07 | Diseño/UX | Reserva ordinaria en cuatro pasos visibles: animal; tipo/profesional; fecha/hora; revisión/confirmación. Cómo se mide “desde el ingreso”: P-RC-01. RNF-USA-01. |
 | RC-D08 | Consentimiento/alerta | Advertencia de deuda, derivación a mostrador por ausencias y consentimiento clínico conservan el comportamiento y clasificación canónicos; no se inventan umbrales ni se agrupan aceptaciones. RN-08, RN-10, RN-36, RN-43. |
 | RC-D09 | Pseudocódigo/comportamiento | Guardar un borrador no firma, publica al cliente, genera cargo ni envía resumen. Cerrar y firmar forman una única operación con efectos persistidos juntos. RN-12, RN-20, RNF-CON-03. |
 
@@ -60,12 +60,12 @@ Se conserva el identificador existente. Esta sección precisa su salida y su con
 | Caso | Comportamiento observable |
 |---|---|
 | Visitante o sesión vencida | Acceso/registro, verificación cuando corresponda y reanudación de intención; disponibilidad se recalcula. No se conserva un bloqueo de agenda mientras el usuario se autentica. |
-| Sin animales registrados | Continuar por alta de animal y retomar la reserva; medición de pasos pendiente en P-RC-01. |
+| Sin animales registrados | Continuar por alta de animal y retomar la reserva; el alta no suma pasos (P-RC-01). |
 | Animal ajeno, cuenta no verificada o profesional inhabilitado | Rechazar la operación con mensaje apropiado sin exponer datos ajenos. |
 | Solapamiento concurrente | Una reserva gana; la otra recibe conflicto y horarios actualizados. Se conservan las selecciones compatibles. |
 | Ausencias por encima del umbral | Aplicar RN-08: informar que debe agendar por mostrador. Se conserva su clasificación canónica de Advertencia; su redacción impide autoagendar. |
 | Deuda por encima del umbral | Aviso conforme a RN-36; no inventar un bloqueo de urgencia. |
-| Seña exigida para cirugía | Ruta Pendiente, confirmación de seña y liberación de capacidad pendientes de especificar en P-RC-02. No afirmar que la cirugía está confirmada antes de cumplir RN-35. |
+| Seña exigida para cirugía | Ruta Pendiente con vencimiento a las 24 h y liberación del horario (P-RC-02). No afirmar que la cirugía está confirmada antes de cumplir RN-35. |
 | Reprogramación | Conservar identificador y trazabilidad del cambio; validar nuevo intervalo y sustituirlo atómicamente. Si falla, conservar el anterior. No reprogramar un turno En curso. |
 | Respuesta perdida | Consultar/reintentar la misma operación; devolver el turno ya creado después de verificar autorización. |
 
@@ -87,10 +87,11 @@ Se conserva el identificador existente. Esta sección precisa su salida y su con
 | En curso | Cerrar y firmar, Veterinario autorizado | Finalizado | Misma transacción de firma, historia, consumos, cargos y correo pendiente. |
 | Confirmado/Pendiente | Cancelar, Cliente autorizado o Recepción | Cancelado | Cliente respeta RN-06; fuera de ventana interviene la clínica. Liberar capacidad que realmente estuviera ocupada. |
 | En espera | Retiro antes de atención, Recepción | Cancelado | Motivo y trazabilidad; solo si no inició la consulta ni hay consumos reales. |
+| En curso | Cancelar sin atención, Veterinario autor | Cancelado | Solo si no hubo atención ni consumos reales; motivo obligatorio (P-RC-04). La consulta Borrador se conserva como evidencia y no se publica. |
 | Confirmado | Registrar ausencia, Recepción | Ausente | Hora y tolerancia configuradas cumplidas, sin llegada ni atención; no marcar ausencia automática por error de red. |
 | Confirmado | Reprogramar, Cliente o Recepción | Confirmado | Intervalo sustituido atómicamente; reglas y política se revalidan. |
 
-Finalizado, Cancelado y Ausente son terminales en este recorrido. Una reconsulta crea otro turno. No hay transición directa Pendiente→Finalizado ni Cancelado→En curso. Correcciones administrativas de estados terminales requieren otro procedimiento trazable por definir; no se habilita editar libremente la columna Estado.
+Finalizado, Cancelado y Ausente son terminales en este recorrido; la única corrección permitida es Ausente ↔ Cancelado por Administrador (P-RC-04). Una reconsulta crea otro turno. No hay transición directa Pendiente→Finalizado ni Cancelado→En curso. Correcciones administrativas de estados terminales requieren otro procedimiento trazable por definir; no se habilita editar libremente la columna Estado.
 
 ### 4.2 Consulta y cargo
 
@@ -103,7 +104,7 @@ Finalizado, Cancelado y Ausente son terminales en este recorrido. Una reconsulta
 | Cargo | No existe → Pendiente de cobro | Se genera al cierre de la prestación, una vez por origen. |
 | Cargo | Pendiente → Parcialmente pagado/Pagado | Solo mediante cobro validado y trazable en el futuro CU de Recepción; no cambia el estado clínico. |
 
-Una interrupción de la atención conserva el borrador y las reservas/consumos reales para resolución por el personal. No se convierte automáticamente en Cancelada ni se borra evidencia. Definir interrupciones definitivas en P-RC-04 antes de implementar.
+Una interrupción de la atención conserva el borrador y las reservas/consumos reales para resolución por el personal. No se convierte automáticamente en Cancelada ni se borra evidencia. Tratamiento de interrupciones definitivas: P-RC-04.
 
 ## 5. Matriz de permisos del recorrido
 
@@ -122,7 +123,7 @@ Propuesta de mínimo acceso, aplicada en la API por rol y relación con cada reg
 | Registrar cobro/comprobante | Pago online fuera de base | No por el solo rol veterinario | Sí, sobre prestaciones finalizadas | Solo con permiso de cobro; no asumido por jerarquía |
 | Leer en móvil el resultado firmado | Animal bajo responsabilidad vigente | Caso autorizado | Datos de gestión, no texto clínico | Según permiso específico |
 
-La consulta de historia por personal autorizado registra lector, animal, momento, acción y origen sin copiar texto clínico a logs. Acceder al expediente de otro paciente o adivinar un identificador no evita RN-18/RNF-SEG-05. La reasignación de un caso y el alcance de lectura de colegas se resuelven en P-RC-05.
+La consulta de historia por personal autorizado registra lector, animal, momento, acción y origen sin copiar texto clínico a logs. Acceder al expediente de otro paciente o adivinar un identificador no evita RN-18/RNF-SEG-05. La reasignación de un caso y el alcance de lectura de colegas están en P-RC-05.
 
 ## 6. CU-VET-01 — Realizar consulta
 
@@ -144,7 +145,7 @@ La consulta de historia por personal autorizado registra lector, animal, momento
 2. El Veterinario abre el turno; la API verifica asignación, permisos y vigencia profesional.
 3. Al iniciar atención, la API verifica el consentimiento previo si el procedimiento lo requiere y crea o recupera la única consulta del turno. En la creación, turno En curso y consulta Borrador se guardan juntos. Si durante la atención se propone un procedimiento sujeto a consentimiento, se valida antes de autorizar ese procedimiento.
 4. La API registra la lectura de la historia y presenta antecedentes, alergias y contraindicaciones destacadas.
-5. El Veterinario registra motivo, anamnesis, examen físico, signos vitales, peso, diagnóstico y tratamiento. Los campos/mediciones aplicables dependen de especie y contexto; la obligatoriedad precisa se cierra en P-RC-06. Para firmar siempre se exige al menos un diagnóstico presuntivo o definitivo (RN-20).
+5. El Veterinario registra motivo, anamnesis, examen físico, signos vitales, peso, diagnóstico y tratamiento. Los campos/mediciones aplicables dependen de especie y contexto; obligatorios para firmar solo motivo y diagnóstico (P-RC-06). Para firmar siempre se exige al menos un diagnóstico presuntivo o definitivo (RN-20).
 6. Puede guardar avances con control de versión. El Cliente aún no recibe el borrador como atención finalizada.
 7. Adjunta los estudios pertinentes. La API valida archivo y autorización; almacena binarios protegidos y conserva metadatos. La carga externa se completa antes del cierre, sin mantener una transacción abierta mientras sube el archivo.
 8. Registra prestaciones e insumos. La API calcula cantidades, selecciona lotes válidos por FEFO y reserva existencias disponibles. El uso real queda identificado por lote, cantidad y momento. Las vacunas se completan en H3 con sus validaciones específicas.
@@ -355,17 +356,19 @@ Especificación de pruebas futuras; estas pruebas aún no fueron ejecutadas sobr
 | CA-RC-18 | Clave idempotente reutilizada con otro contenido | Error de conflicto; no ejecutar ni devolver resultado de otra intención. | RC-D04 |
 | CA-RC-19 | Atención interrumpida con insumo usado | Mantener reserva/uso para conciliación; no devolver automáticamente a disponible. | RC-D05; RN-26, RN-30 |
 
-## 11. Decisiones acotadas pendientes
+## 11. Decisiones cerradas
 
-| ID | Clasificación | Pendiente y propuesta de trabajo |
-|---|---|---|
-| P-RC-01 | Diseño/UX | Precisar medición de RNF-USA-01: cuatro pasos de reserva; registro/alta previa requieren acordar cómo se contabilizan “desde el ingreso”. |
-| P-RC-02 | Pseudocódigo/comportamiento | Definir estado Pendiente por seña: vigencia, ocupación de agenda, confirmación y vencimiento; cálculo de espera estimada, tolerancia de ausencia, límites de cancelación y sobreturnos sin violar otras RN. |
-| P-RC-03 | Decisión técnica y pseudocódigo | Validar reservas/uso/consolidación de stock de RC-D05, unidades/fracciones, conciliación de vencimientos y gestión de reservas no usadas. Resolver antes de implementar consumo. |
-| P-RC-04 | Pseudocódigo/comportamiento | Cierre de atención interrumpida, errores de admisión y corrección trazable de estados terminales. No inventar diagnóstico para poder cerrar. |
-| P-RC-05 | Requerimiento no funcional: autorización | Alcance de lectura entre colegas, reasignación, reemplazo del autor y permisos de cobro adicionales. |
-| P-RC-06 | Pseudocódigo y consentimiento | Campos clínicos obligatorios por especie, confirmaciones, mecanismo concreto de firma y consentimiento; no elegir validez jurídica ni proveedor por omisión. |
-| P-RC-07 | Pseudocódigo/comportamiento | Responsable económico, tarifas incluidas/adicionales, unidad, redondeo, moneda y política de correcciones contables. |
-| P-RC-08 | Decisión técnica | **Parcial:** MySQL confirmado por Eric (DT-BD-01). Diego debe definir versión/proveedor y estrategia de exclusión de intervalos variables, índices/aislamiento y reintentos. |
+Cerradas por Diego el 2026-10-29. Los valores numéricos son **parámetros por defecto** configurables desde Administración (RF-ADM-10, RNF-MAN-04), no reglas fijas. Ninguna cambia la redacción ni el tipo de una RN canónica.
 
-Las filas anteriores delimitan lo necesario para cerrar este recorrido; no eliminan los pendientes globales de registro y asistencia. Próximo documento funcional: CU de Recepción “Cobrar consulta”, con cobro, aplicación a cargos y comprobantes, seguido del ingreso/alta de internación.
+| ID | Clasificación | Decisión | Impacto |
+|---|---|---|---|
+| P-RC-01 | Diseño/UX | Los cuatro pasos de RNF-USA-01 se cuentan desde «Agendar turno» con la sesión iniciada y al menos un animal registrado. Iniciar sesión, registrarse, verificar el correo y dar de alta un animal son flujos previos y no suman pasos. Si el Cliente tiene un solo animal, el paso 1 se muestra ya elegido. | Blazor y móvil; prueba de usabilidad del recorrido. |
+| P-RC-02 | Pseudocódigo/comportamiento | **Seña (RN-35):** el turno queda Pendiente, ocupa la agenda y vence a las 24 h si no se registra la seña; al vencer pasa a Cancelado con motivo «seña no recibida» y libera el horario. **Espera estimada:** suma de las duraciones restantes de los turnos En espera y En curso del mismo profesional. **Ausencia:** Recepción puede marcarla 15 min después del inicio sin llegada; nunca es automática. **Cancelación (RN-06):** el Cliente cancela sin penalidad hasta 24 h antes; después solo Recepción. **Antelación mínima (RN-05):** 2 h; **horizonte:** 60 días. **Ausencias (RN-08):** a partir de 3 en 12 meses se deriva a mostrador. **Sobreturnos (RN-09):** solo Recepción o Administrador, fuera de la disponibilidad calculada, nunca superpuestos con otro turno del mismo profesional, animal o recurso. | Dominio de agenda, configuración, Recepción en Blazor. |
+| P-RC-03 | Decisión técnica y pseudocódigo | Se confirma RC-D05. Cada producto tiene una unidad (unidad, ml, comprimido, etc.) y un indicador de si admite fracciones; las cantidades se guardan con hasta 2 decimales. Las reservas no usadas se liberan al cerrar o cancelar la consulta y, si la consulta sigue en Borrador, a las 24 h mediante una tarea programada. Las usadas nunca se liberan solas. La baja por vencimiento descuenta solo el saldo no comprometido; lo usado y pendiente de cierre se consolida en el cierre sin descontarse dos veces. | Inventario, tarea programada, pruebas CA-RC-05/06/19. |
+| P-RC-04 | Pseudocódigo/comportamiento | Si la atención se interrumpe, la consulta queda en Borrador y el turno En curso; Recepción y el veterinario ven una lista de «consultas abiertas» al final del día. Si no hubo atención ni consumos, el veterinario puede cancelar el turno con motivo (En curso → Cancelado, transición nueva solo para este caso). Si hubo consumos, debe cerrar con al menos un diagnóstico presuntivo. Estados terminales: solo el Administrador corrige Ausente ↔ Cancelado, con motivo y auditoría; Finalizado no se corrige (para eso están las enmiendas). | Máquina de estados del turno, auditoría. |
+| P-RC-05 | RNF derivado: autorización | Cualquier veterinario activo lee la historia completa de un animal con turno, internación o asistencia activos en la clínica; fuera de eso necesita un «acceso con motivo», que queda auditado. Antes de En curso, Recepción reasigna el turno a otro profesional. Después, solo el veterinario autor transfiere la consulta a un colega, y queda registrado. Solo el rol Recepción registra cobros; un Administrador lo hace únicamente si también tiene ese rol. | Autorización en la API, RN-40. |
+| P-RC-06 | Pseudocódigo y consentimiento | Obligatorios para firmar: motivo de consulta y al menos un diagnóstico (RN-20). El resto de los campos de RF-VET-02 son opcionales y su relevancia depende de la especie; no se exigen campos exclusivos de perros o gatos. **Firma de la consulta:** acción del veterinario autenticado que vuelve a ingresar su contraseña; se guarda autor, fecha y hora, y un hash del contenido firmado. **Consentimiento informado (RN-10):** el responsable lo acepta en su cuenta (o en el mostrador, con su sesión) marcando la aceptación y escribiendo su nombre completo; se guarda versión del documento, procedimiento, animal, fecha, canal y hash. No se presenta como firma electrónica avanzada con validez jurídica plena. | Consulta, consentimiento, auditoría. |
+| P-RC-07 | Pseudocódigo/comportamiento | **Responsable económico:** el Cliente que reservó, siempre que tenga responsabilidad vigente sobre el animal en la fecha de la prestación; si no, el titular vigente. Queda fijado en el cargo. **Tarifas:** cada servicio indica qué insumos incluye; los demás se cobran aparte. **Moneda:** UYU. **Redondeo:** las líneas se calculan con 2 decimales y el total se redondea a peso entero (mitad hacia arriba). **Correcciones:** siempre por nota de crédito (RN-34), nunca editando el cargo. | Cargos, comprobantes, cobro de Recepción. |
+| P-RC-08 | Decisión técnica | Ver **DT-BD-02** en `../contexto-base/CONTEXTO_BASE.md`: MySQL 8.4 LTS con EF Core y el proveedor Pomelo; exclusión de intervalos con `SELECT … FOR UPDATE` sobre la fila del profesional, del animal y de cada recurso, en orden fijo; aislamiento READ COMMITTED; hasta 3 reintentos ante interbloqueo. | Infraestructura y agenda en la sección C; prueba CA-RC-01. |
+
+Siguen abiertos fuera de este recorrido: el CU de Recepción «Cobrar consulta» y el ingreso/alta de internación, que son los próximos documentos funcionales.

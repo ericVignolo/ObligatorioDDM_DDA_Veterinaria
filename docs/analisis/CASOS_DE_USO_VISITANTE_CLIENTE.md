@@ -206,7 +206,7 @@ Detalle de conexión con la atención: [FLUJO_RESERVA_CONSULTA.md](FLUJO_RESERVA
 **Calidad:** RNF-CON-01, 02, 05 a 09; RNF-REN-02; RNF-USA-01, 02.  
 **Nota:** el recorrido visible tendrá un máximo de cuatro pasos; las validaciones internas no cuentan como pasos de usuario.
 
-**Precisión pendiente:** RNF-USA-01 dice “desde el ingreso”. El tratamiento de registro o alta previa de un animal al medir esos pasos se cierra en P-RC-01 del recorrido integrado. El comportamiento posterior es llegada por Recepción, inicio por Veterinario y cierre clínico; el pago tiene un ciclo propio.
+**Medición de pasos:** RNF-USA-01 dice “desde el ingreso”; según P-RC-01, el registro y el alta previa de un animal no suman pasos. El comportamiento posterior es llegada por Recepción, inicio por Veterinario y cierre clínico; el pago tiene un ciclo propio.
 
 ### CU-CLI-03 — Cancelar o reprogramar turno
 

@@ -2,7 +2,7 @@
 
 Fecha: 2026-10-09
 
-Estado: borrador de análisis para revisar con Eric y Diego. No es diseño visual definitivo ni evidencia de RF implementados.
+Estado: flujo aprobado para construir el prototipo de la sección A (2026-10-29). No es diseño visual definitivo.
 
 Estos diagramas son editables en Markdown/Mermaid y viajan con la rama `desktop`. Eric confirmó que el primer flujo será **catálogo público → registro → reservar turno** y que «árboles binarios» significa **decisiones de proceso con ramas Sí/No**, no un árbol de navegación ni una estructura de datos algorítmica.
 
@@ -35,7 +35,7 @@ flowchart LR
     libre -->|Sí| confirmado([Turno confirmado])
 ```
 
-**Límite de la rama `desktop`:** la navegación, los formularios, mensajes y estados se podrán ensayar con datos de demostración una vez cerradas las especificaciones necesarias. El código enviado por correo, la cuenta verificada, la disponibilidad, la reserva y la persistencia reales pertenecen a la integración posterior con la API/MySQL. En el prototipo se marcarán como simulados y no se contabilizarán como RF cumplidos. Quedan pendientes los detalles P-RC-01/02 y D-REG-02/05 que Diego debe cerrar.
+**Límite de la rama `desktop`:** el código por correo, la cuenta verificada, la disponibilidad y la reserva se simulan hasta la sección C (ver [principios vigentes](../contexto-base/CONTEXTO_BASE.md#31-principios-vigentes)). Las decisiones de este recorrido (D-REG-02/05, P-RC-01/02) están cerradas.
 
 ## 2. Árbol binario de decisiones: siguiente paso para reservar
 
@@ -54,4 +54,4 @@ flowchart TD
     animal -->|Sí| continuar([Seguir con reserva])
 ```
 
-El árbol solo selecciona el **siguiente paso visible**. No concede permisos por sí solo: la futura API deberá validar sesión, cuenta verificada, responsabilidad sobre el animal y disponibilidad real. En la rama `desktop` esas respuestas serán demostrativas, sin guardar datos ni crear un turno verdadero. Diego debe cerrar las decisiones pendientes por recorrido y Eric/Codex revisarán el resultado.
+El árbol solo selecciona el **siguiente paso visible**; la API valida sesión, cuenta verificada, responsabilidad sobre el animal y disponibilidad real.

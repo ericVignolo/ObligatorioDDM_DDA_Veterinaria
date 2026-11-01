@@ -2,13 +2,13 @@
 
 Fecha: 2026-10-08
 
-Estado: borrador; Diego cierra las decisiones pendientes y registra su justificación; no implementado.
+Estado: decisiones D-CAT-01 a D-CAT-04 **cerradas** (D-CAT-01 por Eric, el resto por Diego el 2026-10-29); contrato listo para implementar; no implementado.
 
 ## Propósito y límite
 
-Primer recorrido pequeño de la rama `feature/escritorio-api`: una persona sin cuenta abre el catálogo en Blazor, Blazor consulta la API compartida y presenta los servicios públicos con descripción y precio de referencia. La misma API servirá después a React Native. Este documento concreta **RF-VIS-01** y **HU-VIS-01**, dentro de **CU-VIS-01**; no especifica todavía la administración completa de servicios (**RF-ADM-02**), la reserva ni el cobro.
+Primer recorrido pequeño del proyecto. En la sección A (rama `desktop`) Blazor lo consume con datos de demostración a través de un adaptador con la misma forma que este contrato; en la sección C la API lo implementa de verdad. Una persona sin cuenta abre el catálogo en Blazor, Blazor consulta la API compartida y presenta los servicios públicos con descripción y precio de referencia. La misma API servirá después a React Native. Este documento concreta **RF-VIS-01** y **HU-VIS-01**, dentro de **CU-VIS-01**; no especifica todavía la administración completa de servicios (**RF-ADM-02**), la reserva ni el cobro.
 
-Las reglas canónicas siguen en [MATRIZ_REQUISITOS.md](../contexto-base/MATRIZ_REQUISITOS.md). Los nombres de rutas y campos siguientes son una **propuesta de contrato técnico**, no nuevos RF ni decisiones de negocio aprobadas. Los puntos abiertos están identificados al final.
+Las reglas canónicas siguen en [MATRIZ_REQUISITOS.md](../contexto-base/MATRIZ_REQUISITOS.md). Los nombres de rutas y campos siguientes son una **propuesta de contrato técnico**, no nuevos RF ni decisiones de negocio aprobadas. Las decisiones están al final.
 
 ## Recorrido visible
 
@@ -47,9 +47,9 @@ Ejemplo **ilustrativo de forma, no de datos reales ni precios aprobados**:
 }
 ```
 
-`id` no debe codificar datos personales. **Decisión de Eric (2026-10-08, D-CAT-01):** el precio visible se rotula siempre «Desde». La API entrega un importe de referencia respaldado por una tarifa vigente; no envía la palabra «Desde» como sustituto del dato. **D-CAT-02/04 parcialmente cerradas:** sin importe publicable, el servicio no aparece; un servicio no reservable en línea sí puede aparecer y muestra «Consultar/llamar». Sigue abierto el cálculo exacto del importe base y los demás criterios de publicación. El ejemplo **no fija** moneda, tarifa, categoría, duración ni precio de ningún servicio. La respuesta pública no incluye costos internos, datos de clientes, agenda privada ni registros clínicos.
+`id` no debe codificar datos personales. **Decisión de Eric (2026-10-08, D-CAT-01):** el precio visible se rotula siempre «Desde». La API entrega un importe de referencia respaldado por una tarifa vigente; no envía la palabra «Desde» como sustituto del dato. **D-CAT-02/04 parcialmente cerradas:** sin importe publicable, el servicio no aparece; un servicio no reservable en línea sí puede aparecer y muestra «Consultar/llamar». El importe y los criterios de publicación están en D-CAT-02 y D-CAT-04. El ejemplo **no fija** moneda, tarifa, categoría, duración ni precio de ningún servicio. La respuesta pública no incluye costos internos, datos de clientes, agenda privada ni registros clínicos.
 
-La API valida parámetros de paginación y responde `400` con un error legible si son inválidos. Una página válida sin resultados devuelve `200` con `items: []`; un detalle no público devuelve `404` sin revelar si existe internamente. Ante una falla del servicio, Blazor muestra un mensaje de recuperación y contacto, sin presentar datos ficticios. El formato uniforme de errores y los límites exactos de paginación se fijarán al definir las convenciones comunes de la API.
+La API valida parámetros de paginación y responde `400` con un error legible si son inválidos. Una página válida sin resultados devuelve `200` con `items: []`; un detalle no público devuelve `404` sin revelar si existe internamente. Ante una falla del servicio, Blazor muestra un mensaje de recuperación y contacto, sin presentar datos ficticios. El formato de errores y los límites de paginación son los de D-CAT-03.
 
 ## Reglas que debe preservar la implementación
 
@@ -74,15 +74,15 @@ La API valida parámetros de paginación y responde `400` con un error legible s
 | CAT-07 | Tarifa de referencia distinta de la tarifa al prestar | Catálogo no determina el cargo; la prueba del cargo se completará en H2 según RN-33. |
 | CAT-08 | Intentar reservar desde el catálogo | Acceso/registro y reanudación de intención; no se crea turno anónimo. Se verificará con H1. |
 
-**Criterio de avance:** este documento permite discutir y preparar el endpoint público, pero no marca RF-VIS-01 como implementado. Para cerrarlo faltan las decisiones D-CAT-02 a 04, contrato final, código API y Blazor, y evidencia de CAT-01 a CAT-06. CAT-07/08 son pruebas de integración de hitos posteriores.
+**Criterio de avance:** las decisiones están cerradas. RF-VIS-01 queda implementado cuando existan código API y Blazor y evidencia de CAT-01 a CAT-06. CAT-07/08 son pruebas de integración de hitos posteriores.
 
-## Decisiones pendientes
+## Decisiones
 
 | ID | Clasificación | Pregunta | Impacto |
 |---|---|---|---|
 | D-CAT-01 | Diseño/UX | **Cerrada 2026-10-08:** Eric indicó mostrar siempre el precio como «Desde». | Blazor rotula así todo importe público de referencia. |
-| D-CAT-02 | Regla de negocio / diseño-UX | **Parcial 2026-10-08:** Eric permite servicios visibles sin reserva en línea, con «Consultar/llamar». Falta definir publicación y vigencia concretas. | Filtro de los GET y modelo de publicación. |
-| D-CAT-03 | Decisión técnica | Convención común de paginación, errores y formato definitivo de identificadores. | Contrato OpenAPI compartido. |
-| D-CAT-04 | Regla de negocio | **Parcial 2026-10-08:** Eric indicó ocultar servicios sin importe publicable. Falta definir de qué tarifa vigente sale el importe «Desde» si hay variantes. | Cálculo de referencia sin anuncios engañosos. |
+| D-CAT-02 | Regla de negocio / diseño-UX | **Cerrada 2026-10-29 (Diego):** un servicio aparece si cumple las tres condiciones: marcado «Publicado» por Administración, vigente hoy (`vigenteDesde` ≤ hoy y `vigenteHasta` vacío o posterior) y con importe publicable (D-CAT-04). «Reservable en línea» es un indicador aparte; si está apagado se muestra «Consultar/llamar» (Eric, 2026-10-08). | Filtro de los GET y modelo de publicación. |
+| D-CAT-03 | Decisión técnica | **Cerrada 2026-10-29 (Diego):** paginación `page` (desde 1) y `pageSize` (por defecto 20, máximo 50; fuera de rango → `400`). Errores en formato Problem Details (RFC 9457, `application/problem+json`) con `type`, `title`, `status`, `detail` y un `code` propio estable; sin datos internos ni clínicos. Identificadores UUID en texto. Rutas versionadas con `/api/v1/`. Se aplica a toda la API, no solo al catálogo. | Contrato OpenAPI compartido. |
+| D-CAT-04 | Regla de negocio | **Cerrada 2026-10-29 (Diego):** el importe «Desde» es la menor tarifa vigente hoy entre las variantes publicadas del servicio (por especie, duración u otra variante). Sin ninguna tarifa vigente el servicio no aparece (Eric, 2026-10-08). Moneda UYU, en pesos enteros. | Cálculo de referencia sin anuncios engañosos. |
 
-No cerrar estas decisiones mediante valores de ejemplo. Ver el [tablero de decisiones](DECISIONES_PARA_DESARROLLO.md) para su orden junto con registro y consulta.
+Los valores del ejemplo JSON siguen siendo ilustrativos. Ver el [tablero de decisiones](DECISIONES_PARA_DESARROLLO.md) para su orden junto con registro y consulta.

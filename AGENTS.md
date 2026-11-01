@@ -17,9 +17,18 @@ Antes de planificar, diseñar o implementar, leer:
 - Clasificar cada requisito nuevo como: decisión técnica, requerimiento funcional, regla de negocio, requerimiento no funcional, diseño/UX, pseudocódigo o consentimiento/alerta.
 - Aplicar la redacción y clasificación de RF, RN-01 a RN-59 y RNF documentada en `MATRIZ_REQUISITOS.md`. No sustituirla por resúmenes informales.
 - La navegación pública sin autenticación está permitida; las acciones protegidas deben solicitar inicio de sesión o registro y luego retomar la intención original del usuario.
-- Antes del diseño visual definitivo se deben incorporar los requisitos suministrados por el usuario y definir el comportamiento/pseudocódigo correspondiente.
+- Un recorrido se diseña en alta fidelidad o se programa cuando sus decisiones, estados y pseudocódigo están cerrados (puerta H0 por recorrido, DT-ORG-03 en `CONTEXTO_BASE.md`).
+- Las advertencias comunes (autoridad de la API, límites de los prototipos, estados de un requisito) se escriben solo en la sección 3.1 de `CONTEXTO_BASE.md`; los demás documentos la enlazan.
 - Cualquier cambio de arquitectura, tecnología o regla obligatoria debe actualizar primero la documentación de contexto.
 
 ## Punto de continuación
 
-El documento de análisis original, las políticas de privacidad y la primera especificación de alertas y asistencia ya fueron incorporados. El 2026-10-02 se confirmó un equipo de dos integrantes con apoyo de Codex y sin fecha límite real establecida. El 2026-10-08 se prepararon las carpetas `api/`, `desktop/`, `mobile/` y `tests/` y la rama `feature/escritorio-api`. El 2026-10-09 Eric delegó las decisiones pendientes en Diego y pidió una rama `desktop` derivada de la anterior: primero se validará la experiencia de escritorio Blazor, posponiendo la API para integración posterior. Eric eligió MySQL como motor de la futura base de datos (DT-BD-01). Mientras no exista API, los recorridos interactivos solo pueden usar datos de demostración y no acreditan persistencia, autenticación, autorización ni reglas críticas; Blazor nunca accederá directamente a MySQL. La tabla de alcance está en `docs/analisis/ALCANCE_ENTREGA.md` y el arranque operativo en `docs/analisis/ARRANQUE_ESCRITORIO.md`. El frente funcional inmediato sigue siendo cerrar las decisiones de “Reservar turno” conectado con “Realizar consulta” en `docs/analisis/FLUJO_RESERVA_CONSULTA.md`, completar registro, cobro, internación y parámetros de asistencia, y construir y validar el mapa móvil de Visitante, Cliente, Asistencia y Veterinario, contemplando Recepción en Blazor. No comenzar todavía el diseño visual definitivo ni implementar código de producto hasta completar la especificación de registro, el pseudocódigo restante y las decisiones abiertas documentadas.
+Actualizado: 2026-10-29.
+
+- Equipo: Eric y Diego, con apoyo de asistentes de IA. Sin fecha de entrega real todavía.
+- Decisiones del primer recorrido (catálogo → registro → reserva → consulta) cerradas por Diego: ver `docs/analisis/DECISIONES_PARA_DESARROLLO.md`.
+- Base de datos: MySQL 8.4 LTS, EF Core 9 con Pomelo, agenda protegida con `SELECT … FOR UPDATE` (DT-BD-01 y DT-BD-02).
+- Ramas: secciones A (`desktop`), B (`desktop-mobile`) y C (`desktop-mobile-api`), encadenadas, con merge a `main` al aprobar cada una; trabajo diario en ramas cortas con PR (DT-ORG-02).
+- Plan B de alcance listo, sin recortes aplicados: `docs/analisis/PLAN_B_ALCANCE.md`.
+- Siguiente paso: sección A, tareas A-001 a A-003 de `docs/analisis/PLAN_TAREAS_PROYECTO.md` (esqueleto Blazor y catálogo con datos de demostración).
+- Siguen abiertos: cobro por Recepción, internación, alertas sanitarias y parámetros de asistencia; se cierran antes de sus propias pantallas.

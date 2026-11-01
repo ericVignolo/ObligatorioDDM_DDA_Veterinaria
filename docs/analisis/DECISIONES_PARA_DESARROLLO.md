@@ -1,29 +1,26 @@
 # Decisiones que desbloquean el desarrollo
 
-Fecha: 2026-10-09
+Actualizado: 2026-10-29
 
-Estado: decisiones abiertas asignadas a Diego; ninguna respuesta pendiente se presume aprobada.
+Eric delegó en Diego el 2026-10-09 las decisiones abiertas. El 2026-10-29 Diego cerró las del primer recorrido (catálogo → registro → reserva → consulta). Cada decisión cerrada está escrita, con su impacto, en el documento del módulo; este tablero solo indica dónde. «Cerrada» significa decidida y documentada, no implementada.
 
-Eric delegó el 2026-10-09 en Diego las **decisiones aún abiertas**. Eric y Codex mantendrán la documentación y podrán revisar la implementación. Las decisiones ya tomadas por Eric se conservan. Este tablero no reemplaza la [matriz canónica](../contexto-base/MATRIZ_REQUISITOS.md) ni los pendientes detallados de [reserva y consulta](FLUJO_RESERVA_CONSULTA.md). Una decisión pasa a «cerrada» solo cuando Diego registra la opción elegida, justificación, fecha, impacto en API/Blazor/móvil/pruebas y documentos actualizados. «Documentado» no significa «implementado».
+| Orden | Bloque | Decisiones | Estado | Dónde está el detalle |
+|---|---|---|---|---|
+| 1 | Catálogo API | D-CAT-01 a D-CAT-04 | Cerradas (D-CAT-01 Eric 2026-10-08; resto Diego 2026-10-29) | [Catálogo](ESPECIFICACION_CATALOGO_SERVICIOS_API.md#decisiones) |
+| 2 | Registro | D-REG-01 a D-REG-05 | Cerradas (campos y verificación por correo: Eric 2026-10-08; resto Diego 2026-10-29) | [Registro](ESPECIFICACION_REGISTRO_CLIENTE.md#decisiones-cerradas) |
+| 3 | Reserva | P-RC-01, P-RC-02 | Cerradas (Diego 2026-10-29) | [Flujo, sección 11](FLUJO_RESERVA_CONSULTA.md#11-decisiones-cerradas) |
+| 4 | Consulta clínica | P-RC-03 a P-RC-07 | Cerradas (Diego 2026-10-29) | [Flujo, sección 11](FLUJO_RESERVA_CONSULTA.md#11-decisiones-cerradas) |
+| 5 | Persistencia | DT-BD-01 (MySQL, Eric 2026-10-09), DT-BD-02 y P-RC-08 | Cerradas (Diego 2026-10-29) | [Contexto base, DT-BD-02](../contexto-base/CONTEXTO_BASE.md#2-estado-actual) |
+| 6 | Organización | DT-ORG-02 y G-011 (flujo de ramas) | Cerradas (secciones: Eric 2026-10-20; ramas: Diego 2026-10-29) | [Plan de tareas, sección 2](PLAN_TAREAS_PROYECTO.md#2-ramas-previstas) |
+| 7 | Alcance | Plan B de recortes | Vigente como contingencia, sin recortes aplicados | [Plan B](PLAN_B_ALCANCE.md) |
+| 8 | Después del primer recorrido | Cobro por Recepción, internación, alertas sanitarias, parámetros de asistencia | Abiertas | Se deciden al abordar cada módulo. |
 
-| Orden | Bloque | Preguntas de cierre | Estado, responsable y destino |
-|---|---|---|---|
-| 1 | Catálogo API | D-CAT-01 **cerrada: siempre «Desde»**; D-CAT-02 **parcial: visible sin reserva en línea**; D-CAT-03 convenciones comunes; D-CAT-04 **parcial: ocultar sin precio publicable** | Diego cierra lo restante. [Especificación del catálogo](ESPECIFICACION_CATALOGO_SERVICIOS_API.md). |
-| 2 | Registro | D-REG-01 **parcial: siete campos obligatorios definidos**; D-REG-02 **parcial: código por correo**; D-REG-03 recuperación; D-REG-04 documentos/decisiones; D-REG-05 reanudación segura | Diego cierra lo restante. [Especificación de registro](ESPECIFICACION_REGISTRO_CLIENTE.md). |
-| 3 | Reserva | P-RC-01 medición de pasos; P-RC-02 seña, expiración, espera, ausencia, cancelación y sobreturnos; P-RC-08 **parcial: MySQL elegido**, pendiente versión/proveedor y exclusión de solapamientos | Diego cierra lo restante. [Flujo](FLUJO_RESERVA_CONSULTA.md) y [recorrido API](RECORRIDO_API_RESERVA_CONSULTA.md). |
-| 4 | Consulta clínica | P-RC-03 stock; P-RC-04 atención interrumpida/correcciones; P-RC-05 permisos; P-RC-06 campos/firma/consentimiento; P-RC-07 responsable económico, tarifa y redondeo | Diego. [Flujo](FLUJO_RESERVA_CONSULTA.md) y [recorrido API](RECORRIDO_API_RESERVA_CONSULTA.md). |
-| 5 | Después del primer recorrido | Cobro por Recepción, internación, alertas sanitarias y parámetros de asistencia | Diego cuando se aborde cada módulo. No ampliar el primer endpoint a estos procesos. |
+## Qué habilita este cierre
 
-## Decisiones ya confirmadas por Eric
+Con los bloques 1 a 6 cerrados, el primer recorrido ya no tiene decisiones pendientes. Queda habilitado empezar la sección A en `desktop`: esqueleto Blazor y catálogo público con datos de demostración (A-001 a A-003), seguido del registro y la reserva demostrativos (A-006 a A-015).
 
-1. **Respondida 2026-10-08:** mostrar siempre el precio como «Desde» (**D-CAT-01**) y ocultar servicios sin importe publicable (**D-CAT-04 parcial**). Diego define la fuente del importe.
-2. **Respondida 2026-10-08:** nombre, apellido, correo, contraseña, teléfono, documento y dirección del hogar serán obligatorios; falta la ficha de finalidad, acceso y conservación de cada dato (**D-REG-01**).
-3. **Respondida 2026-10-08:** verificar mediante código enviado al correo; faltan caducidad y límites de intentos/reenvíos (**D-REG-02**, RN-38).
+El bloque 8 no frena la sección A: cada módulo cierra sus decisiones antes de su propia pantalla, no antes de empezar a programar.
 
-También quedó confirmado que un servicio puede mostrarse sin reserva en línea, con «Consultar/llamar» (**D-CAT-02 parcial**). Diego define los criterios restantes de publicación.
+## Regla para nuevas decisiones
 
-El 2026-10-09 Eric eligió MySQL como motor de la futura base de datos (**DT-BD-01**, P-RC-08 parcial); Diego define los detalles restantes de persistencia y concurrencia.
-
-## Regla práctica para Diego
-
-Diego puede tomar y documentar las decisiones pendientes, revisar la arquitectura y preparar el entorno. No debe interpretar una pregunta abierta como respuesta aprobada ni marcar RF-VIS-01 como terminado por crear un endpoint. Debe conservar las decisiones confirmadas, la redacción canónica de RF/RN/RNF y la arquitectura obligatoria; cualquier cambio a estas reglas se documenta primero en contexto. Conforme al [arranque del escritorio](ARRANQUE_ESCRITORIO.md) y [AGENTS.md](../../AGENTS.md), el inicio del código de producto sigue condicionado al cierre de H0, en particular registro, pseudocódigo restante y decisiones abiertas. Cuando se levante esa condición, el primer incremento verificable será **API pública de servicios → vista Blazor → pruebas CAT-01 a CAT-06**.
+Quien decide registra la opción elegida, la fecha, el impacto en API, Blazor, móvil y pruebas, y actualiza el documento del módulo. Las decisiones de Eric no se reabren sin hablarlo con él. Una decisión que cambia arquitectura, tecnología o una regla obligatoria se escribe primero en `CONTEXTO_BASE.md`.
