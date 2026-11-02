@@ -1,7 +1,95 @@
-﻿@page "/"
+@page "/"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ClinicaService ClinicaService
+@inject PrestacionService PrestacionService
+@inject NavigationManager Navegacion
 
-<PageTitle>Home</PageTitle>
+<PageTitle>@clinica.Nombre — Inicio</PageTitle>
 
-<h1>Hello, world!</h1>
+@* Identidad de la clínica (A-002) *@
+<section class="p-4 mb-4 bg-light rounded-3 border">
+    <h1 class="display-5 fw-bold">@clinica.Nombre</h1>
+    <p class="lead">@clinica.Lema</p>
+    <p class="text-muted mb-3">Atendemos perros, gatos, caballos, ovinos y bovinos en @clinica.Ciudad.</p>
+    <a class="btn btn-primary me-2" href="servicios">Ver servicios</a>
+    <a class="btn btn-outline-primary" href="acceso">Ingresar o crear cuenta</a>
+</section>
 
-Welcome to your new app.
+@* Urgencias siempre visibles (RF-VIS-06) *@
+<section class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-2" role="region" aria-label="Urgencias">
+    <div>
+        <strong>¿Es una urgencia?</strong>
+        Si tu animal está en peligro, llamá a la guardia. Esta página no reemplaza la atención de un veterinario.
+    </div>
+    <a class="btn btn-danger" href="@ClinicaService.EnlaceTelefono(clinica.TelefonoGuardia)">
+        Llamar a guardia: @clinica.TelefonoGuardia
+    </a>
+</section>
+
+@* Servicios destacados (RF-VIS-01) *@
+<section class="mb-4">
+    <div class="d-flex justify-content-between align-items-baseline">
+        <h2 class="h4">Servicios destacados</h2>
+        <a href="servicios">Ver todos →</a>
+    </div>
+
+    @if (destacados.Count == 0)
+    {
+        <p>Por ahora no hay servicios publicados.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var prestacion in destacados)
+            {
+                <div class="col-lg-4">
+                    <PrestacionCard Prestacion="prestacion" OnReservar="IrAReservar" />
+                </div>
+            }
+        </div>
+    }
+</section>
+
+@* Contacto y ubicación (RF-VIS-03). El mapa se agrega cuando se elija el proveedor. *@
+<section class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <h2 class="h4">Contacto</h2>
+        <ul class="list-unstyled">
+            <li>Teléfono: <a href="@ClinicaService.EnlaceTelefono(clinica.Telefono)">@clinica.Telefono</a></li>
+            <li>Correo: <a href="@($"mailto:{clinica.Correo}")">@clinica.Correo</a></li>
+            <li>Horario: @clinica.Horario</li>
+        </ul>
+    </div>
+    <div class="col-md-6 mb-3">
+        <h2 class="h4">Ubicación</h2>
+        <p class="mb-1">@clinica.Direccion</p>
+        <p>@clinica.Ciudad</p>
+        <p class="text-muted small">Mapa: pendiente de elegir proveedor (Google Maps u OpenStreetMap).</p>
+    </div>
+</section>
+
+@* Políticas (RF-VIS-10). Las páginas se crean en A-005. *@
+<footer class="border-top pt-3 text-muted small">
+    <p class="mb-1">@clinica.Nombre · @clinica.Direccion, @clinica.Ciudad</p>
+    <p class="mb-0">Política de Privacidad · Términos y Condiciones · Política de Cookies (próximamente)</p>
+</footer>
+
+@code {
+    private Clinica clinica = new();
+    private List<Prestacion> destacados = new();
+
+    protected override void OnInitialized()
+    {
+        clinica = ClinicaService.Obtener();
+
+        // Se muestran los tres primeros servicios publicados.
+        destacados = PrestacionService.ObtenerPublicas().Take(3).ToList();
+    }
+
+    // Igual que en Servicios: reservar pasa primero por el acceso (RF-VIS-07).
+    private void IrAReservar(int id)
+    {
+        Navegacion.NavigateTo($"acceso?servicio={id}");
+    }
+}

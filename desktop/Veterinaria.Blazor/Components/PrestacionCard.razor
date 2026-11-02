@@ -1,4 +1,6 @@
-﻿@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ClinicaService ClinicaService
 
 <div class="card mb-3">
     <div class="card-body">
@@ -14,7 +16,7 @@
         }
         else
         {
-            <a class="btn btn-outline-primary btn-sm" href="tel:+59845440000">Consultar o llamar</a>
+            <a class="btn btn-outline-primary btn-sm" href="@ClinicaService.EnlaceTelefono(ClinicaService.Obtener().Telefono)">Consultar o llamar</a>
         }
     </div>
 </div>

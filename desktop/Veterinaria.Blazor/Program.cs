@@ -10,6 +10,7 @@ CultureInfo.DefaultThreadCurrentUICulture = culturaUruguay;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<PrestacionService>();
+builder.Services.AddScoped<ClinicaService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

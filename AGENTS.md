@@ -21,6 +21,22 @@ Antes de planificar, diseñar o implementar, leer:
 - Las advertencias comunes (autoridad de la API, límites de los prototipos, estados de un requisito) se escriben solo en la sección 3.1 de `CONTEXTO_BASE.md`; los demás documentos la enlazan.
 - Cualquier cambio de arquitectura, tecnología o regla obligatoria debe actualizar primero la documentación de contexto.
 
+## Sesiones de trabajo
+
+- Al **iniciar** una sesión, leer la última bitácora de `docs/sesiones/` y su lista de pendientes.
+- Al **cerrar** una sesión, crear `docs/sesiones/AAAA-MM-DD_tema-breve.md` con: qué se hizo, archivos tocados, decisiones, cómo probarlo y qué falta.
+- Cada tarea va en una rama corta (`<nombre>/<tarea>`) con PR a la rama de la sección; el otro integrante revisa antes de mezclar (DT-ORG-02).
+
+## Convenciones de código (estilo del docente)
+
+- Blazor Web App, .NET 10, interactividad Server con ubicación Global.
+- Carpetas: `Models/` (clases de datos), `Services/` (lógica y datos), `Components/` (componentes reutilizables como `PrestacionCard`), `Components/Pages/` (páginas).
+- Modelos: clases comunes con `{ get; set; }`, valores por defecto (`= ""`) y nombres en español.
+- Datos sin API (sección A): un `XxxService` con una `List<>` privada, registrado con `AddScoped<XxxService>()` e inyectado con `@inject`. Sin interfaces. En la sección C se reemplaza por `XxxApiService` con `AddHttpClient`.
+- Páginas: `@foreach` con componentes que reciben `[Parameter]`; detalle con `@page "/ruta/{Id:int}"` y `OnParametersSet`; acciones desde un componente con `EventCallback`.
+- Formularios: `EditForm` con `DataAnnotationsValidator` y `ValidationMessage`; reglas con `[Required]`, `[Range]`, etc. en el modelo.
+- Textos visibles en español rioplatense; cultura `es-UY`.
+
 ## Punto de continuación
 
 Actualizado: 2026-10-31.
