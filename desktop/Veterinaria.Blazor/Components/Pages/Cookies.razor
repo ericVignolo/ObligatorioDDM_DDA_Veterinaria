@@ -1,0 +1,64 @@
+@page "/cookies"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ClinicaService ClinicaService
+
+<EncabezadoLegal Codigo="cookies" />
+
+<h2 class="h4">1. Qué son las cookies</h2>
+<p>
+    Son pequeños archivos que un sitio guarda en tu navegador. Algunas son necesarias para que el sitio funcione;
+    otras sirven para analizar visitas o mostrar publicidad.
+</p>
+
+<h2 class="h4">2. Qué cookies usamos</h2>
+<p>Hoy usamos <strong>solo cookies necesarias</strong>. No usamos cookies de análisis, publicidad ni redes sociales.</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">Cookie</th>
+            <th scope="col">Para qué sirve</th>
+            <th scope="col">Duración</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>.AspNetCore.Antiforgery.*</code></td>
+            <td>Protege los formularios contra envíos falsificados desde otros sitios.</td>
+            <td>Hasta cerrar el navegador.</td>
+        </tr>
+        <tr>
+            <td>Cookie de sesión</td>
+            <td>Mantiene tu sesión iniciada de forma segura. Se agrega cuando exista el inicio de sesión.</td>
+            <td>Hasta cerrar sesión o que venza.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2 class="h4">3. Por qué no te pedimos aceptar cookies</h2>
+<p>
+    Las cookies necesarias no requieren tu consentimiento porque sin ellas el sitio no funciona de forma segura.
+    Si en el futuro incorporamos cookies o servicios no necesarios (por ejemplo, un mapa externo o herramientas de
+    análisis), no se van a activar hasta que decidas. Rechazar va a ser tan fácil como aceptar, y vas a poder cambiar
+    tu decisión cuando quieras.
+</p>
+
+<h2 class="h4">4. Cómo borrarlas</h2>
+<p>
+    Podés borrar o bloquear las cookies desde la configuración de tu navegador. Si bloqueás las necesarias, algunas
+    funciones, como iniciar sesión, pueden dejar de funcionar.
+</p>
+
+<h2 class="h4">5. Contacto</h2>
+<p>Por dudas sobre esta política escribinos a <a href="@($"mailto:{clinica.Correo}")">@clinica.Correo</a>.</p>
+
+<p class="mt-4"><a href="">← Volver al inicio</a></p>
+
+@code {
+    private Clinica clinica = new();
+
+    protected override void OnInitialized()
+    {
+        clinica = ClinicaService.Obtener();
+    }
+}

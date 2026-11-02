@@ -8,13 +8,16 @@ public class ClinicaService
     private readonly Clinica _clinica = new()
     {
         Nombre = "VITALIA",
+        RazonSocial = "VITALIA Servicios Veterinarios S.A.S.",
         Lema = "Clínica veterinaria para animales de compañía y de campo",
+        Presentacion = "Atendemos perros, gatos, caballos, ovinos y bovinos. Trabajamos en la clínica y, cuando hace falta, vamos a tu casa o a tu campo.",
         Direccion = "Calle 18 de Julio 1234",
         Ciudad = "Nueva Palmira, Colonia",
         Telefono = "+598 4544 0000",
         TelefonoGuardia = "+598 99 000 000",
         Correo = "contacto@vitalia.uy",
-        Horario = "Lunes a viernes de 9 a 19 h · Sábados de 9 a 13 h"
+        Horario = "Lunes a viernes de 9 a 19 h · Sábados de 9 a 13 h",
+        Cobertura = "Asistencia a domicilio hasta 30 km desde la clínica."
     };
 
     public Clinica Obtener()

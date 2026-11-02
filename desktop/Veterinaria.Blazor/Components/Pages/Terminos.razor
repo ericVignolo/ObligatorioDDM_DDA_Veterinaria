@@ -1,0 +1,92 @@
+@page "/terminos"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ClinicaService ClinicaService
+
+<EncabezadoLegal Codigo="terminos" />
+
+<h2 class="h4">1. Objeto</h2>
+<p>
+    Estos términos regulan el uso del sitio y la aplicación de @clinica.Nombre, prestados por @clinica.RazonSocial,
+    para consultar servicios, reservar turnos, ver la historia clínica de tus animales, pedir asistencia y pagar
+    prestaciones. Al crear una cuenta los aceptás. Podés navegar la información pública sin cuenta.
+</p>
+
+<h2 class="h4">2. Tu cuenta</h2>
+<ul>
+    <li>Tenés que ser mayor de edad y dar datos reales.</li>
+    <li>La cuenta es personal. Cuidá tu contraseña y avisanos si creés que alguien más la usa.</li>
+    <li>Para reservar tenés que verificar tu correo.</li>
+    <li>Solo podés gestionar los animales de los que sos responsable.</li>
+</ul>
+
+<h2 class="h4">3. Turnos</h2>
+<ul>
+    <li>Podés reservar con al menos 2 horas de anticipación y hasta 60 días hacia adelante.</li>
+    <li>Podés cancelar sin costo hasta 24 horas antes. Después, la cancelación se hace por Recepción.</li>
+    <li>Si no te presentás, el turno queda como ausente. Con 3 ausencias en 12 meses, las próximas reservas se hacen por Recepción.</li>
+    <li>Las cirugías pueden requerir una seña. Sin la seña, el turno queda pendiente y se cancela a las 24 horas.</li>
+    <li>El horario puede demorarse si se atiende una urgencia.</li>
+</ul>
+
+<h2 class="h4">4. Precios y pagos</h2>
+<ul>
+    <li>Los precios publicados son de referencia («desde»). El importe final depende del animal y de la atención realizada.</li>
+    <li>Los precios están en pesos uruguayos.</li>
+    <li>Podés pagar en línea, cuando esté disponible, o en Recepción.</li>
+    <li>Las correcciones de un cobro se hacen con nota de crédito.</li>
+</ul>
+
+<h2 class="h4">5. Asistencia y urgencias</h2>
+<ul>
+    <li>La asistencia a domicilio cubre hasta 30 km desde la clínica y tiene un costo según distancia y cantidad de animales.</li>
+    <li>El nivel de urgencia lo define el equipo y puede cambiar después de la evaluación.</li>
+    <li>Pedir asistencia no garantiza un horario de llegada. Si la vida del animal corre peligro, llamá a la guardia: <a href="@ClinicaService.EnlaceTelefono(clinica.TelefonoGuardia)">@clinica.TelefonoGuardia</a>.</li>
+    <li>La información del sitio es orientativa y no reemplaza la consulta con un veterinario.</li>
+</ul>
+
+<h2 class="h4">6. Consentimientos clínicos</h2>
+<p>
+    Algunos procedimientos requieren un consentimiento informado específico. Se firma aparte, para cada procedimiento,
+    y no se reemplaza por la aceptación de estos términos.
+</p>
+
+<h2 class="h4">7. Uso correcto</h2>
+<p>
+    No podés usar el servicio para fines ilegales, intentar acceder a datos de otras personas o animales, ni afectar
+    su funcionamiento. Podemos suspender una cuenta que incumpla estos términos, avisándote el motivo.
+</p>
+
+<h2 class="h4">8. Responsabilidad</h2>
+<p>
+    Trabajamos para que el servicio esté disponible y la información sea correcta, pero puede haber interrupciones.
+    La atención veterinaria se rige por las normas de la profesión. No respondemos por el mal uso de la cuenta por
+    parte de terceros cuando no se nos avisó.
+</p>
+
+<h2 class="h4">9. Propiedad intelectual</h2>
+<p>Los textos, imágenes y diseño del sitio pertenecen a @clinica.RazonSocial o se usan con autorización.</p>
+
+<h2 class="h4">10. Cambios y ley aplicable</h2>
+<p>
+    Cada versión de estos términos tiene número y fecha. Si un cambio es importante, te lo informamos antes de que
+    rija. Estos términos se rigen por las leyes de la República Oriental del Uruguay.
+</p>
+
+<h2 class="h4">11. Contacto</h2>
+<p>
+    @clinica.RazonSocial · @clinica.Direccion, @clinica.Ciudad ·
+    <a href="@($"mailto:{clinica.Correo}")">@clinica.Correo</a> ·
+    <a href="@ClinicaService.EnlaceTelefono(clinica.Telefono)">@clinica.Telefono</a>
+</p>
+
+<p class="mt-4"><a href="">← Volver al inicio</a></p>
+
+@code {
+    private Clinica clinica = new();
+
+    protected override void OnInitialized()
+    {
+        clinica = ClinicaService.Obtener();
+    }
+}

@@ -1,0 +1,34 @@
+@page "/profesionales"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ProfesionalService ProfesionalService
+
+<PageTitle>Profesionales — VITALIA</PageTitle>
+
+<h1>Nuestro equipo</h1>
+<p class="text-muted">Conocé a los veterinarios de la clínica, su área de trabajo y sus horarios.</p>
+
+@if (profesionales.Count == 0)
+{
+    <p>Por ahora no hay profesionales publicados.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var profesional in profesionales)
+        {
+            <div class="col-md-6 col-lg-4 mb-3">
+                <ProfesionalCard Profesional="profesional" />
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Profesional> profesionales = new();
+
+    protected override void OnInitialized()
+    {
+        profesionales = ProfesionalService.ObtenerPublicos();
+    }
+}

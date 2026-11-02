@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<PrestacionService>();
 builder.Services.AddScoped<ClinicaService>();
+builder.Services.AddScoped<ProfesionalService>();
+builder.Services.AddScoped<DocumentoLegalService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

@@ -1,0 +1,41 @@
+@page "/profesionales/{Id:int}"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ProfesionalService ProfesionalService
+
+@if (profesional is null)
+{
+    <PageTitle>Profesional no disponible — VITALIA</PageTitle>
+    <h1>Profesional no disponible</h1>
+    <p>No se encontró el profesional solicitado.</p>
+}
+else
+{
+    <PageTitle>@profesional.Nombre — VITALIA</PageTitle>
+    <h1>@profesional.Nombre</h1>
+    <p class="lead">@profesional.Especialidad</p>
+    <p>@profesional.Descripcion</p>
+
+    <h2 class="h5">Horarios de atención</h2>
+    <ul>
+        @foreach (var horario in profesional.Horarios)
+        {
+            <li>@horario</li>
+        }
+    </ul>
+    <p class="text-muted small">Horarios informativos. La disponibilidad real se ve al reservar un turno.</p>
+}
+
+<a href="profesionales">← Volver al equipo</a>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Profesional? profesional;
+
+    protected override void OnParametersSet()
+    {
+        profesional = ProfesionalService.ObtenerPorId(Id);
+    }
+}

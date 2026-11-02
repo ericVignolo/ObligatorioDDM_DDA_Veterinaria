@@ -1,0 +1,101 @@
+@page "/privacidad"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ClinicaService ClinicaService
+
+<EncabezadoLegal Codigo="privacidad" />
+
+<h2 class="h4">1. Quién es responsable de tus datos</h2>
+<p>
+    El responsable de la base de datos es @clinica.RazonSocial (@clinica.Nombre), con domicilio en
+    @clinica.Direccion, @clinica.Ciudad, Uruguay. Podés escribirnos a
+    <a href="@($"mailto:{clinica.Correo}")">@clinica.Correo</a> o llamar al
+    <a href="@ClinicaService.EnlaceTelefono(clinica.Telefono)">@clinica.Telefono</a>.
+</p>
+<p>Tratamos los datos personales conforme a la Ley N.º 18.331 de Protección de Datos Personales y sus normas complementarias.</p>
+
+<h2 class="h4">2. Qué datos recolectamos</h2>
+<ul>
+    <li><strong>Datos de tu cuenta:</strong> nombre, apellido, correo electrónico, contraseña (guardada cifrada), teléfono, documento de identidad y dirección del hogar.</li>
+    <li><strong>Datos de tus animales:</strong> nombre, especie, raza, sexo, fecha de nacimiento, microchip y fotos que decidas cargar.</li>
+    <li><strong>Historia clínica:</strong> consultas, diagnósticos, tratamientos, vacunas, estudios y consentimientos firmados.</li>
+    <li><strong>Turnos y pagos:</strong> reservas, asistencias, cargos, cobros y comprobantes. No guardamos los datos completos de tu tarjeta.</li>
+    <li><strong>Ubicación:</strong> solo cuando pedís asistencia a domicilio y lo aceptás en ese momento.</li>
+    <li><strong>Datos técnicos:</strong> registros de acceso y seguridad necesarios para proteger la cuenta.</li>
+</ul>
+<p>No pedimos datos que no necesitamos para la finalidad indicada. Los campos opcionales se marcan como tales.</p>
+
+<h2 class="h4">3. Para qué los usamos</h2>
+<ul>
+    <li>Crear y proteger tu cuenta, y verificar tu correo.</li>
+    <li>Reservar, modificar y cancelar turnos, y enviarte recordatorios.</li>
+    <li>Atender a tus animales y llevar su historia clínica.</li>
+    <li>Avisarte de refuerzos de vacunas y desparasitaciones.</li>
+    <li>Coordinar y seguir una asistencia a domicilio.</li>
+    <li>Emitir cargos, registrar pagos y entregar comprobantes.</li>
+    <li>Cumplir obligaciones legales y atender tus consultas.</li>
+</ul>
+<p>No usamos tus datos para publicidad de terceros ni los vendemos.</p>
+
+<h2 class="h4">4. Con qué base los tratamos</h2>
+<p>
+    Tratamos tus datos con tu consentimiento, que se pide por separado para cada finalidad, y cuando son necesarios
+    para prestarte el servicio que solicitaste o para cumplir una obligación legal. Las opciones voluntarias nunca
+    aparecen marcadas de antemano y podés cambiarlas desde tu perfil.
+</p>
+
+<h2 class="h4">5. Ubicación en la asistencia a domicilio</h2>
+<p>
+    Antes de compartir tu ubicación te informamos para qué se usa y quién la ve: el veterinario asignado y Recepción,
+    solo para llegar a donde está el animal. El seguimiento termina cuando finaliza la asistencia. La ubicación del
+    veterinario en camino se comparte con vos con el mismo límite.
+</p>
+
+<h2 class="h4">6. Con quién los compartimos</h2>
+<p>Solo con quienes necesitamos para prestar el servicio, y con los datos mínimos:</p>
+<ul>
+    <li>proveedor de correo electrónico, para enviarte avisos y comprobantes;</li>
+    <li>proveedor de notificaciones del celular, para los avisos de la aplicación;</li>
+    <li>proveedor de pagos en línea, si elegís pagar por ese medio;</li>
+    <li>proveedor de mapas, cuando usás la asistencia a domicilio.</li>
+</ul>
+<p>Antes de incorporar cada proveedor actualizamos esta política con su nombre y los datos que recibe. Nunca enviamos información clínica a herramientas de análisis.</p>
+
+<h2 class="h4">7. Cuánto tiempo los guardamos</h2>
+<ul>
+    <li><strong>Historia clínica:</strong> no se borra, porque es un registro médico. Si eliminás tu cuenta, se conserva separada de tus datos personales durante el plazo que exija la normativa veterinaria.</li>
+    <li><strong>Cuenta:</strong> mientras esté activa. Si la eliminás, borramos tus datos personales salvo los que debamos conservar por ley.</li>
+    <li><strong>Pagos y comprobantes:</strong> durante el plazo que exija la normativa fiscal.</li>
+    <li><strong>Ubicación de una asistencia:</strong> solo mientras dura la asistencia y el registro mínimo de su resultado.</li>
+</ul>
+
+<h2 class="h4">8. Tus derechos</h2>
+<p>
+    Podés pedir acceso, rectificación, actualización, inclusión, supresión y oposición sobre tus datos, y descargar
+    una copia. Escribinos a <a href="@($"mailto:{clinica.Correo}")">@clinica.Correo</a> desde el correo de tu cuenta.
+    Respondemos en los plazos que fija la ley. Si no quedás conforme, podés presentar un reclamo ante la Unidad
+    Reguladora y de Control de Datos Personales (URCDP).
+</p>
+
+<h2 class="h4">9. Seguridad</h2>
+<p>
+    Usamos conexión cifrada, contraseñas protegidas, accesos según el rol de cada integrante del equipo y registro de
+    quién consulta la historia clínica. Si ocurre un incidente que afecte tus datos, te avisamos y actuamos según la normativa.
+</p>
+
+<h2 class="h4">10. Cambios en esta política</h2>
+<p>
+    Cada versión tiene número y fecha. Si un cambio afecta lo que aceptaste, te lo informamos y, cuando corresponda,
+    te pedimos una nueva aceptación. Guardamos el historial de versiones aceptadas.
+</p>
+
+<p class="mt-4"><a href="">← Volver al inicio</a></p>
+
+@code {
+    private Clinica clinica = new();
+
+    protected override void OnInitialized()
+    {
+        clinica = ClinicaService.Obtener();
+    }
+}

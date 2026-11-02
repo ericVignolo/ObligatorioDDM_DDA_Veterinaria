@@ -22,9 +22,12 @@
         <strong>¿Es una urgencia?</strong>
         Si tu animal está en peligro, llamá a la guardia. Esta página no reemplaza la atención de un veterinario.
     </div>
-    <a class="btn btn-danger" href="@ClinicaService.EnlaceTelefono(clinica.TelefonoGuardia)">
-        Llamar a guardia: @clinica.TelefonoGuardia
-    </a>
+    <div>
+        <a class="btn btn-danger" href="@ClinicaService.EnlaceTelefono(clinica.TelefonoGuardia)">
+            Llamar a guardia: @clinica.TelefonoGuardia
+        </a>
+        <a class="btn btn-outline-danger ms-1" href="urgencias">Qué hacer</a>
+    </div>
 </section>
 
 @* Servicios destacados (RF-VIS-01) *@
@@ -66,14 +69,9 @@
         <p class="mb-1">@clinica.Direccion</p>
         <p>@clinica.Ciudad</p>
         <p class="text-muted small">Mapa: pendiente de elegir proveedor (Google Maps u OpenStreetMap).</p>
+        <a href="clinica">Más sobre la clínica →</a>
     </div>
 </section>
-
-@* Políticas (RF-VIS-10). Las páginas se crean en A-005. *@
-<footer class="border-top pt-3 text-muted small">
-    <p class="mb-1">@clinica.Nombre · @clinica.Direccion, @clinica.Ciudad</p>
-    <p class="mb-0">Política de Privacidad · Términos y Condiciones · Política de Cookies (próximamente)</p>
-</footer>
 
 @code {
     private Clinica clinica = new();

@@ -1,0 +1,26 @@
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject DocumentoLegalService DocumentoLegalService
+@inject ClinicaService ClinicaService
+
+@* Visible en todas las páginas, con o sin sesión (RF-VIS-10). *@
+<footer class="border-top mt-5 pt-3 pb-3 text-muted small">
+    <p class="mb-1">@clinica.RazonSocial · @clinica.Direccion, @clinica.Ciudad · <a href="@ClinicaService.EnlaceTelefono(clinica.Telefono)">@clinica.Telefono</a></p>
+    <nav aria-label="Documentos legales">
+        @foreach (var documento in documentos)
+        {
+            <a class="me-3" href="@documento.Ruta">@documento.Titulo</a>
+        }
+    </nav>
+</footer>
+
+@code {
+    private Clinica clinica = new();
+    private List<DocumentoLegal> documentos = new();
+
+    protected override void OnInitialized()
+    {
+        clinica = ClinicaService.Obtener();
+        documentos = DocumentoLegalService.ObtenerVigentes();
+    }
+}
