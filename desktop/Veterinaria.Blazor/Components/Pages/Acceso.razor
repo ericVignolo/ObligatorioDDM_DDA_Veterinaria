@@ -1,0 +1,20 @@
+﻿@page "/acceso"
+
+<PageTitle>Ingresar</PageTitle>
+
+<h1>Ingresá o creá tu cuenta</h1>
+<p>Para reservar un turno necesitás una cuenta verificada.</p>
+
+@if (Servicio is not null)
+{
+    <p class="text-muted">Servicio elegido: @Servicio</p>
+}
+
+<div class="alert alert-info">En construcción: el registro y el ingreso se agregan en el próximo paso.</div>
+
+<a href="servicios">← Volver a servicios</a>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int? Servicio { get; set; }
+}
