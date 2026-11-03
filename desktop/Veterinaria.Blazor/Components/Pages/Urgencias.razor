@@ -71,16 +71,14 @@
     // Niveles de ESPECIFICACION_ALERTAS_ASISTENCIA.md, en orden de prioridad.
     private readonly List<NivelUrgencia> niveles = new()
     {
-        new("Rojo", "bg-danger", "Posible riesgo para la vida o empeoramiento grave.", "En todo horario, por la guardia. Es la prioridad máxima."),
-        new("Naranja", "bg-warning text-dark", "Urgencia alta, sin riesgo para la vida confirmado.", "En el horario de la clínica."),
-        new("Amarillo", "bg-info text-dark", "Necesita atención prioritaria, pero puede esperar un poco.", "En el horario de la clínica, después de los naranjas."),
-        new("Verde", "bg-success", "Situación estable o que se puede programar.", "En el horario de la clínica, después de los niveles anteriores.")
+        new() { Nombre = "Rojo", Clase = "bg-danger", Significado = "Posible riesgo para la vida o empeoramiento grave.", Horario = "En todo horario, por la guardia. Es la prioridad máxima." },
+        new() { Nombre = "Naranja", Clase = "bg-warning text-dark", Significado = "Urgencia alta, sin riesgo para la vida confirmado.", Horario = "En el horario de la clínica." },
+        new() { Nombre = "Amarillo", Clase = "bg-info text-dark", Significado = "Necesita atención prioritaria, pero puede esperar un poco.", Horario = "En el horario de la clínica, después de los naranjas." },
+        new() { Nombre = "Verde", Clase = "bg-success", Significado = "Situación estable o que se puede programar.", Horario = "En el horario de la clínica, después de los niveles anteriores." }
     };
 
     protected override void OnInitialized()
     {
         clinica = ClinicaService.Obtener();
     }
-
-    private record NivelUrgencia(string Nombre, string Clase, string Significado, string Horario);
 }
