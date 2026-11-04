@@ -63,10 +63,10 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 
 - [x] **A-006 — Construir registro como Cliente.** Implementar el formulario visual desde la especificación aprobada, aceptaciones separadas y validaciones de presentación; el prototipo no crea credenciales reales.
 - [~] **A-007 — Construir verificación y recuperación demostrativas.** Mostrar estados y mensajes de código, expiración, reenvío y recuperación definidos en H0; indicar que son simulaciones mientras no exista API.
-- [ ] **A-008 — Construir inicio y cierre de sesión demostrativos.** Crear rutas públicas/protegidas de presentación y estados de sesión simulados sin afirmar autorización real.
+- [x] **A-008 — Construir inicio y cierre de sesión demostrativos.** Crear rutas públicas/protegidas de presentación y estados de sesión simulados sin afirmar autorización real.
 - [ ] **A-009 — Crear perfil del Cliente.** Mostrar y editar solo datos y preferencias definidos, con estados de guardado/error demostrativos y privacidad por campo.
 - [ ] **A-010 — Crear perfiles de personal en el panel.** Preparar vistas de roles para Recepción, Veterinario y Administrador; separar permisos esperados de controles visuales simulados.
-- [ ] **A-011 — Preparar recuperación de acción protegida.** Desde catálogo o agenda, guardar intención no sensible y retomarla después del acceso simulado; al retomarla volver a revisar disponibilidad en los datos de demostración.
+- [x] **A-011 — Preparar recuperación de acción protegida.** Desde catálogo o agenda, guardar intención no sensible y retomarla después del acceso simulado; al retomarla volver a revisar disponibilidad en los datos de demostración.
 
 ### A.3 Animales y agenda
 
