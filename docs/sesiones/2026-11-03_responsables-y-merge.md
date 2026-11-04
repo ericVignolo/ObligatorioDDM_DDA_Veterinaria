@@ -18,7 +18,8 @@ Participantes: Eric (con Claude). Rama: `eric/a-004-a005-paginas-publicas` (PR #
 ## Pendientes
 
 - [ ] Diego: decidir proveedor MySQL de DT-BD-02 (el profesor usa `MySql.EntityFrameworkCore` de Oracle con EF Core 10).
-- [ ] Borrar ramas ya integradas o cerradas: `eric/a-002-inicio-vitalia`, `eric/a-004-a005-paginas-publicas`, `diego/cierre-h0`, `diego/proyecto-blazor`.
+- [x] Ramas borradas: `diego/cierre-h0`, `diego/proyecto-blazor`, `eric/a-002-inicio-vitalia`, `eric/a-004-a005-paginas-publicas` y `feature/escritorio-api` (todas contenidas en `desktop`).
+- [x] README actualizado y `desktop` mezclada a `main`, para que GitHub muestre C# en la rama principal.
 - [ ] Botones Reservar / Consultar en el detalle del servicio.
 - [ ] Mapa cuando se elija proveedor; actualizar Privacidad y Cookies en ese momento.
 - [ ] **Siguiente tarea:** registro de cliente (A-006 a A-008), en rama nueva desde `desktop`.
