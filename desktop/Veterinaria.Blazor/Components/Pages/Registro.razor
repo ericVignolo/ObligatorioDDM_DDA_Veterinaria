@@ -1,0 +1,177 @@
+@page "/registro"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject CuentaService CuentaService
+@inject NavigationManager Navegacion
+
+<PageTitle>Crear cuenta — VITALIA</PageTitle>
+
+<h1>Crear cuenta</h1>
+<p class="text-muted">Con tu cuenta vas a poder registrar a tus animales y reservar turnos. Todos los campos son obligatorios salvo los marcados como opcionales.</p>
+
+<div class="alert alert-secondary small">
+    Demostración: la cuenta se guarda solo mientras la aplicación está abierta. En la versión final la crea la API.
+</div>
+
+@if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger" role="alert">@error</div>
+}
+
+<EditForm Model="registro" OnValidSubmit="Registrar" FormName="registro">
+    <DataAnnotationsValidator />
+
+    <fieldset class="mb-4">
+        <legend class="h5">Datos personales</legend>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="nombre">Nombre</label>
+                <InputText id="nombre" class="form-control" @bind-Value="registro.Nombre" autocomplete="given-name" />
+                <ValidationMessage For="() => registro.Nombre" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="apellido">Apellido</label>
+                <InputText id="apellido" class="form-control" @bind-Value="registro.Apellido" autocomplete="family-name" />
+                <ValidationMessage For="() => registro.Apellido" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="correo">Correo electrónico</label>
+                <InputText id="correo" type="email" class="form-control" @bind-Value="registro.Correo" autocomplete="email" />
+                <ValidationMessage For="() => registro.Correo" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="telefono">Teléfono</label>
+                <InputText id="telefono" type="tel" class="form-control" @bind-Value="registro.Telefono" autocomplete="tel" placeholder="099 123 456" />
+                <div class="form-text">Si no ponés prefijo internacional, se toma como número de Uruguay.</div>
+                <ValidationMessage For="() => registro.Telefono" />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend class="h5">Documento</legend>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="tipoDocumento">Tipo</label>
+                <InputSelect id="tipoDocumento" class="form-select" @bind-Value="registro.TipoDocumento">
+                    <option value="CI">Cédula uruguaya</option>
+                    <option value="Pasaporte">Pasaporte</option>
+                    <option value="Otro">Otro documento extranjero</option>
+                </InputSelect>
+                <ValidationMessage For="() => registro.TipoDocumento" />
+            </div>
+            <div class="col-md-8 mb-3">
+                <label class="form-label" for="numeroDocumento">Número</label>
+                <InputText id="numeroDocumento" class="form-control" @bind-Value="registro.NumeroDocumento" placeholder="@(registro.TipoDocumento == "CI" ? "1.234.567-2" : "")" />
+                <ValidationMessage For="() => registro.NumeroDocumento" />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend class="h5">Dirección del hogar</legend>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="calle">Calle</label>
+                <InputText id="calle" class="form-control" @bind-Value="registro.Calle" autocomplete="address-line1" />
+                <ValidationMessage For="() => registro.Calle" />
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label" for="numeroPuerta">Número</label>
+                <InputText id="numeroPuerta" class="form-control" @bind-Value="registro.NumeroPuerta" />
+                <ValidationMessage For="() => registro.NumeroPuerta" />
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label" for="apartamento">Apartamento <span class="text-muted">(opcional)</span></label>
+                <InputText id="apartamento" class="form-control" @bind-Value="registro.Apartamento" />
+                <ValidationMessage For="() => registro.Apartamento" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="localidad">Localidad</label>
+                <InputText id="localidad" class="form-control" @bind-Value="registro.Localidad" autocomplete="address-level2" />
+                <ValidationMessage For="() => registro.Localidad" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="departamento">Departamento</label>
+                <InputSelect id="departamento" class="form-select" @bind-Value="registro.Departamento">
+                    <option value="">Elegí un departamento</option>
+                    @foreach (var departamento in CuentaService.Departamentos)
+                    {
+                        <option value="@departamento">@departamento</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => registro.Departamento" />
+            </div>
+            <div class="col-12 mb-3">
+                <label class="form-label" for="referencias">Referencias <span class="text-muted">(opcional)</span></label>
+                <InputText id="referencias" class="form-control" @bind-Value="registro.Referencias" placeholder="Por ejemplo: portón verde, frente a la escuela" />
+                <ValidationMessage For="() => registro.Referencias" />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend class="h5">Contraseña</legend>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="contrasena">Contraseña</label>
+                <InputText id="contrasena" type="password" class="form-control" @bind-Value="registro.Contrasena" autocomplete="new-password" />
+                <div class="form-text">Entre 8 y 64 caracteres.</div>
+                <ValidationMessage For="() => registro.Contrasena" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="repetirContrasena">Repetir contraseña</label>
+                <InputText id="repetirContrasena" type="password" class="form-control" @bind-Value="registro.RepetirContrasena" autocomplete="new-password" />
+                <ValidationMessage For="() => registro.RepetirContrasena" />
+            </div>
+        </div>
+    </fieldset>
+
+    @* Dos aceptaciones separadas, sin marcar de antemano (RN-43, D-REG-04). *@
+    <fieldset class="mb-4">
+        <legend class="h5">Aceptaciones</legend>
+        <div class="form-check mb-2">
+            <InputCheckbox id="aceptaTerminos" class="form-check-input" @bind-Value="registro.AceptaTerminos" />
+            <label class="form-check-label" for="aceptaTerminos">
+                Leí y acepto los <a href="terminos" target="_blank">Términos y Condiciones</a> (versión 1.0).
+            </label>
+            <ValidationMessage For="() => registro.AceptaTerminos" />
+        </div>
+        <div class="form-check mb-2">
+            <InputCheckbox id="aceptaPrivacidad" class="form-check-input" @bind-Value="registro.AceptaPrivacidad" />
+            <label class="form-check-label" for="aceptaPrivacidad">
+                Leí y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> (versión 1.0).
+            </label>
+            <ValidationMessage For="() => registro.AceptaPrivacidad" />
+        </div>
+        <p class="form-text">Son obligatorias porque explican cómo funciona el servicio y cómo cuidamos tus datos.</p>
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Crear cuenta</button>
+    <a class="btn btn-link" href="@VolverA">Cancelar</a>
+</EditForm>
+
+@code {
+    // Si llegó desde «Reservar turno», se conserva el servicio para volver a él (CU-VIS-03).
+    [SupplyParameterFromQuery]
+    public int? Servicio { get; set; }
+
+    private RegistroCliente registro = new();
+    private string error = "";
+
+    private string VolverA => Servicio is null ? "" : $"servicios/{Servicio}";
+
+    private void Registrar()
+    {
+        error = "";
+        var resultado = CuentaService.Registrar(registro);
+
+        if (!resultado.Exito)
+        {
+            error = resultado.Mensaje;
+            return;
+        }
+
+        Navegacion.NavigateTo(Servicio is null ? "verificar" : $"verificar?servicio={Servicio}");
+    }
+}
