@@ -1,0 +1,77 @@
+@page "/ingresar"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject SesionService Sesion
+@inject IntencionService Intencion
+@inject NavigationManager Navegacion
+
+<PageTitle>Ingresar — VITALIA</PageTitle>
+
+<h1>Ingresar</h1>
+
+@if (Sesion.Iniciada)
+{
+    <p>Ya ingresaste como <strong>@Sesion.CuentaActual!.Nombre @Sesion.CuentaActual.Apellido</strong>.</p>
+    <a class="btn btn-primary" href="">Ir al inicio</a>
+}
+else
+{
+    <div class="alert alert-secondary small">
+        Demostración: solo podés ingresar con una cuenta creada desde que abriste esta pestaña.
+    </div>
+
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="alert alert-danger" role="alert">
+            @error
+            @if (debeVerificar)
+            {
+                <a class="alert-link ms-1" href="verificar">Verificar ahora</a>
+            }
+        </div>
+    }
+
+    <EditForm Model="datos" OnValidSubmit="IniciarSesion" FormName="ingresar">
+        <DataAnnotationsValidator />
+        <div style="max-width: 24rem;">
+            <div class="mb-3">
+                <label class="form-label" for="correo">Correo electrónico</label>
+                <InputText id="correo" type="email" class="form-control" @bind-Value="datos.Correo" autocomplete="email" />
+                <ValidationMessage For="() => datos.Correo" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="contrasena">Contraseña</label>
+                <InputText id="contrasena" type="password" class="form-control" @bind-Value="datos.Contrasena" autocomplete="current-password" />
+                <ValidationMessage For="() => datos.Contrasena" />
+            </div>
+            <button type="submit" class="btn btn-primary">Ingresar</button>
+        </div>
+    </EditForm>
+
+    <p class="mt-3">¿No tenés cuenta? <a href="registro">Creá una</a>.</p>
+    <p class="text-muted small">¿Olvidaste tu contraseña? La recuperación se agrega en una próxima etapa.</p>
+}
+
+@code {
+    private InicioSesion datos = new();
+    private string error = "";
+    private bool debeVerificar;
+
+    private void IniciarSesion()
+    {
+        error = "";
+        debeVerificar = false;
+
+        var resultado = Sesion.Ingresar(datos);
+        if (!resultado.Exito)
+        {
+            error = resultado.Mensaje;
+            debeVerificar = resultado.Mensaje.StartsWith("Todavía no verificaste");
+            datos.Contrasena = "";
+            return;
+        }
+
+        // Vuelve a lo que estaba haciendo antes de ingresar (A-011).
+        Navegacion.NavigateTo(Intencion.DestinoDespuesDeIngresar());
+    }
+}

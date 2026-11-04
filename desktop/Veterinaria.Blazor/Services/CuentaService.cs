@@ -129,6 +129,7 @@ public class CuentaService
         cuenta.Verificada = true;
         cuenta.HashCodigo = "";
         cuenta.CodigoDemo = "";
+        CorreoPendiente = "";
         return new ResultadoOperacion { Exito = true, Mensaje = "¡Listo! Tu correo quedó verificado." };
     }
 
@@ -152,6 +153,25 @@ public class CuentaService
         return new ResultadoOperacion { Exito = true, Mensaje = "Te enviamos un código nuevo. El anterior ya no sirve." };
     }
 
+    // Devuelve la cuenta si el correo y la contraseña coinciden; si no, null.
+    // No distingue entre correo inexistente y contraseña incorrecta.
+    public Cuenta? ValidarCredenciales(string correo, string contrasena)
+    {
+        var cuenta = ObtenerPorCorreo(correo);
+        if (cuenta is null || !ContrasenaCoincide(contrasena, cuenta.HashContrasena))
+        {
+            return null;
+        }
+
+        return cuenta;
+    }
+
+    // Para retomar la verificación de una cuenta que todavía no la completó.
+    public void MarcarPendiente(string correo)
+    {
+        CorreoPendiente = NormalizarCorreo(correo);
+    }
+
     private void GenerarCodigo(Cuenta cuenta)
     {
         var codigo = RandomNumberGenerator.GetInt32(0, 1_000_000).ToString("D6");
@@ -172,6 +192,20 @@ public class CuentaService
         var salt = RandomNumberGenerator.GetBytes(16);
         var derivado = Rfc2898DeriveBytes.Pbkdf2(contrasena, salt, 100_000, HashAlgorithmName.SHA256, 32);
         return $"{Convert.ToBase64String(salt)}.{Convert.ToBase64String(derivado)}";
+    }
+
+    private static bool ContrasenaCoincide(string contrasena, string guardado)
+    {
+        var partes = guardado.Split('.');
+        if (partes.Length != 2)
+        {
+            return false;
+        }
+
+        var salt = Convert.FromBase64String(partes[0]);
+        var esperado = Convert.FromBase64String(partes[1]);
+        var derivado = Rfc2898DeriveBytes.Pbkdf2(contrasena ?? "", salt, 100_000, HashAlgorithmName.SHA256, 32);
+        return CryptographicOperations.FixedTimeEquals(derivado, esperado);
     }
 
     private static string Hash(string texto)

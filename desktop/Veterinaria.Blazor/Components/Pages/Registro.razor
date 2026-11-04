@@ -7,7 +7,7 @@
 <PageTitle>Crear cuenta — VITALIA</PageTitle>
 
 <h1>Crear cuenta</h1>
-<p class="text-muted">Con tu cuenta vas a poder registrar a tus animales y reservar turnos. Todos los campos son obligatorios salvo los marcados como opcionales.</p>
+<p class="text-muted">Con tu cuenta vas a poder registrar a tus animales y reservar turnos. Todos los campos son obligatorios salvo los marcados como opcionales. ¿Ya tenés cuenta? <a href="ingresar">Ingresá</a>.</p>
 
 <div class="alert alert-secondary small">
     Demostración: la cuenta se guarda solo mientras la aplicación está abierta. En la versión final la crea la API.
@@ -148,18 +148,12 @@
     </fieldset>
 
     <button type="submit" class="btn btn-primary">Crear cuenta</button>
-    <a class="btn btn-link" href="@VolverA">Cancelar</a>
+    <a class="btn btn-link" href="acceso">Cancelar</a>
 </EditForm>
 
 @code {
-    // Si llegó desde «Reservar turno», se conserva el servicio para volver a él (CU-VIS-03).
-    [SupplyParameterFromQuery]
-    public int? Servicio { get; set; }
-
     private RegistroCliente registro = new();
     private string error = "";
-
-    private string VolverA => Servicio is null ? "" : $"servicios/{Servicio}";
 
     private void Registrar()
     {
@@ -172,6 +166,6 @@
             return;
         }
 
-        Navegacion.NavigateTo(Servicio is null ? "verificar" : $"verificar?servicio={Servicio}");
+        Navegacion.NavigateTo("verificar");
     }
 }

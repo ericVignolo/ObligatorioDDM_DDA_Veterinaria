@@ -1,7 +1,11 @@
-﻿@page "/servicios/{Id:int}"
+@page "/servicios/{Id:int}"
 @using Veterinaria.Blazor.Models
 @using Veterinaria.Blazor.Services
 @inject PrestacionService PrestacionService
+@inject ClinicaService ClinicaService
+@inject IntencionService Intencion
+@inject SesionService Sesion
+@inject NavigationManager Navegacion
 
 @if (prestacion is null)
 {
@@ -12,10 +16,31 @@
 else
 {
     <PageTitle>@prestacion.Nombre</PageTitle>
+
+    @* Se retomó la reserva después de ingresar (A-011). Los cuatro pasos se agregan en A-015. *@
+    @if (Reservar && Sesion.Iniciada && prestacion.ReservableEnLinea)
+    {
+        <div class="alert alert-info" role="status">
+            <strong>@Sesion.CuentaActual!.Nombre, retomamos tu reserva de @prestacion.Nombre.</strong>
+            La reserva en cuatro pasos (animal, profesional, fecha y confirmación) se agrega en la próxima etapa.
+        </div>
+    }
+
     <h1>@prestacion.Nombre</h1>
     <p>@prestacion.Descripcion</p>
     <p class="fw-bold">Desde $ @prestacion.PrecioDesde.ToString("N0")</p>
     <p class="text-muted">El importe final se calcula con la tarifa vigente el día de la atención.</p>
+
+    <div class="mb-3">
+        @if (prestacion.ReservableEnLinea)
+        {
+            <button class="btn btn-primary" @onclick="IrAReservar">Reservar turno</button>
+        }
+        else
+        {
+            <a class="btn btn-outline-primary" href="@ClinicaService.EnlaceTelefono(ClinicaService.Obtener().Telefono)">Consultar o llamar</a>
+        }
+    </div>
 }
 
 <a href="servicios">← Volver a servicios</a>
@@ -24,10 +49,19 @@ else
     [Parameter]
     public int Id { get; set; }
 
+    // Llega en true cuando se vuelve a este servicio para reservar.
+    [SupplyParameterFromQuery]
+    public bool Reservar { get; set; }
+
     private Prestacion? prestacion;
 
     protected override void OnParametersSet()
     {
         prestacion = PrestacionService.ObtenerPorId(Id);
+    }
+
+    private void IrAReservar()
+    {
+        Navegacion.NavigateTo(Intencion.DestinoParaReservar(Id));
     }
 }

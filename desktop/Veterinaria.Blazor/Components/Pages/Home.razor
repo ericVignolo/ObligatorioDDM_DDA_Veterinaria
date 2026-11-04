@@ -4,6 +4,8 @@
 @inject ClinicaService ClinicaService
 @inject PrestacionService PrestacionService
 @inject NavigationManager Navegacion
+@inject IntencionService Intencion
+@inject SesionService Sesion
 
 <PageTitle>@clinica.Nombre — Inicio</PageTitle>
 
@@ -13,7 +15,10 @@
     <p class="lead">@clinica.Lema</p>
     <p class="text-muted mb-3">Atendemos perros, gatos, caballos, ovinos y bovinos en @clinica.Ciudad.</p>
     <a class="btn btn-primary me-2" href="servicios">Ver servicios</a>
-    <a class="btn btn-outline-primary" href="acceso">Ingresar o crear cuenta</a>
+    @if (!Sesion.Iniciada)
+    {
+        <a class="btn btn-outline-primary" href="acceso">Ingresar o crear cuenta</a>
+    }
 </section>
 
 @* Urgencias siempre visibles (RF-VIS-06) *@
@@ -85,9 +90,9 @@
         destacados = PrestacionService.ObtenerPublicas().Take(3).ToList();
     }
 
-    // Igual que en Servicios: reservar pasa primero por el acceso (RF-VIS-07).
+    // Igual que en Servicios: sin sesión pasa por el acceso y se retoma después (RF-VIS-07, A-011).
     private void IrAReservar(int id)
     {
-        Navegacion.NavigateTo($"acceso?servicio={id}");
+        Navegacion.NavigateTo(Intencion.DestinoParaReservar(id));
     }
 }

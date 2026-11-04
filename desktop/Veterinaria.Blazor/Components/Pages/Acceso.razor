@@ -2,54 +2,60 @@
 @using Veterinaria.Blazor.Models
 @using Veterinaria.Blazor.Services
 @inject PrestacionService PrestacionService
+@inject IntencionService Intencion
+@inject SesionService Sesion
 
-<PageTitle>Ingresar — VITALIA</PageTitle>
+<PageTitle>Ingresar o crear cuenta — VITALIA</PageTitle>
 
 <h1>Ingresá o creá tu cuenta</h1>
 
-@if (prestacion is not null)
+@if (Sesion.Iniciada)
 {
-    @* Acción protegida: se explica el motivo y se conserva el servicio elegido (RF-VIS-07). *@
-    <p>Para reservar <strong>@prestacion.Nombre</strong> necesitás una cuenta verificada. Después de crearla volvés a este servicio.</p>
+    <p>Ya ingresaste como <strong>@Sesion.CuentaActual!.Nombre</strong>.</p>
+    <a class="btn btn-primary" href="servicios">Ver servicios</a>
 }
 else
 {
-    <p>Con tu cuenta vas a poder registrar a tus animales y reservar turnos.</p>
-}
+    @if (prestacion is not null)
+    {
+        @* Acción protegida: se explica el motivo y se conserva el servicio elegido (RF-VIS-07). *@
+        <p>Para reservar <strong>@prestacion.Nombre</strong> necesitás una cuenta verificada. Después de ingresar volvés a este servicio.</p>
+    }
+    else
+    {
+        <p>Con tu cuenta vas a poder registrar a tus animales y reservar turnos.</p>
+    }
 
-<div class="row">
-    <div class="col-md-6 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h2 class="h5 card-title">Soy nuevo</h2>
-                <p class="card-text">Creá tu cuenta en unos minutos.</p>
-                <a class="btn btn-primary" href="@EnlaceRegistro">Crear cuenta</a>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5 card-title">Soy nuevo</h2>
+                    <p class="card-text">Creá tu cuenta en unos minutos.</p>
+                    <a class="btn btn-primary" href="registro">Crear cuenta</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5 card-title">Ya tengo cuenta</h2>
+                    <p class="card-text">Ingresá con tu correo y tu contraseña.</p>
+                    <a class="btn btn-outline-primary" href="ingresar">Ingresar</a>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h2 class="h5 card-title">Ya tengo cuenta</h2>
-                <p class="card-text">El inicio de sesión se agrega en la próxima etapa (A-008).</p>
-                <button class="btn btn-outline-primary" disabled>Ingresar</button>
-            </div>
-        </div>
-    </div>
-</div>
+}
 
 <a href="servicios">← Volver a servicios</a>
 
 @code {
-    [SupplyParameterFromQuery]
-    public int? Servicio { get; set; }
-
     private Prestacion? prestacion;
 
-    private string EnlaceRegistro => Servicio is null ? "registro" : $"registro?servicio={Servicio}";
-
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
-        prestacion = Servicio is null ? null : PrestacionService.ObtenerPorId(Servicio.Value);
+        var servicio = Intencion.ServicioPendiente();
+        prestacion = servicio is null ? null : PrestacionService.ObtenerPorId(servicio.Value);
     }
 }
