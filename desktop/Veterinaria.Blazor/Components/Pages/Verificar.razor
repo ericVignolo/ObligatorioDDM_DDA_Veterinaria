@@ -1,0 +1,99 @@
+@page "/verificar"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject CuentaService CuentaService
+@inject NavigationManager Navegacion
+
+<PageTitle>Verificar correo — VITALIA</PageTitle>
+
+<h1>Verificá tu correo</h1>
+
+@if (cuenta is null)
+{
+    <p>No hay una cuenta pendiente de verificar en esta sesión.</p>
+    <a class="btn btn-primary" href="registro">Crear cuenta</a>
+}
+else if (cuenta.Verificada)
+{
+    <div class="alert alert-success" role="status">@mensaje</div>
+
+    @if (Servicio is not null)
+    {
+        <p>Ya podés seguir con el servicio que habías elegido.</p>
+        <a class="btn btn-primary" href="@($"servicios/{Servicio}")">Volver al servicio</a>
+    }
+    else
+    {
+        <a class="btn btn-primary" href="">Ir al inicio</a>
+    }
+    <p class="text-muted small mt-3">El inicio de sesión se agrega en la próxima etapa (A-008).</p>
+}
+else
+{
+    <p>Enviamos un código de 6 números a <strong>@cuenta.Correo</strong>. Vence a los 15 minutos.</p>
+
+    @* SOLO DEMOSTRACIÓN: todavía no se envían correos reales. *@
+    <div class="alert alert-warning small">
+        Demostración: como todavía no se envían correos, el código es <strong>@cuenta.CodigoDemo</strong>.
+    </div>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-info" : "alert-danger")" role="alert">@mensaje</div>
+    }
+
+    <EditForm Model="codigo" OnValidSubmit="ConfirmarCodigo" FormName="verificar">
+        <DataAnnotationsValidator />
+        <div class="mb-3" style="max-width: 16rem;">
+            <label class="form-label" for="codigo">Código</label>
+            <InputText id="codigo" class="form-control" @bind-Value="codigo.Codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
+            <ValidationMessage For="() => codigo.Codigo" />
+        </div>
+        <button type="submit" class="btn btn-primary">Verificar</button>
+        <button type="button" class="btn btn-link" @onclick="Reenviar">Enviarme otro código</button>
+    </EditForm>
+
+    <p class="text-muted small mt-3">Tenés 5 intentos por código y podés pedir hasta 3 códigos por hora.</p>
+}
+
+@code {
+    // Servicio elegido antes de registrarse, para volver a él (CU-VIS-03).
+    [SupplyParameterFromQuery]
+    public int? Servicio { get; set; }
+
+    private Cuenta? cuenta;
+    private CodigoVerificacion codigo = new();
+    private string mensaje = "";
+    private bool exito;
+
+    protected override void OnInitialized()
+    {
+        cuenta = CuentaService.ObtenerPorCorreo(CuentaService.CorreoPendiente);
+    }
+
+    private void ConfirmarCodigo()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        var resultado = CuentaService.Verificar(cuenta.Correo, codigo.Codigo);
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        codigo = new();
+    }
+
+    private void Reenviar()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        var resultado = CuentaService.ReenviarCodigo(cuenta.Correo);
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        codigo = new();
+    }
+}
