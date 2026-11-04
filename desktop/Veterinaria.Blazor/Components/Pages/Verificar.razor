@@ -3,6 +3,8 @@
 @using Veterinaria.Blazor.Services
 @inject CuentaService CuentaService
 @inject NavigationManager Navegacion
+@inject SesionService Sesion
+@inject IntencionService Intencion
 
 <PageTitle>Verificar correo — VITALIA</PageTitle>
 
@@ -15,18 +17,8 @@
 }
 else if (cuenta.Verificada)
 {
-    <div class="alert alert-success" role="status">@mensaje</div>
-
-    @if (Servicio is not null)
-    {
-        <p>Ya podés seguir con el servicio que habías elegido.</p>
-        <a class="btn btn-primary" href="@($"servicios/{Servicio}")">Volver al servicio</a>
-    }
-    else
-    {
-        <a class="btn btn-primary" href="">Ir al inicio</a>
-    }
-    <p class="text-muted small mt-3">El inicio de sesión se agrega en la próxima etapa (A-008).</p>
+    <div class="alert alert-success" role="status">@(string.IsNullOrEmpty(mensaje) ? "Tu correo ya está verificado." : mensaje) Ya ingresaste con tu cuenta.</div>
+    <button class="btn btn-primary" @onclick="Continuar">Continuar</button>
 }
 else
 {
@@ -57,10 +49,6 @@ else
 }
 
 @code {
-    // Servicio elegido antes de registrarse, para volver a él (CU-VIS-03).
-    [SupplyParameterFromQuery]
-    public int? Servicio { get; set; }
-
     private Cuenta? cuenta;
     private CodigoVerificacion codigo = new();
     private string mensaje = "";
@@ -82,6 +70,18 @@ else
         exito = resultado.Exito;
         mensaje = resultado.Mensaje;
         codigo = new();
+
+        // Verificado: entra a la sesión sin volver a pedir la contraseña.
+        if (resultado.Exito)
+        {
+            Sesion.IngresarDespuesDeVerificar(cuenta);
+        }
+    }
+
+    // Vuelve al servicio que había elegido antes de registrarse, si sigue vigente (A-011).
+    private void Continuar()
+    {
+        Navegacion.NavigateTo(Intencion.DestinoDespuesDeIngresar());
     }
 
     private void Reenviar()

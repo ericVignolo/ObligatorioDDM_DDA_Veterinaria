@@ -1,0 +1,39 @@
+@using Veterinaria.Blazor.Services
+@implements IDisposable
+@inject SesionService Sesion
+@inject NavigationManager Navegacion
+
+@* Barra superior: muestra quién ingresó y permite salir (A-008). *@
+@if (Sesion.Iniciada)
+{
+    <span class="me-3">Hola, <strong>@Sesion.CuentaActual!.Nombre</strong></span>
+    <button class="btn btn-link p-0" @onclick="CerrarSesion">Cerrar sesión</button>
+}
+else
+{
+    <a href="ingresar" class="me-3">Ingresar</a>
+    <a href="registro">Crear cuenta</a>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        Sesion.Cambio += Actualizar;
+    }
+
+    private void Actualizar()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void CerrarSesion()
+    {
+        Sesion.Salir();
+        Navegacion.NavigateTo("");
+    }
+
+    public void Dispose()
+    {
+        Sesion.Cambio -= Actualizar;
+    }
+}

@@ -14,6 +14,8 @@ builder.Services.AddScoped<ClinicaService>();
 builder.Services.AddScoped<ProfesionalService>();
 builder.Services.AddScoped<DocumentoLegalService>();
 builder.Services.AddScoped<CuentaService>();
+builder.Services.AddScoped<SesionService>();
+builder.Services.AddScoped<IntencionService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

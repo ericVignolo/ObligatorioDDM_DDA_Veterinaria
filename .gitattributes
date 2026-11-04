@@ -1,0 +1,5 @@
+# GitHub: contar los componentes Blazor (.razor) como C# en la barra de lenguajes.
+*.razor linguist-language=C#
+
+# Bootstrap es una librería de terceros: no se cuenta.
+desktop/Veterinaria.Blazor/wwwroot/lib/** linguist-vendored

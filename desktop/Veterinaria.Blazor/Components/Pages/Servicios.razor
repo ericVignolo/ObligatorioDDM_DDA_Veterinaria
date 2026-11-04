@@ -1,8 +1,9 @@
-﻿@page "/servicios"
+@page "/servicios"
 @using Veterinaria.Blazor.Models
 @using Veterinaria.Blazor.Services
 @inject PrestacionService PrestacionService
 @inject NavigationManager Navegacion
+@inject IntencionService Intencion
 
 <PageTitle>Servicios</PageTitle>
 
@@ -29,9 +30,9 @@ else
         prestaciones = PrestacionService.ObtenerPublicas();
     }
 
-    // Reservar es una acción protegida: primero pasa por el acceso (RF-VIS-07).
+    // Reservar es una acción protegida: sin sesión pasa por el acceso y se retoma después (RF-VIS-07, A-011).
     private void IrAReservar(int id)
     {
-        Navegacion.NavigateTo($"acceso?servicio={id}");
+        Navegacion.NavigateTo(Intencion.DestinoParaReservar(id));
     }
 }
