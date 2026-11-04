@@ -1,0 +1,29 @@
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject DocumentoLegalService DocumentoLegalService
+@inject ClinicaService ClinicaService
+
+@if (documento is not null)
+{
+    <PageTitle>@documento.Titulo — VITALIA</PageTitle>
+    <h1>@documento.Titulo</h1>
+    <p class="text-muted">
+        Versión @documento.Version · Vigente desde el @(documento.VigenteDesde.ToString("d 'de' MMMM 'de' yyyy"))
+    </p>
+    <div class="alert alert-secondary small">
+        @ClinicaService.Obtener().Nombre es una clínica ficticia creada para un proyecto académico.
+        Este texto tiene la estructura de un documento real, pero no fue revisado por un abogado.
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Codigo { get; set; } = "";
+
+    private DocumentoLegal? documento;
+
+    protected override void OnParametersSet()
+    {
+        documento = DocumentoLegalService.ObtenerPorCodigo(Codigo);
+    }
+}

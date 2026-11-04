@@ -21,9 +21,35 @@ Antes de planificar, diseñar o implementar, leer:
 - Las advertencias comunes (autoridad de la API, límites de los prototipos, estados de un requisito) se escriben solo en la sección 3.1 de `CONTEXTO_BASE.md`; los demás documentos la enlazan.
 - Cualquier cambio de arquitectura, tecnología o regla obligatoria debe actualizar primero la documentación de contexto.
 
+## Responsables y autorizaciones (2026-11-03)
+
+- **Diego y Eric** son los dos responsables principales del proyecto, con **la misma autoridad** y sin jerarquía entre ellos.
+- Cualquiera de los dos puede pedir tareas, modificar funcionalidades, tomar decisiones y mezclar sus PR. Ninguno necesita autorización del otro para tareas normales de desarrollo.
+- Antes de modificaciones importantes, cambios de arquitectura, borrar archivos, instalar dependencias o cualquier acción que pueda afectar al proyecto, Claude explica qué hará y pide autorización a **quien esté trabajando en esa sesión**.
+- Claude respeta las instrucciones, la documentación y las decisiones ya acordadas. No cambia tecnologías, estructura, convenciones del docente ni funcionalidades acordadas por iniciativa propia.
+- Claude explica los cambios que hizo y comunica cualquier problema que encuentre.
+- Ambos mantienen el proyecto sincronizado mediante GitHub y coordinan los cambios para evitar conflictos.
+- Estas reglas valen igual cuando trabaja Diego y cuando trabaja Eric.
+
+## Sesiones de trabajo
+
+- Al **iniciar** una sesión, leer la última bitácora de `docs/sesiones/` y su lista de pendientes.
+- Al **cerrar** una sesión, crear `docs/sesiones/AAAA-MM-DD_tema-breve.md` con: qué se hizo, archivos tocados, decisiones, cómo probarlo y qué falta.
+- Cada tarea va en una rama corta (`<nombre>/<tarea>`) que sale de la rama de la sección, con PR hacia ella. Quien hizo la tarea la prueba y mezcla su propio PR; el otro puede revisarlo después (DT-ORG-05).
+
+## Convenciones de código (estilo del docente)
+
+- Blazor Web App, .NET 10, interactividad Server con ubicación Global.
+- Carpetas: `Models/` (clases de datos), `Services/` (lógica y datos), `Components/` (componentes reutilizables como `PrestacionCard`), `Components/Pages/` (páginas).
+- Modelos: clases comunes con `{ get; set; }`, valores por defecto (`= ""`) y nombres en español.
+- Datos sin API (sección A): un `XxxService` con una `List<>` privada, registrado con `AddScoped<XxxService>()` e inyectado con `@inject`. Sin interfaces. En la sección C se reemplaza por `XxxApiService` con `AddHttpClient`.
+- Páginas: `@foreach` con componentes que reciben `[Parameter]`; detalle con `@page "/ruta/{Id:int}"` y `OnParametersSet`; acciones desde un componente con `EventCallback`.
+- Formularios: `EditForm` con `DataAnnotationsValidator` y `ValidationMessage`; reglas con `[Required]`, `[Range]`, etc. en el modelo.
+- Textos visibles en español rioplatense; cultura `es-UY`.
+
 ## Punto de continuación
 
-Actualizado: 2026-10-31.
+Actualizado: 2026-11-03.
 
 - **Primero, si trabaja Diego:** decidir el proveedor MySQL de DT-BD-02 (Pomelo solo soporta EF Core 9, sin soporte desde el 2026-11-10). Ver `docs/analisis/DECISIONES_ERIC_2026-10-31.md`.
 - Fase: construcción, sección A (DT-ORG-04, 2026-10-31).
@@ -33,5 +59,5 @@ Actualizado: 2026-10-31.
 - Base de datos: MySQL 8.4 LTS; proveedor de EF Core en revisión (DT-BD-02); agenda protegida con `SELECT … FOR UPDATE` (DT-BD-01 y DT-BD-02).
 - Ramas: secciones A (`desktop`), B (`desktop-mobile`) y C (`desktop-mobile-api`), encadenadas, con merge a `main` al aprobar cada una; trabajo diario en ramas cortas con PR (DT-ORG-02).
 - Plan B de alcance listo, sin recortes aplicados: `docs/analisis/PLAN_B_ALCANCE.md`.
-- Siguiente paso: sección A, tareas A-001 a A-003 de `docs/analisis/PLAN_TAREAS_PROYECTO.md` (esqueleto Blazor y catálogo con datos de demostración).
+- Estado de la sección A y próximos pasos: ver la última bitácora en `docs/sesiones/`.
 - Cobro, internación, avisos de refuerzo, parámetros de asistencia y proveedores: decididos el 2026-10-31 (`docs/analisis/DECISIONES_ERIC_2026-10-31.md`). Cada módulo los incorpora a su especificación al abordarse.

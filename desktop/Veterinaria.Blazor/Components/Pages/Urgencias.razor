@@ -1,0 +1,84 @@
+@page "/urgencias"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ClinicaService ClinicaService
+
+<PageTitle>Urgencias — VITALIA</PageTitle>
+
+@* HU-VIS-06: los datos urgentes van primero, sin formularios ni inicio de sesión. *@
+<h1>Urgencias</h1>
+
+<section class="alert alert-danger" aria-label="Teléfono de guardia">
+    <p class="fs-5 mb-2"><strong>Si tu animal está en peligro, llamá ahora a la guardia.</strong></p>
+    <a class="btn btn-danger btn-lg mb-2" href="@ClinicaService.EnlaceTelefono(clinica.TelefonoGuardia)">
+        Llamar a guardia: @clinica.TelefonoGuardia
+    </a>
+    <p class="mb-0">La guardia atiende las 24 horas. Dirección: @clinica.Direccion, @clinica.Ciudad.</p>
+</section>
+
+<section class="mb-4">
+    <h2 class="h4">Llamá a la guardia sin esperar si tu animal:</h2>
+    <ul>
+        <li>no respira o respira con mucha dificultad;</li>
+        <li>perdió el conocimiento o tiene convulsiones;</li>
+        <li>tiene un sangrado que no se detiene;</li>
+        <li>fue atropellado, sufrió una caída fuerte o tiene una herida profunda;</li>
+        <li>pudo haber comido un veneno, un medicamento o una planta tóxica;</li>
+        <li>tiene el abdomen hinchado y duro, o intenta vomitar sin poder;</li>
+        <li>es una hembra con un parto que no avanza.</li>
+    </ul>
+    <p class="text-muted small">
+        Esta lista es orientativa. No reemplaza la evaluación de un veterinario: ante la duda, llamá.
+    </p>
+</section>
+
+<section class="mb-4">
+    <h2 class="h4">Cómo clasificamos las solicitudes de asistencia</h2>
+    <p>Cuando pedís asistencia, el equipo asigna un nivel según la gravedad. El nivel define el orden de atención.</p>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Nivel</th>
+                <th scope="col">Qué significa</th>
+                <th scope="col">Cuándo se atiende</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var nivel in niveles)
+            {
+                <tr>
+                    <th scope="row"><span class="badge @nivel.Clase">@nivel.Nombre</span></th>
+                    <td>@nivel.Significado</td>
+                    <td>@nivel.Horario</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p class="text-muted small">
+        El nivel es una clasificación inicial y puede cambiar cuando un veterinario evalúa el caso.
+        Pedir asistencia no garantiza un horario de llegada.
+    </p>
+</section>
+
+<section class="mb-4">
+    <h2 class="h4">Asistencia a domicilio</h2>
+    <p>@clinica.Cobertura Para pedirla desde la aplicación vas a necesitar una cuenta. Si es grave, no esperes: llamá a la guardia.</p>
+</section>
+
+@code {
+    private Clinica clinica = new();
+
+    // Niveles de ESPECIFICACION_ALERTAS_ASISTENCIA.md, en orden de prioridad.
+    private readonly List<NivelUrgencia> niveles = new()
+    {
+        new() { Nombre = "Rojo", Clase = "bg-danger", Significado = "Posible riesgo para la vida o empeoramiento grave.", Horario = "En todo horario, por la guardia. Es la prioridad máxima." },
+        new() { Nombre = "Naranja", Clase = "bg-warning text-dark", Significado = "Urgencia alta, sin riesgo para la vida confirmado.", Horario = "En el horario de la clínica." },
+        new() { Nombre = "Amarillo", Clase = "bg-info text-dark", Significado = "Necesita atención prioritaria, pero puede esperar un poco.", Horario = "En el horario de la clínica, después de los naranjas." },
+        new() { Nombre = "Verde", Clase = "bg-success", Significado = "Situación estable o que se puede programar.", Horario = "En el horario de la clínica, después de los niveles anteriores." }
+    };
+
+    protected override void OnInitialized()
+    {
+        clinica = ClinicaService.Obtener();
+    }
+}

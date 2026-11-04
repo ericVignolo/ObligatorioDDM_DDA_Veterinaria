@@ -1,0 +1,51 @@
+@page "/clinica"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ClinicaService ClinicaService
+
+<PageTitle>La clínica — VITALIA</PageTitle>
+
+<h1>La clínica</h1>
+<p class="lead">@clinica.Presentacion</p>
+
+<div class="row">
+    <section class="col-md-6 mb-4">
+        <h2 class="h4">Contacto</h2>
+        <ul class="list-unstyled">
+            <li>Teléfono: <a href="@ClinicaService.EnlaceTelefono(clinica.Telefono)">@clinica.Telefono</a></li>
+            <li>Guardia: <a href="@ClinicaService.EnlaceTelefono(clinica.TelefonoGuardia)">@clinica.TelefonoGuardia</a></li>
+            <li>Correo: <a href="@($"mailto:{clinica.Correo}")">@clinica.Correo</a></li>
+        </ul>
+
+        <h2 class="h4">Horario</h2>
+        <p>@clinica.Horario</p>
+        <p>Las urgencias graves se atienden en todo horario por la guardia. <a href="urgencias">Ver urgencias</a></p>
+    </section>
+
+    <section class="col-md-6 mb-4">
+        <h2 class="h4">Ubicación</h2>
+        <p class="mb-1">@clinica.Direccion</p>
+        <p>@clinica.Ciudad</p>
+        @* HU-VIS-03: si no hay mapa, la dirección en texto siempre queda visible. *@
+        <p class="text-muted small">Mapa: pendiente de elegir proveedor (Google Maps u OpenStreetMap).</p>
+
+        <h2 class="h4">Cobertura</h2>
+        <p>@clinica.Cobertura</p>
+    </section>
+</div>
+
+<section class="mb-4">
+    <h2 class="h4">Responsable</h2>
+    <p class="mb-1">@clinica.RazonSocial</p>
+    <p class="mb-1">@clinica.Direccion, @clinica.Ciudad</p>
+    <p>Consultá cómo tratamos tus datos en la <a href="privacidad">Política de Privacidad</a>.</p>
+</section>
+
+@code {
+    private Clinica clinica = new();
+
+    protected override void OnInitialized()
+    {
+        clinica = ClinicaService.Obtener();
+    }
+}
