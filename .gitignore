@@ -1,0 +1,21 @@
+# Visual Studio y .NET
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+
+# React Native y Node.js
+**/node_modules/
+mobile/.expo/
+mobile/dist/
+
+# Configuración local y archivos del sistema
+.env
+.env.*
+!.env.example
+desktop.ini
+Thumbs.db
+
+# Archivos temporales de revisión
+.tmp_doc_review/

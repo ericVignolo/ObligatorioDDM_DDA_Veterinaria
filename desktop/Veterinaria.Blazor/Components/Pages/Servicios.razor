@@ -1,0 +1,37 @@
+﻿@page "/servicios"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject PrestacionService PrestacionService
+@inject NavigationManager Navegacion
+
+<PageTitle>Servicios</PageTitle>
+
+<h1>Servicios</h1>
+<p class="text-muted">Precios de referencia. El importe final depende del animal y de la atención realizada.</p>
+
+@if (prestaciones.Count == 0)
+{
+    <p>Por ahora no hay servicios publicados.</p>
+}
+else
+{
+    @foreach (var prestacion in prestaciones)
+    {
+        <PrestacionCard Prestacion="prestacion" OnReservar="IrAReservar" />
+    }
+}
+
+@code {
+    private List<Prestacion> prestaciones = new();
+
+    protected override void OnInitialized()
+    {
+        prestaciones = PrestacionService.ObtenerPublicas();
+    }
+
+    // Reservar es una acción protegida: primero pasa por el acceso (RF-VIS-07).
+    private void IrAReservar(int id)
+    {
+        Navegacion.NavigateTo($"acceso?servicio={id}");
+    }
+}

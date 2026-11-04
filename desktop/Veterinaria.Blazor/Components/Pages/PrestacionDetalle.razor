@@ -1,0 +1,33 @@
+﻿@page "/servicios/{Id:int}"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject PrestacionService PrestacionService
+
+@if (prestacion is null)
+{
+    <PageTitle>Servicio no disponible</PageTitle>
+    <h1>Servicio no disponible</h1>
+    <p>No se encontró el servicio solicitado.</p>
+}
+else
+{
+    <PageTitle>@prestacion.Nombre</PageTitle>
+    <h1>@prestacion.Nombre</h1>
+    <p>@prestacion.Descripcion</p>
+    <p class="fw-bold">Desde $ @prestacion.PrecioDesde.ToString("N0")</p>
+    <p class="text-muted">El importe final se calcula con la tarifa vigente el día de la atención.</p>
+}
+
+<a href="servicios">← Volver a servicios</a>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Prestacion? prestacion;
+
+    protected override void OnParametersSet()
+    {
+        prestacion = PrestacionService.ObtenerPorId(Id);
+    }
+}

@@ -1,0 +1,36 @@
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ClinicaService ClinicaService
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">@Prestacion.Nombre</h5>
+        <p class="card-text">@Prestacion.Descripcion</p>
+        <p class="fw-bold">Desde $ @Prestacion.PrecioDesde.ToString("N0")</p>
+
+        <a class="btn btn-outline-secondary btn-sm" href="@($"servicios/{Prestacion.Id}")">Ver detalle</a>
+
+        @if (Prestacion.ReservableEnLinea)
+        {
+            <button class="btn btn-primary btn-sm" @onclick="Reservar">Reservar turno</button>
+        }
+        else
+        {
+            <a class="btn btn-outline-primary btn-sm" href="@ClinicaService.EnlaceTelefono(ClinicaService.Obtener().Telefono)">Consultar o llamar</a>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Prestacion Prestacion { get; set; } = new();
+
+    // La tarjeta avisa a la página; la página decide qué hacer.
+    [Parameter]
+    public EventCallback<int> OnReservar { get; set; }
+
+    private async Task Reservar()
+    {
+        await OnReservar.InvokeAsync(Prestacion.Id);
+    }
+}

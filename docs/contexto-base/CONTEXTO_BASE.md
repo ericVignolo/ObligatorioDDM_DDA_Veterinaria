@@ -1,6 +1,6 @@
 # Contexto base — Sistema de gestión veterinaria
 
-Actualizado: 2026-09-26
+Actualizado: 2026-10-29
 
 Este documento consolida el contexto recuperado del proyecto de ChatGPT `ObligatorioDDM_DDA`. Es la referencia operativa para continuar el trabajo en la carpeta local `ObligatorioVeterinaria`.
 
@@ -19,15 +19,31 @@ El flujo general mencionado en los planes es:
 
 ## 2. Estado actual
 
-- La carpeta local estaba vacía al iniciar esta recuperación.
 - No se ha creado todavía la solución .NET, la aplicación React Native ni el archivo de Figma.
-- No se debe comenzar todavía el diseño visual definitivo.
+- El diseño visual definitivo de cada pantalla espera a que su recorrido tenga comportamiento y decisiones cerradas (DT-ORG-03).
 - El documento original `docs/fuentes/Analisis_Clinica_Veterinaria.docx` ya fue revisado e incorporado al contexto.
 - La especificación contiene 62 RF, 42 RN y 55 RNF recuperados del documento original, más 12 RF, 17 RN y 10 RNF complementarios incorporados; su texto canónico está en `MATRIZ_REQUISITOS.md`.
 - Los requisitos adicionales de privacidad, consentimiento, accesibilidad, terceros, derechos de autor y publicación fueron incorporados desde `Implementacion_Politicas.txt`.
 - El plan de implementación visual, las alternativas evaluadas y la decisión inicial de diseño móvil están documentados en `Diseño.md`.
-- Se incorporó la primera especificación funcional de alertas y asistencia, con cuatro niveles, prioridad, reevaluación, GPS, asignación, seguimiento, costos y atención de animales de cualquier especie. Permanecen abiertos sus parámetros operativos y la especificación adicional de registro y alertas sanitarias.
-- El próximo frente acordado es funcional: incorporar los requisitos adicionales y construir el mapa de navegación, empezando por Visitante y Cliente y después Veterinario.
+- Se incorporó la primera especificación funcional de alertas y asistencia, con cuatro niveles, prioridad, reevaluación, GPS, asignación, seguimiento, costos y atención de animales de cualquier especie. Permanecen abiertos sus parámetros operativos y las alertas sanitarias. El registro de Cliente quedó especificado el 2026-10-29.
+- El 2026-10-02 se confirmó un equipo de dos integrantes, con apoyo de Codex. No hay fecha límite real establecida; las diez semanas del plan original son una referencia histórica, no un plazo comprometido. La dedicación efectiva se estimará por hito.
+- El 2026-10-29 Diego cerró las decisiones del primer recorrido (catálogo, registro, reserva y consulta) y definió un plan B de alcance (`../analisis/PLAN_B_ALCANCE.md`). El tablero está en `../analisis/DECISIONES_PARA_DESARROLLO.md`. El frente inmediato es empezar la sección A en `desktop`.
+- Repositorio indicado por el usuario: https://github.com/ericVignolo/ObligatorioDDM_DDA_Veterinaria (coincide con el remoto `origin` local). Al compartirlo inicialmente como referencia no se había solicitado publicación.
+- El 2026-10-09 Eric delegó en Diego las decisiones aún abiertas del proyecto y pidió subir la documentación al repositorio. Las decisiones ya confirmadas por Eric se conservan; Diego registrará las restantes con fecha, justificación e impacto antes de implementar el módulo afectado. Eric y Codex mantendrán y revisarán la documentación.
+- El 2026-10-09 Eric pidió separar una rama `desktop` y trabajar primero en la experiencia de escritorio. La API queda para una etapa posterior de integración; la arquitectura final de una única API no cambia. Hasta entonces, cualquier recorrido interactivo de Blazor será un prototipo con datos de demostración, no una implementación productiva de persistencia, permisos o reglas críticas.
+- **DT-ORG-02 — Secuencia de trabajo y ramas (Eric, 2026-10-20; flujo cerrado por Diego el 2026-10-29, G-011):** la construcción se organiza en secciones acumulativas: A — escritorio, B — móvil, C — API e integración. Ramas: `desktop-mobile` se crea desde `desktop` cuando A esté aprobada, y `desktop-mobile-api` desde `desktop-mobile` cuando B esté aprobada. Al aprobar cada sección se hace merge a `main` por PR. El trabajo diario va en ramas cortas (`<nombre>/<tarea>`) con PR contra la rama de la sección. `feature/escritorio-api` queda congelada como antecedente y ya está contenida en `desktop`. Al final hay una sola API compartida (ver Principios vigentes). Plan detallado: `../analisis/PLAN_TAREAS_PROYECTO.md`.
+- **DT-ORG-03 — Puerta H0 por recorrido (Diego, 2026-10-29):** la puerta H0 ya no exige cerrar todas las decisiones del proyecto antes de escribir código. Cada recorrido puede programarse cuando sus propias decisiones, estados y pseudocódigo están cerrados. El primer recorrido (catálogo → registro → reserva → consulta) ya cumple esa condición. Cobro, internación, vacunas, alertas sanitarias y asistencia cierran sus decisiones antes de su propia implementación. Motivo: la regla anterior frenaba todo el proyecto por decisiones de módulos que se construyen meses después.
+- **DT-ORG-04 — Fase de construcción (Eric, 2026-10-31):** el proyecto deja la etapa de especificación y pasa a construcción, sección A. La documentación se actualiza o se crea a medida que se desarrolla. Las decisiones de cobro, internación, avisos de refuerzo, parámetros de asistencia, proveedores, identidad ficticia de la clínica, conservación y microchip están en `../analisis/DECISIONES_ERIC_2026-10-31.md`. Base de datos, versiones de MySQL y Plan B quedan delegados en Diego.
+- **DT-ORG-05 — Responsables y merge (Eric, 2026-11-03):** Diego y Eric tienen la misma autoridad sobre el proyecto. Ninguno necesita autorización del otro para tareas normales de desarrollo. Quien hace una tarea la prueba y mezcla su propio PR a la rama de la sección; el otro puede revisarlo después. Modifica la revisión previa obligatoria de DT-ORG-02; el resto de DT-ORG-02 (secciones, ramas encadenadas, ramas cortas con PR) sigue vigente. Reglas completas en `AGENTS.md`, «Responsables y autorizaciones».
+- **Integración anticipada a `main` (Eric, 2026-11-03):** `desktop` se mezcló a `main` antes de aprobar la sección A, para que GitHub muestre el código real (C#/Blazor) en la rama principal. `main` se seguirá actualizando desde `desktop` en hitos estables; la aprobación formal de la sección A y la creación de `desktop-mobile` no cambian (DT-ORG-02). Se borraron las ramas ya integradas y `feature/escritorio-api`, cuyo contenido está en `desktop`.
+- **DT-BD-01 — Decisión técnica (Eric, 2026-10-09):** **MySQL** es el motor de la base de datos. Solo la API se conecta a ella.
+- **DT-BD-02 — Versión, proveedor y concurrencia (Diego, 2026-10-29; cierra P-RC-08):**
+    - MySQL 8.4 LTS con EF Core 9 y el proveedor Pomelo.EntityFrameworkCore.MySql 9, que está probado contra MySQL 8.4 y 8.0.
+    - **En revisión (2026-10-31, decide Diego):** el soporte de EF Core 9 termina el 2026-11-10 y Pomelo no tiene versión para EF Core 10. Alternativas: `MySql.EntityFrameworkCore` (Oracle) o `Microting.EntityFrameworkCore.MySql`. Ver `../analisis/DECISIONES_ERIC_2026-10-31.md`.
+    - MySQL no tiene restricciones de exclusión de intervalos. RN-01, RN-02 y RN-07 se garantizan así: en una transacción breve, la API bloquea con `SELECT … FOR UPDATE` la fila del profesional, la del animal y la de cada recurso del turno, siempre en ese orden y por identificador ascendente para evitar interbloqueos; después verifica que no haya turnos activos con `inicio < finNuevo AND fin > inicioNuevo` e inserta. Índices compuestos `(profesional_id, inicio, fin)`, `(animal_id, inicio, fin)` y `(recurso_id, inicio, fin)` en la tabla de asignaciones. Se descartan los turnos en bloques fijos con índice único porque las duraciones son variables (RN-03).
+    - Aislamiento READ COMMITTED. Bloquear la fila «padre» (profesional, animal, recurso) en vez de un rango de turnos evita depender de los gap locks, que READ COMMITTED no usa.
+    - Ante interbloqueo (error 1213) o espera de bloqueo agotada (1205), hasta 3 reintentos con espera de 50, 100 y 200 ms; después, error comprensible y horarios actualizados (RNF-CON-02, RNF-CON-06).
+    - **Aplicación de RNF-CON-08 en MySQL:** el texto canónico viene de SQL Server («read committed con versionado de filas»). En InnoDB, READ COMMITTED ya hace lecturas consistentes con versiones de filas (MVCC) sin bloquear lectores, así que el RNF se cumple usando READ COMMITTED como nivel por defecto y elevándolo solo cuando una operación lo justifique. La redacción de la matriz no se cambia.
 
 ## 3. Reglas técnicas obligatorias
 
@@ -43,6 +59,15 @@ El flujo general mencionado en los planes es:
 | RT-08 | Las reglas críticas se implementarán en backend/API y, cuando corresponda, con restricciones o transacciones de base de datos; nunca dependerán únicamente de Blazor o React Native. |
 | RT-09 | El contrato de la API deberá estar documentado y versionado para que ambos clientes evolucionen sin duplicar lógica. |
 | RT-10 | Los cambios de arquitectura, tecnologías o reglas obligatorias deberán reflejarse en el plan y la documentación antes de considerarse oficiales. |
+
+### 3.1 Principios vigentes
+
+Este es el **único lugar** donde se escriben estas advertencias; los demás documentos lo enlazan en vez de repetirlo.
+
+- **Autoridad única:** la API aplica datos, autenticación, autorización y reglas. Blazor y React Native nunca acceden a MySQL.
+- **Prototipos de A y B:** usan datos de demostración y adaptadores temporales con la misma forma que el contrato de la API. Sirven para validar navegación, presentación y estados; no prueban persistencia, seguridad, transacciones ni reglas críticas, y no se cuentan como RF cumplidos.
+- **Estados de un requisito:** «documentado» o «decidido» no es «implementado». Un RF está implementado cuando funciona en su canal y la API aplica sus reglas, y verificado cuando además tiene pruebas y evidencia.
+- **Canon:** la redacción de RF, RN y RNF de `MATRIZ_REQUISITOS.md` no se modifica en otros documentos; ubicar un requisito en un hito o en el plan B no lo elimina.
 
 Principios derivados:
 
@@ -76,7 +101,20 @@ Veterinaria.sln
 
 `Veterinaria.Contracts` concentrará los DTO y contratos REST compartidos conceptualmente por ambos clientes. React Native no dependerá del código C#.
 
-El documento original desarrolla estrategias específicas para SQL Server y las conversaciones usan Entity Framework Core como base del plan técnico. La selección debe formalizarse al cerrar las fundaciones, pero las reglas de integridad y concurrencia no dependen de la interfaz elegida.
+### Organización física del repositorio y ramas (actualizado 2026-10-09)
+
+Se conserva la arquitectura de una única API y dos clientes. La solución .NET podrá estar en la raíz del repositorio y agrupar proyectos ubicados en carpetas distintas:
+
+```text
+ObligatorioVeterinaria/
+├── api/          API ASP.NET Core, Application, Domain, Infrastructure y Contracts
+├── desktop/      interfaz Blazor/C# para computadora
+├── mobile/       aplicación React Native (cuando se inicie el frente móvil)
+├── tests/        pruebas de la API, el dominio y la integración
+└── docs/         análisis, decisiones, diseño y evidencia
+```
+
+Ramas y secuencia: ver DT-ORG-02. Concurrencia y motor: ver DT-BD-02. Límites de los prototipos: ver 3.1.
 
 ## 5. Roles identificados
 
@@ -139,7 +177,7 @@ En la documentación histórica, “mascota” identifica al paciente asociado a
 - Registro de atención y consultas.
 - Historia clínica.
 - Vacunación.
-- Consultas firmadas/inmutables, mencionadas como regla crítica pendiente de recuperar con su redacción exacta.
+- Consultas firmadas e inmutables según RN-12, RN-13, RN-14 y RN-20; correcciones mediante enmiendas.
 
 ### Internación
 
@@ -148,7 +186,7 @@ En la documentación histórica, “mascota” identifica al paciente asociado a
 ### Inventario
 
 - Gestión de inventario.
-- Stock no negativo y FEFO fueron mencionados como reglas críticas; falta recuperar su definición canónica.
+- Stock no negativo, FEFO, vencimientos, mínimos y movimientos trazables según RN-26 a RN-31.
 
 ### Comunicaciones
 
@@ -168,7 +206,7 @@ En la documentación histórica, “mascota” identifica al paciente asociado a
 
 ### Facturación y administración
 
-- Facturación con restricciones de negocio aún pendientes de recuperar en detalle.
+- Cargos, tarifas históricas y comprobantes según RN-32 a RN-36. Se distingue el cargo generado al cerrar la atención del cobro posterior; falta completar el caso de uso de cobro.
 - Administración e indicadores en Blazor.
 
 ### Capacidades móviles adicionales
@@ -262,50 +300,17 @@ Al implementar o diseñar un flujo, se deben conservar sus identificadores y ras
 
 Esta lista es solo un resumen. La redacción verificable completa está en `MATRIZ_REQUISITOS.md`.
 
-## 11. Plan A — API + Blazor
+## 11. Plan de construcción por secciones A, B y C
 
-1. **Fundación:** solución .NET, capas, entidades, base de datos, Entity Framework Core, DTO/contratos, migraciones, ambientes, Swagger/OpenAPI, errores, logging y pruebas.
-2. **Identidad y seguridad:** usuarios, roles, permisos, autenticación, estrategia de tokens si corresponde, autorización, auditoría y baja lógica.
-3. **Núcleo funcional:** clientes/responsables, mascotas, veterinarios, especies/razas, servicios, tipos de cita, recursos y tablas maestras. Comenzar primeras pantallas Blazor en paralelo.
-4. **Módulos:** agenda/disponibilidad → historia clínica → internación → inventario → comunicaciones → facturación.
-5. **Reglas críticas y robustez:** RN-01 a RN-42, concurrencia, transacciones, idempotencia y garantías en base de datos.
-6. **Blazor completo:** paneles por rol, agenda, fichas clínicas, internación, inventario, administración, facturación e indicadores.
-7. **Integración y defensa:** pruebas, seguridad, datos de demostración, documentación y UML actualizado.
+La secuencia de ramas del 2026-10-20 sustituye el orden de implementación de los planes A/B anteriores, sin cambiar la arquitectura final:
 
-## 12. Plan B — React Native + Figma
+1. **Sección A — escritorio:** primero Blazor con inicio, catálogo de servicios, información pública y, después, identidad/perfiles y los recorridos de Cliente, Recepción, Veterinario y Administración. Los adaptadores usan datos sintéticos; no prueban persistencia ni reglas de servidor.
+2. **Sección B — móvil:** diseñar en Figma y construir React Native con experiencias Cliente/Veterinario sobre las decisiones y contratos funcionales documentados. Hasta C, cualquier respuesta de datos permanece demostrativa.
+3. **Sección C — API e integración:** implementar la API ASP.NET Core, capas de dominio/aplicación/infraestructura/contratos, persistencia MySQL, autenticación/autorización, reglas críticas y conexión de ambos clientes a la misma API.
 
-1. **Requisitos y comportamiento:** incorporar documentos del usuario; clasificar RF, RN, RNF, UX, pseudocódigo y consentimientos. La última aclaración establece que el pseudocódigo debe preceder al diseño visual definitivo.
-2. **Definición funcional:** mapa de navegación y user flows, primero Cliente y luego Veterinario.
-3. **Wireframes y Figma:** estructura en escala de grises, navegación, formularios, jerarquía y estados; después design system y UI de alta fidelidad.
-4. **Prototipo navegable:** validar recorridos, alertas, estados y acciones protegidas.
-5. **Fundación React Native:** navegación, tema, componentes, estado, cliente HTTP, almacenamiento seguro de token, sesión, ambientes y errores.
-6. **Integración:** autenticación/usuarios → mascotas → agenda → funciones clínicas → internación → notificaciones.
-7. **Adaptación y pruebas:** tamaños de pantalla, carga/error/sin conexión, expiración de sesión, permisos, concurrencia y flujos completos.
+Cada recorrido se programa cuando cerró su puerta H0 (DT-ORG-03). El inventario completo de tareas está en `../analisis/PLAN_TAREAS_PROYECTO.md`; H0–H5 sigue siendo la planificación funcional de `../analisis/ALCANCE_ENTREGA.md`. La decisión visual inicial móvil de `Diseño.md` se aplica después de validar mapa, flujos, estados, pseudocódigo y requisitos.
 
-Organización React Native propuesta:
-
-```text
-src/
-├── api/
-├── components/
-├── features/
-│   ├── auth/
-│   ├── pets/
-│   ├── appointments/
-│   ├── clinicalHistory/
-│   └── hospitalization/
-├── navigation/
-├── screens/
-├── services/
-├── hooks/
-├── store/
-├── theme/
-└── utils/
-```
-
-La decisión visual inicial se encuentra en `Diseño.md`: dirección clínica cálida, verde petróleo y coral, tipografía Inter, navegación inferior funcional y navegación contextual dentro de cada mascota. La alta fidelidad permanece condicionada al cierre de registro, pseudocódigo restante y parámetros abiertos de alertas.
-
-## 13. Método para incorporar nuevos requisitos
+## 12. Método para incorporar nuevos requisitos
 
 Cada elemento nuevo debe registrarse sin mezclar categorías:
 
@@ -319,27 +324,39 @@ Cada elemento nuevo debe registrarse sin mezclar categorías:
 
 Si una regla cambia, registrar qué reemplaza, la fecha y el impacto sobre API, Blazor, React Native, Figma, pruebas y documentación.
 
-## 14. Pendientes inmediatos
+## 13. Pendientes inmediatos
 
-1. Completar la especificación de registro, alertas sanitarias y los parámetros pendientes del módulo de asistencia; privacidad y consentimientos ya fueron incorporados desde `Implementacion_Politicas.txt`.
-2. Confirmar formalmente el motor de base de datos y la estrategia concreta para impedir solapamientos de intervalos variables.
-3. Construir y validar el mapa funcional de Visitante y Cliente, respetando los RF-VIS y RF-CLI.
-4. Construir y validar el mapa funcional del Veterinario, respetando los RF-VET.
-5. Completar el pseudocódigo restante, estados, errores, consentimientos y reanudación de acciones protegidas antes del diseño visual definitivo; asistencia ya cuenta con una primera especificación.
-6. Preparar trazabilidad entre RF, RN, RNF, pantallas, endpoints y casos de prueba.
-7. Actualizar UML y justificación de patrones para que coincidan con Blazor/C# + API .NET + React Native + Figma.
+El orden funcional sigue siendo H0–H5 de `../analisis/ALCANCE_ENTREGA.md` (no renumera la columna Fase de la matriz). El orden de construcción es A/B/C de `../analisis/PLAN_TAREAS_PROYECTO.md`.
 
-## 14.1 Artefactos funcionales derivados
+1. Empezar la sección A en `desktop`: esqueleto Blazor y catálogo público con datos de demostración (A-001 a A-003).
+2. Seguir con registro y reserva demostrativos (A-006 a A-015), usando las decisiones cerradas el 2026-10-29.
+3. Especificar «Cobrar consulta» e internación antes de sus pantallas (A-023, A-024).
+4. Cerrar alertas sanitarias y parámetros de asistencia antes de sus pantallas (A-021, A-026).
+5. Registrar la fecha de entrega cuando exista y aplicar el disparador del plan B.
+6. Mantener la trazabilidad RF → caso de uso → endpoint → pantalla → prueba y actualizar UML para el stack vigente.
+
+## 13.1 Artefactos funcionales derivados
 
 Se incorporaron como borradores para validación los primeros artefactos funcionales de Visitante y Cliente:
 
 - `docs/analisis/HISTORIAS_USUARIO_VISITANTE_CLIENTE.md`: backlog con 35 historias, criterios de aceptación y trazabilidad.
 - `docs/analisis/CASOS_DE_USO_VISITANTE_CLIENTE.md`: catálogo de 25 casos de uso y especificación detallada de 11 recorridos esenciales.
 - `docs/analisis/ESPECIFICACION_ALERTAS_ASISTENCIA.md`: clasificación, estados, flujos, pseudocódigo, privacidad, excepciones y pruebas del nuevo módulo.
+- `docs/analisis/ALCANCE_ENTREGA.md`: tabla operativa de entrega base y extensiones, asignación de los 74 RF a hitos, límites y evidencia esperada.
+- `docs/analisis/FLUJO_RESERVA_CONSULTA.md`: detalle conectado de CU-CLI-02 y CU-VET-01 (Realizar consulta), estados, permisos, datos, pseudocódigo y criterios de aceptación.
+- `docs/analisis/HISTORIAS_USUARIO_ATENCION.md`: historias derivadas del recorrido de atención, sin agregar RF a la matriz.
+- `docs/analisis/ESPECIFICACION_CATALOGO_SERVICIOS_API.md`: propuesta acotada del primer contrato público API → Blazor para RF-VIS-01, con decisiones D-CAT-01 a 04 cerradas y pruebas.
+- `docs/analisis/DECISIONES_PARA_DESARROLLO.md`: tablero de decisiones: dónde está cada una y su estado.
+- `docs/analisis/ESPECIFICACION_REGISTRO_CLIENTE.md`: flujo, ficha de datos, decisiones cerradas, pseudocódigo y pruebas del registro con reanudación de intención protegida.
+- `docs/analisis/RECORRIDO_API_RESERVA_CONSULTA.md`: mapa propuesto de operaciones API desde reservar turno hasta firmar consulta y dejar cargo/correo pendientes.
+- `docs/analisis/PLAN_B_ALCANCE.md`: núcleo que no se recorta, recortes ordenados y su disparador.
+- `docs/diagramas/INICIO_ESCRITORIO.md`: primer flujo de catálogo/acceso/reserva y árbol binario de decisiones para el siguiente paso, con límites claros de la simulación sin API.
 
-Estos documentos no sustituyen la matriz canónica. Permanecen en estado de borrador hasta resolver los pendientes de registro, parámetros abiertos, pseudocódigo restante, alcance y casos resumidos.
+Estos documentos no sustituyen la matriz canónica. Los del primer recorrido (catálogo, registro, reserva y consulta) tienen sus decisiones cerradas; asistencia, alertas sanitarias y los casos resumidos siguen como borrador.
 
-## 15. Fuentes de esta recuperación
+La tabla de alcance del 2026-10-02 fija una base operativa para planificar por hitos; no declara aprobados por el profesor los detalles nuevos ni terminada la Fase 1. Conserva todos los RF Must y las RN/RNF aplicables. Postergar una obligación vigente requiere una revisión explícita de contexto y matriz; la devolución docente aporta criterios, no elimina requisitos automáticamente.
+
+## 14. Fuentes de esta recuperación
 
 - Proyecto ChatGPT: `ObligatorioDDM_DDA` (`g-p-6aacb1aef7648191ac475284acde7878`).
 - Documento fuente: `docs/fuentes/Analisis_Clinica_Veterinaria.docx`, versión 1.0, setiembre de 2026.
