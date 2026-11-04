@@ -54,10 +54,10 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 ### A.1 Fundación y páginas públicas
 
 - [x] **A-001 — Preparar estructura de escritorio.** Crear el cascarón Blazor, navegación, estilos base y configuración local de demostración, conforme al H0 aprobado.
-- [ ] **A-002 — Crear página de inicio.** Presentar identidad de la clínica, navegación pública, servicios destacados, contacto, ubicación y acceso visible a urgencias/políticas; probar tamaños de computadora acordados.
+- [x] **A-002 — Crear página de inicio.** Presentar identidad de la clínica, navegación pública, servicios destacados, contacto, ubicación y acceso visible a urgencias/políticas; probar tamaños de computadora acordados.
 - [x] **A-003 — Crear catálogo de servicios.** Mostrar servicios configurables con descripción y requisitos; incluir datos ficticios de revisión clínica, vacunación y desparasitación distinguidas, y rehabilitación equina solo como servicio condicional.
-- [ ] **A-004 — Crear páginas públicas de profesionales y clínica.** Mostrar únicamente datos aprobados para publicación, horarios informativos, vías de contacto, ubicación, cobertura y políticas.
-- [ ] **A-005 — Definir acceso a urgencias y políticas.** Presentar orientación clara, niveles informativos y enlaces públicos; no simular una garantía de atención ni sustituir un diagnóstico.
+- [x] **A-004 — Crear páginas públicas de profesionales y clínica.** Mostrar únicamente datos aprobados para publicación, horarios informativos, vías de contacto, ubicación, cobertura y políticas.
+- [x] **A-005 — Definir acceso a urgencias y políticas.** Presentar orientación clara, niveles informativos y enlaces públicos; no simular una garantía de atención ni sustituir un diagnóstico.
 
 ### A.2 Identidad y perfil
 

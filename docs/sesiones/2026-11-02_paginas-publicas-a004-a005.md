@@ -42,12 +42,12 @@ Participantes: Eric (con Claude). Rama: `eric/a-004-a005-paginas-publicas`, crea
 
 ## Pendientes
 
-- [ ] Eric: probar la rama y avisar errores.
+- [x] Eric probó la rama el 2026-11-03: funciona.
 - [x] Se cerró el PR #4 y todo quedó reunido en el PR #5 (A-002, A-004 y A-005).
-- [ ] Diego: revisar y mezclar el PR #5.
+- [x] PR #5 mezclado por Eric el 2026-11-03 (DT-ORG-05: cada uno mezcla lo suyo).
 - [ ] Borrar las ramas ya integradas o cerradas: `eric/a-002-inicio-vitalia`, `diego/cierre-h0`, `diego/proyecto-blazor`.
 - [ ] Próximas tareas: una rama por tarea saliendo siempre de `desktop`, no de otra rama sin mezclar.
-- [ ] Marcar A-002, A-004 y A-005 en `PLAN_TAREAS_PROYECTO.md` al mezclar.
+- [x] A-002, A-004 y A-005 marcadas en `PLAN_TAREAS_PROYECTO.md`.
 - [ ] Diego: decidir proveedor MySQL de DT-BD-02.
 - [ ] Botones Reservar / Consultar en el detalle del servicio.
 - [ ] Mapa en La clínica y en el inicio cuando se elija proveedor; actualizar Privacidad y Cookies en ese momento.
