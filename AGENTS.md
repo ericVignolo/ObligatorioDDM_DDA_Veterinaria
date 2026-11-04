@@ -35,7 +35,8 @@ Antes de planificar, diseñar o implementar, leer:
 
 - Al **iniciar** una sesión, leer la última bitácora de `docs/sesiones/` y su lista de pendientes.
 - Al **cerrar** una sesión, crear `docs/sesiones/AAAA-MM-DD_tema-breve.md` con: qué se hizo, archivos tocados, decisiones, cómo probarlo y qué falta.
-- Cada tarea va en una rama corta (`<nombre>/<tarea>`) que sale de la rama de la sección, con PR hacia ella. Quien hizo la tarea la prueba y mezcla su propio PR; el otro puede revisarlo después (DT-ORG-05).
+- **Una rama por sesión** (`<nombre>/sesion-AAAA-MM-DD`), que sale de la rama de la sección; todo lo de esa sesión va ahí y se abre **un solo PR** al final (DT-ORG-06). Quien trabajó la prueba y mezcla su propio PR; el otro puede revisarlo después (DT-ORG-05).
+- Claude no puede compilar: el código llega sin probar y se prueba con F5 antes de mezclar. Por eso nunca se trabaja directo sobre `desktop`.
 
 ## Convenciones de código (estilo del docente)
 

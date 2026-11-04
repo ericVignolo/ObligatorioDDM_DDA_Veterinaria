@@ -39,8 +39,8 @@ Participantes: Eric (con Claude). Rama: `eric/a-006-registro` desde `desktop` �
 
 ## Pendientes
 
-- [ ] Eric: probar la rama y mezclar el PR.
-- [ ] Marcar A-006 en `PLAN_TAREAS_PROYECTO.md` al mezclar; A-007 queda a medias (falta recuperación de contraseña).
+- [x] Eric probó el registro, la verificación y las páginas legales: funciona. PR #8 mezclado el 2026-11-04.
+- [x] A-006 marcada; A-007 marcada como parcial (`[~]`, falta recuperación de contraseña).
 - [ ] **Siguiente:** A-008 inicio y cierre de sesión; A-011 retomar la acción con límite de 30 min (D-REG-05); recuperación de contraseña (D-REG-03).
 - [ ] Diego: decidir proveedor MySQL de DT-BD-02.
 - [ ] Botones Reservar / Consultar en el detalle del servicio.

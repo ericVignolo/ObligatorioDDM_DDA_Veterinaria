@@ -1,11 +1,136 @@
-# Interfaz para computadora
+# Interfaz para computadora — `Veterinaria.Blazor`
 
-`Veterinaria.Blazor`: interfaz de Visitante, Cliente, Recepción, Veterinario y Administración. Se construye en la sección A (rama `desktop`) con datos de demostración y se conecta a la API en la sección C.
+Aplicación **Blazor Web App** en **C# / .NET 10** (interactividad Server, ubicación Global) para Visitante, Cliente, Recepción, Veterinario y Administración. Se construye en la sección A (rama `desktop`) con **datos de demostración** y se conecta a la API en la sección C.
 
-Reglas que aplican: [principios vigentes](../docs/contexto-base/CONTEXTO_BASE.md#31-principios-vigentes).
+- Abrir `Veterinaria.Blazor/Veterinaria.Blazor.slnx` en Visual Studio 2026 y ejecutar con **F5**.
+- Reglas comunes: [principios vigentes](../docs/contexto-base/CONTEXTO_BASE.md#31-principios-vigentes). Convenciones del docente: [`AGENTS.md`](../AGENTS.md).
+- Avance: [plan de tareas](../docs/analisis/PLAN_TAREAS_PROYECTO.md) y [bitácoras](../docs/sesiones/).
 
-Proyecto: `Veterinaria.Blazor/Veterinaria.Blazor.slnx` (.NET 10). Se abre en Visual Studio 2026 y se ejecuta con F5.
+## Cómo está organizado
 
-Hecho: inicio, catálogo de servicios, profesionales, la clínica, urgencias y documentos legales (A-001 a A-005). Siguiente: registro e ingreso (A-006 en adelante). Avance en el [plan de tareas](../docs/analisis/PLAN_TAREAS_PROYECTO.md).
+```
+Veterinaria.Blazor/
+├── Models/              Clases de datos (sin lógica): Prestacion, Profesional, Clinica, Cuenta…
+├── Services/            Lógica y datos de demostración; cada uno se registra con AddScoped en Program.cs
+├── Components/
+│   ├── Layout/          MainLayout (marco de todas las páginas) y NavMenu (menú lateral)
+│   ├── Pages/           Una página por ruta (@page)
+│   └── *.razor          Componentes reutilizables: tarjetas, pie legal, barra de sesión…
+├── wwwroot/             Archivos estáticos (Bootstrap, app.css)
+└── Program.cs           Cultura es-UY y registro de servicios
+```
 
-Recorrido principal: [catálogo → acceso → reserva](../docs/diagramas/INICIO_ESCRITORIO.md), con las decisiones cerradas de [registro](../docs/analisis/ESPECIFICACION_REGISTRO_CLIENTE.md) y [reserva/consulta](../docs/analisis/FLUJO_RESERVA_CONSULTA.md).
+Cada página **inyecta** (`@inject`) los servicios que necesita y **usa** componentes con `[Parameter]`. Los servicios trabajan con los modelos. En la sección C, cada `XxxService` se reemplaza por un `XxxApiService` que pide los mismos datos a la API con `HttpClient`, sin cambiar las páginas.
+
+## Mapa de conexiones
+
+```mermaid
+flowchart LR
+    subgraph Paginas["Páginas (Components/Pages)"]
+        Home["/ Inicio"]
+        Servicios["/servicios"]
+        Detalle["/servicios/{Id}"]
+        Profesionales["/profesionales"]
+        ProfDetalle["/profesionales/{Id}"]
+        LaClinica["/clinica"]
+        Urgencias["/urgencias"]
+        Legales["/privacidad · /terminos · /cookies"]
+        Acceso["/acceso"]
+        Registro["/registro"]
+        Verificar["/verificar"]
+        Ingresar["/ingresar"]
+    end
+
+    subgraph Componentes["Componentes"]
+        Layout["MainLayout"]
+        Nav["NavMenu"]
+        Barra["BarraSesion"]
+        Pie["PieLegal"]
+        Encabezado["EncabezadoLegal"]
+        PCard["PrestacionCard"]
+        ProfCard["ProfesionalCard"]
+    end
+
+    subgraph Servicios_["Services"]
+        SPrest["PrestacionService"]
+        SProf["ProfesionalService"]
+        SClin["ClinicaService"]
+        SLegal["DocumentoLegalService"]
+        SCuenta["CuentaService"]
+        SSesion["SesionService"]
+        SInt["IntencionService"]
+    end
+
+    subgraph Modelos["Models"]
+        MPrest["Prestacion"]
+        MProf["Profesional"]
+        MClin["Clinica"]
+        MLegal["DocumentoLegal"]
+        MCuenta["Cuenta · RegistroCliente · CodigoVerificacion · InicioSesion · ResultadoOperacion · ValidacionDatos"]
+        MNivel["NivelUrgencia"]
+    end
+
+    Layout --> Nav & Barra & Pie
+    Home --> PCard
+    Servicios --> PCard
+    Profesionales --> ProfCard
+    Legales --> Encabezado
+
+    Home --> SClin & SPrest & SInt & SSesion
+    Servicios --> SPrest & SInt
+    Detalle --> SPrest & SClin & SInt & SSesion
+    Profesionales --> SProf
+    ProfDetalle --> SProf
+    LaClinica --> SClin
+    Urgencias --> SClin
+    Urgencias --> MNivel
+    Legales --> SClin
+    Acceso --> SPrest & SInt & SSesion
+    Registro --> SCuenta
+    Verificar --> SCuenta & SSesion & SInt
+    Ingresar --> SSesion & SInt
+    Barra --> SSesion
+    Pie --> SLegal & SClin
+    Encabezado --> SLegal & SClin
+    PCard --> SClin
+
+    SInt --> SSesion --> SCuenta --> SLegal
+
+    SPrest --> MPrest
+    SProf --> MProf
+    SClin --> MClin
+    SLegal --> MLegal
+    SCuenta --> MCuenta
+    SSesion --> MCuenta
+```
+
+## Páginas
+
+| Ruta | Archivo | Tarea | Usa |
+|---|---|---|---|
+| `/` | `Pages/Home.razor` | A-002 | ClinicaService, PrestacionService, IntencionService, SesionService · `PrestacionCard` |
+| `/servicios` | `Pages/Servicios.razor` | A-003 | PrestacionService, IntencionService · `PrestacionCard` |
+| `/servicios/{Id}` | `Pages/PrestacionDetalle.razor` | A-003, A-011 | PrestacionService, ClinicaService, IntencionService, SesionService |
+| `/profesionales` | `Pages/Profesionales.razor` | A-004 | ProfesionalService · `ProfesionalCard` |
+| `/profesionales/{Id}` | `Pages/ProfesionalDetalle.razor` | A-004 | ProfesionalService |
+| `/clinica` | `Pages/LaClinica.razor` | A-004 | ClinicaService |
+| `/urgencias` | `Pages/Urgencias.razor` | A-005 | ClinicaService · modelo `NivelUrgencia` |
+| `/privacidad`, `/terminos`, `/cookies` | `Pages/Privacidad.razor`, `Terminos.razor`, `Cookies.razor` | A-005 | ClinicaService · `EncabezadoLegal` |
+| `/acceso` | `Pages/Acceso.razor` | A-006, A-011 | PrestacionService, IntencionService, SesionService |
+| `/registro` | `Pages/Registro.razor` | A-006 | CuentaService · modelo `RegistroCliente` |
+| `/verificar` | `Pages/Verificar.razor` | A-007 | CuentaService, SesionService, IntencionService · modelo `CodigoVerificacion` |
+| `/ingresar` | `Pages/Ingresar.razor` | A-008 | SesionService, IntencionService · modelo `InicioSesion` |
+
+## Servicios
+
+| Servicio | Qué hace | Depende de | Se reemplaza en la sección C por |
+|---|---|---|---|
+| `PrestacionService` | Catálogo público de servicios (solo publicados y con precio) | — | `PrestacionApiService` → `GET /api/v1/servicios` |
+| `ProfesionalService` | Profesionales publicados y sus horarios | — | `ProfesionalApiService` |
+| `ClinicaService` | Datos de VITALIA y enlaces `tel:` | — | `ClinicaApiService` |
+| `DocumentoLegalService` | Versión y fecha vigente de Privacidad, Términos y Cookies | — | Documentos servidos por la API |
+| `CuentaService` | Registro, verificación por código y credenciales (PBKDF2) | DocumentoLegalService | `CuentaApiService` (identidad en la API) |
+| `SesionService` | Cuenta que ingresó; ingresar y salir | CuentaService | Autenticación con tokens (RNF-SEG-03) |
+| `IntencionService` | Servicio elegido antes de ingresar; se retoma hasta 30 min | SesionService | Igual, en el cliente |
+
+> Todos los servicios son `AddScoped`: en Blazor Server duran lo que dura la pestaña. Cuentas y sesión se pierden al recargar; es lo esperado hasta tener la API.

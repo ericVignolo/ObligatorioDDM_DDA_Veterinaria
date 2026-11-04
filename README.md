@@ -28,8 +28,14 @@ Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ning
 | A-003 | Catálogo de servicios con detalle | ✅ |
 | A-004 | Profesionales con horarios y página de la clínica | ✅ |
 | A-005 | Urgencias y documentos legales (Privacidad, Términos, Cookies) | ✅ |
-| A-006 a A-011 | Registro, verificación, ingreso, perfiles y retomar la acción | Siguiente |
+| A-006 | Registro de cliente con validaciones y aceptaciones separadas | ✅ |
+| A-007 | Verificación del correo por código (falta recuperar contraseña) | 🟡 |
+| A-008 | Inicio y cierre de sesión | ✅ |
+| A-011 | Retomar la reserva después de ingresar | ✅ |
+| A-009, A-010 | Perfil del Cliente y perfiles del personal | Pendiente |
 | A-012 en adelante | Animales, reserva en cuatro pasos, consulta y panel del personal | Pendiente |
+
+El mapa de páginas, servicios y modelos (con diagrama) está en [`desktop/README.md`](desktop/README.md).
 
 Avance completo en el [plan de tareas](docs/analisis/PLAN_TAREAS_PROYECTO.md) y en la [última bitácora de trabajo](docs/sesiones/).
 
@@ -69,7 +75,7 @@ dotnet run
 ## Forma de trabajo
 
 - **Ramas:** `main` (versión integrada) · `desktop` (sección A, activa) · `desktop-mobile` (sección B) · `desktop-mobile-api` (sección C). Cada sección sale de la anterior.
-- Cada tarea va en una rama corta `<nombre>/<tarea>` desde la rama de la sección, con PR hacia ella. Quien hace la tarea la prueba y mezcla su PR.
+- Cada sesión de trabajo va en una rama `<nombre>/sesion-AAAA-MM-DD` desde la rama de la sección, con un PR al final. Quien trabajó la prueba y mezcla su PR. `main` se actualiza desde `desktop` en cada hito estable.
 - Al cerrar cada sesión se escribe una bitácora en `docs/sesiones/` con lo hecho y lo pendiente.
 - El código sigue el estilo del docente; las convenciones y reglas para asistentes de IA están en [`AGENTS.md`](AGENTS.md).
 
