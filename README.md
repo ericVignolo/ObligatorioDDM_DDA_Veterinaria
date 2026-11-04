@@ -1,25 +1,78 @@
-# Sistema de gestión veterinaria
+# VITALIA — Sistema de gestión veterinaria
 
-Proyecto académico de dos integrantes. La interfaz principal para computadora se desarrollará con Blazor/C#; la aplicación móvil con React Native. Ambas consumirán una única API ASP.NET Core, responsable de la autenticación, autorización, datos y reglas de negocio.
+Obligatorio de **DDM / DDA** del Instituto Tecnológico CTC Colonia (Uruguay), carrera Analista Programador.
 
-## Carpetas
+Sistema integral para **VITALIA**, una clínica veterinaria **ficticia** que atiende animales de compañía y de campo (perros, gatos, caballos, ovinos y bovinos). El recorrido central es **agendar → atender → registrar → notificar**: turnos, consulta e historia clínica, stock por lote, cobro, vacunas, internación y asistencia a domicilio con niveles de urgencia.
+
+**Equipo:** Diego y Eric, responsables con igual autoridad ([DT-ORG-05](docs/contexto-base/CONTEXTO_BASE.md#2-estado-actual)), con apoyo de asistentes de IA.
+
+## Tecnologías
+
+| Parte | Tecnología | Estado |
+|---|---|---|
+| Escritorio | **Blazor Web App** · **C#** · **.NET 10** · interactividad Server · Bootstrap | En construcción (sección A) |
+| Móvil | **React Native** · diseño en Figma | Sección B |
+| API | **ASP.NET Core** (C#) · EF Core · única autoridad de datos y reglas | Sección C |
+| Base de datos | **MySQL 8.4 LTS** | Sección C (proveedor de EF Core en revisión, DT-BD-02) |
+
+Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ningún cliente accede a la base de datos**. Detalle en los [principios vigentes](docs/contexto-base/CONTEXTO_BASE.md#31-principios-vigentes).
+
+## Estado actual
+
+**Sección A — escritorio**, con datos de demostración (todavía sin API ni base de datos).
+
+| Tarea | Qué incluye | Estado |
+|---|---|---|
+| A-001 | Proyecto Blazor, navegación y cultura `es-UY` | ✅ |
+| A-002 | Página de inicio de VITALIA | ✅ |
+| A-003 | Catálogo de servicios con detalle | ✅ |
+| A-004 | Profesionales con horarios y página de la clínica | ✅ |
+| A-005 | Urgencias y documentos legales (Privacidad, Términos, Cookies) | ✅ |
+| A-006 a A-011 | Registro, verificación, ingreso, perfiles y retomar la acción | Siguiente |
+| A-012 en adelante | Animales, reserva en cuatro pasos, consulta y panel del personal | Pendiente |
+
+Avance completo en el [plan de tareas](docs/analisis/PLAN_TAREAS_PROYECTO.md) y en la [última bitácora de trabajo](docs/sesiones/).
+
+## Cómo ejecutarlo
+
+Requisitos: **Visual Studio 2026** (o el SDK de **.NET 10**).
+
+1. Clonar el repositorio y cambiar a la rama `desktop`.
+2. Abrir `desktop/Veterinaria.Blazor/Veterinaria.Blazor.slnx`.
+3. Ejecutar con **F5** y aceptar el certificado HTTPS de desarrollo si lo pide.
+
+Desde la terminal:
+
+```
+cd desktop/Veterinaria.Blazor
+dotnet run
+```
+
+## Estructura
 
 | Carpeta | Contenido |
 |---|---|
-| [`api/`](api/README.md) | API y capas compartidas de aplicación, dominio, infraestructura y contratos. |
-| [`desktop/`](desktop/README.md) | Interfaz Blazor para computadora. |
-| [`mobile/`](mobile/README.md) | Aplicación React Native y su integración posterior con la API. |
+| [`desktop/Veterinaria.Blazor/`](desktop/README.md) | Aplicación Blazor: `Models/`, `Services/`, `Components/` y `Components/Pages/`. |
+| [`api/`](api/README.md) | API ASP.NET Core (sección C). |
+| [`mobile/`](mobile/README.md) | Aplicación React Native (sección B). |
 | [`tests/`](tests/README.md) | Pruebas del dominio, API, base de datos e integración. |
-| [`docs/`](docs/contexto-base/CONTEXTO_BASE.md) | Contexto, requisitos, casos de uso, historias y decisiones. |
+| [`docs/`](docs/contexto-base/CONTEXTO_BASE.md) | Contexto, requisitos, casos de uso, decisiones, diagramas y bitácoras. |
 
-Las carpetas de código todavía no tienen proyectos ejecutables. Las reglas comunes a todo el proyecto están en los [principios vigentes](docs/contexto-base/CONTEXTO_BASE.md#31-principios-vigentes).
+## Documentación principal
 
-## Orden de trabajo
+- [Contexto base](docs/contexto-base/CONTEXTO_BASE.md): objetivo, arquitectura y decisiones técnicas.
+- [Matriz de requisitos](docs/contexto-base/MATRIZ_REQUISITOS.md): fuente canónica de RF, RN y RNF.
+- [Tablero de decisiones](docs/analisis/DECISIONES_PARA_DESARROLLO.md) y [decisiones del 31/10](docs/analisis/DECISIONES_ERIC_2026-10-31.md).
+- [Alcance por hitos](docs/analisis/ALCANCE_ENTREGA.md) y [plan B de alcance](docs/analisis/PLAN_B_ALCANCE.md).
+- [Bitácoras de trabajo](docs/sesiones/): qué se hizo y qué falta en cada sesión.
 
-- **Sección A — escritorio** (rama `desktop`): Blazor con datos de demostración. Es la sección activa.
-- **Sección B — móvil** (rama `desktop-mobile`): React Native y Figma.
-- **Sección C — API e integración** (rama `desktop-mobile-api`): API ASP.NET Core con MySQL 8.4 y conexión de ambos clientes.
+## Forma de trabajo
 
-Cada sección sale de la anterior y se mezcla a `main` al aprobarse; el trabajo diario va en ramas cortas con PR. Las decisiones del primer recorrido están cerradas: ver el [tablero de decisiones](docs/analisis/DECISIONES_PARA_DESARROLLO.md). Si el tiempo no alcanza, se aplica el [plan B de alcance](docs/analisis/PLAN_B_ALCANCE.md).
+- **Ramas:** `main` (versión integrada) · `desktop` (sección A, activa) · `desktop-mobile` (sección B) · `desktop-mobile-api` (sección C). Cada sección sale de la anterior.
+- Cada tarea va en una rama corta `<nombre>/<tarea>` desde la rama de la sección, con PR hacia ella. Quien hace la tarea la prueba y mezcla su PR.
+- Al cerrar cada sesión se escribe una bitácora en `docs/sesiones/` con lo hecho y lo pendiente.
+- El código sigue el estilo del docente; las convenciones y reglas para asistentes de IA están en [`AGENTS.md`](AGENTS.md).
 
-La [matriz de requisitos](docs/contexto-base/MATRIZ_REQUISITOS.md) es la fuente canónica. La [tabla de alcance](docs/analisis/ALCANCE_ENTREGA.md) organiza la entrega por hitos y el [plan de tareas](docs/analisis/PLAN_TAREAS_PROYECTO.md) el orden de construcción.
+---
+
+VITALIA, sus datos de contacto y sus profesionales son ficticios. Los textos legales tienen estructura de documento real, pero no fueron revisados por un abogado.
