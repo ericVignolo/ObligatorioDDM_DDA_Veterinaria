@@ -10,10 +10,6 @@ generado: true
 
 **Ruta:** `/servicios/{Id:int}`
 
-Se retomó la reserva después de ingresar (A-011). Los cuatro pasos se agregan en A-015.
-
-**Tareas:** A-011, A-015
-
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
@@ -21,4 +17,3 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[IntencionService]]
 - [[Prestacion]]
 - [[PrestacionService]]
-- [[SesionService]]

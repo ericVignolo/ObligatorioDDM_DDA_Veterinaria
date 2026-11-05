@@ -72,8 +72,8 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 
 - [x] **A-012 — Crear listado y ficha de animales.** Mostrar especie/categoría, identificadores permitidos, responsables, antecedentes y acciones; admitir animales de campo y datos de grupo donde corresponda.
 - [x] **A-013 — Crear alta y edición de animal.** Representar campos, validaciones y estados acordados; incluir ejemplos sintéticos de caballo y oveja.
-- [ ] **A-014 — Crear disponibilidad orientativa.** Mostrar servicios, profesional, recursos, fecha y horarios ficticios; marcar la disponibilidad como demostrativa hasta que la API la confirme.
-- [ ] **A-015 — Crear reserva en cuatro pasos.** Animal; tipo/profesional; fecha/hora; revisión y confirmación. Conservar errores de cupo y estados descritos en H0.
+- [x] **A-014 — Crear disponibilidad orientativa.** Mostrar servicios, profesional, recursos, fecha y horarios ficticios; marcar la disponibilidad como demostrativa hasta que la API la confirme.
+- [x] **A-015 — Crear reserva en cuatro pasos.** Animal; tipo/profesional; fecha/hora; revisión y confirmación. Conservar errores de cupo y estados descritos en H0.
 - [ ] **A-016 — Crear turnos, cancelación y reprogramación.** Listar próximos/históricos y presentar consecuencias/confirmación según políticas ya definidas; no conservar cupos reales durante la demostración.
 - [ ] **A-017 — Crear agenda de Recepción y Veterinario.** Mostrar filtros, capacidad, estados y detalle de turno; permitir simular llegada/espera en el prototipo.
 - [ ] **A-018 — Diseñar estados de agenda.** Unificar etiquetas, permisos esperados, errores, vacío, carga, éxito y colisión en pantallas y documentación.

@@ -10,7 +10,7 @@ generado: true
 
 Guarda qué quería hacer el visitante antes de ingresar, para retomarlo después (A-011, D-REG-05).
 
-**Tareas:** A-011
+**Tareas:** A-011, A-015
 
 **Requisitos y decisiones:** D-REG-05, RF-VIS-07
 

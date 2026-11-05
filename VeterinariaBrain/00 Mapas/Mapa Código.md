@@ -7,7 +7,7 @@ generado: true
 
 Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y quién la usa.
 
-## Páginas (20)
+## Páginas (22)
 - [[Acceso]] · `/acceso`
 - [[AnimalDetalle]] · `/animales/{Id:int}`
 - [[AnimalEditar]] · `/animales/{Id:int}/editar`
@@ -23,25 +23,29 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[Profesionales]] · `/profesionales`
 - [[Recuperar]] · `/recuperar`
 - [[Registro]] · `/registro`
+- [[Reservar]] · `/reservar`
 - [[Restablecer]] · `/restablecer`
 - [[Servicios]] · `/servicios`
 - [[Terminos]] · `/terminos`
+- [[Turnos]] · `/turnos`
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-## Componentes (10)
+## Componentes (11)
 - [[AnimalCard]]
 - [[AnimalForm]]
 - [[BarraSesion]]
 - [[EncabezadoLegal]]
 - [[MainLayout]]
 - [[NavMenu]]
+- [[PasosReserva]]
 - [[PieLegal]]
 - [[PrestacionCard]]
 - [[ProfesionalCard]]
 - [[RequiereSesion]]
 
-## Servicios (8)
+## Servicios (9)
+- [[AgendaService]]
 - [[AnimalService]]
 - [[ClinicaService]]
 - [[CuentaService]]
@@ -51,13 +55,15 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[ProfesionalService]]
 - [[SesionService]]
 
-## Modelos (15)
+## Modelos (18)
 - [[Animal]]
 - [[AnimalFormulario]]
+- [[Ausencia]]
 - [[Clinica]]
 - [[CodigoVerificacion]]
 - [[Cuenta]]
 - [[DocumentoLegal]]
+- [[FranjaHoraria]]
 - [[InicioSesion]]
 - [[NivelUrgencia]]
 - [[NuevaContrasena]]
@@ -66,4 +72,5 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[RegistroCliente]]
 - [[ResultadoOperacion]]
 - [[SolicitudRecuperacion]]
+- [[Turno]]
 - [[ValidacionDatos]]
