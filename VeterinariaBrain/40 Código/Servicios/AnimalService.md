@@ -22,8 +22,11 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[ResultadoOperacion]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AgendaService]]
 - [[AnimalDetalle]]
 - [[AnimalEditar]]
 - [[AnimalForm]]
 - [[AnimalNuevo]]
 - [[Animales]]
+- [[Reservar]]
+- [[Turnos]]

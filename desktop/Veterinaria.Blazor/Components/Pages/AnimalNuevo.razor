@@ -19,6 +19,10 @@
 </RequiereSesion>
 
 @code {
+    // Si se llegó desde la reserva, se vuelve a ella después de registrar (P-RC-01).
+    [SupplyParameterFromQuery]
+    public string? Volver { get; set; }
+
     private AnimalFormulario datos = new();
     private string error = "";
 
@@ -36,6 +40,8 @@
             return;
         }
 
-        Navegacion.NavigateTo("animales");
+        // Solo se acepta volver a la reserva, nunca a una dirección externa.
+        var destino = Volver is not null && Volver.StartsWith("reservar") ? Volver : "animales";
+        Navegacion.NavigateTo(destino);
     }
 }

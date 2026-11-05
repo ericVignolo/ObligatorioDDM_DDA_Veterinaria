@@ -4,7 +4,6 @@
 @inject PrestacionService PrestacionService
 @inject ClinicaService ClinicaService
 @inject IntencionService Intencion
-@inject SesionService Sesion
 @inject NavigationManager Navegacion
 
 @if (prestacion is null)
@@ -16,15 +15,6 @@
 else
 {
     <PageTitle>@prestacion.Nombre</PageTitle>
-
-    @* Se retomó la reserva después de ingresar (A-011). Los cuatro pasos se agregan en A-015. *@
-    @if (Reservar && Sesion.Iniciada && prestacion.ReservableEnLinea)
-    {
-        <div class="alert alert-info" role="status">
-            <strong>@Sesion.CuentaActual!.Nombre, retomamos tu reserva de @prestacion.Nombre.</strong>
-            La reserva en cuatro pasos (animal, profesional, fecha y confirmación) se agrega en la próxima etapa.
-        </div>
-    }
 
     <h1>@prestacion.Nombre</h1>
     <p>@prestacion.Descripcion</p>
@@ -48,10 +38,6 @@ else
 @code {
     [Parameter]
     public int Id { get; set; }
-
-    // Llega en true cuando se vuelve a este servicio para reservar.
-    [SupplyParameterFromQuery]
-    public bool Reservar { get; set; }
 
     private Prestacion? prestacion;
 

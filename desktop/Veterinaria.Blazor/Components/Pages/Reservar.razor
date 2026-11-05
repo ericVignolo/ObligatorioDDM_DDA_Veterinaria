@@ -1,0 +1,332 @@
+@page "/reservar"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AgendaService Agenda
+@inject AnimalService AnimalService
+@inject PrestacionService PrestacionService
+@inject ProfesionalService ProfesionalService
+@inject SesionService Sesion
+@inject NavigationManager Navegacion
+
+<PageTitle>Reservar turno — VITALIA</PageTitle>
+
+<h1>Reservar turno</h1>
+
+<RequiereSesion>
+    <PasosReserva Actual="paso" />
+
+    @if (!string.IsNullOrEmpty(aviso))
+    {
+        <div class="alert alert-warning" role="alert">@aviso</div>
+    }
+
+    @* Paso 1 — Animal *@
+    @if (paso == 1)
+    {
+        <h2 class="h4">¿Para qué animal es el turno?</h2>
+
+        @if (animales.Count == 0)
+        {
+            <p>Todavía no registraste ningún animal. Registralo y volvés acá; no cuenta como un paso más.</p>
+            <a class="btn btn-primary" href="@($"animales/nuevo?volver={Uri.EscapeDataString(EnlaceDeVuelta)}")">Registrar animal</a>
+        }
+        else
+        {
+            <div class="list-group mb-3" style="max-width: 32rem;">
+                @foreach (var animal in animales)
+                {
+                    <button type="button" class="list-group-item list-group-item-action @(animal.Id == animalId ? "active" : "")" @onclick="() => ElegirAnimal(animal.Id)">
+                        <strong>@animal.Nombre</strong> · @DescribirAnimal(animal)
+                    </button>
+                }
+            </div>
+            <button class="btn btn-primary" disabled="@(animalId == 0)" @onclick="() => IrAPaso(2)">Siguiente</button>
+        }
+    }
+
+    @* Paso 2 — Servicio y profesional: solo quienes hacen ese servicio y atienden esa especie *@
+    @if (paso == 2 && animalElegido is not null)
+    {
+        <h2 class="h4">Servicio y profesional para @animalElegido.Nombre</h2>
+
+        <div class="mb-3" style="max-width: 24rem;">
+            <label class="form-label" for="servicio">Servicio</label>
+            <select id="servicio" class="form-select" value="@prestacionId" @onchange="CambiarServicio">
+                <option value="0">Elegí un servicio</option>
+                @foreach (var prestacion in reservables)
+                {
+                    <option value="@prestacion.Id">@prestacion.Nombre (@prestacion.DuracionMinutos min)</option>
+                }
+            </select>
+        </div>
+
+        @if (prestacionId != 0)
+        {
+            @if (profesionales.Count == 0)
+            {
+                <div class="alert alert-info">
+                    Ningún profesional hace este servicio para @animalElegido.Especie.ToLower(). Elegí otro servicio o consultá en la clínica.
+                </div>
+            }
+            else
+            {
+                <p class="mb-2">Profesional</p>
+                <div class="list-group mb-3" style="max-width: 32rem;">
+                    @foreach (var profesional in profesionales)
+                    {
+                        <button type="button" class="list-group-item list-group-item-action @(profesional.Id == profesionalId ? "active" : "")" @onclick="() => profesionalId = profesional.Id">
+                            <strong>@profesional.Nombre</strong> · @profesional.Especialidad
+                        </button>
+                    }
+                </div>
+            }
+        }
+
+        <button class="btn btn-outline-secondary me-2" @onclick="() => IrAPaso(1)">Volver</button>
+        <button class="btn btn-primary" disabled="@(prestacionId == 0 || profesionalId == 0)" @onclick="() => IrAPaso(3)">Siguiente</button>
+    }
+
+    @* Paso 3 — Fecha y hora *@
+    @if (paso == 3 && animalElegido is not null && elegida is not null && profesionalElegido is not null)
+    {
+        <h2 class="h4">Fecha y hora</h2>
+        <p class="text-muted small">Disponibilidad de demostración: la confirma la clínica cuando exista la API. Mínimo @AgendaService.HorasDeAnticipacion h de anticipación y hasta @AgendaService.DiasHaciaAdelante días.</p>
+
+        <div class="mb-3" style="max-width: 16rem;">
+            <label class="form-label" for="fecha">Día</label>
+            <input id="fecha" type="date" class="form-control"
+                   value="@fecha.ToString("yyyy-MM-dd")"
+                   min="@Agenda.PrimerDia.ToString("yyyy-MM-dd")"
+                   max="@Agenda.UltimoDia.ToString("yyyy-MM-dd")"
+                   @onchange="CambiarFecha" />
+            <div class="form-text">@fecha.ToString("dddd d 'de' MMMM")</div>
+        </div>
+
+        @if (horarios.Count == 0)
+        {
+            <div class="alert alert-info">@MotivoSinHorarios()</div>
+        }
+        else
+        {
+            <p class="mb-2">Horarios libres con @profesionalElegido.Nombre (@elegida.DuracionMinutos min)</p>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                @foreach (var horario in horarios)
+                {
+                    <button type="button" class="btn btn-sm @(horario == inicio ? "btn-primary" : "btn-outline-primary")" @onclick="() => inicio = horario">
+                        @horario.ToString("HH:mm")
+                    </button>
+                }
+            </div>
+        }
+
+        <button class="btn btn-outline-secondary me-2" @onclick="() => IrAPaso(2)">Volver</button>
+        <button class="btn btn-primary" disabled="@(inicio is null)" @onclick="() => IrAPaso(4)">Siguiente</button>
+    }
+
+    @* Paso 4 — Revisión y confirmación *@
+    @if (paso == 4 && animalElegido is not null && elegida is not null && profesionalElegido is not null && inicio is not null)
+    {
+        <h2 class="h4">Revisá y confirmá</h2>
+
+        <dl class="row" style="max-width: 40rem;">
+            <dt class="col-sm-4">Animal</dt>
+            <dd class="col-sm-8">@animalElegido.Nombre (@animalElegido.Especie)</dd>
+            <dt class="col-sm-4">Servicio</dt>
+            <dd class="col-sm-8">@elegida.Nombre · @elegida.DuracionMinutos min</dd>
+            <dt class="col-sm-4">Profesional</dt>
+            <dd class="col-sm-8">@profesionalElegido.Nombre</dd>
+            <dt class="col-sm-4">Día y hora</dt>
+            <dd class="col-sm-8">@inicio.Value.ToString("dddd d 'de' MMMM, HH:mm") a @inicio.Value.AddMinutes(elegida.DuracionMinutos).ToString("HH:mm")</dd>
+            <dt class="col-sm-4">Precio</dt>
+            <dd class="col-sm-8">Desde $ @elegida.PrecioDesde.ToString("N0"). El importe final se calcula con la tarifa vigente el día de la atención.</dd>
+        </dl>
+
+        <div class="alert alert-secondary small">
+            Podés cancelar sin costo hasta @AgendaService.HorasParaCancelar horas antes. Después, la cancelación se hace por Recepción.
+        </div>
+
+        <button class="btn btn-outline-secondary me-2" @onclick="() => IrAPaso(3)">Volver</button>
+        <button class="btn btn-primary" disabled="@confirmando" @onclick="Confirmar">Confirmar turno</button>
+
+        @* SOLO DEMOSTRACIÓN: permite probar qué pasa si otro cliente toma el horario mientras confirmás. *@
+        <p class="mt-3 small">
+            <button type="button" class="btn btn-link btn-sm p-0" @onclick="SimularOcupado">Demostración: simular que otro cliente reservó este horario</button>
+        </p>
+    }
+</RequiereSesion>
+
+@code {
+    // Servicio elegido en el catálogo, si se llegó desde «Reservar turno».
+    [SupplyParameterFromQuery]
+    public int? Servicio { get; set; }
+
+    private int paso = 1;
+    private string aviso = "";
+    private bool confirmando;
+
+    private List<Animal> animales = new();
+    private List<Prestacion> reservables = new();
+    private List<Profesional> profesionales = new();
+    private List<DateTime> horarios = new();
+
+    private int animalId;
+    private int prestacionId;
+    private int profesionalId;
+    private DateOnly fecha;
+    private DateTime? inicio;
+
+    private Animal? animalElegido => animales.FirstOrDefault(a => a.Id == animalId);
+    private Prestacion? elegida => reservables.FirstOrDefault(p => p.Id == prestacionId);
+    private Profesional? profesionalElegido => profesionales.FirstOrDefault(p => p.Id == profesionalId);
+
+    private string EnlaceDeVuelta => Servicio is null ? "reservar" : $"reservar?servicio={Servicio}";
+
+    protected override void OnInitialized()
+    {
+        reservables = PrestacionService.ObtenerReservables();
+        fecha = Agenda.PrimerDia;
+
+        if (Sesion.CuentaActual is null)
+        {
+            return;
+        }
+
+        animales = AnimalService.ObtenerDe(Sesion.CuentaActual.Id);
+
+        // P-RC-01: con un solo animal, el paso 1 ya viene elegido.
+        if (animales.Count == 1)
+        {
+            animalId = animales[0].Id;
+        }
+
+        if (Servicio is not null && reservables.Any(p => p.Id == Servicio))
+        {
+            prestacionId = Servicio.Value;
+        }
+    }
+
+    private static string DescribirAnimal(Animal animal)
+    {
+        return animal.EsGrupo ? $"{animal.Especie} (grupo de {animal.CantidadGrupo})" : animal.Especie;
+    }
+
+    private void ElegirAnimal(int id)
+    {
+        animalId = id;
+    }
+
+    private void IrAPaso(int numero)
+    {
+        aviso = "";
+
+        if (numero == 2)
+        {
+            CargarProfesionales();
+        }
+
+        if (numero == 3)
+        {
+            CargarHorarios();
+        }
+
+        paso = numero;
+    }
+
+    private void CambiarServicio(ChangeEventArgs e)
+    {
+        prestacionId = int.TryParse(e.Value?.ToString(), out var id) ? id : 0;
+        CargarProfesionales();
+    }
+
+    private void CargarProfesionales()
+    {
+        profesionales = animalElegido is null || prestacionId == 0
+            ? new()
+            : ProfesionalService.ObtenerPara(prestacionId, animalElegido.Especie);
+
+        // Si el profesional elegido ya no corresponde, se quita; si hay uno solo, se elige.
+        if (!profesionales.Any(p => p.Id == profesionalId))
+        {
+            profesionalId = profesionales.Count == 1 ? profesionales[0].Id : 0;
+        }
+
+        inicio = null;
+    }
+
+    private void CambiarFecha(ChangeEventArgs e)
+    {
+        if (DateOnly.TryParse(e.Value?.ToString(), out var nueva))
+        {
+            fecha = nueva;
+            CargarHorarios();
+        }
+    }
+
+    private void CargarHorarios()
+    {
+        horarios = Agenda.HorariosLibres(profesionalId, prestacionId, animalId, fecha);
+
+        if (inicio is not null && !horarios.Contains(inicio.Value))
+        {
+            inicio = null;
+        }
+    }
+
+    private string MotivoSinHorarios()
+    {
+        if (fecha < Agenda.PrimerDia || fecha > Agenda.UltimoDia)
+        {
+            return $"Elegí un día entre hoy y los próximos {AgendaService.DiasHaciaAdelante} días, con al menos {AgendaService.HorasDeAnticipacion} horas de anticipación.";
+        }
+
+        if (Agenda.EsFeriado(fecha))
+        {
+            return "Ese día la clínica no atiende. Elegí otro día.";
+        }
+
+        var ausencia = profesionalElegido?.Ausencias.FirstOrDefault(a => fecha >= a.Desde && fecha <= a.Hasta);
+        if (ausencia is not null)
+        {
+            return $"{profesionalElegido!.Nombre} no atiende ese día ({ausencia.Motivo.ToLower()}). Elegí otro día.";
+        }
+
+        if (profesionalElegido is not null && !profesionalElegido.Jornada.Any(f => f.Dia == fecha.DayOfWeek))
+        {
+            return $"{profesionalElegido.Nombre} no atiende los {fecha.ToString("dddd")}. Elegí otro día.";
+        }
+
+        return "No quedan horarios libres ese día. Probá con otro.";
+    }
+
+    private void Confirmar()
+    {
+        if (Sesion.CuentaActual is null || inicio is null)
+        {
+            return;
+        }
+
+        confirmando = true;
+        var resultado = Agenda.Reservar(Sesion.CuentaActual.Id, animalId, prestacionId, profesionalId, inicio.Value, out var turno);
+        confirmando = false;
+
+        if (!resultado.Exito || turno is null)
+        {
+            // Se mantiene lo elegido y se muestran los horarios actualizados (solapamiento concurrente).
+            CargarHorarios();
+            inicio = null;
+            paso = 3;
+            aviso = resultado.Mensaje;
+            return;
+        }
+
+        Navegacion.NavigateTo($"turnos?confirmado={turno.Id}");
+    }
+
+    private void SimularOcupado()
+    {
+        if (inicio is not null)
+        {
+            Agenda.OcuparComoOtroCliente(profesionalId, prestacionId, inicio.Value);
+        }
+    }
+}

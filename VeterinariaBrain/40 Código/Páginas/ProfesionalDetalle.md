@@ -10,8 +10,13 @@ generado: true
 
 **Ruta:** `/profesionales/{Id:int}`
 
+Ausencias próximas (A-014): esos días no se puede reservar con este profesional.
+
+**Tareas:** A-014
+
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
+- [[Ausencia]]
 - [[Profesional]]
 - [[ProfesionalService]]

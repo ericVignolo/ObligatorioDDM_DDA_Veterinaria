@@ -1,0 +1,90 @@
+@page "/turnos"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AgendaService Agenda
+@inject AnimalService AnimalService
+@inject PrestacionService PrestacionService
+@inject ProfesionalService ProfesionalService
+@inject SesionService Sesion
+
+<PageTitle>Mis turnos — VITALIA</PageTitle>
+
+<h1>Mis turnos</h1>
+
+<RequiereSesion>
+    @* Constancia después de reservar (A-015, CU-CLI-02 paso 8). *@
+    @if (confirmado is not null)
+    {
+        <div class="alert alert-success" role="status">
+            <strong>¡Turno confirmado!</strong>
+            @Describir(confirmado). Número de turno: @confirmado.Id.
+            Podés cancelar sin costo hasta @AgendaService.HorasParaCancelar horas antes.
+        </div>
+    }
+
+    <a class="btn btn-primary mb-3" href="reservar">Reservar otro turno</a>
+
+    @if (turnos.Count == 0)
+    {
+        <p>No tenés turnos próximos.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Día y hora</th>
+                    <th scope="col">Animal</th>
+                    <th scope="col">Servicio</th>
+                    <th scope="col">Profesional</th>
+                    <th scope="col">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var turno in turnos)
+                {
+                    <tr>
+                        <td>@turno.Inicio.ToString("ddd d/MM HH:mm")</td>
+                        <td>@NombreAnimal(turno)</td>
+                        <td>@(PrestacionService.ObtenerPorId(turno.PrestacionId)?.Nombre)</td>
+                        <td>@(ProfesionalService.ObtenerPorId(turno.ProfesionalId)?.Nombre)</td>
+                        <td><span class="badge bg-success">@turno.Estado</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p class="text-muted small">Cancelar y reprogramar se agregan en la próxima etapa (A-016).</p>
+    }
+</RequiereSesion>
+
+@code {
+    // Llega con el número del turno recién reservado.
+    [SupplyParameterFromQuery]
+    public int? Confirmado { get; set; }
+
+    private List<Turno> turnos = new();
+    private Turno? confirmado;
+
+    protected override void OnParametersSet()
+    {
+        if (Sesion.CuentaActual is null)
+        {
+            return;
+        }
+
+        turnos = Agenda.ProximosDe(Sesion.CuentaActual.Id);
+        confirmado = Confirmado is null ? null : turnos.FirstOrDefault(t => t.Id == Confirmado);
+    }
+
+    private string NombreAnimal(Turno turno)
+    {
+        return Sesion.CuentaActual is null ? "" : AnimalService.ObtenerPorId(turno.AnimalId, Sesion.CuentaActual.Id)?.Nombre ?? "";
+    }
+
+    private string Describir(Turno turno)
+    {
+        var servicio = PrestacionService.ObtenerPorId(turno.PrestacionId)?.Nombre;
+        var profesional = ProfesionalService.ObtenerPorId(turno.ProfesionalId)?.Nombre;
+        return $"{servicio} para {NombreAnimal(turno)} con {profesional}, el {turno.Inicio:dddd d 'de' MMMM} a las {turno.Inicio:HH\\:mm}";
+    }
+}

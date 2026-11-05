@@ -1,0 +1,18 @@
+@* Indicador de los cuatro pasos de la reserva (RC-D07, P-RC-01). *@
+<ol class="list-inline mb-4" aria-label="Pasos de la reserva">
+    @for (var i = 1; i <= Nombres.Length; i++)
+    {
+        var numero = i;
+        <li class="list-inline-item me-3 @(numero == Actual ? "fw-bold text-primary" : numero < Actual ? "text-success" : "text-muted")"
+            aria-current="@(numero == Actual ? "step" : null)">
+            @(numero < Actual ? "✓" : numero.ToString()). @(Nombres[numero - 1])
+        </li>
+    }
+</ol>
+
+@code {
+    [Parameter]
+    public int Actual { get; set; } = 1;
+
+    private static readonly string[] Nombres = { "Animal", "Servicio y profesional", "Fecha y hora", "Confirmación" };
+}
