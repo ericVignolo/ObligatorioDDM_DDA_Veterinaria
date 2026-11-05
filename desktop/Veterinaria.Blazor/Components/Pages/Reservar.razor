@@ -8,11 +8,19 @@
 @inject SesionService Sesion
 @inject NavigationManager Navegacion
 
-<PageTitle>Reservar turno — VITALIA</PageTitle>
+<PageTitle>@(reprogramando is null ? "Reservar turno" : "Reprogramar turno") — VITALIA</PageTitle>
 
-<h1>Reservar turno</h1>
+<h1>@(reprogramando is null ? "Reservar turno" : "Reprogramar turno")</h1>
 
 <RequiereSesion>
+    @if (!string.IsNullOrEmpty(errorReprogramar))
+    {
+        <div class="alert alert-warning" role="alert">@errorReprogramar</div>
+        <a href="turnos">← Volver a mis turnos</a>
+    }
+    else
+    {
+    <div>
     <PasosReserva Actual="paso" />
 
     @if (!string.IsNullOrEmpty(aviso))
@@ -90,6 +98,10 @@
     @if (paso == 3 && animalElegido is not null && elegida is not null && profesionalElegido is not null)
     {
         <h2 class="h4">Fecha y hora</h2>
+        @if (reprogramando is not null)
+        {
+            <p>Horario actual: <strong>@reprogramando.Inicio.ToString("dddd d 'de' MMMM, HH:mm")</strong>. Elegí el nuevo.</p>
+        }
         <p class="text-muted small">Disponibilidad de demostración: la confirma la clínica cuando exista la API. Mínimo @AgendaService.HorasDeAnticipacion h de anticipación y hasta @AgendaService.DiasHaciaAdelante días.</p>
 
         <div class="mb-3" style="max-width: 16rem;">
@@ -119,7 +131,14 @@
             </div>
         }
 
-        <button class="btn btn-outline-secondary me-2" @onclick="() => IrAPaso(2)">Volver</button>
+        @if (reprogramando is null)
+        {
+            <button class="btn btn-outline-secondary me-2" @onclick="() => IrAPaso(2)">Volver</button>
+        }
+        else
+        {
+            <a class="btn btn-outline-secondary me-2" href="turnos">Cancelar cambio</a>
+        }
         <button class="btn btn-primary" disabled="@(inicio is null)" @onclick="() => IrAPaso(4)">Siguiente</button>
     }
 
@@ -135,7 +154,12 @@
             <dd class="col-sm-8">@elegida.Nombre · @elegida.DuracionMinutos min</dd>
             <dt class="col-sm-4">Profesional</dt>
             <dd class="col-sm-8">@profesionalElegido.Nombre</dd>
-            <dt class="col-sm-4">Día y hora</dt>
+            @if (reprogramando is not null)
+            {
+                <dt class="col-sm-4">Horario actual</dt>
+                <dd class="col-sm-8">@reprogramando.Inicio.ToString("dddd d 'de' MMMM, HH:mm")</dd>
+            }
+            <dt class="col-sm-4">@(reprogramando is null ? "Día y hora" : "Nuevo horario")</dt>
             <dd class="col-sm-8">@inicio.Value.ToString("dddd d 'de' MMMM, HH:mm") a @inicio.Value.AddMinutes(elegida.DuracionMinutos).ToString("HH:mm")</dd>
             <dt class="col-sm-4">Precio</dt>
             <dd class="col-sm-8">Desde $ @elegida.PrecioDesde.ToString("N0"). El importe final se calcula con la tarifa vigente el día de la atención.</dd>
@@ -146,12 +170,14 @@
         </div>
 
         <button class="btn btn-outline-secondary me-2" @onclick="() => IrAPaso(3)">Volver</button>
-        <button class="btn btn-primary" disabled="@confirmando" @onclick="Confirmar">Confirmar turno</button>
+        <button class="btn btn-primary" disabled="@confirmando" @onclick="Confirmar">@(reprogramando is null ? "Confirmar turno" : "Confirmar cambio")</button>
 
         @* SOLO DEMOSTRACIÓN: permite probar qué pasa si otro cliente toma el horario mientras confirmás. *@
         <p class="mt-3 small">
             <button type="button" class="btn btn-link btn-sm p-0" @onclick="SimularOcupado">Demostración: simular que otro cliente reservó este horario</button>
         </p>
+    }
+    </div>
     }
 </RequiereSesion>
 
@@ -159,6 +185,13 @@
     // Servicio elegido en el catálogo, si se llegó desde «Reservar turno».
     [SupplyParameterFromQuery]
     public int? Servicio { get; set; }
+
+    // A-016: número del turno a reprogramar. Se conservan animal, servicio y profesional; solo cambia el horario.
+    [SupplyParameterFromQuery]
+    public int? Reprogramar { get; set; }
+
+    private Turno? reprogramando;
+    private string errorReprogramar = "";
 
     private int paso = 1;
     private string aviso = "";
@@ -203,6 +236,35 @@
         {
             prestacionId = Servicio.Value;
         }
+
+        if (Reprogramar is not null)
+        {
+            PrepararReprogramacion(Reprogramar.Value);
+        }
+    }
+
+    private void PrepararReprogramacion(int turnoId)
+    {
+        var turno = Agenda.ObtenerDe(turnoId, Sesion.CuentaActual!.Id);
+        if (turno is null || !Agenda.PuedeGestionar(turno))
+        {
+            errorReprogramar = $"Este turno ya no se puede reprogramar desde la web. Si faltan menos de {AgendaService.HorasParaCancelar} horas, consultá en Recepción.";
+            return;
+        }
+
+        reprogramando = turno;
+        animalId = turno.AnimalId;
+        prestacionId = turno.PrestacionId;
+        CargarProfesionales();
+        profesionalId = turno.ProfesionalId;
+        fecha = DateOnly.FromDateTime(turno.Inicio);
+        if (fecha < Agenda.PrimerDia)
+        {
+            fecha = Agenda.PrimerDia;
+        }
+
+        CargarHorarios();
+        paso = 3;
     }
 
     private static string DescribirAnimal(Animal animal)
@@ -264,7 +326,7 @@
 
     private void CargarHorarios()
     {
-        horarios = Agenda.HorariosLibres(profesionalId, prestacionId, animalId, fecha);
+        horarios = Agenda.HorariosLibres(profesionalId, prestacionId, animalId, fecha, reprogramando?.Id ?? 0);
 
         if (inicio is not null && !horarios.Contains(inicio.Value))
         {
@@ -305,6 +367,12 @@
             return;
         }
 
+        if (reprogramando is not null)
+        {
+            ConfirmarReprogramacion();
+            return;
+        }
+
         confirmando = true;
         var resultado = Agenda.Reservar(Sesion.CuentaActual.Id, animalId, prestacionId, profesionalId, inicio.Value, out var turno);
         confirmando = false;
@@ -320,6 +388,23 @@
         }
 
         Navegacion.NavigateTo($"turnos?confirmado={turno.Id}");
+    }
+
+    private void ConfirmarReprogramacion()
+    {
+        var resultado = Agenda.Reprogramar(reprogramando!.Id, Sesion.CuentaActual!.Id, inicio!.Value);
+
+        if (!resultado.Exito)
+        {
+            // El turno sigue como estaba; se muestran los horarios actualizados.
+            CargarHorarios();
+            inicio = null;
+            paso = 3;
+            aviso = resultado.Mensaje;
+            return;
+        }
+
+        Navegacion.NavigateTo($"turnos?reprogramado={reprogramando.Id}");
     }
 
     private void SimularOcupado()
