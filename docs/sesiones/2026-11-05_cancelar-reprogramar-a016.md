@@ -41,7 +41,7 @@ Participantes: Eric (con Claude). Rama: `eric/sesion-2026-11-05-3` desde `deskto
 
 ## Pendientes
 
-- [ ] Eric: probar la rama y mezclar el PR. Al mezclar, marcar A-016 y pasar «🧪 En prueba» a ✅ en el README.
+- [x] Eric probó la rama: funciona. PR #16 mezclado; A-016 marcada.
 - [ ] A-009: «Mi cuenta» (datos personales, animales con botón de historia clínica, turnos, servicios usados con «Reservar de nuevo»).
 - [ ] A-017: agenda de Recepción y Veterinario (llegada, ausente, cancelación fuera de las 24 h, recursos).
 - [ ] Definir cuántos servicios habrá y para qué especies es «Baño y estética» (fases finales).
