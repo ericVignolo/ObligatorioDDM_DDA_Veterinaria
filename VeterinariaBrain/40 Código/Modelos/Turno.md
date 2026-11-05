@@ -10,7 +10,7 @@ generado: true
 
 Turno reservado (A-015, CU-CLI-02). En la sección C lo crea la API dentro de una transacción (DT-BD-02).
 
-**Tareas:** A-015, A-016, A-018
+**Tareas:** A-015, A-016, A-017, A-018
 
 **Requisitos y decisiones:** CU-CLI-02
 
@@ -18,4 +18,5 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AgendaService]]
+- [[Reservar]]
 - [[Turnos]]

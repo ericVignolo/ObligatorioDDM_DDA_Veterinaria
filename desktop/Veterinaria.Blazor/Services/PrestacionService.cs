@@ -12,7 +12,8 @@ public class PrestacionService
         new() { Id = 3, Nombre = "Desparasitación", Descripcion = "Tratamiento antiparasitario indicado por el veterinario.", PrecioDesde = 450, ReservableEnLinea = true, DuracionMinutos = 15 },
         new() { Id = 4, Nombre = "Revisión de ovinos y bovinos", Descripcion = "Revisión individual o por grupo. Se coordina con la clínica.", PrecioDesde = 1500, ReservableEnLinea = false },
         new() { Id = 5, Nombre = "Rehabilitación equina", Descripcion = "Fisioterapia para caballos. Requiere evaluación previa.", PrecioDesde = 2500, ReservableEnLinea = false },
-        new() { Id = 6, Nombre = "Estética", Descripcion = "No publicado: no debe aparecer.", PrecioDesde = 900, ReservableEnLinea = true, Publicado = false }
+        new() { Id = 6, Nombre = "Baño y estética", Descripcion = "Baño, secado, corte y cuidado estético de perros y gatos.", PrecioDesde = 900, ReservableEnLinea = true, DuracionMinutos = 60 },
+        new() { Id = 7, Nombre = "Guardería", Descripcion = "No publicado: no debe aparecer.", PrecioDesde = 700, ReservableEnLinea = false, Publicado = false }
     };
 
     // Catálogo público: solo publicadas y con precio (D-CAT-02, D-CAT-04).
