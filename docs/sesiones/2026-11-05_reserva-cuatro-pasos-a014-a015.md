@@ -66,7 +66,7 @@ Participantes: Eric (con Claude). Rama: `eric/sesion-2026-11-05-2` desde `deskto
 
 ## Pendientes
 
-- [ ] Eric: probar la rama y mezclar el PR. Al mezclar, marcar A-014 y A-015 y pasar «🧪 En prueba» a ✅ en el README.
+- [x] Eric probó la reserva de servicios: funciona. PR #14 mezclado; A-014 y A-015 marcadas.
 - [ ] A-016: cancelar (24 h) y reprogramar turnos.
 - [ ] Recursos (consultorios) y agenda de Recepción y Veterinario: A-017.
 - [ ] Al completar el recorrido catálogo → registro → reserva, medir el tiempo para el disparador del Plan B (falta fecha de entrega).
