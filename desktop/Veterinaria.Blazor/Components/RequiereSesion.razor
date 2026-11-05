@@ -1,0 +1,20 @@
+@using Veterinaria.Blazor.Services
+@inject SesionService Sesion
+
+@* Muestra el contenido solo con sesión iniciada; si no, ofrece ingresar (RF-VIS-07, RN-38). *@
+@if (Sesion.Iniciada)
+{
+    @ChildContent
+}
+else
+{
+    <div class="alert alert-info">
+        Para ver esta sección necesitás ingresar con tu cuenta verificada.
+        <a class="alert-link ms-1" href="acceso">Ingresar o crear cuenta</a>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

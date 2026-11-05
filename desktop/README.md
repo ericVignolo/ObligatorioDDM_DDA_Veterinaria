@@ -24,6 +24,8 @@ Cada página **inyecta** (`@inject`) los servicios que necesita y **usa** compon
 
 ## Mapa de conexiones
 
+Versión navegable, con «Usa» y «Usado por» de cada archivo: el cerebro de Obsidian en [`VeterinariaBrain/`](../VeterinariaBrain/00%20Mapas/Mapa%20C%C3%B3digo.md).
+
 ```mermaid
 flowchart LR
     subgraph Paginas["Páginas (Components/Pages)"]
@@ -39,6 +41,8 @@ flowchart LR
         Registro["/registro"]
         Verificar["/verificar"]
         Ingresar["/ingresar"]
+        Recuperar["/recuperar · /restablecer"]
+        Animales["/animales · /animales/{Id} · nuevo · editar"]
     end
 
     subgraph Componentes["Componentes"]
@@ -49,6 +53,9 @@ flowchart LR
         Encabezado["EncabezadoLegal"]
         PCard["PrestacionCard"]
         ProfCard["ProfesionalCard"]
+        ACard["AnimalCard"]
+        AForm["AnimalForm"]
+        Guard["RequiereSesion"]
     end
 
     subgraph Servicios_["Services"]
@@ -59,6 +66,7 @@ flowchart LR
         SCuenta["CuentaService"]
         SSesion["SesionService"]
         SInt["IntencionService"]
+        SAnimal["AnimalService"]
     end
 
     subgraph Modelos["Models"]
@@ -68,6 +76,7 @@ flowchart LR
         MLegal["DocumentoLegal"]
         MCuenta["Cuenta · RegistroCliente · CodigoVerificacion · InicioSesion · ResultadoOperacion · ValidacionDatos"]
         MNivel["NivelUrgencia"]
+        MAnimal["Animal · AnimalFormulario"]
     end
 
     Layout --> Nav & Barra & Pie
@@ -89,6 +98,12 @@ flowchart LR
     Registro --> SCuenta
     Verificar --> SCuenta & SSesion & SInt
     Ingresar --> SSesion & SInt
+    Recuperar --> SCuenta & SSesion
+    Animales --> SAnimal & SSesion
+    Animales --> ACard & AForm & Guard
+    AForm --> SAnimal
+    Guard --> SSesion
+    Barra --> SSesion
     Barra --> SSesion
     Pie --> SLegal & SClin
     Encabezado --> SLegal & SClin
@@ -102,6 +117,7 @@ flowchart LR
     SLegal --> MLegal
     SCuenta --> MCuenta
     SSesion --> MCuenta
+    SAnimal --> MAnimal
 ```
 
 ## Páginas
@@ -120,6 +136,12 @@ flowchart LR
 | `/registro` | `Pages/Registro.razor` | A-006 | CuentaService · modelo `RegistroCliente` |
 | `/verificar` | `Pages/Verificar.razor` | A-007 | CuentaService, SesionService, IntencionService · modelo `CodigoVerificacion` |
 | `/ingresar` | `Pages/Ingresar.razor` | A-008 | SesionService, IntencionService · modelo `InicioSesion` |
+| `/recuperar` | `Pages/Recuperar.razor` | A-007 | CuentaService · modelo `SolicitudRecuperacion` |
+| `/restablecer` | `Pages/Restablecer.razor` | A-007 | CuentaService, SesionService · modelo `NuevaContrasena` |
+| `/animales` | `Pages/Animales.razor` | A-012 | AnimalService, SesionService · `AnimalCard`, `RequiereSesion` |
+| `/animales/{Id}` | `Pages/AnimalDetalle.razor` | A-012 | AnimalService, SesionService · `RequiereSesion` |
+| `/animales/nuevo` | `Pages/AnimalNuevo.razor` | A-013 | AnimalService, SesionService · `AnimalForm` |
+| `/animales/{Id}/editar` | `Pages/AnimalEditar.razor` | A-013 | AnimalService, SesionService · `AnimalForm` |
 
 ## Servicios
 
@@ -129,8 +151,9 @@ flowchart LR
 | `ProfesionalService` | Profesionales publicados y sus horarios | — | `ProfesionalApiService` |
 | `ClinicaService` | Datos de VITALIA y enlaces `tel:` | — | `ClinicaApiService` |
 | `DocumentoLegalService` | Versión y fecha vigente de Privacidad, Términos y Cookies | — | Documentos servidos por la API |
-| `CuentaService` | Registro, verificación por código y credenciales (PBKDF2) | DocumentoLegalService | `CuentaApiService` (identidad en la API) |
+| `CuentaService` | Registro, verificación por código, recuperación de contraseña y credenciales (PBKDF2) | DocumentoLegalService | `CuentaApiService` (identidad en la API) |
 | `SesionService` | Cuenta que ingresó; ingresar y salir | CuentaService | Autenticación con tokens (RNF-SEG-03) |
+| `AnimalService` | Animales del cliente (solo los suyos, RN-18), microchip único (RN-41), ejemplos de caballo y oveja | — | `AnimalApiService` → `/api/v1/animales` |
 | `IntencionService` | Servicio elegido antes de ingresar; se retoma hasta 30 min | SesionService | Igual, en el cliente |
 
 > Todos los servicios son `AddScoped`: en Blazor Server duran lo que dura la pestaña. Cuentas y sesión se pierden al recargar; es lo esperado hasta tener la API.

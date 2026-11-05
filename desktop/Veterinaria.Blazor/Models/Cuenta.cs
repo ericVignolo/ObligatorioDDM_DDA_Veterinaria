@@ -34,6 +34,13 @@ public class Cuenta
     public int IntentosRestantes { get; set; }
     public List<DateTime> Reenvios { get; set; } = new();
 
+    // Recuperación de contraseña (D-REG-03): mismos límites que la verificación.
+    public string HashCodigoRecuperacion { get; set; } = "";
+    public DateTime CodigoRecuperacionVence { get; set; }
+    public int IntentosRecuperacion { get; set; }
+    public List<DateTime> PedidosRecuperacion { get; set; } = new();
+    public string CodigoRecuperacionDemo { get; set; } = "";
+
     // SOLO DEMOSTRACIÓN: el código se muestra en pantalla porque todavía no se envían correos.
     // En la sección C lo genera la API y no se guarda en claro.
     public string CodigoDemo { get; set; } = "";

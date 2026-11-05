@@ -19,3 +19,12 @@ Thumbs.db
 
 # Archivos temporales de revisión
 .tmp_doc_review/
+
+# Obsidian: configuración personal de cada uno (el vault sí se versiona)
+VeterinariaBrain/.obsidian/workspace*.json
+VeterinariaBrain/.obsidian/cache
+VeterinariaBrain/.trash/
+/.obsidian/
+
+# Claude Code: configuración y skills locales de cada computadora
+.claude/
