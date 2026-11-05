@@ -1,0 +1,93 @@
+@page "/animales/{Id:int}"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AnimalService AnimalService
+@inject SesionService Sesion
+
+<RequiereSesion>
+    @if (animal is null)
+    {
+        <PageTitle>Animal no disponible — VITALIA</PageTitle>
+        <h1>Animal no disponible</h1>
+        @* RN-18: no se distingue entre «no existe» y «no es tuyo». *@
+        <p>No encontramos ese animal entre los tuyos.</p>
+    }
+    else
+    {
+        <PageTitle>@animal.Nombre — VITALIA</PageTitle>
+
+        @if (!string.IsNullOrEmpty(Mensaje))
+        {
+            <div class="alert alert-success" role="status">@Mensaje</div>
+        }
+
+        <h1>@animal.Nombre</h1>
+        <p class="lead">
+            @animal.Especie
+            @if (animal.EsGrupo)
+            {
+                <span class="badge bg-secondary ms-1">Grupo de @animal.CantidadGrupo</span>
+            }
+        </p>
+
+        <div class="row">
+            <section class="col-md-6 mb-4">
+                <h2 class="h5">Datos</h2>
+                <dl class="row">
+                    <dt class="col-sm-5">Raza</dt>
+                    <dd class="col-sm-7">@Mostrar(animal.Raza)</dd>
+                    <dt class="col-sm-5">Sexo</dt>
+                    <dd class="col-sm-7">@animal.Sexo</dd>
+                    @if (!animal.EsGrupo)
+                    {
+                        <dt class="col-sm-5">Nacimiento</dt>
+                        <dd class="col-sm-7">@(animal.FechaNacimiento?.ToString("d") ?? "Sin dato")</dd>
+                        <dt class="col-sm-5">Microchip</dt>
+                        <dd class="col-sm-7">@Mostrar(animal.Microchip)</dd>
+                    }
+                    <dt class="col-sm-5">Caravana</dt>
+                    <dd class="col-sm-7">@Mostrar(animal.Caravana)</dd>
+                </dl>
+            </section>
+
+            <section class="col-md-6 mb-4">
+                <h2 class="h5">Responsable</h2>
+                <p>@Sesion.CuentaActual!.Nombre @Sesion.CuentaActual.Apellido</p>
+
+                <h2 class="h5">Señas particulares</h2>
+                <p>@Mostrar(animal.SenasParticulares)</p>
+
+                <h2 class="h5">Antecedentes informados</h2>
+                <p>@Mostrar(animal.Antecedentes)</p>
+            </section>
+        </div>
+
+        <div class="mb-3">
+            <a class="btn btn-primary" href="@($"animales/{animal.Id}/editar")">Editar</a>
+            <span class="text-muted small ms-2">Historia clínica, vacunas y turnos se agregan en las próximas tareas.</span>
+        </div>
+    }
+
+    <a href="animales">← Volver a mis animales</a>
+</RequiereSesion>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    // Mensaje después de guardar (?mensaje=...).
+    [SupplyParameterFromQuery]
+    public string? Mensaje { get; set; }
+
+    private Animal? animal;
+
+    protected override void OnParametersSet()
+    {
+        animal = Sesion.CuentaActual is null ? null : AnimalService.ObtenerPorId(Id, Sesion.CuentaActual.Id);
+    }
+
+    private static string Mostrar(string texto)
+    {
+        return string.IsNullOrWhiteSpace(texto) ? "Sin dato" : texto;
+    }
+}

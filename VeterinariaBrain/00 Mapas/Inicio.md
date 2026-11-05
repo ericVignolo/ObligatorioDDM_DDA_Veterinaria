@@ -7,7 +7,7 @@ tags: [mapa]
 Sistema de gestión para **[[VITALIA]]**, clínica veterinaria ficticia: una API ASP.NET Core única, Blazor para computadora y React Native para móvil. Fuente canónica de requisitos: [[Matriz de requisitos]].
 
 ## Estado
-- Fase de construcción, **sección A (escritorio)**: A-001 a A-006, A-008 y A-011 hechas; A-007 a medias. Detalle en [[Plan de tareas]].
+- Fase de construcción, **sección A (escritorio)**: A-001 a A-008 y A-011 a A-013 hechas o en prueba. Detalle en [[Plan de tareas]].
 - Código actual: [[Mapa Código]] (páginas, componentes, servicios y modelos con sus dependencias).
 - Pendiente de [[Diego]]: proveedor MySQL (ver [[MySQL]]).
 
@@ -22,6 +22,7 @@ Sistema de gestión para **[[VITALIA]]**, clínica veterinaria ficticia: una API
 - [[Mapa Equipo y roles]]
 
 ## Últimas sesiones
+- [[Sesión 2026-11-05 cerebro y animales]]
 - [[Sesión 2026-11-04 inicio de sesión]]
 - [[Sesión 2026-11-03 registro]]
 - [[Sesión 2026-11-03 responsables]]

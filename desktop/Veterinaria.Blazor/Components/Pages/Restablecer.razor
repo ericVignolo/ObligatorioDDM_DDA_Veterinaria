@@ -1,0 +1,96 @@
+@page "/restablecer"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject CuentaService CuentaService
+@inject SesionService Sesion
+
+<PageTitle>Nueva contraseña — VITALIA</PageTitle>
+
+<h1>Crear una contraseña nueva</h1>
+
+@if (string.IsNullOrEmpty(correo))
+{
+    <p>Primero pedí un código desde <a href="recuperar">Recuperar contraseña</a>.</p>
+}
+else if (listo)
+{
+    <div class="alert alert-success" role="status">@mensaje</div>
+    <a class="btn btn-primary" href="ingresar">Ingresar</a>
+}
+else
+{
+    <p>Si <strong>@correo</strong> está registrado, te enviamos un código de 6 números. Vence a los 15 minutos.</p>
+
+    @* SOLO DEMOSTRACIÓN: todavía no se envían correos. *@
+    <div class="alert alert-warning small">
+        @if (cuenta is not null && !string.IsNullOrEmpty(cuenta.CodigoRecuperacionDemo))
+        {
+            <span>Demostración: el código es <strong>@cuenta.CodigoRecuperacionDemo</strong>.</span>
+        }
+        else
+        {
+            <span>Demostración: no hay un código activo para ese correo (no existe la cuenta o se pidieron más de 3 códigos en la última hora). En la versión final el mensaje es siempre el mismo.</span>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert alert-danger" role="alert">@mensaje</div>
+    }
+
+    <EditForm Model="datos" OnValidSubmit="Cambiar" FormName="restablecer">
+        <DataAnnotationsValidator />
+        <div style="max-width: 24rem;">
+            <div class="mb-3">
+                <label class="form-label" for="codigo">Código</label>
+                <InputText id="codigo" class="form-control" @bind-Value="datos.Codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
+                <ValidationMessage For="() => datos.Codigo" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="contrasena">Contraseña nueva</label>
+                <InputText id="contrasena" type="password" class="form-control" @bind-Value="datos.Contrasena" autocomplete="new-password" />
+                <div class="form-text">Entre 8 y 64 caracteres.</div>
+                <ValidationMessage For="() => datos.Contrasena" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="repetir">Repetir contraseña</label>
+                <InputText id="repetir" type="password" class="form-control" @bind-Value="datos.RepetirContrasena" autocomplete="new-password" />
+                <ValidationMessage For="() => datos.RepetirContrasena" />
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar contraseña</button>
+            <a class="btn btn-link" href="recuperar">Pedir otro código</a>
+        </div>
+    </EditForm>
+}
+
+@code {
+    private string correo = "";
+    private Cuenta? cuenta;
+    private NuevaContrasena datos = new();
+    private string mensaje = "";
+    private bool listo;
+
+    protected override void OnInitialized()
+    {
+        correo = CuentaService.CorreoRecuperacion;
+        cuenta = CuentaService.ObtenerPorCorreo(correo);
+    }
+
+    private void Cambiar()
+    {
+        var resultado = CuentaService.Restablecer(correo, datos.Codigo, datos.Contrasena);
+        mensaje = resultado.Mensaje;
+        datos = new();
+
+        if (resultado.Exito)
+        {
+            listo = true;
+
+            // D-REG-03: al cambiar la contraseña se cierran las sesiones abiertas de esa cuenta.
+            if (Sesion.CuentaActual?.Correo == cuenta?.Correo)
+            {
+                Sesion.Salir();
+            }
+        }
+    }
+}

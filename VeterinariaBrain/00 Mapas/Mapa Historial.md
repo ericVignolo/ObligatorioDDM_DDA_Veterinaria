@@ -14,3 +14,4 @@ Volver a [[Inicio]].
 - [[Sesión 2026-11-03 responsables]]
 - [[Sesión 2026-11-03 registro]]
 - [[Sesión 2026-11-04 inicio de sesión]]
+- [[Sesión 2026-11-05 cerebro y animales]]

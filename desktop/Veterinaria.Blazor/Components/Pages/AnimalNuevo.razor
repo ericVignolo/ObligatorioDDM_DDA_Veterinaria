@@ -1,0 +1,41 @@
+@page "/animales/nuevo"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AnimalService AnimalService
+@inject SesionService Sesion
+@inject NavigationManager Navegacion
+
+<PageTitle>Registrar animal — VITALIA</PageTitle>
+
+<h1>Registrar animal</h1>
+
+<RequiereSesion>
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="alert alert-danger" role="alert">@error</div>
+    }
+
+    <AnimalForm Datos="datos" TextoBoton="Registrar" OnGuardar="Guardar" />
+</RequiereSesion>
+
+@code {
+    private AnimalFormulario datos = new();
+    private string error = "";
+
+    private void Guardar(AnimalFormulario formulario)
+    {
+        if (Sesion.CuentaActual is null)
+        {
+            return;
+        }
+
+        var resultado = AnimalService.Crear(formulario, Sesion.CuentaActual.Id);
+        if (!resultado.Exito)
+        {
+            error = resultado.Mensaje;
+            return;
+        }
+
+        Navegacion.NavigateTo("animales");
+    }
+}

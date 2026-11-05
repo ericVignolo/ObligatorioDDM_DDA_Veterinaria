@@ -10,7 +10,7 @@ generado: true
 
 Cuentas de demostración en memoria (sección A). Se pierden al reiniciar la aplicación.
 
-**Requisitos y decisiones:** CU-VIS-03, D-REG-02, RNF-SEG-01
+**Requisitos y decisiones:** CU-VIS-03, D-REG-02, D-REG-03, RNF-SEG-01
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -22,6 +22,8 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[ValidacionDatos]]
 
 ## Usado por (si cambia, revisar estos)
+- [[Recuperar]]
 - [[Registro]]
+- [[Restablecer]]
 - [[SesionService]]
 - [[Verificar]]

@@ -1,0 +1,61 @@
+@page "/animales/{Id:int}/editar"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AnimalService AnimalService
+@inject SesionService Sesion
+@inject NavigationManager Navegacion
+
+<PageTitle>Editar animal — VITALIA</PageTitle>
+
+<RequiereSesion>
+    @if (datos is null)
+    {
+        <h1>Animal no disponible</h1>
+        <p>No encontramos ese animal entre los tuyos.</p>
+        <a href="animales">← Volver a mis animales</a>
+    }
+    else
+    {
+        <h1>Editar @nombre</h1>
+
+        @if (!string.IsNullOrEmpty(error))
+        {
+            <div class="alert alert-danger" role="alert">@error</div>
+        }
+
+        <AnimalForm Datos="datos" TextoBoton="Guardar cambios" VolverA="@($"animales/{Id}")" OnGuardar="Guardar" />
+    }
+</RequiereSesion>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private AnimalFormulario? datos;
+    private string nombre = "";
+    private string error = "";
+
+    protected override void OnParametersSet()
+    {
+        var animal = Sesion.CuentaActual is null ? null : AnimalService.ObtenerPorId(Id, Sesion.CuentaActual.Id);
+        datos = animal is null ? null : AnimalService.ParaEditar(animal);
+        nombre = animal?.Nombre ?? "";
+    }
+
+    private void Guardar(AnimalFormulario formulario)
+    {
+        if (Sesion.CuentaActual is null)
+        {
+            return;
+        }
+
+        var resultado = AnimalService.Editar(Id, formulario, Sesion.CuentaActual.Id);
+        if (!resultado.Exito)
+        {
+            error = resultado.Mensaje;
+            return;
+        }
+
+        Navegacion.NavigateTo($"animales/{Id}?mensaje={Uri.EscapeDataString(resultado.Mensaje)}");
+    }
+}

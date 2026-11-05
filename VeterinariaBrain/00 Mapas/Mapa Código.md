@@ -7,8 +7,12 @@ generado: true
 
 Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y quién la usa.
 
-## Páginas (14)
+## Páginas (20)
 - [[Acceso]] · `/acceso`
+- [[AnimalDetalle]] · `/animales/{Id:int}`
+- [[AnimalEditar]] · `/animales/{Id:int}/editar`
+- [[AnimalNuevo]] · `/animales/nuevo`
+- [[Animales]] · `/animales`
 - [[Cookies]] · `/cookies`
 - [[Home]] · `/`
 - [[Ingresar]] · `/ingresar`
@@ -17,13 +21,17 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[Privacidad]] · `/privacidad`
 - [[ProfesionalDetalle]] · `/profesionales/{Id:int}`
 - [[Profesionales]] · `/profesionales`
+- [[Recuperar]] · `/recuperar`
 - [[Registro]] · `/registro`
+- [[Restablecer]] · `/restablecer`
 - [[Servicios]] · `/servicios`
 - [[Terminos]] · `/terminos`
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-## Componentes (7)
+## Componentes (10)
+- [[AnimalCard]]
+- [[AnimalForm]]
 - [[BarraSesion]]
 - [[EncabezadoLegal]]
 - [[MainLayout]]
@@ -31,8 +39,10 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[PieLegal]]
 - [[PrestacionCard]]
 - [[ProfesionalCard]]
+- [[RequiereSesion]]
 
-## Servicios (7)
+## Servicios (8)
+- [[AnimalService]]
 - [[ClinicaService]]
 - [[CuentaService]]
 - [[DocumentoLegalService]]
@@ -41,15 +51,19 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[ProfesionalService]]
 - [[SesionService]]
 
-## Modelos (11)
+## Modelos (15)
+- [[Animal]]
+- [[AnimalFormulario]]
 - [[Clinica]]
 - [[CodigoVerificacion]]
 - [[Cuenta]]
 - [[DocumentoLegal]]
 - [[InicioSesion]]
 - [[NivelUrgencia]]
+- [[NuevaContrasena]]
 - [[Prestacion]]
 - [[Profesional]]
 - [[RegistroCliente]]
 - [[ResultadoOperacion]]
+- [[SolicitudRecuperacion]]
 - [[ValidacionDatos]]
