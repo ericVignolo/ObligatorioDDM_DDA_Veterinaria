@@ -60,6 +60,18 @@ public class ProfesionalService
             },
             new()
             {
+                Id = 5,
+                Nombre = "Sofía Méndez",
+                Especialidad = "Baño y estética",
+                Descripcion = "Baño, corte y cuidado estético de perros y gatos. No realiza atención clínica.",
+                Jornada = Franjas(LunesAViernes, 10, 0, 18, 0)
+                    .Concat(Franjas(new[] { DayOfWeek.Saturday }, 9, 0, 13, 0)).ToList(),
+                Descansos = Franjas(LunesAViernes, 13, 0, 14, 0),
+                Especies = new() { "Perro", "Gato" },
+                PrestacionIds = new() { 6 }
+            },
+            new()
+            {
                 Id = 4,
                 Nombre = "Dr. Andrés Pereira",
                 Especialidad = "Clínica general",

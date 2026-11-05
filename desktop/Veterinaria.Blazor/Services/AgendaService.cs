@@ -53,7 +53,8 @@ public class AgendaService
 
     // Horarios de inicio libres cada 15 minutos. Un turno ocupa toda su duración:
     // una consulta de 30 min a las 09:00 bloquea también las 09:15 (RN-01, RN-02, RN-07).
-    public List<DateTime> HorariosLibres(int profesionalId, int prestacionId, int animalId, DateOnly fecha)
+    // excluirTurnoId: al reprogramar, el turno que se mueve no se cuenta como ocupado.
+    public List<DateTime> HorariosLibres(int profesionalId, int prestacionId, int animalId, DateOnly fecha, int excluirTurnoId = 0)
     {
         var libres = new List<DateTime>();
         var profesional = _profesionales.ObtenerPorId(profesionalId);
@@ -98,7 +99,7 @@ public class AgendaService
                     && horario < dia + d.Fin.ToTimeSpan()
                     && fin > dia + d.Inicio.ToTimeSpan());
 
-                if (!pisaDescanso && !Superpone(profesionalId, animalId, horario, fin))
+                if (!pisaDescanso && !Superpone(profesionalId, animalId, horario, fin, excluirTurnoId))
                 {
                     libres.Add(horario);
                 }
@@ -152,6 +153,69 @@ public class AgendaService
             .ToList();
     }
 
+    // Turnos cancelados o ya pasados del cliente (RF-CLI-04).
+    public List<Turno> HistorialDe(int clienteId)
+    {
+        return _turnos
+            .Where(t => t.ClienteId == clienteId && (t.Estado != "Confirmado" || t.Fin < DateTime.Now))
+            .OrderByDescending(t => t.Inicio)
+            .ToList();
+    }
+
+    // Solo turnos del propio cliente (RN-18).
+    public Turno? ObtenerDe(int turnoId, int clienteId)
+    {
+        return _turnos.FirstOrDefault(t => t.Id == turnoId && t.ClienteId == clienteId);
+    }
+
+    // RN-06: el cliente cancela o reprograma solo un turno Confirmado y con más de 24 h de anticipación.
+    public bool PuedeGestionar(Turno turno)
+    {
+        return turno.Estado == "Confirmado" && turno.Inicio - DateTime.Now > TimeSpan.FromHours(HorasParaCancelar);
+    }
+
+    public ResultadoOperacion Cancelar(int turnoId, int clienteId, string motivo)
+    {
+        var turno = ObtenerDe(turnoId, clienteId);
+        if (turno is null || turno.Estado != "Confirmado")
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Ese turno ya no se puede cancelar." };
+        }
+
+        if (!PuedeGestionar(turno))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = $"Faltan menos de {HorasParaCancelar} horas: la cancelación se hace por Recepción." };
+        }
+
+        // El horario queda libre porque solo los turnos Confirmado ocupan la agenda.
+        turno.Estado = "Cancelado";
+        turno.MotivoCancelacion = (motivo ?? "").Trim();
+        turno.FechaCancelacion = DateTime.Now;
+        return new ResultadoOperacion { Exito = true, Mensaje = "El turno quedó cancelado y el horario se liberó." };
+    }
+
+    // Cambia el horario del mismo turno. Si el nuevo horario no está libre, el turno queda como estaba (atómico).
+    public ResultadoOperacion Reprogramar(int turnoId, int clienteId, DateTime nuevoInicio)
+    {
+        var turno = ObtenerDe(turnoId, clienteId);
+        if (turno is null || !PuedeGestionar(turno))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = $"Este turno ya no se puede reprogramar. Si faltan menos de {HorasParaCancelar} horas, consultá en Recepción." };
+        }
+
+        var libres = HorariosLibres(turno.ProfesionalId, turno.PrestacionId, turno.AnimalId, DateOnly.FromDateTime(nuevoInicio), turno.Id);
+        if (!libres.Contains(nuevoInicio))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Ese horario ya no está disponible. Tu turno sigue como estaba; te mostramos los horarios actualizados." };
+        }
+
+        var duracion = turno.Fin - turno.Inicio;
+        turno.InicioAnterior = turno.Inicio;
+        turno.Inicio = nuevoInicio;
+        turno.Fin = nuevoInicio + duracion;
+        return new ResultadoOperacion { Exito = true, Mensaje = "Turno reprogramado." };
+    }
+
     // Para el ejercicio de demostración: ocupa un horario como si otro cliente lo hubiera reservado.
     public void OcuparComoOtroCliente(int profesionalId, int prestacionId, DateTime inicio)
     {
@@ -176,9 +240,10 @@ public class AgendaService
     }
 
     // Choca con otro turno activo del mismo profesional o del mismo animal.
-    private bool Superpone(int profesionalId, int animalId, DateTime inicio, DateTime fin)
+    private bool Superpone(int profesionalId, int animalId, DateTime inicio, DateTime fin, int excluirTurnoId)
     {
         return _turnos.Any(t => t.Estado == "Confirmado"
+            && t.Id != excluirTurnoId
             && (t.ProfesionalId == profesionalId || t.AnimalId == animalId)
             && inicio < t.Fin
             && fin > t.Inicio);

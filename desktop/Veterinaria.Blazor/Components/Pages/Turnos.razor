@@ -5,6 +5,7 @@
 @inject AnimalService AnimalService
 @inject PrestacionService PrestacionService
 @inject ProfesionalService ProfesionalService
+@inject ClinicaService ClinicaService
 @inject SesionService Sesion
 
 <PageTitle>Mis turnos — VITALIA</PageTitle>
@@ -12,68 +13,166 @@
 <h1>Mis turnos</h1>
 
 <RequiereSesion>
-    @* Constancia después de reservar (A-015, CU-CLI-02 paso 8). *@
+    @* Constancia después de reservar o reprogramar (A-015, A-016). *@
     @if (confirmado is not null)
     {
         <div class="alert alert-success" role="status">
-            <strong>¡Turno confirmado!</strong>
+            <strong>@(Reprogramado is not null ? "¡Turno reprogramado!" : "¡Turno confirmado!")</strong>
             @Describir(confirmado). Número de turno: @confirmado.Id.
-            Podés cancelar sin costo hasta @AgendaService.HorasParaCancelar horas antes.
+            Podés cancelar o reprogramar sin costo hasta @AgendaService.HorasParaCancelar horas antes.
         </div>
+    }
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-warning")" role="status">@mensaje</div>
     }
 
     <a class="btn btn-primary mb-3" href="reservar">Reservar otro turno</a>
 
-    @if (turnos.Count == 0)
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <button class="nav-link @(verHistorial ? "" : "active")" @onclick="() => verHistorial = false">Próximos (@proximos.Count)</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link @(verHistorial ? "active" : "")" @onclick="() => verHistorial = true">Historial (@historial.Count)</button>
+        </li>
+    </ul>
+
+    @if (!verHistorial)
     {
-        <p>No tenés turnos próximos.</p>
+        @if (proximos.Count == 0)
+        {
+            <p>No tenés turnos próximos.</p>
+        }
+        else
+        {
+            @foreach (var turno in proximos)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h2 class="h5 card-title">@turno.Inicio.ToString("dddd d 'de' MMMM, HH:mm")</h2>
+                        <p class="card-text mb-2">@Resumen(turno) <span class="badge bg-success ms-1">@turno.Estado</span></p>
+
+                        @if (cancelandoId == turno.Id)
+                        {
+                            @* Confirmación antes de cancelar, con motivo opcional (A-016). *@
+                            <div class="border rounded p-3 bg-light">
+                                <p class="mb-2"><strong>¿Cancelar este turno?</strong> El horario queda libre para otros.</p>
+                                <label class="form-label" for="motivo">Motivo <span class="text-muted">(opcional)</span></label>
+                                <input id="motivo" class="form-control mb-2" maxlength="200" @bind="motivo" />
+                                <button class="btn btn-danger btn-sm me-2" @onclick="() => ConfirmarCancelacion(turno.Id)">Sí, cancelar</button>
+                                <button class="btn btn-outline-secondary btn-sm" @onclick="() => cancelandoId = 0">No, volver</button>
+                            </div>
+                        }
+                        else if (Agenda.PuedeGestionar(turno))
+                        {
+                            <a class="btn btn-outline-primary btn-sm me-2" href="@($"reservar?reprogramar={turno.Id}")">Reprogramar</a>
+                            <button class="btn btn-outline-danger btn-sm" @onclick="() => EmpezarCancelacion(turno.Id)">Cancelar</button>
+                        }
+                        else
+                        {
+                            @* RN-06: dentro de las 24 h interviene la clínica. *@
+                            <p class="small text-muted mb-1">Faltan menos de @AgendaService.HorasParaCancelar horas: para cancelar o cambiar el turno, llamá a Recepción.</p>
+                            <a class="btn btn-outline-secondary btn-sm" href="@ClinicaService.EnlaceTelefono(ClinicaService.Obtener().Telefono)">Llamar a Recepción</a>
+                        }
+                    </div>
+                </div>
+            }
+        }
     }
     else
     {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Día y hora</th>
-                    <th scope="col">Animal</th>
-                    <th scope="col">Servicio</th>
-                    <th scope="col">Profesional</th>
-                    <th scope="col">Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var turno in turnos)
-                {
+        @if (historial.Count == 0)
+        {
+            <p>Todavía no hay turnos pasados ni cancelados.</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>@turno.Inicio.ToString("ddd d/MM HH:mm")</td>
-                        <td>@NombreAnimal(turno)</td>
-                        <td>@(PrestacionService.ObtenerPorId(turno.PrestacionId)?.Nombre)</td>
-                        <td>@(ProfesionalService.ObtenerPorId(turno.ProfesionalId)?.Nombre)</td>
-                        <td><span class="badge bg-success">@turno.Estado</span></td>
+                        <th scope="col">Día y hora</th>
+                        <th scope="col">Detalle</th>
+                        <th scope="col">Estado</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-        <p class="text-muted small">Cancelar y reprogramar se agregan en la próxima etapa (A-016).</p>
+                </thead>
+                <tbody>
+                    @foreach (var turno in historial)
+                    {
+                        <tr>
+                            <td>@turno.Inicio.ToString("ddd d/MM/yyyy HH:mm")</td>
+                            <td>
+                                @Resumen(turno)
+                                @if (!string.IsNullOrEmpty(turno.MotivoCancelacion))
+                                {
+                                    <div class="small text-muted">Motivo: @turno.MotivoCancelacion</div>
+                                }
+                            </td>
+                            <td><span class="badge @(turno.Estado == "Cancelado" ? "bg-secondary" : "bg-success")">@(turno.Estado == "Confirmado" ? "Realizado" : turno.Estado)</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     }
 </RequiereSesion>
 
 @code {
-    // Llega con el número del turno recién reservado.
+    // Llega con el número del turno recién reservado o reprogramado.
     [SupplyParameterFromQuery]
     public int? Confirmado { get; set; }
 
-    private List<Turno> turnos = new();
+    [SupplyParameterFromQuery]
+    public int? Reprogramado { get; set; }
+
+    private List<Turno> proximos = new();
+    private List<Turno> historial = new();
     private Turno? confirmado;
+    private bool verHistorial;
+    private int cancelandoId;
+    private string motivo = "";
+    private string mensaje = "";
+    private bool exito;
 
     protected override void OnParametersSet()
+    {
+        Cargar();
+        var id = Confirmado ?? Reprogramado;
+        confirmado = id is null ? null : proximos.FirstOrDefault(t => t.Id == id);
+    }
+
+    private void Cargar()
     {
         if (Sesion.CuentaActual is null)
         {
             return;
         }
 
-        turnos = Agenda.ProximosDe(Sesion.CuentaActual.Id);
-        confirmado = Confirmado is null ? null : turnos.FirstOrDefault(t => t.Id == Confirmado);
+        proximos = Agenda.ProximosDe(Sesion.CuentaActual.Id);
+        historial = Agenda.HistorialDe(Sesion.CuentaActual.Id);
+    }
+
+    private void EmpezarCancelacion(int turnoId)
+    {
+        cancelandoId = turnoId;
+        motivo = "";
+        mensaje = "";
+    }
+
+    private void ConfirmarCancelacion(int turnoId)
+    {
+        if (Sesion.CuentaActual is null)
+        {
+            return;
+        }
+
+        var resultado = Agenda.Cancelar(turnoId, Sesion.CuentaActual.Id, motivo);
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        cancelandoId = 0;
+        confirmado = null;
+        Cargar();
     }
 
     private string NombreAnimal(Turno turno)
@@ -81,10 +180,15 @@
         return Sesion.CuentaActual is null ? "" : AnimalService.ObtenerPorId(turno.AnimalId, Sesion.CuentaActual.Id)?.Nombre ?? "";
     }
 
-    private string Describir(Turno turno)
+    private string Resumen(Turno turno)
     {
         var servicio = PrestacionService.ObtenerPorId(turno.PrestacionId)?.Nombre;
         var profesional = ProfesionalService.ObtenerPorId(turno.ProfesionalId)?.Nombre;
-        return $"{servicio} para {NombreAnimal(turno)} con {profesional}, el {turno.Inicio:dddd d 'de' MMMM} a las {turno.Inicio:HH\\:mm}";
+        return $"{servicio} para {NombreAnimal(turno)} con {profesional}";
+    }
+
+    private string Describir(Turno turno)
+    {
+        return $"{Resumen(turno)}, el {turno.Inicio:dddd d 'de' MMMM} a las {turno.Inicio:HH\\:mm}";
     }
 }

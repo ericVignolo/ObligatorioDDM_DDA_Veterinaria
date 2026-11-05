@@ -35,7 +35,9 @@ Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ning
 | A-009, A-010 | Perfil del Cliente y perfiles del personal | Pendiente |
 | A-012, A-013 | Mis animales: listado, ficha, alta y edición (incluye grupos de campo) | ✅ |
 | A-014, A-015 | Disponibilidad y reserva en cuatro pasos, con Mis turnos | ✅ |
-| A-016 en adelante | Cancelar y reprogramar, agenda del personal, consulta y demás módulos | Pendiente |
+| A-016 | Cancelar y reprogramar turnos (24 h), historial de turnos | ✅ |
+| A-009 | Perfil del Cliente («Mi cuenta») | Pendiente |
+| A-017 en adelante | Agenda del personal, consulta y demás módulos | Pendiente |
 
 El mapa de páginas, servicios y modelos (con diagrama) está en [`desktop/README.md`](desktop/README.md).
 

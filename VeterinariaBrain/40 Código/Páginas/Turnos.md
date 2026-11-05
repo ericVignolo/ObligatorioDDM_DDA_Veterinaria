@@ -10,20 +10,19 @@ generado: true
 
 **Ruta:** `/turnos`
 
-Constancia después de reservar (A-015, CU-CLI-02 paso 8).
+Constancia después de reservar o reprogramar (A-015, A-016).
 
 **Tareas:** A-015, A-016
 
-**Requisitos y decisiones:** CU-CLI-02
+**Requisitos y decisiones:** RN-06
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
 - [[AgendaService]]
-- [[Animal]]
 - [[AnimalService]]
+- [[ClinicaService]]
 - [[PrestacionService]]
-- [[Profesional]]
 - [[ProfesionalService]]
 - [[RequiereSesion]]
 - [[SesionService]]
