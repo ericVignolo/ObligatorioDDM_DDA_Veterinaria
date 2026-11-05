@@ -1,0 +1,126 @@
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AnimalService AnimalService
+
+@* Formulario compartido de alta y edición de animales (A-013, CU-CLI-01). *@
+<EditForm Model="Datos" OnValidSubmit="Guardar" FormName="animal">
+    <DataAnnotationsValidator />
+
+    <fieldset class="mb-4">
+        <legend class="h5">Datos principales</legend>
+        <div class="form-check mb-3">
+            <InputCheckbox id="esGrupo" class="form-check-input" @bind-Value="Datos.EsGrupo" />
+            <label class="form-check-label" for="esGrupo">Es un grupo de animales (por ejemplo, una majada o un rodeo)</label>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="nombre">@(Datos.EsGrupo ? "Nombre del grupo" : "Nombre")</label>
+                <InputText id="nombre" class="form-control" @bind-Value="Datos.Nombre" />
+                <ValidationMessage For="() => Datos.Nombre" />
+            </div>
+            @if (Datos.EsGrupo)
+            {
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="cantidad">Cantidad de animales</label>
+                    <InputNumber id="cantidad" class="form-control" @bind-Value="Datos.CantidadGrupo" />
+                    <ValidationMessage For="() => Datos.CantidadGrupo" />
+                </div>
+            }
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="especie">Especie</label>
+                <InputSelect id="especie" class="form-select" @bind-Value="Datos.Especie">
+                    <option value="">Elegí una especie</option>
+                    @foreach (var especie in AnimalService.Especies)
+                    {
+                        <option value="@especie">@especie</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Datos.Especie" />
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="raza">Raza <span class="text-muted">(opcional)</span></label>
+                <InputText id="raza" class="form-control" @bind-Value="Datos.Raza" />
+                <ValidationMessage For="() => Datos.Raza" />
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="sexo">Sexo</label>
+                <InputSelect id="sexo" class="form-select" @bind-Value="Datos.Sexo">
+                    <option value="">Elegí una opción</option>
+                    @foreach (var sexo in AnimalService.Sexos)
+                    {
+                        <option value="@sexo">@sexo</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Datos.Sexo" />
+            </div>
+            @if (!Datos.EsGrupo)
+            {
+                <div class="col-md-4 mb-3">
+                    <label class="form-label" for="nacimiento">Fecha de nacimiento <span class="text-muted">(opcional)</span></label>
+                    <InputDate id="nacimiento" class="form-control" @bind-Value="Datos.FechaNacimiento" />
+                    <ValidationMessage For="() => Datos.FechaNacimiento" />
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend class="h5">Identificación <span class="text-muted fs-6">(opcional)</span></legend>
+        <div class="row">
+            @if (!Datos.EsGrupo)
+            {
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="microchip">Microchip</label>
+                    <InputText id="microchip" class="form-control" @bind-Value="Datos.Microchip" inputmode="numeric" maxlength="15" />
+                    <div class="form-text">15 números.</div>
+                    <ValidationMessage For="() => Datos.Microchip" />
+                </div>
+            }
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="caravana">Caravana</label>
+                <InputText id="caravana" class="form-control" @bind-Value="Datos.Caravana" />
+                <div class="form-text">Para ganado: el código de la caravana o del grupo.</div>
+                <ValidationMessage For="() => Datos.Caravana" />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend class="h5">Más información <span class="text-muted fs-6">(opcional)</span></legend>
+        <div class="mb-3">
+            <label class="form-label" for="senas">Señas particulares</label>
+            <InputTextArea id="senas" class="form-control" rows="2" @bind-Value="Datos.SenasParticulares" />
+            <ValidationMessage For="() => Datos.SenasParticulares" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="antecedentes">Antecedentes que conozcas</label>
+            <InputTextArea id="antecedentes" class="form-control" rows="3" @bind-Value="Datos.Antecedentes" />
+            <div class="form-text">Por ejemplo, alergias, operaciones o tratamientos anteriores. El veterinario los revisa en la consulta.</div>
+            <ValidationMessage For="() => Datos.Antecedentes" />
+        </div>
+        <p class="text-muted small">La foto del animal se agrega cuando exista la API, que guarda los archivos.</p>
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">@TextoBoton</button>
+    <a class="btn btn-link" href="@VolverA">Cancelar</a>
+</EditForm>
+
+@code {
+    [Parameter]
+    public AnimalFormulario Datos { get; set; } = new();
+
+    [Parameter]
+    public string TextoBoton { get; set; } = "Guardar";
+
+    [Parameter]
+    public string VolverA { get; set; } = "animales";
+
+    // El formulario avisa a la página; la página decide qué hacer.
+    [Parameter]
+    public EventCallback<AnimalFormulario> OnGuardar { get; set; }
+
+    private async Task Guardar()
+    {
+        await OnGuardar.InvokeAsync(Datos);
+    }
+}

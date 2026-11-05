@@ -1,0 +1,63 @@
+@page "/animales"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AnimalService AnimalService
+@inject SesionService Sesion
+
+<PageTitle>Mis animales — VITALIA</PageTitle>
+
+<h1>Mis animales</h1>
+
+<RequiereSesion>
+    <p class="text-muted">Solo ves los animales de los que sos responsable.</p>
+
+    <div class="mb-3">
+        <a class="btn btn-primary" href="animales/nuevo">Registrar animal</a>
+        @if (animales.Count == 0)
+        {
+            <button class="btn btn-outline-secondary ms-2" @onclick="CargarEjemplos">Cargar ejemplos (caballo y oveja)</button>
+        }
+    </div>
+
+    @if (animales.Count == 0)
+    {
+        <p>Todavía no registraste ningún animal.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var animal in animales)
+            {
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <AnimalCard Animal="animal" />
+                </div>
+            }
+        </div>
+    }
+</RequiereSesion>
+
+@code {
+    private List<Animal> animales = new();
+
+    protected override void OnInitialized()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        animales = Sesion.CuentaActual is null ? new() : AnimalService.ObtenerDe(Sesion.CuentaActual.Id);
+    }
+
+    // A-013: datos sintéticos de demostración.
+    private void CargarEjemplos()
+    {
+        if (Sesion.CuentaActual is null)
+        {
+            return;
+        }
+
+        AnimalService.CargarEjemplos(Sesion.CuentaActual.Id);
+        Cargar();
+    }
+}

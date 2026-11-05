@@ -153,6 +153,68 @@ public class CuentaService
         return new ResultadoOperacion { Exito = true, Mensaje = "Te enviamos un código nuevo. El anterior ya no sirve." };
     }
 
+    // Correo para el que se pidió recuperar la contraseña en esta sesión.
+    public string CorreoRecuperacion { get; private set; } = "";
+
+    // D-REG-03: la respuesta es siempre la misma, exista o no la cuenta (REG-08).
+    public ResultadoOperacion SolicitarRecuperacion(string correo)
+    {
+        CorreoRecuperacion = NormalizarCorreo(correo);
+        var respuesta = new ResultadoOperacion { Exito = true, Mensaje = "Si el correo está registrado, te enviamos un código para crear una contraseña nueva." };
+
+        var cuenta = ObtenerPorCorreo(correo);
+        if (cuenta is null)
+        {
+            return respuesta;
+        }
+
+        var haceUnaHora = DateTime.Now.AddHours(-1);
+        cuenta.PedidosRecuperacion.RemoveAll(fecha => fecha < haceUnaHora);
+        if (cuenta.PedidosRecuperacion.Count >= ReenviosPorHora)
+        {
+            // Mismo mensaje: no se revela que la cuenta existe ni que llegó al límite.
+            return respuesta;
+        }
+
+        cuenta.PedidosRecuperacion.Add(DateTime.Now);
+        var codigo = RandomNumberGenerator.GetInt32(0, 1_000_000).ToString("D6");
+        cuenta.HashCodigoRecuperacion = Hash(codigo);
+        cuenta.CodigoRecuperacionVence = DateTime.Now.AddMinutes(MinutosVigenciaCodigo);
+        cuenta.IntentosRecuperacion = IntentosPorCodigo;
+        cuenta.CodigoRecuperacionDemo = codigo;
+        return respuesta;
+    }
+
+    public ResultadoOperacion Restablecer(string correo, string codigo, string nuevaContrasena)
+    {
+        var error = new ResultadoOperacion { Exito = false, Mensaje = "El código no es válido o venció. Pedí uno nuevo." };
+        var cuenta = ObtenerPorCorreo(correo);
+
+        if (cuenta is null || string.IsNullOrEmpty(cuenta.HashCodigoRecuperacion))
+        {
+            return error;
+        }
+
+        if (cuenta.IntentosRecuperacion <= 0 || DateTime.Now > cuenta.CodigoRecuperacionVence)
+        {
+            return error;
+        }
+
+        if (Hash((codigo ?? "").Trim()) != cuenta.HashCodigoRecuperacion)
+        {
+            cuenta.IntentosRecuperacion--;
+            return cuenta.IntentosRecuperacion > 0
+                ? new ResultadoOperacion { Exito = false, Mensaje = $"El código no es correcto. Te quedan {cuenta.IntentosRecuperacion} intentos." }
+                : new ResultadoOperacion { Exito = false, Mensaje = "El código no es correcto y se invalidó. Pedí uno nuevo." };
+        }
+
+        cuenta.HashContrasena = DerivarContrasena(nuevaContrasena);
+        cuenta.HashCodigoRecuperacion = "";
+        cuenta.CodigoRecuperacionDemo = "";
+        CorreoRecuperacion = "";
+        return new ResultadoOperacion { Exito = true, Mensaje = "Listo, tu contraseña cambió. Ya podés ingresar con la nueva." };
+    }
+
     // Devuelve la cuenta si el correo y la contraseña coinciden; si no, null.
     // No distingue entre correo inexistente y contraseña incorrecta.
     public Cuenta? ValidarCredenciales(string correo, string contrasena)

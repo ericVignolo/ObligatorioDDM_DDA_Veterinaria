@@ -1,0 +1,31 @@
+@using Veterinaria.Blazor.Models
+
+@* Tarjeta de un animal en «Mis animales» (A-012). *@
+<div class="card mb-3 h-100">
+    <div class="card-body">
+        <h2 class="h5 card-title">@Animal.Nombre</h2>
+        <p class="card-subtitle text-muted mb-2">
+            @EspecieYRaza
+            @if (Animal.EsGrupo)
+            {
+                <span class="badge bg-secondary ms-1">Grupo de @Animal.CantidadGrupo</span>
+            }
+        </p>
+        @if (!string.IsNullOrEmpty(Animal.Microchip))
+        {
+            <p class="card-text small mb-1">Microchip: @Animal.Microchip</p>
+        }
+        @if (!string.IsNullOrEmpty(Animal.Caravana))
+        {
+            <p class="card-text small mb-1">Caravana: @Animal.Caravana</p>
+        }
+        <a class="btn btn-outline-secondary btn-sm mt-2" href="@($"animales/{Animal.Id}")">Ver ficha</a>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Animal Animal { get; set; } = new();
+
+    private string EspecieYRaza => string.IsNullOrEmpty(Animal.Raza) ? Animal.Especie : $"{Animal.Especie} · {Animal.Raza}";
+}

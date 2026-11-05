@@ -37,6 +37,7 @@ Antes de planificar, diseñar o implementar, leer:
 - Al **cerrar** una sesión, crear `docs/sesiones/AAAA-MM-DD_tema-breve.md` con: qué se hizo, archivos tocados, decisiones, cómo probarlo y qué falta.
 - **Una rama por sesión** (`<nombre>/sesion-AAAA-MM-DD`), que sale de la rama de la sección; todo lo de esa sesión va ahí y se abre **un solo PR** al final (DT-ORG-06). Quien trabajó la prueba y mezcla su propio PR; el otro puede revisarlo después (DT-ORG-05).
 - Claude no puede compilar: el código llega sin probar y se prueba con F5 antes de mezclar. Por eso nunca se trabaja directo sobre `desktop`.
+- **Cerebro de Obsidian (`VeterinariaBrain/`):** antes de cambiar código, revisar en `VeterinariaBrain/40 Código/` la sección «Usado por» de cada archivo que se va a tocar, para prever qué más se ve afectado. Al cerrar la sesión, regenerar las notas de código con `python VeterinariaBrain/_scripts/actualizar_codigo.py` y actualizar a mano las notas de documentos, sesiones y mapas que correspondan.
 
 ## Convenciones de código (estilo del docente)
 

@@ -3,3 +3,6 @@
 
 # Bootstrap es una librería de terceros: no se cuenta.
 desktop/Veterinaria.Blazor/wwwroot/lib/** linguist-vendored
+
+# Cerebro de Obsidian: documentación, no cuenta en la barra de lenguajes.
+VeterinariaBrain/** linguist-documentation
