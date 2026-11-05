@@ -43,6 +43,8 @@ flowchart LR
         Ingresar["/ingresar"]
         Recuperar["/recuperar · /restablecer"]
         Animales["/animales · /animales/{Id} · nuevo · editar"]
+        Reservar["/reservar (4 pasos)"]
+        Turnos["/turnos"]
     end
 
     subgraph Componentes["Componentes"]
@@ -56,6 +58,7 @@ flowchart LR
         ACard["AnimalCard"]
         AForm["AnimalForm"]
         Guard["RequiereSesion"]
+        Pasos["PasosReserva"]
     end
 
     subgraph Servicios_["Services"]
@@ -67,6 +70,7 @@ flowchart LR
         SSesion["SesionService"]
         SInt["IntencionService"]
         SAnimal["AnimalService"]
+        SAgenda["AgendaService"]
     end
 
     subgraph Modelos["Models"]
@@ -77,6 +81,7 @@ flowchart LR
         MCuenta["Cuenta · RegistroCliente · CodigoVerificacion · InicioSesion · ResultadoOperacion · ValidacionDatos"]
         MNivel["NivelUrgencia"]
         MAnimal["Animal · AnimalFormulario"]
+        MAgenda["Turno · FranjaHoraria · Ausencia"]
     end
 
     Layout --> Nav & Barra & Pie
@@ -103,6 +108,10 @@ flowchart LR
     Animales --> ACard & AForm & Guard
     AForm --> SAnimal
     Guard --> SSesion
+    Reservar --> SAgenda & SAnimal & SPrest & SProf & SSesion
+    Reservar --> Pasos & Guard
+    Turnos --> SAgenda & SAnimal & SPrest & SProf & SSesion
+    SAgenda --> SProf & SPrest & SAnimal
     Barra --> SSesion
     Barra --> SSesion
     Pie --> SLegal & SClin
@@ -118,6 +127,8 @@ flowchart LR
     SCuenta --> MCuenta
     SSesion --> MCuenta
     SAnimal --> MAnimal
+    SAgenda --> MAgenda
+    SProf --> MAgenda
 ```
 
 ## Páginas
@@ -142,18 +153,21 @@ flowchart LR
 | `/animales/{Id}` | `Pages/AnimalDetalle.razor` | A-012 | AnimalService, SesionService · `RequiereSesion` |
 | `/animales/nuevo` | `Pages/AnimalNuevo.razor` | A-013 | AnimalService, SesionService · `AnimalForm` |
 | `/animales/{Id}/editar` | `Pages/AnimalEditar.razor` | A-013 | AnimalService, SesionService · `AnimalForm` |
+| `/reservar` | `Pages/Reservar.razor` | A-014, A-015 | AgendaService, AnimalService, PrestacionService, ProfesionalService, SesionService · `PasosReserva` |
+| `/turnos` | `Pages/Turnos.razor` | A-015 | AgendaService, AnimalService, PrestacionService, ProfesionalService, SesionService |
 
 ## Servicios
 
 | Servicio | Qué hace | Depende de | Se reemplaza en la sección C por |
 |---|---|---|---|
 | `PrestacionService` | Catálogo público de servicios (solo publicados y con precio) | — | `PrestacionApiService` → `GET /api/v1/servicios` |
-| `ProfesionalService` | Profesionales publicados y sus horarios | — | `ProfesionalApiService` |
+| `ProfesionalService` | Profesionales publicados, jornada, descansos, ausencias, especies y servicios que atienden | — | `ProfesionalApiService` |
 | `ClinicaService` | Datos de VITALIA y enlaces `tel:` | — | `ClinicaApiService` |
 | `DocumentoLegalService` | Versión y fecha vigente de Privacidad, Términos y Cookies | — | Documentos servidos por la API |
 | `CuentaService` | Registro, verificación por código, recuperación de contraseña y credenciales (PBKDF2) | DocumentoLegalService | `CuentaApiService` (identidad en la API) |
 | `SesionService` | Cuenta que ingresó; ingresar y salir | CuentaService | Autenticación con tokens (RNF-SEG-03) |
 | `AnimalService` | Animales del cliente (solo los suyos, RN-18), microchip único (RN-41), ejemplos de caballo y oveja | — | `AnimalApiService` → `/api/v1/animales` |
+| `AgendaService` | Horarios libres cada 15 min bloqueando toda la duración; 2 h de anticipación, 60 días, feriados y ausencias; reserva con revalidación | ProfesionalService, PrestacionService, AnimalService | API de turnos con `SELECT … FOR UPDATE` (DT-BD-02) |
 | `IntencionService` | Servicio elegido antes de ingresar; se retoma hasta 30 min | SesionService | Igual, en el cliente |
 
 > Todos los servicios son `AddScoped`: en Blazor Server duran lo que dura la pestaña. Cuentas y sesión se pierden al recargar; es lo esperado hasta tener la API.

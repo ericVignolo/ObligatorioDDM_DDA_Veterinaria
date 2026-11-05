@@ -15,12 +15,12 @@ public class IntencionService
         _sesion = sesion;
     }
 
-    // Decide a dónde ir al tocar «Reservar turno».
+    // Decide a dónde ir al tocar «Reservar turno»: con sesión, a la reserva en cuatro pasos (A-015).
     public string DestinoParaReservar(int servicioId)
     {
         if (_sesion.Iniciada)
         {
-            return $"servicios/{servicioId}?reservar=true";
+            return $"reservar?servicio={servicioId}";
         }
 
         // Acción protegida: se guarda la intención y se pide ingresar o registrarse (RF-VIS-07).
@@ -50,7 +50,7 @@ public class IntencionService
 
         if (servicio is not null)
         {
-            return $"servicios/{servicio}?reservar=true";
+            return $"reservar?servicio={servicio}";
         }
 
         return habiaIntencion ? "servicios" : "";

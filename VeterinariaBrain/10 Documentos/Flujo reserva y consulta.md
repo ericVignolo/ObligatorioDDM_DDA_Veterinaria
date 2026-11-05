@@ -18,6 +18,8 @@ Parte de [[Mapa Requisitos y análisis]].
 - [[Matriz de requisitos]]
 
 ## Conceptos
+- [[Reservar]]
+- [[AgendaService]]
 - [[Cliente]]
 - [[Recepción]]
 - [[Veterinario]]

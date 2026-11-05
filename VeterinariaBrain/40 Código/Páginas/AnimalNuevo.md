@@ -10,6 +10,8 @@ generado: true
 
 **Ruta:** `/animales/nuevo`
 
+Si se llegó desde la reserva, se vuelve a ella después de registrar (P-RC-01).
+
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa

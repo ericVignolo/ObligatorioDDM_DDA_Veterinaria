@@ -10,6 +10,8 @@ generado: true
 
 Datos ficticios de la sección A. En la sección C se reemplaza por PrestacionApiService.
 
+**Tareas:** A-015
+
 **Requisitos y decisiones:** D-CAT-02, D-CAT-04
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
@@ -19,6 +21,9 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Acceso]]
+- [[AgendaService]]
 - [[Home]]
 - [[PrestacionDetalle]]
+- [[Reservar]]
 - [[Servicios]]
+- [[Turnos]]

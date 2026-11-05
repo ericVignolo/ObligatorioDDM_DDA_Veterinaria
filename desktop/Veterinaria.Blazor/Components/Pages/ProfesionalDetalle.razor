@@ -18,11 +18,25 @@ else
 
     <h2 class="h5">Horarios de atención</h2>
     <ul>
-        @foreach (var horario in profesional.Horarios)
+        @foreach (var linea in ProfesionalService.DescribirJornada(profesional))
         {
-            <li>@horario</li>
+            <li>@linea</li>
         }
     </ul>
+
+    @* Ausencias próximas (A-014): esos días no se puede reservar con este profesional. *@
+    @if (ausencias.Count > 0)
+    {
+        <h2 class="h5">No atiende</h2>
+        <ul>
+            @foreach (var ausencia in ausencias)
+            {
+                <li>@TextoAusencia(ausencia)</li>
+            }
+        </ul>
+    }
+
+    <p class="text-muted small">Atiende: @string.Join(", ", profesional.Especies).</p>
     <p class="text-muted small">Horarios informativos. La disponibilidad real se ve al reservar un turno.</p>
 }
 
@@ -33,9 +47,20 @@ else
     public int Id { get; set; }
 
     private Profesional? profesional;
+    private List<Ausencia> ausencias = new();
 
     protected override void OnParametersSet()
     {
         profesional = ProfesionalService.ObtenerPorId(Id);
+        var hoy = DateOnly.FromDateTime(DateTime.Today);
+        ausencias = profesional?.Ausencias.Where(a => a.Hasta >= hoy).OrderBy(a => a.Desde).ToList() ?? new();
+    }
+
+    private static string TextoAusencia(Ausencia ausencia)
+    {
+        var fechas = ausencia.Desde == ausencia.Hasta
+            ? ausencia.Desde.ToString("d 'de' MMMM")
+            : $"del {ausencia.Desde:d 'de' MMMM} al {ausencia.Hasta:d 'de' MMMM}";
+        return $"{fechas} ({ausencia.Motivo.ToLower()})";
     }
 }
