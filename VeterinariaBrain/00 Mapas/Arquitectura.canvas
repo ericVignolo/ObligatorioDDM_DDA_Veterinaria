@@ -1,0 +1,349 @@
+{
+	"nodes": [
+		{
+			"id": "7dbbdafa5b9a8bc0",
+			"type": "group",
+			"x": -40,
+			"y": 160,
+			"width": 1340,
+			"height": 200,
+			"label": "Usuarios",
+			"color": "4"
+		},
+		{
+			"id": "2142183d30bf7736",
+			"type": "group",
+			"x": -40,
+			"y": 440,
+			"width": 1340,
+			"height": 320,
+			"label": "Interfaces (clientes de la API)",
+			"color": "5"
+		},
+		{
+			"id": "459771047b32ebff",
+			"type": "group",
+			"x": -40,
+			"y": 840,
+			"width": 1340,
+			"height": 300,
+			"label": "Backend",
+			"color": "6"
+		},
+		{
+			"id": "f04682282cf60aa4",
+			"type": "group",
+			"x": 1640,
+			"y": 160,
+			"width": 420,
+			"height": 980,
+			"label": "Primer recorrido — rama desktop",
+			"color": "3"
+		},
+		{
+			"id": "bc4e9fb44b59e314",
+			"type": "text",
+			"x": -40,
+			"y": 0,
+			"width": 1340,
+			"height": 110,
+			"text": "# Arquitectura — Sistema de gestión veterinaria\nUna sola API como autoridad; dos interfaces que la consumen. Volver a [[Inicio]]."
+		},
+		{
+			"id": "d346cf89ef6a566f",
+			"type": "text",
+			"x": 0,
+			"y": 220,
+			"width": 220,
+			"height": 110,
+			"text": "### [[Visitante]]\nSin cuenta: info pública"
+		},
+		{
+			"id": "52af67bb4431460e",
+			"type": "text",
+			"x": 260,
+			"y": 220,
+			"width": 220,
+			"height": 110,
+			"text": "### [[Cliente]]\nCuenta verificada, animales y turnos"
+		},
+		{
+			"id": "3b6882b82f77ee4b",
+			"type": "text",
+			"x": 520,
+			"y": 220,
+			"width": 220,
+			"height": 110,
+			"text": "### [[Veterinario]]\nAgenda, consultas, asistencias"
+		},
+		{
+			"id": "f99b210431979a23",
+			"type": "text",
+			"x": 780,
+			"y": 220,
+			"width": 220,
+			"height": 110,
+			"text": "### [[Recepción]]\nLlegadas, agenda, cobros"
+		},
+		{
+			"id": "50537340692ca5d0",
+			"type": "text",
+			"x": 1040,
+			"y": 220,
+			"width": 220,
+			"height": 110,
+			"text": "### [[Administrador]]\nServicios, usuarios, auditoría"
+		},
+		{
+			"id": "1e5af3d11f3bd7a5",
+			"type": "text",
+			"x": 60,
+			"y": 510,
+			"width": 480,
+			"height": 200,
+			"text": "## [[Blazor]]\n**Computadora** · C#\n\nPaneles de Recepción, Veterinario y Administración + información pública.\n\nCarpeta: [[Carpeta desktop]]",
+			"color": "5"
+		},
+		{
+			"id": "cc2808159fb66f7e",
+			"type": "text",
+			"x": 720,
+			"y": 510,
+			"width": 480,
+			"height": 200,
+			"text": "## [[React Native]]\n**Móvil**\n\nVisitante, Cliente y Veterinario.\n\nCarpeta: [[Carpeta mobile]]",
+			"color": "5"
+		},
+		{
+			"id": "1af94e74c8a0ec06",
+			"type": "text",
+			"x": 1340,
+			"y": 530,
+			"width": 240,
+			"height": 150,
+			"text": "### [[Figma]]\nDiseño previo de la app móvil\n[[Diseño Figma móvil]]"
+		},
+		{
+			"id": "2a3fa7a21b2f22fa",
+			"type": "text",
+			"x": 300,
+			"y": 900,
+			"width": 660,
+			"height": 200,
+			"text": "## [[API ASP.NET Core]]\nÚnica autoridad de **datos, autenticación, autorización y reglas de negocio**.\n\nCapas: Api · Application · Domain · Infrastructure · Contracts\n\nCarpeta: [[Carpeta api]] · Pruebas: [[Carpeta tests]]",
+			"color": "6"
+		},
+		{
+			"id": "f02f64e70cee7b60",
+			"type": "text",
+			"x": 480,
+			"y": 1220,
+			"width": 300,
+			"height": 130,
+			"text": "## [[MySQL]]\nBase de datos de la sección C (DT-BD-01)\n8.4 LTS · proveedor de EF Core en revisión",
+			"color": "6"
+		},
+		{
+			"id": "a6ad976cc0122198",
+			"type": "text",
+			"x": -760,
+			"y": 440,
+			"width": 480,
+			"height": 420,
+			"text": "## Reglas no negociables\n- Una sola API como autoridad.\n- Ningún cliente accede directo a la BD.\n- Reglas críticas en backend/dominio, reforzadas con transacciones o restricciones.\n- Navegación pública libre; acciones protegidas piden login y retoman la intención.\n- Cambios de arquitectura: primero actualizar la documentación.\n\nFuente: [[Instrucciones AGENTS]] · [[Contexto base]]",
+			"color": "1"
+		},
+		{
+			"id": "6de1b5c54a4c52e1",
+			"type": "text",
+			"x": -760,
+			"y": 900,
+			"width": 480,
+			"height": 300,
+			"text": "## Estado actual\n- Rama `desktop`: prototipo Blazor de [[VITALIA]] con **datos de demostración**.\n- Hechas: inicio, catálogo, profesionales, clínica, urgencias, legales, registro, verificación, sesión y retomar la reserva.\n- Código: [[Mapa Código]]\n- API y BD todavía sin código.\n- Fuente canónica: [[Matriz de requisitos]]",
+			"color": "2"
+		},
+		{
+			"id": "79b3f997162c84ca",
+			"type": "text",
+			"x": -760,
+			"y": 1420,
+			"width": 2820,
+			"height": 110,
+			"text": "## [[Ramas git]] — secciones acumulativas\n`main` ← **`desktop`** (A: escritorio) → `desktop-mobile` (B) → `desktop-mobile-api` (C) · Una rama por sesión · Plan: [[Plan de tareas]] · Hitos: [[Hitos H0–H5]]"
+		},
+		{
+			"id": "37c9855048bdae19",
+			"type": "text",
+			"x": 1680,
+			"y": 230,
+			"width": 340,
+			"height": 150,
+			"text": "### 1. Catálogo público\n[[Especificación catálogo de servicios]]"
+		},
+		{
+			"id": "db613e5ce955cd80",
+			"type": "text",
+			"x": 1680,
+			"y": 460,
+			"width": 340,
+			"height": 150,
+			"text": "### 2. Registro y verificación\n[[Especificación registro de cliente]]"
+		},
+		{
+			"id": "3970d09cf06020c0",
+			"type": "text",
+			"x": 1680,
+			"y": 690,
+			"width": 340,
+			"height": 150,
+			"text": "### 3. Reservar turno\n[[Flujo reserva y consulta]]"
+		},
+		{
+			"id": "c4e810ce2655b089",
+			"type": "text",
+			"x": 1680,
+			"y": 920,
+			"width": 340,
+			"height": 150,
+			"text": "### 4. Realizar consulta\n[[Recorrido API reserva y consulta]]"
+		}
+	],
+	"edges": [
+		{
+			"id": "debeba8dc493673d",
+			"fromNode": "d346cf89ef6a566f",
+			"fromSide": "bottom",
+			"toNode": "1e5af3d11f3bd7a5",
+			"toSide": "top",
+			"toEnd": "arrow"
+		},
+		{
+			"id": "883e0f1a166872f8",
+			"fromNode": "d346cf89ef6a566f",
+			"fromSide": "bottom",
+			"toNode": "cc2808159fb66f7e",
+			"toSide": "top",
+			"toEnd": "arrow"
+		},
+		{
+			"id": "15a2533fc54832db",
+			"fromNode": "3b6882b82f77ee4b",
+			"fromSide": "bottom",
+			"toNode": "1e5af3d11f3bd7a5",
+			"toSide": "top",
+			"toEnd": "arrow"
+		},
+		{
+			"id": "d03cd8b62fee2fe5",
+			"fromNode": "3b6882b82f77ee4b",
+			"fromSide": "bottom",
+			"toNode": "cc2808159fb66f7e",
+			"toSide": "top",
+			"toEnd": "arrow"
+		},
+		{
+			"id": "1b3c446da209a1e1",
+			"fromNode": "52af67bb4431460e",
+			"fromSide": "bottom",
+			"toNode": "cc2808159fb66f7e",
+			"toSide": "top",
+			"toEnd": "arrow"
+		},
+		{
+			"id": "3aa7905b3a9eabb3",
+			"fromNode": "f99b210431979a23",
+			"fromSide": "bottom",
+			"toNode": "1e5af3d11f3bd7a5",
+			"toSide": "top",
+			"toEnd": "arrow"
+		},
+		{
+			"id": "619f8b44cc401796",
+			"fromNode": "50537340692ca5d0",
+			"fromSide": "bottom",
+			"toNode": "1e5af3d11f3bd7a5",
+			"toSide": "top",
+			"toEnd": "arrow"
+		},
+		{
+			"id": "cf98971f34293dd4",
+			"fromNode": "1e5af3d11f3bd7a5",
+			"fromSide": "bottom",
+			"toNode": "2a3fa7a21b2f22fa",
+			"toSide": "top",
+			"toEnd": "arrow",
+			"label": "HTTPS · API v1"
+		},
+		{
+			"id": "31881eb02af38fb0",
+			"fromNode": "cc2808159fb66f7e",
+			"fromSide": "bottom",
+			"toNode": "2a3fa7a21b2f22fa",
+			"toSide": "top",
+			"toEnd": "arrow",
+			"label": "HTTPS · API v1"
+		},
+		{
+			"id": "53fe54a0ad145370",
+			"fromNode": "2a3fa7a21b2f22fa",
+			"fromSide": "bottom",
+			"toNode": "f02f64e70cee7b60",
+			"toSide": "top",
+			"toEnd": "arrow",
+			"label": "única conexión"
+		},
+		{
+			"id": "907fb9b2144d76dd",
+			"fromNode": "1e5af3d11f3bd7a5",
+			"fromSide": "left",
+			"toNode": "f02f64e70cee7b60",
+			"toSide": "left",
+			"toEnd": "arrow",
+			"label": "✗ prohibido acceso directo",
+			"color": "1"
+		},
+		{
+			"id": "d1c4001c2b471701",
+			"fromNode": "1af94e74c8a0ec06",
+			"fromSide": "left",
+			"toNode": "cc2808159fb66f7e",
+			"toSide": "right",
+			"toEnd": "arrow",
+			"label": "diseña"
+		},
+		{
+			"id": "57817dc7f75c1267",
+			"fromNode": "37c9855048bdae19",
+			"fromSide": "bottom",
+			"toNode": "db613e5ce955cd80",
+			"toSide": "top",
+			"toEnd": "arrow"
+		},
+		{
+			"id": "b44ebac68193c0c3",
+			"fromNode": "db613e5ce955cd80",
+			"fromSide": "bottom",
+			"toNode": "3970d09cf06020c0",
+			"toSide": "top",
+			"toEnd": "arrow"
+		},
+		{
+			"id": "d76144db2b3d44d0",
+			"fromNode": "3970d09cf06020c0",
+			"fromSide": "bottom",
+			"toNode": "c4e810ce2655b089",
+			"toSide": "top",
+			"toEnd": "arrow"
+		},
+		{
+			"id": "172f6ad1a7395b25",
+			"fromNode": "c4e810ce2655b089",
+			"fromSide": "left",
+			"toNode": "2a3fa7a21b2f22fa",
+			"toSide": "right",
+			"toEnd": "arrow",
+			"label": "endpoints del recorrido"
+		}
+	]
+}
