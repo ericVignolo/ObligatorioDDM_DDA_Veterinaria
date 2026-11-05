@@ -51,9 +51,9 @@ Participantes: Eric (con Claude). Rama: `eric/sesion-2026-11-05` desde `desktop`
 
 ## Pendientes
 
-- [ ] Eric: probar la rama y mezclar el PR.
-- [ ] Al mezclar: marcar A-007, A-012 y A-013 en `PLAN_TAREAS_PROYECTO.md` y pasar «🧪 En prueba» a ✅ en el README.
-- [ ] Borrar `VeterinariaBrain_viejo` y las dos copias viejas del repositorio (`OneDrive\Desktop\ObligatorioVeterinaria` y `source\repos\ObligatorioDDM_DDA_Veterinaria`).
+- [x] Eric probó la rama: registro de animales (un loro con microchip), microchip repetido rechazado, ingreso y recuperación funcionan. Vault cargado en Obsidian. PR #12 mezclado.
+- [x] A-007, A-012 y A-013 marcadas; README al día.
+- [ ] Borrar `VeterinariaBrain_viejo` (Eric ya puede) y las dos copias viejas del repositorio (`OneDrive\Desktop\ObligatorioVeterinaria` y `source\repos\ObligatorioDDM_DDA_Veterinaria`).
 - [ ] Borrar desde GitHub las 6 ramas ya integradas.
 - [ ] Decidir si `.claude/skills` (skills de Obsidian) se sube al repositorio.
 - [ ] Diego: proveedor MySQL de DT-BD-02 (EF Core 9 sin soporte desde el 2026-11-10).

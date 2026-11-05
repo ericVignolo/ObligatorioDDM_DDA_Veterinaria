@@ -29,11 +29,11 @@ Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ning
 | A-004 | Profesionales con horarios y página de la clínica | ✅ |
 | A-005 | Urgencias y documentos legales (Privacidad, Términos, Cookies) | ✅ |
 | A-006 | Registro de cliente con validaciones y aceptaciones separadas | ✅ |
-| A-007 | Verificación del correo por código y recuperación de contraseña | 🧪 En prueba |
+| A-007 | Verificación del correo por código y recuperación de contraseña | ✅ |
 | A-008 | Inicio y cierre de sesión | ✅ |
 | A-011 | Retomar la reserva después de ingresar | ✅ |
 | A-009, A-010 | Perfil del Cliente y perfiles del personal | Pendiente |
-| A-012, A-013 | Mis animales: listado, ficha, alta y edición (incluye grupos de campo) | 🧪 En prueba |
+| A-012, A-013 | Mis animales: listado, ficha, alta y edición (incluye grupos de campo) | ✅ |
 | A-014 en adelante | Disponibilidad, reserva en cuatro pasos, consulta y panel del personal | Pendiente |
 
 El mapa de páginas, servicios y modelos (con diagrama) está en [`desktop/README.md`](desktop/README.md).
