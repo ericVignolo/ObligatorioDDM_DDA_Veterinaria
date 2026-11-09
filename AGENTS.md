@@ -51,9 +51,10 @@ Antes de planificar, diseñar o implementar, leer:
 
 ## Punto de continuación
 
-Actualizado: 2026-11-03.
+Actualizado: 2026-11-09.
 
-- **Primero, si trabaja Diego:** decidir el proveedor MySQL de DT-BD-02 (Pomelo solo soporta EF Core 9, sin soporte desde el 2026-11-10). Ver `docs/analisis/DECISIONES_ERIC_2026-10-31.md`.
+- **Entrega: jueves 4 de diciembre de 2026** (DT-ORG-07).
+- **Primero, si trabaja Diego:** (1) decidir el proveedor MySQL de DT-BD-02 — Pomelo solo soporta EF Core 9, sin soporte desde el 2026-11-10; el profesor usa `MySql.EntityFrameworkCore` (Oracle) con EF Core 10; (2) crear la base de datos (le corresponde a Diego, acordado el 2026-11-09); (3) aplicar el disparador del Plan B con la fecha de entrega (R1 y R2 en el límite). Mensaje completo en `docs/analisis/MENSAJE_PARA_DIEGO.md`.
 - Fase: construcción, sección A (DT-ORG-04, 2026-10-31).
 
 - Equipo: Eric y Diego, con apoyo de asistentes de IA. Sin fecha de entrega real todavía.
