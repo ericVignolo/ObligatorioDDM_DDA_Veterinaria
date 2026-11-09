@@ -1,0 +1,82 @@
+@page "/panel/mi-agenda"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AgendaService Agenda
+@inject AnimalService AnimalService
+@inject PrestacionService PrestacionService
+@inject SesionService Sesion
+
+<PageTitle>Mi agenda — VITALIA</PageTitle>
+
+<RequierePersonal Roles="@(new[] { PersonalService.Veterinario })">
+    <h1>Mi agenda</h1>
+    <p class="text-muted">@Sesion.PersonalActual!.Nombre · solo tus turnos.</p>
+
+    <div class="mb-3" style="max-width: 16rem;">
+        <label class="form-label" for="fecha">Día</label>
+        <input id="fecha" type="date" class="form-control" value="@fecha.ToString("yyyy-MM-dd")" @onchange="CambiarFecha" />
+        <div class="form-text">@fecha.ToString("dddd d 'de' MMMM")</div>
+    </div>
+
+    @if (enEspera > 0)
+    {
+        <div class="alert alert-info" role="status">Hay @enEspera @(enEspera == 1 ? "paciente" : "pacientes") en espera.</div>
+    }
+
+    @if (turnos.Count == 0)
+    {
+        <p>No tenés turnos este día.</p>
+    }
+    else
+    {
+        <div class="list-group mb-3">
+            @foreach (var turno in turnos)
+            {
+                var animal = AnimalService.ObtenerParaPersonal(turno.AnimalId);
+                <div class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <div>
+                        <strong>@turno.Inicio.ToString("HH:mm")–@turno.Fin.ToString("HH:mm")</strong>
+                        · @animal?.Nombre <span class="text-muted">(@animal?.Especie)</span>
+                        · @(PrestacionService.ObtenerPorId(turno.PrestacionId)?.Nombre)
+                    </div>
+                    <div>
+                        <EstadoTurno Estado="@turno.Estado" />
+                        @if (turno.Estado == "En espera")
+                        {
+                            @* La consulta clínica llega con A-019. *@
+                            <button class="btn btn-success btn-sm ms-2" disabled title="Disponible con la consulta clínica (A-019)">Iniciar atención</button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <p class="text-muted small">«Iniciar atención» se habilita con la pantalla de consulta (A-019). La historia completa solo se ve en casos asignados (matriz de permisos).</p>
+    }
+</RequierePersonal>
+
+@code {
+    private DateOnly fecha = DateOnly.FromDateTime(DateTime.Today);
+    private List<Turno> turnos = new();
+    private int enEspera;
+
+    protected override void OnInitialized()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        var profesionalId = Sesion.PersonalActual?.ProfesionalId;
+        turnos = profesionalId is null ? new() : Agenda.TurnosDelDia(fecha, profesionalId);
+        enEspera = turnos.Count(t => t.Estado == "En espera");
+    }
+
+    private void CambiarFecha(ChangeEventArgs e)
+    {
+        if (DateOnly.TryParse(e.Value?.ToString(), out var nueva))
+        {
+            fecha = nueva;
+            Cargar();
+        }
+    }
+}

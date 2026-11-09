@@ -21,7 +21,9 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Acceso]]
+- [[AgendaRecepcion]]
 - [[AgendaService]]
+- [[AgendaVeterinario]]
 - [[Home]]
 - [[PrestacionDetalle]]
 - [[Reservar]]

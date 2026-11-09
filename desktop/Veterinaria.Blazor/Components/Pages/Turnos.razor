@@ -52,7 +52,7 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <h2 class="h5 card-title">@turno.Inicio.ToString("dddd d 'de' MMMM, HH:mm")</h2>
-                        <p class="card-text mb-2">@Resumen(turno) <span class="badge bg-success ms-1">@turno.Estado</span></p>
+                        <p class="card-text mb-2">@Resumen(turno) <EstadoTurno Estado="@turno.Estado" /></p>
 
                         @if (cancelandoId == turno.Id)
                         {
@@ -109,7 +109,7 @@
                                     <div class="small text-muted">Motivo: @turno.MotivoCancelacion</div>
                                 }
                             </td>
-                            <td><span class="badge @(turno.Estado == "Cancelado" ? "bg-secondary" : "bg-success")">@(turno.Estado == "Confirmado" ? "Realizado" : turno.Estado)</span></td>
+                            <td><EstadoTurno Estado="@turno.Estado" Pasado="@(turno.Fin < DateTime.Now)" /></td>
                         </tr>
                     }
                 </tbody>

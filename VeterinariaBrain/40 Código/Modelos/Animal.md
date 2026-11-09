@@ -20,6 +20,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Cuenta]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AgendaRecepcion]]
 - [[AnimalCard]]
 - [[AnimalDetalle]]
 - [[AnimalEditar]]

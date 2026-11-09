@@ -8,9 +8,9 @@ generado: true
 
 > Fuente: `desktop/Veterinaria.Blazor/Services/SesionService.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
-Sesión de demostración (A-008). Dura lo que dura la pestaña del navegador.
+Sesión de demostración (A-008, A-010). Dura lo que dura la pestaña del navegador.
 
-**Tareas:** A-008
+**Tareas:** A-008, A-010
 
 **Requisitos y decisiones:** RN-38, RNF-SEG-03
 
@@ -20,10 +20,13 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Cuenta]]
 - [[CuentaService]]
 - [[InicioSesion]]
+- [[Personal]]
+- [[PersonalService]]
 - [[ResultadoOperacion]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Acceso]]
+- [[AgendaVeterinario]]
 - [[AnimalDetalle]]
 - [[AnimalEditar]]
 - [[AnimalNuevo]]
@@ -32,6 +35,8 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Home]]
 - [[Ingresar]]
 - [[IntencionService]]
+- [[PanelInicio]]
+- [[RequierePersonal]]
 - [[RequiereSesion]]
 - [[Reservar]]
 - [[Restablecer]]

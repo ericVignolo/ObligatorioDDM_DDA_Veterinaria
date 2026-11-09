@@ -8,11 +8,21 @@ public class AnimalService
 {
     private readonly List<Animal> _animales = new()
     {
-        // Animal de otro cliente: sirve para probar que no se puede repetir su microchip (RN-41).
-        new() { Id = 1, ResponsableId = 0, Nombre = "Toby", Especie = "Perro", Raza = "Mestizo", Sexo = "Macho", Microchip = "858000000000001", FechaAlta = new DateTime(2026, 10, 1) }
+        // Animales de los clientes de demostración (Ana Rodríguez = 100, Pedro Gómez = 101).
+        // Toby también sirve para probar que no se puede repetir su microchip (RN-41).
+        new() { Id = 1, ResponsableId = 100, Nombre = "Toby", Especie = "Perro", Raza = "Mestizo", Sexo = "Macho", Microchip = "858000000000001", FechaAlta = new DateTime(2026, 10, 1) },
+        new() { Id = 2, ResponsableId = 100, Nombre = "Mishi", Especie = "Gato", Raza = "Común europeo", Sexo = "Hembra", FechaAlta = new DateTime(2026, 10, 1) },
+        new() { Id = 3, ResponsableId = 101, Nombre = "Rodeo La Esperanza", Especie = "Vaca", Raza = "Hereford", Sexo = "Hembra", EsGrupo = true, CantidadGrupo = 25, Caravana = "UY-BV-0815", FechaAlta = new DateTime(2026, 10, 1) },
+        new() { Id = 4, ResponsableId = 101, Nombre = "Canela", Especie = "Caballo", Raza = "Criollo", Sexo = "Hembra", FechaAlta = new DateTime(2026, 10, 1) }
     };
 
-    private int _ultimoId = 1;
+    private int _ultimoId = 4;
+
+    // Para el personal: cualquier animal, sin filtrar por responsable (RF-REC-03).
+    public Animal? ObtenerParaPersonal(int id)
+    {
+        return _animales.FirstOrDefault(a => a.Id == id);
+    }
 
     public List<string> Especies { get; } = new()
     {

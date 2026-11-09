@@ -17,3 +17,4 @@ Volver a [[Inicio]].
 - [[Sesión 2026-11-05 cerebro y animales]]
 - [[Sesión 2026-11-05 reserva]]
 - [[Sesión 2026-11-05 cancelar y reprogramar]]
+- [[Sesión 2026-11-09 panel del personal]]

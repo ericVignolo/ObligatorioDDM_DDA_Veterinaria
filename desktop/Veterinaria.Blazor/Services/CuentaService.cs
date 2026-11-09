@@ -20,6 +20,19 @@ public class CuentaService
     public CuentaService(DocumentoLegalService documentosLegales)
     {
         _documentosLegales = documentosLegales;
+        CargarClientesDemo();
+    }
+
+    // Clientes de demostración con turnos y animales ya cargados (sin contraseña: no pueden ingresar).
+    private void CargarClientesDemo()
+    {
+        _cuentas.Add(new Cuenta { Id = 100, Nombre = "Ana", Apellido = "Rodríguez", Correo = "ana.demo@vitalia.uy", Telefono = "+59899111222", Verificada = true, FechaCreacion = new DateTime(2026, 10, 1) });
+        _cuentas.Add(new Cuenta { Id = 101, Nombre = "Pedro", Apellido = "Gómez", Correo = "pedro.demo@vitalia.uy", Telefono = "+59899333444", Verificada = true, FechaCreacion = new DateTime(2026, 10, 1) });
+    }
+
+    public Cuenta? ObtenerPorId(int id)
+    {
+        return _cuentas.FirstOrDefault(c => c.Id == id);
     }
 
     public List<string> Departamentos { get; } = new()
@@ -249,14 +262,14 @@ public class CuentaService
     }
 
     // Derivación lenta con salt individual (RNF-SEG-01).
-    private static string DerivarContrasena(string contrasena)
+    public static string DerivarContrasena(string contrasena)
     {
         var salt = RandomNumberGenerator.GetBytes(16);
         var derivado = Rfc2898DeriveBytes.Pbkdf2(contrasena, salt, 100_000, HashAlgorithmName.SHA256, 32);
         return $"{Convert.ToBase64String(salt)}.{Convert.ToBase64String(derivado)}";
     }
 
-    private static bool ContrasenaCoincide(string contrasena, string guardado)
+    public static bool ContrasenaCoincide(string contrasena, string guardado)
     {
         var partes = guardado.Split('.');
         if (partes.Length != 2)

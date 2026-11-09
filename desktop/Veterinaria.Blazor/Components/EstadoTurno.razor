@@ -1,0 +1,30 @@
+@* Etiqueta única del estado de un turno en todas las pantallas (A-018, FLUJO_RESERVA_CONSULTA §4.1). *@
+<span class="badge @Clase">@Texto</span>
+
+@code {
+    [Parameter]
+    public string Estado { get; set; } = "";
+
+    // Un turno Confirmado cuyo horario ya pasó se muestra como «Realizado» en el historial del cliente.
+    [Parameter]
+    public bool Pasado { get; set; }
+
+    private string Texto => Estado switch
+    {
+        "Confirmado" when Pasado => "Realizado",
+        "En curso" => "En consulta",
+        _ => Estado
+    };
+
+    private string Clase => Estado switch
+    {
+        "Confirmado" => Pasado ? "bg-secondary" : "bg-primary",
+        "Pendiente" => "bg-warning text-dark",
+        "En espera" => "bg-info text-dark",
+        "En curso" => "bg-success",
+        "Finalizado" => "bg-dark",
+        "Ausente" => "bg-danger",
+        "Cancelado" => "bg-secondary",
+        _ => "bg-light text-dark"
+    };
+}

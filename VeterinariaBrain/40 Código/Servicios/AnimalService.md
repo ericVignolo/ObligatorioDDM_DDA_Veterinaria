@@ -12,7 +12,7 @@ Animales de demostración en memoria (sección A). En la sección C se reemplaza
 
 **Tareas:** A-013
 
-**Requisitos y decisiones:** CU-CLI-01, RN-18, RN-41
+**Requisitos y decisiones:** CU-CLI-01, RF-REC-03, RN-18, RN-41
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -22,7 +22,9 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[ResultadoOperacion]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AgendaRecepcion]]
 - [[AgendaService]]
+- [[AgendaVeterinario]]
 - [[AnimalDetalle]]
 - [[AnimalEditar]]
 - [[AnimalForm]]

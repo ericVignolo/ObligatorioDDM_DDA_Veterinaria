@@ -22,6 +22,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[ValidacionDatos]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AgendaRecepcion]]
 - [[Recuperar]]
 - [[Registro]]
 - [[Restablecer]]
