@@ -39,6 +39,14 @@ Antes de planificar, diseñar o implementar, leer:
 - Claude no puede compilar: el código llega sin probar y se prueba con F5 antes de mezclar. Por eso nunca se trabaja directo sobre `desktop`.
 - **Cerebro de Obsidian (`VeterinariaBrain/`):** antes de cambiar código, revisar en `VeterinariaBrain/40 Código/` la sección «Usado por» de cada archivo que se va a tocar, para prever qué más se ve afectado. Al cerrar la sesión, regenerar las notas de código con `python VeterinariaBrain/_scripts/actualizar_codigo.py` y actualizar a mano las notas de documentos, sesiones y mapas que correspondan.
 
+## Calidad: compilación, pruebas y revisión (2026-11-09)
+
+- **CI:** GitHub Actions («Compilar y probar», `.github/workflows/ci.yml`) compila y corre `tests/Veterinaria.Tests` en cada PR y en cada push a `desktop`/`main`. Claude lee el resultado con `gh api` y corrige lo que falle **antes** de pedir la prueba con F5.
+- Un PR con el CI en rojo no se mezcla.
+- Cada regla nueva o cambiada del backend agrega o ajusta su prueba xUnit en el mismo PR (`tests/README.md`).
+- **Agente revisor:** antes de abrir o dar por listo un PR, Claude lanza un agente revisor independiente que compara el cambio con `MATRIZ_REQUISITOS.md`, las decisiones y las convenciones del docente, y busca errores típicos de Razor. Sus hallazgos se corrigen o se informan en el PR.
+- El CI y el revisor no reemplazan la prueba con F5 de quien trabajó.
+
 ## Convenciones de código (estilo del docente)
 
 - Blazor Web App, .NET 10, interactividad Server con ubicación Global.
