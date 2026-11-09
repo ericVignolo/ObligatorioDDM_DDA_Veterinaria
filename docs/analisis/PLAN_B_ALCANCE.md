@@ -49,3 +49,4 @@ R7 es el último recurso: la asistencia es el módulo más original del proyecto
 | Fecha | Recorte | Decidió | Motivo |
 |---|---|---|---|
 | — | Ninguno aplicado | — | — |
+| 2026-11-09 | Medición: primer recorrido 7 de 36 días (19 %) o 5 de 34 (15 %) según desde cuándo se cuente. **R1 y R2 en el límite; decide Diego.** | — | Fecha de entrega fijada el 2026-11-09 (DT-ORG-07). |
