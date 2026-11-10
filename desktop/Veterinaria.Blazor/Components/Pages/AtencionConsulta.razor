@@ -1,5 +1,4 @@
 @page "/panel/consulta/{TurnoId:int}"
-@using System.ComponentModel.DataAnnotations
 @using Veterinaria.Blazor.Models
 @using Veterinaria.Blazor.Services
 @inject AgendaService Agenda
@@ -36,6 +35,10 @@
             @* Antecedentes destacados antes de atender (CU-VET-01, paso 4) *@
             <aside class="col-lg-4 order-lg-2 mb-4">
                 <h2 class="h5">Antecedentes</h2>
+                @if (!lecturaRegistrada)
+                {
+                    <p class="small text-muted">Este animal ya no tiene un turno activo: para ver sus antecedentes abrí la historia completa (pide el motivo del acceso).</p>
+                }
                 @if (!string.IsNullOrWhiteSpace(alergiasPrevias))
                 {
                     <div class="alert alert-warning py-2"><strong>Alergias registradas:</strong> @alergiasPrevias</div>
@@ -71,7 +74,7 @@
                 }
                 else
                 {
-                    <EditForm Model="formulario" OnValidSubmit="Guardar" FormName="consulta">
+                    <EditForm EditContext="contexto" OnValidSubmit="Guardar" FormName="consulta">
                         <DataAnnotationsValidator />
 
                         <div class="mb-3">
@@ -200,31 +203,50 @@
     private List<Consulta> historia = new();
     private string alergiasPrevias = "";
     private ConsultaFormulario formulario = new();
+    private EditContext contexto = new(new ConsultaFormulario());
+
+    // Versión que esta pantalla cargó; el servicio rechaza un guardado con una versión vieja (A-RC-02).
+    private int version;
+    private bool lecturaRegistrada;
+    private int turnoCargado;
     private FirmaConsulta firma = new();
     private bool mostrarFirma;
     private string motivoCancelacion = "";
     private string mensaje = "";
     private bool exito;
-    private int animalLeido;
 
     protected override void OnParametersSet()
     {
+        // Solo se recarga al cambiar de turno, para no pisar lo que se está escribiendo.
+        if (turnoCargado == TurnoId)
+        {
+            return;
+        }
+
+        turnoCargado = TurnoId;
         turno = Agenda.ObtenerPorId(TurnoId);
         consulta = Consultas.ObtenerPorTurno(TurnoId);
         animal = consulta is null ? null : AnimalService.ObtenerParaPersonal(consulta.AnimalId);
+        historia = new();
+        alergiasPrevias = "";
+        lecturaRegistrada = false;
 
-        if (consulta is not null && animal is not null)
+        if (consulta is null || animal is null || consulta.AutorId != Sesion.PersonalActual?.Id)
         {
-            formulario = Consultas.ParaEditar(consulta);
+            return;
+        }
+
+        formulario = Consultas.ParaEditar(consulta);
+        contexto = new EditContext(formulario);
+        version = consulta.Version;
+
+        // RN-40: ver los antecedentes es leer la historia. Si la lectura no se puede registrar
+        // (sin turno activo hace falta un motivo), no se muestran.
+        lecturaRegistrada = Consultas.RegistrarLectura(Sesion.PersonalActual, animal.Id, "").Exito;
+        if (lecturaRegistrada)
+        {
             historia = Consultas.HistoriaDe(animal.Id);
             alergiasPrevias = string.Join("; ", historia.Select(c => c.Alergias).Where(a => !string.IsNullOrWhiteSpace(a)).Distinct());
-
-            // RN-40: ver los antecedentes es leer la historia; se registra una vez por animal.
-            if (animalLeido != animal.Id)
-            {
-                Consultas.RegistrarLectura(Sesion.PersonalActual, animal.Id, "");
-                animalLeido = animal.Id;
-            }
         }
     }
 
@@ -241,14 +263,19 @@
 
     private void Guardar()
     {
-        Mostrar(Consultas.Guardar(consulta!.Id, consulta.Version, formulario, Sesion.PersonalActual));
+        var resultado = Consultas.Guardar(consulta!.Id, version, formulario, Sesion.PersonalActual);
+        if (resultado.Exito)
+        {
+            version = consulta.Version;
+        }
+
+        Mostrar(resultado);
     }
 
     private void AbrirFirma()
     {
-        // El formulario tiene que ser válido antes de firmar (rangos de signos vitales, largos).
-        var errores = new List<ValidationResult>();
-        if (!Validator.TryValidateObject(formulario, new ValidationContext(formulario), errores, true))
+        // El formulario tiene que ser válido antes de firmar; Validate marca los campos con error.
+        if (!contexto.Validate())
         {
             Mostrar(new ResultadoOperacion { Exito = false, Mensaje = "Corregí los campos marcados antes de firmar." });
             return;
@@ -259,11 +286,12 @@
 
     private void Firmar()
     {
-        var resultado = Consultas.Firmar(consulta!.Id, consulta.Version, formulario, firma.Contrasena, Sesion.PersonalActual);
+        var resultado = Consultas.Firmar(consulta!.Id, version, formulario, firma.Contrasena, Sesion.PersonalActual);
         firma = new();
         if (resultado.Exito)
         {
             mostrarFirma = false;
+            version = consulta.Version;
         }
 
         Mostrar(resultado);

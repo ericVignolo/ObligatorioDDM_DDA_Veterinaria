@@ -6,11 +6,25 @@
 @inject CuentaService CuentaService
 @inject PrestacionService PrestacionService
 @inject ProfesionalService ProfesionalService
+@inject ConsultaService Consultas
 
 <PageTitle>Agenda de Recepción — VITALIA</PageTitle>
 
 <RequierePersonal Roles="@(new[] { PersonalService.Recepcion })">
     <h1>Agenda del día</h1>
+
+    @{ var abiertas = Consultas.Abiertas(); }
+    @if (abiertas.Count > 0)
+    {
+        @* P-RC-04: consultas que siguen abiertas; Recepción las ve sin el texto clínico. *@
+        <div class="alert alert-warning small">
+            <strong>Consultas abiertas:</strong>
+            @foreach (var abierta in abiertas)
+            {
+                <span class="ms-2">@(AnimalService.ObtenerParaPersonal(abierta.AnimalId)?.Nombre) con @abierta.AutorNombre desde las @abierta.FechaInicio.ToString("HH:mm")</span>
+            }
+        </div>
+    }
 
     @* Filtros (A-017) *@
     <div class="row g-2 mb-3">

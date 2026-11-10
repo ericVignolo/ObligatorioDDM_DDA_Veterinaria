@@ -94,6 +94,12 @@ public class ProfesionalService
             .ToList();
     }
 
+    // Ficha interna, publicada o no (por ejemplo, para validar la matrícula al firmar).
+    public Profesional? ObtenerFicha(int id)
+    {
+        return _profesionales.FirstOrDefault(p => p.Id == id);
+    }
+
     public Profesional? ObtenerPorId(int id)
     {
         return ObtenerPublicos().FirstOrDefault(p => p.Id == id);

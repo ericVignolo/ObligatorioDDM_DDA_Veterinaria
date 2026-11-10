@@ -225,4 +225,37 @@ public class ConsultaTests
         Assert.All(historia, c => Assert.Equal("Firmada", c.Estado));
         Assert.Single(historia[0].Enmiendas);
     }
+
+    [Fact]
+    public void Con_datos_fuera_de_rango_no_se_guarda_ni_se_firma()
+    {
+        var (f, vet, turno, consulta) = ConsultaIniciada();
+        var datos = Fabrica.ConsultaCompleta();
+        datos.PesoKg = 0;
+
+        Assert.False(f.Consultas.Guardar(consulta.Id, consulta.Version, datos, vet).Exito);
+        Assert.False(f.Consultas.Firmar(consulta.Id, consulta.Version, datos, PersonalService.ContrasenaDemo, vet).Exito);
+        Assert.Equal("Borrador", consulta.Estado);
+        Assert.Equal("En curso", turno.Estado);
+    }
+
+    [Fact]
+    public void Un_turno_confirmado_de_un_dia_pasado_no_habilita_la_historia_sin_motivo()
+    {
+        var f = new Fabrica();
+        var animal = f.AnimalDe(1);
+        var ayer = DateTime.Today.AddDays(-1).AddHours(9);
+        f.Agenda.OcuparComoOtroCliente(1, 1, ayer);
+        f.Agenda.TurnosDelDia(DateOnly.FromDateTime(ayer), 1).Last(t => t.Inicio == ayer).AnimalId = animal.Id;
+
+        Assert.True(f.Consultas.NecesitaMotivo(animal.Id));
+    }
+
+    [Fact]
+    public void Recepcion_ve_las_consultas_abiertas_de_todos()
+    {
+        var (f, _, _, consulta) = ConsultaIniciada();
+
+        Assert.Contains(consulta, f.Consultas.Abiertas());
+    }
 }

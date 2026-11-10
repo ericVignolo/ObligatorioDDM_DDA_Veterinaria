@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using Veterinaria.Blazor.Models;
@@ -106,7 +108,7 @@ public class ConsultaService
     // RN-13: matrícula vigente del profesional para firmar.
     public bool MatriculaVigente(int profesionalId)
     {
-        var profesional = _profesionales.ObtenerPorId(profesionalId);
+        var profesional = _profesionales.ObtenerFicha(profesionalId);
         return profesional?.MatriculaVigenteHasta is DateOnly hasta && hasta >= DateOnly.FromDateTime(DateTime.Today);
     }
 
@@ -177,6 +179,11 @@ public class ConsultaService
             return error;
         }
 
+        if (!DatosValidos(datos))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Corregí los campos marcados (rangos de signos vitales o largos)." };
+        }
+
         CopiarDatos(datos, consulta!);
         consulta!.Version++;
         return new ResultadoOperacion { Exito = true, Mensaje = $"Borrador guardado a las {DateTime.Now:HH:mm}." };
@@ -190,6 +197,11 @@ public class ConsultaService
         if (error is not null)
         {
             return error;
+        }
+
+        if (!DatosValidos(datos))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Corregí los campos marcados antes de firmar. La consulta sigue en borrador." };
         }
 
         if (_personal.ValidarCredenciales(veterinario!.Correo, contrasena) is null)
@@ -310,6 +322,15 @@ public class ConsultaService
             .ToList();
     }
 
+    // Todas las consultas abiertas: Recepción ve la lista (sin texto clínico) al final del día (P-RC-04).
+    public List<Consulta> Abiertas()
+    {
+        return _consultas
+            .Where(c => c.Estado == "Borrador" && _agenda.ObtenerPorId(c.TurnoId)?.Estado == "En curso")
+            .OrderBy(c => c.FechaInicio)
+            .ToList();
+    }
+
     // P-RC-05: sin turno activo, el personal necesita dar un motivo para leer la historia.
     public bool NecesitaMotivo(int animalId)
     {
@@ -353,6 +374,12 @@ public class ConsultaService
         return null;
     }
 
+    // El servicio no confía en la pantalla: vuelve a aplicar las DataAnnotations del formulario.
+    private static bool DatosValidos(ConsultaFormulario datos)
+    {
+        return Validator.TryValidateObject(datos, new ValidationContext(datos), new List<ValidationResult>(), validateAllProperties: true);
+    }
+
     private static void CopiarDatos(ConsultaFormulario datos, Consulta consulta)
     {
         consulta.Motivo = datos.Motivo.Trim();
@@ -372,8 +399,10 @@ public class ConsultaService
     // Texto que se firma: todos los datos clínicos, el autor y la fecha.
     private static string Contenido(Consulta c)
     {
+        // Los números en cultura invariante: la huella no depende de la configuración regional.
+        var inv = CultureInfo.InvariantCulture;
         return string.Join("|", c.AnimalId, c.AutorId, c.FechaFirma?.ToString("O"), c.Motivo, c.Anamnesis, c.ExamenFisico,
-            c.TemperaturaC, c.FrecuenciaCardiaca, c.FrecuenciaRespiratoria, c.PesoKg, c.Alergias,
+            c.TemperaturaC?.ToString(inv), c.FrecuenciaCardiaca, c.FrecuenciaRespiratoria, c.PesoKg?.ToString(inv), c.Alergias,
             c.Diagnostico, c.TipoDiagnostico, c.Tratamiento, c.Indicaciones);
     }
 

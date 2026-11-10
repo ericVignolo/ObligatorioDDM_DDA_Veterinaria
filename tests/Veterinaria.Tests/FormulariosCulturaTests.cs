@@ -58,4 +58,21 @@ public class FormulariosCulturaTests
             CultureInfo.CurrentCulture = anterior;
         }
     }
+
+    // Independiente del orden de las pruebas: revisa los atributos directamente, en todos los modelos.
+    [Fact]
+    public void Todo_Range_con_decimales_lee_sus_limites_en_cultura_invariante()
+    {
+        var conDecimales = new[] { typeof(decimal), typeof(double), typeof(float) };
+        var malos = typeof(ConsultaFormulario).Assembly.GetTypes()
+            .Where(t => t.Namespace == "Veterinaria.Blazor.Models")
+            .SelectMany(t => t.GetProperties().Select(p => (Tipo: t, Propiedad: p)))
+            .SelectMany(x => x.Propiedad.GetCustomAttributes(typeof(RangeAttribute), true).Cast<RangeAttribute>()
+                .Select(r => (x.Tipo, x.Propiedad, Rango: r)))
+            .Where(x => conDecimales.Contains(x.Rango.OperandType) && !x.Rango.ParseLimitsInInvariantCulture)
+            .Select(x => $"{x.Tipo.Name}.{x.Propiedad.Name}")
+            .ToList();
+
+        Assert.Empty(malos);
+    }
 }

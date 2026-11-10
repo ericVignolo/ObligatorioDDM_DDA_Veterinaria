@@ -400,7 +400,9 @@ public class AgendaService
     // P-RC-05: con un turno activo cualquier veterinario lee la historia sin dar un motivo.
     public bool TieneTurnoActivo(int animalId)
     {
-        return _turnos.Any(t => t.AnimalId == animalId && Ocupa(t));
+        // Un Confirmado de un día anterior que nunca se cerró no habilita el acceso.
+        return _turnos.Any(t => t.AnimalId == animalId && Ocupa(t)
+            && (t.Estado != "Confirmado" || t.Inicio.Date >= DateTime.Today));
     }
 
     // Para el ejercicio de demostración: ocupa un horario como si otro cliente lo hubiera reservado.
