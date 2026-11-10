@@ -15,7 +15,8 @@ public class ConsultaFormulario
     [StringLength(2000, ErrorMessage = "El examen físico puede tener hasta 2000 caracteres.")]
     public string ExamenFisico { get; set; } = "";
 
-    [Range(typeof(decimal), "30", "45", ErrorMessage = "La temperatura debe estar entre 30 y 45 °C.")]
+    // Los límites se escriben con punto: se leen en cultura invariante, no en es-UY (donde el decimal es coma).
+    [Range(typeof(decimal), "30", "45", ParseLimitsInInvariantCulture = true, ConvertValueInInvariantCulture = true, ErrorMessage = "La temperatura debe estar entre 30 y 45 °C.")]
     public decimal? TemperaturaC { get; set; }
 
     [Range(1, 400, ErrorMessage = "La frecuencia cardíaca debe estar entre 1 y 400 lpm.")]
@@ -24,7 +25,7 @@ public class ConsultaFormulario
     [Range(1, 200, ErrorMessage = "La frecuencia respiratoria debe estar entre 1 y 200 rpm.")]
     public int? FrecuenciaRespiratoria { get; set; }
 
-    [Range(typeof(decimal), "0.01", "2000", ErrorMessage = "El peso debe estar entre 0,01 y 2000 kg.")]
+    [Range(typeof(decimal), "0.01", "2000", ParseLimitsInInvariantCulture = true, ConvertValueInInvariantCulture = true, ErrorMessage = "El peso debe estar entre 0,01 y 2000 kg.")]
     public decimal? PesoKg { get; set; }
 
     [StringLength(500, ErrorMessage = "Las alergias pueden tener hasta 500 caracteres.")]
