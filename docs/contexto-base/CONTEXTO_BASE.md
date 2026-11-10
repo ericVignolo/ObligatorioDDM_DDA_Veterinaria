@@ -38,10 +38,12 @@ El flujo general mencionado en los planes es:
 - **Integración anticipada a `main` (Eric, 2026-11-03):** `desktop` se mezcló a `main` antes de aprobar la sección A, para que GitHub muestre el código real (C#/Blazor) en la rama principal. `main` se seguirá actualizando desde `desktop` en hitos estables; la aprobación formal de la sección A y la creación de `desktop-mobile` no cambian (DT-ORG-02). Se borraron las ramas ya integradas y `feature/escritorio-api`, cuyo contenido está en `desktop`.
 - **DT-ORG-06 — Una rama por sesión (Eric, 2026-11-04):** en lugar de una rama por tarea, cada sesión de trabajo usa una rama `<nombre>/sesion-AAAA-MM-DD` desde la rama de la sección y un solo PR al final. Motivo: menos pasos en GitHub Desktop, manteniendo `desktop` protegida del código sin probar. `main` se actualiza desde `desktop` en cada hito estable.
 - **DT-ORG-07 — Fecha de entrega (Eric, 2026-11-09):** el obligatorio se entrega el **jueves 4 de diciembre de 2026**. Tiempo disponible para el disparador del Plan B: 36 días desde la creación del proyecto Blazor (29/10) o 34 desde la fase de construcción (31/10). El primer recorrido (catálogo → registro → reserva) se cerró el 05/11: 7 días (19 %) o 5 días (15 %). La aplicación de R1 y R2 la decide Diego, responsable del Plan B. Diego se encarga además de crear la base de datos.
+- **DT-ORG-08 — Sección C en paralelo (Diego, 2026-11-10):** con la entrega fijada (DT-ORG-07), la API y la base empiezan ya en `api/`, en paralelo con el resto de la sección A, sin esperar a que se aprueben A y B. El código de la API vive en las ramas de sesión de Diego desde `desktop`; los clientes siguen con datos de demostración hasta conectarse. La secuencia de ramas de DT-ORG-02 para integrar (`desktop-mobile`, `desktop-mobile-api`) no cambia.
+- **DT-API-01 — Un solo proyecto de API (Diego, 2026-11-10):** la API es un único proyecto `api/Veterinaria.Api` con carpetas `Models/`, `Data/` (`AppDbContext`), `Controllers/`, `Services/`, `Repositories/` y `DTOs/`, siguiendo el estilo del profesor. Reemplaza la propuesta de cinco proyectos (Api, Application, Domain, Infrastructure, Contracts). Las capas se mantienen como carpetas: Controller → Service → Repository → `AppDbContext`. Los modelos se copian en el proyecto Blazor (sin un proyecto de contratos compartido).
 - **DT-BD-01 — Decisión técnica (Eric, 2026-10-09):** **MySQL** es el motor de la base de datos. Solo la API se conecta a ella.
 - **DT-BD-02 — Versión, proveedor y concurrencia (Diego, 2026-10-29; cierra P-RC-08):**
-    - MySQL 8.4 LTS con EF Core 9 y el proveedor Pomelo.EntityFrameworkCore.MySql 9, que está probado contra MySQL 8.4 y 8.0.
-    - **En revisión (2026-10-31, decide Diego):** el soporte de EF Core 9 termina el 2026-11-10 y Pomelo no tiene versión para EF Core 10. Alternativas: `MySql.EntityFrameworkCore` (Oracle) o `Microting.EntityFrameworkCore.MySql`. Ver `../analisis/DECISIONES_ERIC_2026-10-31.md`.
+    - MySQL 8.4 LTS con **EF Core 10** y el proveedor de Oracle **`MySql.EntityFrameworkCore` 10.0.7** (`UseMySQL`), el mismo que usa el profesor (**Diego, 2026-11-10**). Reemplaza a Pomelo 9 + EF Core 9, que quedó sin soporte el 2026-11-10. Se descartaron `Microting.EntityFrameworkCore.MySql` (lo mantiene un grupo chico) y seguir con Pomelo (sin soporte).
+    - La base se crea con migraciones (`Add-Migration` / `Update-Database`) y semilla `HasData`, como en el curso. Las fechas sin hora se guardan con columna `DATE` y las horas como `TIME` (`TimeSpan`), para no depender de cómo trate el proveedor a `DateOnly`/`TimeOnly`.
     - MySQL no tiene restricciones de exclusión de intervalos. RN-01, RN-02 y RN-07 se garantizan así: en una transacción breve, la API bloquea con `SELECT … FOR UPDATE` la fila del profesional, la del animal y la de cada recurso del turno, siempre en ese orden y por identificador ascendente para evitar interbloqueos; después verifica que no haya turnos activos con `inicio < finNuevo AND fin > inicioNuevo` e inserta. Índices compuestos `(profesional_id, inicio, fin)`, `(animal_id, inicio, fin)` y `(recurso_id, inicio, fin)` en la tabla de asignaciones. Se descartan los turnos en bloques fijos con índice único porque las duraciones son variables (RN-03).
     - Aislamiento READ COMMITTED. Bloquear la fila «padre» (profesional, animal, recurso) en vez de un rango de turnos evita depender de los gap locks, que READ COMMITTED no usa.
     - Ante interbloqueo (error 1213) o espera de bloqueo agotada (1205), hasta 3 reintentos con espera de 50, 100 y 200 ms; después, error comprensible y horarios actualizados (RNF-CON-02, RNF-CON-06).
@@ -88,20 +90,15 @@ React Native ────┘
       └── diseño en Figma
 ```
 
-Estructura .NET propuesta:
+Estructura .NET (DT-API-01, 2026-11-10):
 
 ```text
-Veterinaria.sln
-├── Veterinaria.Api
-├── Veterinaria.Blazor
-├── Veterinaria.Application
-├── Veterinaria.Domain
-├── Veterinaria.Infrastructure
-├── Veterinaria.Contracts
-└── Veterinaria.Tests
+api/Veterinaria.Api        (DT-API-01: un proyecto, capas como carpetas)
+desktop/Veterinaria.Blazor
+tests/                     (pendiente)
 ```
 
-`Veterinaria.Contracts` concentrará los DTO y contratos REST compartidos conceptualmente por ambos clientes. React Native no dependerá del código C#.
+Los DTO de la API viven en `api/Veterinaria.Api/DTOs/` y se copian en `Models` de Blazor, como en el curso. React Native no dependerá del código C#.
 
 ### Organización física del repositorio y ramas (actualizado 2026-10-09)
 
@@ -109,7 +106,7 @@ Se conserva la arquitectura de una única API y dos clientes. La solución .NET 
 
 ```text
 ObligatorioVeterinaria/
-├── api/          API ASP.NET Core, Application, Domain, Infrastructure y Contracts
+├── api/          API ASP.NET Core (Veterinaria.Api) y base MySQL
 ├── desktop/      interfaz Blazor/C# para computadora
 ├── mobile/       aplicación React Native (cuando se inicie el frente móvil)
 ├── tests/        pruebas de la API, el dominio y la integración
