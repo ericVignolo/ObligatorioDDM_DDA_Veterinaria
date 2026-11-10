@@ -5,6 +5,8 @@
 @inject AnimalService AnimalService
 @inject PrestacionService PrestacionService
 @inject SesionService Sesion
+@inject ConsultaService Consultas
+@inject NavigationManager Navegacion
 
 <PageTitle>Mi agenda — VITALIA</PageTitle>
 
@@ -17,6 +19,23 @@
         <input id="fecha" type="date" class="form-control" value="@fecha.ToString("yyyy-MM-dd")" @onchange="CambiarFecha" />
         <div class="form-text">@fecha.ToString("dddd d 'de' MMMM")</div>
     </div>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert alert-danger" role="alert">@mensaje</div>
+    }
+
+    @if (abiertas.Count > 0)
+    {
+        @* P-RC-04: consultas sin cerrar para resolver antes de terminar el día. *@
+        <div class="alert alert-warning">
+            <strong>Consultas abiertas:</strong>
+            @foreach (var abierta in abiertas)
+            {
+                <a class="ms-2" href="@($"panel/consulta/{abierta.TurnoId}")">@(AnimalService.ObtenerParaPersonal(abierta.AnimalId)?.Nombre) (@abierta.FechaInicio.ToString("dd/MM HH:mm"))</a>
+            }
+        </div>
+    }
 
     @if (enEspera > 0)
     {
@@ -43,14 +62,22 @@
                         <EstadoTurno Estado="@turno.Estado" />
                         @if (turno.Estado == "En espera")
                         {
-                            @* La consulta clínica llega con A-019. *@
-                            <button class="btn btn-success btn-sm ms-2" disabled title="Disponible con la consulta clínica (A-019)">Iniciar atención</button>
+                            <button class="btn btn-success btn-sm ms-2" @onclick="() => IniciarAtencion(turno.Id)">Iniciar atención</button>
                         }
+                        else if (turno.Estado == "En curso")
+                        {
+                            <a class="btn btn-outline-success btn-sm ms-2" href="@($"panel/consulta/{turno.Id}")">Continuar consulta</a>
+                        }
+                        else if (turno.Estado == "Finalizado")
+                        {
+                            <a class="btn btn-outline-secondary btn-sm ms-2" href="@($"panel/consulta/{turno.Id}")">Ver consulta</a>
+                        }
+                        <a class="btn btn-link btn-sm" href="@($"panel/historia/{turno.AnimalId}")">Historia</a>
                     </div>
                 </div>
             }
         </div>
-        <p class="text-muted small">«Iniciar atención» se habilita con la pantalla de consulta (A-019). La historia completa solo se ve en casos asignados (matriz de permisos).</p>
+        <p class="text-muted small">«Iniciar atención» aparece cuando Recepción registra la llegada. La historia de un animal sin turno activo pide un motivo (P-RC-05).</p>
     }
 </RequierePersonal>
 
@@ -58,6 +85,8 @@
     private DateOnly fecha = DateOnly.FromDateTime(DateTime.Today);
     private List<Turno> turnos = new();
     private int enEspera;
+    private List<Consulta> abiertas = new();
+    private string mensaje = "";
 
     protected override void OnInitialized()
     {
@@ -69,6 +98,20 @@
         var profesionalId = Sesion.PersonalActual?.ProfesionalId;
         turnos = profesionalId is null ? new() : Agenda.TurnosDelDia(fecha, profesionalId);
         enEspera = turnos.Count(t => t.Estado == "En espera");
+        abiertas = Sesion.PersonalActual is null ? new() : Consultas.AbiertasDe(Sesion.PersonalActual.Id);
+    }
+
+    private void IniciarAtencion(int turnoId)
+    {
+        var resultado = Consultas.Iniciar(turnoId, Sesion.PersonalActual, out _);
+        if (resultado.Exito)
+        {
+            Navegacion.NavigateTo($"panel/consulta/{turnoId}");
+            return;
+        }
+
+        mensaje = resultado.Mensaje;
+        Cargar();
     }
 
     private void CambiarFecha(ChangeEventArgs e)

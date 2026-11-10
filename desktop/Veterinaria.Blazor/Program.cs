@@ -19,6 +19,7 @@ builder.Services.AddScoped<SesionService>();
 builder.Services.AddScoped<IntencionService>();
 builder.Services.AddScoped<AnimalService>();
 builder.Services.AddScoped<AgendaService>();
+builder.Services.AddScoped<ConsultaService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

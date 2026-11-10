@@ -353,6 +353,56 @@ public class AgendaService
         return new ResultadoOperacion { Exito = true, Mensaje = "Turno reprogramado." };
     }
 
+    // ---------- Consulta clínica (A-019): los llama ConsultaService, no las páginas ----------
+
+    // En espera → En curso, al iniciar la atención.
+    public bool IniciarAtencion(int turnoId)
+    {
+        var turno = ObtenerPorId(turnoId);
+        if (turno is null || turno.Estado != "En espera")
+        {
+            return false;
+        }
+
+        turno.Estado = "En curso";
+        return true;
+    }
+
+    // En curso → Finalizado, al firmar la consulta (RN-11).
+    public bool Finalizar(int turnoId)
+    {
+        var turno = ObtenerPorId(turnoId);
+        if (turno is null || turno.Estado != "En curso")
+        {
+            return false;
+        }
+
+        turno.Estado = "Finalizado";
+        return true;
+    }
+
+    // En curso → Cancelado, solo si no hubo atención ni consumos (P-RC-04).
+    public bool CancelarSinAtencion(int turnoId, string motivo)
+    {
+        var turno = ObtenerPorId(turnoId);
+        if (turno is null || turno.Estado != "En curso" || string.IsNullOrWhiteSpace(motivo))
+        {
+            return false;
+        }
+
+        turno.Estado = "Cancelado";
+        turno.MotivoCancelacion = motivo.Trim();
+        turno.FechaCancelacion = DateTime.Now;
+        turno.CanceladoPor = "Veterinario";
+        return true;
+    }
+
+    // P-RC-05: con un turno activo cualquier veterinario lee la historia sin dar un motivo.
+    public bool TieneTurnoActivo(int animalId)
+    {
+        return _turnos.Any(t => t.AnimalId == animalId && Ocupa(t));
+    }
+
     // Para el ejercicio de demostración: ocupa un horario como si otro cliente lo hubiera reservado.
     public void OcuparComoOtroCliente(int profesionalId, int prestacionId, DateTime inicio)
     {

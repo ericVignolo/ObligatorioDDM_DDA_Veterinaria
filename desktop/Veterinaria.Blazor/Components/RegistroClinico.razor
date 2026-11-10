@@ -1,0 +1,99 @@
+@using Veterinaria.Blazor.Models
+
+@* Una consulta firmada de la historia clínica, con su firma y sus enmiendas (A-020).
+   Se usa en la historia del personal y en la del cliente; siempre es de solo lectura (RN-12). *@
+<article class="card mb-3">
+    <div class="card-header d-flex flex-wrap justify-content-between gap-2">
+        <span><strong>@Consulta.FechaFirma?.ToString("dd/MM/yyyy")</strong> · @Consulta.Motivo</span>
+        <span class="badge bg-dark align-self-center">Firmada</span>
+    </div>
+    <div class="card-body">
+        @if (!string.IsNullOrWhiteSpace(Consulta.Alergias))
+        {
+            <div class="alert alert-warning py-2" role="note"><strong>Alergias:</strong> @Consulta.Alergias</div>
+        }
+
+        <dl class="row mb-0">
+            @if (!string.IsNullOrWhiteSpace(Consulta.Anamnesis))
+            {
+                <dt class="col-sm-3">Anamnesis</dt>
+                <dd class="col-sm-9">@Consulta.Anamnesis</dd>
+            }
+            @if (!string.IsNullOrWhiteSpace(Consulta.ExamenFisico))
+            {
+                <dt class="col-sm-3">Examen físico</dt>
+                <dd class="col-sm-9">@Consulta.ExamenFisico</dd>
+            }
+            @if (SignosVitales != "")
+            {
+                <dt class="col-sm-3">Signos vitales</dt>
+                <dd class="col-sm-9">@SignosVitales</dd>
+            }
+            <dt class="col-sm-3">Diagnóstico</dt>
+            <dd class="col-sm-9">@Consulta.Diagnostico <span class="text-muted">(@Consulta.TipoDiagnostico.ToLower())</span></dd>
+            @if (!string.IsNullOrWhiteSpace(Consulta.Tratamiento))
+            {
+                <dt class="col-sm-3">Tratamiento</dt>
+                <dd class="col-sm-9">@Consulta.Tratamiento</dd>
+            }
+            @if (!string.IsNullOrWhiteSpace(Consulta.Indicaciones))
+            {
+                <dt class="col-sm-3">Indicaciones</dt>
+                <dd class="col-sm-9">@Consulta.Indicaciones</dd>
+            }
+        </dl>
+
+        @foreach (var enmienda in Consulta.Enmiendas.OrderBy(e => e.Fecha))
+        {
+            <div class="border-start border-3 border-warning ps-3 mt-3">
+                <div class="small text-muted">Enmienda del @enmienda.Fecha.ToString("dd/MM/yyyy HH:mm") · @enmienda.AutorNombre · motivo: @enmienda.Motivo</div>
+                <p class="mb-0">@enmienda.Texto</p>
+                @if (MostrarHuella)
+                {
+                    <div class="small text-muted">Huella: @Corta(enmienda.HashContenido)</div>
+                }
+            </div>
+        }
+    </div>
+    <div class="card-footer small text-muted d-flex flex-wrap justify-content-between gap-2">
+        <span>
+            Firmado por @Consulta.AutorNombre el @Consulta.FechaFirma?.ToString("dd/MM/yyyy 'a las' HH:mm")
+            @if (MostrarHuella)
+            {
+                <span> · huella @Corta(Consulta.HashContenido)</span>
+            }
+        </span>
+        @Acciones
+    </div>
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public Consulta Consulta { get; set; } = new();
+
+    // La huella del contenido firmado solo se muestra al personal.
+    [Parameter]
+    public bool MostrarHuella { get; set; }
+
+    // Botones opcionales (por ejemplo «Agregar enmienda»).
+    [Parameter]
+    public RenderFragment? Acciones { get; set; }
+
+    private string SignosVitales
+    {
+        get
+        {
+            var partes = new List<string>();
+            if (Consulta.PesoKg is not null) partes.Add($"peso {Consulta.PesoKg:0.##} kg");
+            if (Consulta.TemperaturaC is not null) partes.Add($"temperatura {Consulta.TemperaturaC:0.#} °C");
+            if (Consulta.FrecuenciaCardiaca is not null) partes.Add($"FC {Consulta.FrecuenciaCardiaca} lpm");
+            if (Consulta.FrecuenciaRespiratoria is not null) partes.Add($"FR {Consulta.FrecuenciaRespiratoria} rpm");
+            return string.Join(" · ", partes);
+        }
+    }
+
+    private static string Corta(string huella)
+    {
+        return huella.Length > 12 ? huella[..12] + "…" : huella;
+    }
+}

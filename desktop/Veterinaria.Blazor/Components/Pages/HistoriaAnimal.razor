@@ -1,0 +1,48 @@
+@page "/animales/{Id:int}/historia"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AnimalService AnimalService
+@inject ConsultaService Consultas
+@inject SesionService Sesion
+
+@* Historia clínica para el cliente: solo lectura, solo consultas firmadas de sus animales (RF-CLI-05, RN-18). *@
+<RequiereSesion>
+    @if (animal is null)
+    {
+        <PageTitle>Animal no disponible — VITALIA</PageTitle>
+        <h1>Animal no disponible</h1>
+        <p>No encontramos ese animal entre los tuyos.</p>
+    }
+    else
+    {
+        <PageTitle>Historia clínica de @animal.Nombre — VITALIA</PageTitle>
+        <h1>Historia clínica de @animal.Nombre</h1>
+        <p class="text-muted">Consultas firmadas por la clínica, de la más reciente a la más antigua. Las enmiendas se muestran debajo del registro original.</p>
+
+        @if (historia.Count == 0)
+        {
+            <p>Todavía no hay consultas registradas para @animal.Nombre.</p>
+        }
+
+        @foreach (var consulta in historia)
+        {
+            <RegistroClinico Consulta="consulta" />
+        }
+
+        <a href="@($"animales/{animal.Id}")">← Volver a la ficha de @animal.Nombre</a>
+    }
+</RequiereSesion>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Animal? animal;
+    private List<Consulta> historia = new();
+
+    protected override void OnParametersSet()
+    {
+        animal = Sesion.CuentaActual is null ? null : AnimalService.ObtenerPorId(Id, Sesion.CuentaActual.Id);
+        historia = animal is null ? new() : Consultas.HistoriaDe(animal.Id);
+    }
+}

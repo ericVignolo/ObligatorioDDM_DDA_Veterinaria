@@ -1,0 +1,164 @@
+@page "/panel/historia/{AnimalId:int}"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AnimalService AnimalService
+@inject CuentaService CuentaService
+@inject ConsultaService Consultas
+@inject SesionService Sesion
+
+<PageTitle>Historia clínica — VITALIA</PageTitle>
+
+@* Historia clínica completa para veterinarios (A-020, P-RC-05). Recepción y Administración no la ven. *@
+<RequierePersonal Roles="@(new[] { PersonalService.Veterinario })">
+    @if (animal is null)
+    {
+        <h1>Animal no encontrado</h1>
+    }
+    else
+    {
+        <h1>Historia clínica de @animal.Nombre</h1>
+        <p class="text-muted">@animal.Especie · responsable: @NombreResponsable</p>
+
+        @if (!acceso)
+        {
+            @* Sin turno activo hace falta un motivo, que queda auditado (P-RC-05, RN-40). *@
+            <div class="alert alert-info">Este animal no tiene un turno activo con la clínica. Para leer su historia indicá el motivo del acceso; queda registrado.</div>
+            <div style="max-width: 30rem;">
+                <label class="form-label" for="motivoAcceso">Motivo del acceso</label>
+                <input id="motivoAcceso" class="form-control mb-2" @bind="motivoAcceso" />
+                @if (!string.IsNullOrEmpty(mensaje))
+                {
+                    <div class="text-danger small mb-2">@mensaje</div>
+                }
+                <button class="btn btn-primary" @onclick="Acceder">Ver historia</button>
+            </div>
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert @(exito ? "alert-success" : "alert-danger")" role="status">@mensaje</div>
+            }
+
+            @if (historia.Count == 0)
+            {
+                <p>Todavía no hay consultas firmadas.</p>
+            }
+
+            @foreach (var consulta in historia)
+            {
+                <RegistroClinico Consulta="consulta" MostrarHuella="true">
+                    <Acciones>
+                        @if (consulta.AutorId == Sesion.PersonalActual!.Id && enmendando != consulta.Id)
+                        {
+                            <button class="btn btn-outline-secondary btn-sm" @onclick="() => AbrirEnmienda(consulta.Id)">Agregar enmienda</button>
+                        }
+                    </Acciones>
+                </RegistroClinico>
+
+                @if (enmendando == consulta.Id)
+                {
+                    <div class="border rounded p-3 mb-3 bg-light">
+                        <h2 class="h6">Enmienda a la consulta del @consulta.FechaFirma?.ToString("dd/MM/yyyy")</h2>
+                        <p class="small">El registro original no cambia: la enmienda se agrega con tu firma, la fecha y el motivo (RN-12).</p>
+                        <EditForm Model="enmienda" OnValidSubmit="Enmendar" FormName="enmienda">
+                            <DataAnnotationsValidator />
+                            <div class="mb-2">
+                                <label class="form-label" for="motivoEnmienda">Motivo</label>
+                                <InputText id="motivoEnmienda" class="form-control" @bind-Value="enmienda.Motivo" />
+                                <ValidationMessage For="() => enmienda.Motivo" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" for="textoEnmienda">Corrección o agregado</label>
+                                <InputTextArea id="textoEnmienda" class="form-control" rows="3" @bind-Value="enmienda.Texto" />
+                                <ValidationMessage For="() => enmienda.Texto" />
+                            </div>
+                            <div class="mb-2" style="max-width: 20rem;">
+                                <label class="form-label" for="contrasenaEnmienda">Contraseña</label>
+                                <InputText id="contrasenaEnmienda" type="password" class="form-control" @bind-Value="enmienda.Contrasena" autocomplete="current-password" />
+                                <ValidationMessage For="() => enmienda.Contrasena" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Firmar enmienda</button>
+                            <button type="button" class="btn btn-link" @onclick="() => enmendando = 0">Cancelar</button>
+                        </EditForm>
+                    </div>
+                }
+            }
+
+            <p class="small text-muted">Tu lectura quedó registrada (RN-40). Lecturas registradas de esta historia: @Consultas.LecturasDe(animal.Id).Count.</p>
+        }
+    }
+
+    <a href="panel/mi-agenda">← Volver a mi agenda</a>
+</RequierePersonal>
+
+@code {
+    [Parameter]
+    public int AnimalId { get; set; }
+
+    private Animal? animal;
+    private List<Consulta> historia = new();
+    private bool acceso;
+    private string motivoAcceso = "";
+    private int enmendando;
+    private EnmiendaFormulario enmienda = new();
+    private string mensaje = "";
+    private bool exito;
+    private int animalCargado;
+
+    protected override void OnParametersSet()
+    {
+        if (animalCargado == AnimalId)
+        {
+            return;
+        }
+
+        animalCargado = AnimalId;
+        animal = AnimalService.ObtenerParaPersonal(AnimalId);
+        acceso = false;
+        mensaje = "";
+
+        // Con un turno activo se entra directo; igual queda registrada la lectura.
+        if (animal is not null && !Consultas.NecesitaMotivo(animal.Id))
+        {
+            acceso = Consultas.RegistrarLectura(Sesion.PersonalActual, animal.Id, "").Exito;
+            historia = Consultas.HistoriaDe(animal.Id);
+        }
+    }
+
+    private string NombreResponsable
+    {
+        get
+        {
+            var cuenta = animal is null ? null : CuentaService.ObtenerPorId(animal.ResponsableId);
+            return cuenta is null ? "sin dato" : $"{cuenta.Nombre} {cuenta.Apellido}";
+        }
+    }
+
+    private void Acceder()
+    {
+        var resultado = Consultas.RegistrarLectura(Sesion.PersonalActual, animal!.Id, motivoAcceso);
+        acceso = resultado.Exito;
+        mensaje = resultado.Exito ? "" : resultado.Mensaje;
+        historia = acceso ? Consultas.HistoriaDe(animal.Id) : new();
+    }
+
+    private void AbrirEnmienda(int consultaId)
+    {
+        enmendando = consultaId;
+        enmienda = new();
+        mensaje = "";
+    }
+
+    private void Enmendar()
+    {
+        var resultado = Consultas.Enmendar(enmendando, enmienda, Sesion.PersonalActual);
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        enmienda.Contrasena = "";
+        if (resultado.Exito)
+        {
+            enmendando = 0;
+        }
+    }
+}

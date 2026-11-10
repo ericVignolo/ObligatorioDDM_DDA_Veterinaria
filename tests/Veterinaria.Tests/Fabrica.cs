@@ -14,12 +14,14 @@ public class Fabrica
     public CuentaService Cuentas { get; }
     public SesionService Sesion { get; }
     public AgendaService Agenda { get; }
+    public ConsultaService Consultas { get; }
 
     public Fabrica()
     {
         Cuentas = new CuentaService(Legales);
         Sesion = new SesionService(Cuentas, Personal);
         Agenda = new AgendaService(Profesionales, Prestaciones, Animales);
+        Consultas = new ConsultaService(Agenda, Personal, Profesionales);
     }
 
     public static RegistroCliente RegistroValido(string correo = "cliente@prueba.uy", string cedula = "1.234.567-2")
@@ -73,6 +75,26 @@ public class Fabrica
         }
 
         return dia;
+    }
+
+    public Personal PersonalDe(string correo)
+    {
+        return Personal.ValidarCredenciales(correo, PersonalService.ContrasenaDemo)!;
+    }
+
+    // Turno de hoy de la Dra. Ferreira para Toby, con la llegada ya registrada (En espera).
+    public Turno TurnoEnEspera()
+    {
+        var inicio = DateTime.Today.AddHours(7);
+        Agenda.OcuparComoOtroCliente(1, 1, inicio);
+        var turno = Agenda.TurnosDelDia(DateOnly.FromDateTime(inicio), 1).Last(t => t.Inicio == inicio);
+        Agenda.RegistrarLlegada(turno.Id);
+        return turno;
+    }
+
+    public static ConsultaFormulario ConsultaCompleta()
+    {
+        return new ConsultaFormulario { Motivo = "Vómitos", Diagnostico = "Gastritis", TipoDiagnostico = "Presuntivo", PesoKg = 18.2m };
     }
 
     public static DateTime A(DateOnly dia, int hora, int minuto = 0)
