@@ -30,6 +30,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Turno]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AgendaRecepcion]]
 - [[AgendaVeterinario]]
 - [[AtencionConsulta]]
 - [[HistoriaAnimal]]

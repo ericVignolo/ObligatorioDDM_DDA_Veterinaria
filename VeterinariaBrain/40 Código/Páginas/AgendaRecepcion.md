@@ -10,7 +10,7 @@ generado: true
 
 **Ruta:** `/panel/agenda`
 
-Filtros (A-017)
+P-RC-04: consultas que siguen abiertas; Recepción las ve sin el texto clínico.
 
 **Tareas:** A-017
 
@@ -21,6 +21,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Animal]]
 - [[AnimalService]]
 - [[Ausencia]]
+- [[ConsultaService]]
 - [[CuentaService]]
 - [[EstadoTurno]]
 - [[PrestacionService]]
