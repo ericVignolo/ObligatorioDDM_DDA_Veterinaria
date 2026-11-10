@@ -165,6 +165,9 @@ flowchart LR
 | `/panel` | `Pages/PanelInicio.razor` | A-010 | SesionService · `RequierePersonal`, `Atajo` |
 | `/panel/agenda` | `Pages/AgendaRecepcion.razor` | A-017 | AgendaService, AnimalService, CuentaService, PrestacionService, ProfesionalService · `EstadoTurno` |
 | `/panel/mi-agenda` | `Pages/AgendaVeterinario.razor` | A-017 | AgendaService, AnimalService, PrestacionService, SesionService · `EstadoTurno` |
+| `/panel/consulta/{TurnoId}` | `Pages/AtencionConsulta.razor` | A-019 | AgendaService, AnimalService, CuentaService, ConsultaService, PrestacionService, SesionService · `RegistroClinico`, `EstadoTurno` |
+| `/panel/historia/{AnimalId}` | `Pages/HistoriaClinica.razor` | A-020 | AnimalService, CuentaService, ConsultaService, SesionService · `RegistroClinico` |
+| `/animales/{Id}/historia` | `Pages/HistoriaAnimal.razor` | A-020 | AnimalService, ConsultaService, SesionService · `RegistroClinico`, `RequiereSesion` |
 | `/turnos` | `Pages/Turnos.razor` | A-015, A-016 | AgendaService, AnimalService, PrestacionService, ProfesionalService, ClinicaService, SesionService |
 
 ## Servicios
@@ -180,6 +183,7 @@ flowchart LR
 | `SesionService` | Quién ingresó (Cliente o personal con rol); ingresar y salir | CuentaService, PersonalService | Autenticación con tokens (RNF-SEG-03) |
 | `AnimalService` | Animales del cliente (solo los suyos, RN-18), microchip único (RN-41), ejemplos de caballo y oveja | — | `AnimalApiService` → `/api/v1/animales` |
 | `AgendaService` | Horarios libres cada 15 min bloqueando toda la duración; 2 h de anticipación, 60 días, feriados y ausencias; reserva con revalidación; cancelar y reprogramar con 24 h (A-016) | ProfesionalService, PrestacionService, AnimalService | API de turnos con `SELECT … FOR UPDATE` (DT-BD-02) |
+| `ConsultaService` | Iniciar la consulta (una por turno), guardar borrador con versión, firmar con contraseña y matrícula vigente, cancelar sin atención, enmiendas, historia y lecturas auditadas (A-019, A-020) | AgendaService, PersonalService, ProfesionalService | API de consultas con transacción de cierre, stock y cargos (CU-VET-01) |
 | `IntencionService` | Servicio elegido antes de ingresar; se retoma hasta 30 min | SesionService | Igual, en el cliente |
 
 > Todos los servicios son `AddScoped`: en Blazor Server duran lo que dura la pestaña. Cuentas y sesión se pierden al recargar; es lo esperado hasta tener la API.

@@ -10,15 +10,15 @@ generado: true
 
 **Ruta:** `/panel/mi-agenda`
 
-La consulta clínica llega con A-019.
-
-**Tareas:** A-019
+P-RC-04: consultas sin cerrar para resolver antes de terminar el día.
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
 - [[AgendaService]]
 - [[AnimalService]]
+- [[Consulta]]
+- [[ConsultaService]]
 - [[EstadoTurno]]
 - [[PrestacionService]]
 - [[RequierePersonal]]

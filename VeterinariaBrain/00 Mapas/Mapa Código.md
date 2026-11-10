@@ -7,7 +7,7 @@ generado: true
 
 Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y quién la usa.
 
-## Páginas (25)
+## Páginas (28)
 - [[Acceso]] · `/acceso`
 - [[AgendaRecepcion]] · `/panel/agenda`
 - [[AgendaVeterinario]] · `/panel/mi-agenda`
@@ -15,7 +15,10 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[AnimalEditar]] · `/animales/{Id:int}/editar`
 - [[AnimalNuevo]] · `/animales/nuevo`
 - [[Animales]] · `/animales`
+- [[AtencionConsulta]] · `/panel/consulta/{TurnoId:int}`
 - [[Cookies]] · `/cookies`
+- [[HistoriaAnimal]] · `/animales/{Id:int}/historia`
+- [[HistoriaClinica]] · `/panel/historia/{AnimalId:int}`
 - [[Home]] · `/`
 - [[Ingresar]] · `/ingresar`
 - [[LaClinica]] · `/clinica`
@@ -34,7 +37,7 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-## Componentes (14)
+## Componentes (15)
 - [[AnimalCard]]
 - [[AnimalForm]]
 - [[Atajo]]
@@ -47,13 +50,15 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[PieLegal]]
 - [[PrestacionCard]]
 - [[ProfesionalCard]]
+- [[RegistroClinico]]
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-## Servicios (10)
+## Servicios (11)
 - [[AgendaService]]
 - [[AnimalService]]
 - [[ClinicaService]]
+- [[ConsultaService]]
 - [[CuentaService]]
 - [[DocumentoLegalService]]
 - [[IntencionService]]
@@ -62,16 +67,22 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[ProfesionalService]]
 - [[SesionService]]
 
-## Modelos (19)
+## Modelos (25)
 - [[Animal]]
 - [[AnimalFormulario]]
 - [[Ausencia]]
 - [[Clinica]]
 - [[CodigoVerificacion]]
+- [[Consulta]]
+- [[ConsultaFormulario]]
 - [[Cuenta]]
 - [[DocumentoLegal]]
+- [[Enmienda]]
+- [[EnmiendaFormulario]]
+- [[FirmaConsulta]]
 - [[FranjaHoraria]]
 - [[InicioSesion]]
+- [[LecturaHistoria]]
 - [[NivelUrgencia]]
 - [[NuevaContrasena]]
 - [[Personal]]

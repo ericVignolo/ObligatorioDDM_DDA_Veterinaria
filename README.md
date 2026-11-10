@@ -38,7 +38,8 @@ Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ning
 | A-016 | Cancelar y reprogramar turnos (24 h), historial de turnos | ✅ |
 | A-010, A-017, A-018 | Panel del personal por rol, agenda de Recepción y del Veterinario, estados unificados | 🧪 En prueba |
 | A-009 | Perfil del Cliente («Mi cuenta») | Pendiente |
-| A-019 en adelante | Consulta clínica, historia y demás módulos | Pendiente |
+| A-019, A-020 | Consulta veterinaria (borrador, firma con contraseña), enmiendas e historia clínica para veterinario y cliente | 🧪 En prueba |
+| A-021 en adelante | Vacunación, inventario y demás módulos | Pendiente |
 
 El mapa de páginas, servicios y modelos (con diagrama) está en [`desktop/README.md`](desktop/README.md).
 

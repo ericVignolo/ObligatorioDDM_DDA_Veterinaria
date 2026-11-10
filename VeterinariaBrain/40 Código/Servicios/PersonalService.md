@@ -20,4 +20,5 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Personal]]
 
 ## Usado por (si cambia, revisar estos)
+- [[ConsultaService]]
 - [[SesionService]]

@@ -12,6 +12,8 @@ generado: true
 
 RN-18: no se distingue entre «no existe» y «no es tuyo».
 
+**Tareas:** A-021
+
 **Requisitos y decisiones:** RN-18
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]

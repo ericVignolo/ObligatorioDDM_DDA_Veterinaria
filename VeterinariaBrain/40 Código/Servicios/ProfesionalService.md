@@ -24,6 +24,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usado por (si cambia, revisar estos)
 - [[AgendaRecepcion]]
 - [[AgendaService]]
+- [[ConsultaService]]
 - [[ProfesionalDetalle]]
 - [[Profesionales]]
 - [[Reservar]]

@@ -44,7 +44,7 @@ Antes de planificar, diseñar o implementar, leer:
 - **CI:** GitHub Actions («Compilar y probar», `.github/workflows/ci.yml`) compila y corre `tests/Veterinaria.Tests` en cada PR y en cada push a `desktop`/`main`. Claude lee el resultado con `gh api` y corrige lo que falle **antes** de pedir la prueba con F5.
 - Un PR con el CI en rojo no se mezcla.
 - Cada regla nueva o cambiada del backend agrega o ajusta su prueba xUnit en el mismo PR (`tests/README.md`).
-- **Agente revisor:** antes de abrir o dar por listo un PR, Claude lanza un agente revisor independiente que compara el cambio con `MATRIZ_REQUISITOS.md`, las decisiones y las convenciones del docente, y busca errores típicos de Razor. Sus hallazgos se corrigen o se informan en el PR.
+- **Agente revisor:** cuando quien trabaja en la sesión lo pide (por ejemplo «revisá el PR»), Claude lanza un agente revisor independiente que compara el cambio con `MATRIZ_REQUISITOS.md`, las decisiones y las convenciones del docente, y busca errores típicos de Razor. Sus hallazgos se corrigen o se informan en el PR.
 - El CI y el revisor no reemplazan la prueba con F5 de quien trabajó.
 
 ## Convenciones de código (estilo del docente)

@@ -12,7 +12,7 @@ Profesional visible en el área pública (RF-VIS-02, HU-VIS-02) y su agenda de d
 
 **Tareas:** A-014
 
-**Requisitos y decisiones:** HU-VIS-02, RF-VIS-02
+**Requisitos y decisiones:** HU-VIS-02, RF-VIS-02, RN-13
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
