@@ -13,8 +13,8 @@ public class ConsultaTests
         var f = new Fabrica();
         var vet = f.PersonalDe(Ferreira);
         var turno = f.TurnoEnEspera();
-        f.Consultas.Iniciar(turno.Id, vet, out var consulta);
-        return (f, vet, turno, consulta!);
+        f.Consultas.Iniciar(turno.Id, vet);
+        return (f, vet, turno, f.Consultas.ObtenerPorTurno(turno.Id)!);
     }
 
     [Fact]
@@ -32,10 +32,10 @@ public class ConsultaTests
     {
         var (f, vet, turno, consulta) = ConsultaIniciada();
 
-        var segundo = f.Consultas.Iniciar(turno.Id, vet, out var otra);
+        var segundo = f.Consultas.Iniciar(turno.Id, vet);
 
         Assert.True(segundo.Exito);
-        Assert.Same(consulta, otra);
+        Assert.Same(consulta, f.Consultas.ObtenerPorTurno(turno.Id));
     }
 
     [Fact]
@@ -44,10 +44,10 @@ public class ConsultaTests
         var f = new Fabrica();
         var turno = f.TurnoEnEspera();
 
-        var resultado = f.Consultas.Iniciar(turno.Id, f.PersonalDe("silveira@vitalia.uy"), out var consulta);
+        var resultado = f.Consultas.Iniciar(turno.Id, f.PersonalDe("silveira@vitalia.uy"));
 
         Assert.False(resultado.Exito);
-        Assert.Null(consulta);
+        Assert.Null(f.Consultas.ObtenerPorTurno(turno.Id));
         Assert.Equal("En espera", turno.Estado);
     }
 
@@ -59,7 +59,7 @@ public class ConsultaTests
         f.Agenda.OcuparComoOtroCliente(1, 1, inicio);
         var turno = f.Agenda.TurnosDelDia(DateOnly.FromDateTime(inicio), 1).Last(t => t.Inicio == inicio);
 
-        var resultado = f.Consultas.Iniciar(turno.Id, f.PersonalDe(Ferreira), out _);
+        var resultado = f.Consultas.Iniciar(turno.Id, f.PersonalDe(Ferreira));
 
         Assert.False(resultado.Exito);
         Assert.Equal("Confirmado", turno.Estado);

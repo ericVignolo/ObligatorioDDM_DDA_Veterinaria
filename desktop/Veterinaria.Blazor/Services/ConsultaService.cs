@@ -112,10 +112,10 @@ public class ConsultaService
         return profesional?.MatriculaVigenteHasta is DateOnly hasta && hasta >= DateOnly.FromDateTime(DateTime.Today);
     }
 
-    // CU-VET-01, paso 3: crea la única consulta del turno o devuelve la que ya existe (A-RC-01).
-    public ResultadoOperacion Iniciar(int turnoId, Personal? veterinario, out Consulta? consulta)
+    // CU-VET-01, paso 3: crea la única consulta del turno o retoma la que ya existe (A-RC-01).
+    // La consulta se obtiene después con ObtenerPorTurno.
+    public ResultadoOperacion Iniciar(int turnoId, Personal? veterinario)
     {
-        consulta = null;
         var turno = _agenda.ObtenerPorId(turnoId);
 
         if (turno is null || !EsDelTurno(veterinario, turno))
@@ -123,10 +123,8 @@ public class ConsultaService
             return new ResultadoOperacion { Exito = false, Mensaje = "Este turno no está asignado a vos." };
         }
 
-        var existente = ObtenerPorTurno(turnoId);
-        if (existente is not null)
+        if (ObtenerPorTurno(turnoId) is not null)
         {
-            consulta = existente;
             return new ResultadoOperacion { Exito = true, Mensaje = "Retomaste la consulta de este turno." };
         }
 
@@ -136,7 +134,7 @@ public class ConsultaService
         }
 
         _agenda.IniciarAtencion(turnoId);
-        consulta = new Consulta
+        var consulta = new Consulta
         {
             Id = ++_ultimoId,
             TurnoId = turnoId,

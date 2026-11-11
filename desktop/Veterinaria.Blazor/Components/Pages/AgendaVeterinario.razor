@@ -103,7 +103,7 @@
 
     private void IniciarAtencion(int turnoId)
     {
-        var resultado = Consultas.Iniciar(turnoId, Sesion.PersonalActual, out _);
+        var resultado = Consultas.Iniciar(turnoId, Sesion.PersonalActual);
         if (resultado.Exito)
         {
             Navegacion.NavigateTo($"panel/consulta/{turnoId}");

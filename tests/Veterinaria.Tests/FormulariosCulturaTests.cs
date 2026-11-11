@@ -17,6 +17,30 @@ public class FormulariosCulturaTests
         yield return new object[] { new AnimalFormulario() };
         yield return new object[] { Fabrica.RegistroValido() };
         yield return new object[] { new InicioSesion() };
+        yield return new object[] { new MotivoFormulario() };
+        yield return new object[] { new MotivoOpcionalFormulario() };
+    }
+
+    private static bool EsValido(object formulario)
+    {
+        return Validator.TryValidateObject(formulario, new ValidationContext(formulario), new List<ValidationResult>(), validateAllProperties: true);
+    }
+
+    [Theory]
+    [InlineData("", false)]
+    [InlineData("   ", false)]
+    [InlineData("El paciente se retiró", true)]
+    public void El_motivo_obligatorio_no_acepta_vacio(string motivo, bool valido)
+    {
+        Assert.Equal(valido, EsValido(new MotivoFormulario { Motivo = motivo }));
+    }
+
+    [Fact]
+    public void El_motivo_opcional_acepta_vacio_y_limita_a_200()
+    {
+        Assert.True(EsValido(new MotivoOpcionalFormulario()));
+        Assert.False(EsValido(new MotivoOpcionalFormulario { Motivo = new string('a', 201) }));
+        Assert.False(EsValido(new MotivoFormulario { Motivo = new string('a', 201) }));
     }
 
     [Theory]

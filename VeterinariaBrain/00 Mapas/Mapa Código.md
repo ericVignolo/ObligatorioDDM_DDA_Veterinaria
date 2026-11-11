@@ -67,7 +67,7 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[ProfesionalService]]
 - [[SesionService]]
 
-## Modelos (25)
+## Modelos (27)
 - [[Animal]]
 - [[AnimalFormulario]]
 - [[Ausencia]]
@@ -83,6 +83,8 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[FranjaHoraria]]
 - [[InicioSesion]]
 - [[LecturaHistoria]]
+- [[MotivoFormulario]]
+- [[MotivoOpcionalFormulario]]
 - [[NivelUrgencia]]
 - [[NuevaContrasena]]
 - [[Personal]]

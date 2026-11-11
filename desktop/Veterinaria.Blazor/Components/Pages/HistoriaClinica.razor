@@ -23,15 +23,17 @@
         {
             @* Sin turno activo hace falta un motivo, que queda auditado (P-RC-05, RN-40). *@
             <div class="alert alert-info">Este animal no tiene un turno activo con la clínica. Para leer su historia indicá el motivo del acceso; queda registrado.</div>
-            <div style="max-width: 30rem;">
+            <EditForm Model="motivoAcceso" OnValidSubmit="Acceder" FormName="motivo-acceso" style="max-width: 30rem;">
+                <DataAnnotationsValidator />
                 <label class="form-label" for="motivoAcceso">Motivo del acceso</label>
-                <input id="motivoAcceso" class="form-control mb-2" @bind="motivoAcceso" />
+                <InputText id="motivoAcceso" class="form-control" maxlength="200" @bind-Value="motivoAcceso.Motivo" />
+                <ValidationMessage For="() => motivoAcceso.Motivo" />
                 @if (!string.IsNullOrEmpty(mensaje))
                 {
-                    <div class="text-danger small mb-2">@mensaje</div>
+                    <div class="text-danger small mt-2">@mensaje</div>
                 }
-                <button class="btn btn-primary" @onclick="Acceder">Ver historia</button>
-            </div>
+                <button type="submit" class="btn btn-primary mt-2">Ver historia</button>
+            </EditForm>
         }
         else
         {
@@ -99,7 +101,7 @@
     private Animal? animal;
     private List<Consulta> historia = new();
     private bool acceso;
-    private string motivoAcceso = "";
+    private MotivoFormulario motivoAcceso = new();
     private int enmendando;
     private EnmiendaFormulario enmienda = new();
     private string mensaje = "";
@@ -137,7 +139,7 @@
 
     private void Acceder()
     {
-        var resultado = Consultas.RegistrarLectura(Sesion.PersonalActual, animal!.Id, motivoAcceso);
+        var resultado = Consultas.RegistrarLectura(Sesion.PersonalActual, animal!.Id, motivoAcceso.Motivo);
         acceso = resultado.Exito;
         mensaje = resultado.Exito ? "" : resultado.Mensaje;
         historia = acceso ? Consultas.HistoriaDe(animal.Id) : new();

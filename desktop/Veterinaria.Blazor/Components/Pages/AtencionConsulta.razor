@@ -182,9 +182,13 @@
                         <summary class="small">El paciente se retiró sin ser atendido</summary>
                         <div class="mt-2" style="max-width: 30rem;">
                             <p class="small">Solo si no hubo atención ni se usaron insumos (P-RC-04). El borrador se conserva como evidencia.</p>
-                            <label class="form-label small" for="motivoCancelacion">Motivo</label>
-                            <input id="motivoCancelacion" class="form-control mb-2" @bind="motivoCancelacion" />
-                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="CancelarSinAtencion">Cancelar turno sin atención</button>
+                            <EditForm Model="cancelacion" OnValidSubmit="CancelarSinAtencion" FormName="cancelacion-consulta">
+                                <DataAnnotationsValidator />
+                                <label class="form-label small" for="motivoCancelacion">Motivo</label>
+                                <InputText id="motivoCancelacion" class="form-control" maxlength="200" @bind-Value="cancelacion.Motivo" />
+                                <ValidationMessage For="() => cancelacion.Motivo" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm mt-2">Cancelar turno sin atención</button>
+                            </EditForm>
                         </div>
                     </details>
                 }
@@ -211,7 +215,7 @@
     private int turnoCargado;
     private FirmaConsulta firma = new();
     private bool mostrarFirma;
-    private string motivoCancelacion = "";
+    private MotivoFormulario cancelacion = new();
     private string mensaje = "";
     private bool exito;
 
@@ -299,7 +303,7 @@
 
     private void CancelarSinAtencion()
     {
-        Mostrar(Consultas.CancelarSinAtencion(consulta!.Id, motivoCancelacion, Sesion.PersonalActual));
+        Mostrar(Consultas.CancelarSinAtencion(consulta!.Id, cancelacion.Motivo,Sesion.PersonalActual));
     }
 
     private void Mostrar(ResultadoOperacion resultado)
