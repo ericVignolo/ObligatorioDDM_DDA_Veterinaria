@@ -5,9 +5,11 @@ generado: true
 ---
 # Mapa Código
 
-Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y quién la usa.
+Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, quién la usa y, si existe, su equivalente en las otras aplicaciones.
 
-## Páginas (22)
+## Desktop — [[Carpeta desktop]]
+
+### Páginas (22)
 - [[Acceso]] · `/acceso`
 - [[AnimalDetalle]] · `/animales/{Id:int}`
 - [[AnimalEditar]] · `/animales/{Id:int}/editar`
@@ -31,7 +33,7 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-## Componentes (11)
+### Componentes (11)
 - [[AnimalCard]]
 - [[AnimalForm]]
 - [[BarraSesion]]
@@ -44,7 +46,7 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[ProfesionalCard]]
 - [[RequiereSesion]]
 
-## Servicios (9)
+### Servicios (9)
 - [[AgendaService]]
 - [[AnimalService]]
 - [[ClinicaService]]
@@ -55,7 +57,7 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[ProfesionalService]]
 - [[SesionService]]
 
-## Modelos (18)
+### Modelos (18)
 - [[Animal]]
 - [[AnimalFormulario]]
 - [[Ausencia]]
@@ -74,3 +76,11 @@ Volver a [[Inicio]]. Proyecto: [[Carpeta desktop]]. Cada nota lista qué usa y q
 - [[SolicitudRecuperacion]]
 - [[Turno]]
 - [[ValidacionDatos]]
+
+## Api — [[Carpeta api]]
+
+Todavía sin código.
+
+## Mobile — [[Carpeta mobile]]
+
+Todavía sin código.
