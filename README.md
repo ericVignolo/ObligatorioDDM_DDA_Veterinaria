@@ -39,7 +39,8 @@ Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ning
 | A-009 | Perfil del Cliente («Mi cuenta»): datos con quién ve cada uno, animales con historia, turnos y «Reservar de nuevo», cambio de correo y de contraseña con verificación | ✅ |
 | A-019, A-020 | Consulta veterinaria (borrador, firma con contraseña), enmiendas e historia clínica para veterinario y cliente | ✅ |
 | A-021 | Vacunas y antiparasitarios: se registran dentro de la consulta, lote que no vence (RN-15), refuerzo calculado (RN-19), carnet con estados y alertas sanitarias | ✅ |
-| A-022 en adelante | Inventario y demás módulos | Pendiente |
+| A-022 | Inventario: lotes con vencimiento, FEFO, stock mínimo y alertas, compras, ajustes y bajas del Administrador, insumos y dosis que se descuentan al firmar la consulta | 🧪 En prueba |
+| A-023 en adelante | Cobro, internación y demás módulos | Pendiente |
 
 El mapa de páginas, servicios y modelos (con diagrama) está en [`desktop/README.md`](desktop/README.md).
 

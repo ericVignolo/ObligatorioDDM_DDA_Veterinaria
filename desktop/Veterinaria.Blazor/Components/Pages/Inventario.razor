@@ -1,0 +1,360 @@
+@page "/panel/inventario"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject InventarioService Inventario
+@inject SesionService Sesion
+
+<PageTitle>Inventario — VITALIA</PageTitle>
+
+@* A-022: el Administrador gestiona (RF-ADM-05, RN-31); el Veterinario solo mira (decisión de Eric, 2026-11-11). *@
+<RequierePersonal Roles="@(new[] { PersonalService.Administrador, PersonalService.Veterinario })">
+    <h1>Inventario</h1>
+    <p class="text-muted">
+        @(EsAdministrador ? "Compras, ajustes, bajas y alertas de stock." : "Vista de solo lectura: las compras, ajustes y bajas las registra el Administrador.")
+    </p>
+
+    <div class="alert alert-secondary small">@InventarioService.AvisoDemo</div>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    @* Tablero de alertas (RF-ADM-06, RN-28) *@
+    <section class="mb-4" aria-labelledby="titulo-tablero">
+        <h2 class="h4" id="titulo-tablero">Alertas</h2>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h6">Por debajo del mínimo (@bajoMinimo.Count)</h3>
+                        @if (bajoMinimo.Count == 0)
+                        {
+                            <p class="small text-muted mb-0">Todo el stock está en el mínimo o por encima.</p>
+                        }
+                        <ul class="small mb-0 ps-3">
+                            @foreach (var articulo in bajoMinimo)
+                            {
+                                <li>@articulo.Nombre: @Inventario.Stock(articulo.Id) de @articulo.StockMinimo @articulo.Unidad</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h6">Vencen en @Inventario.DiasProximoAVencer días (@proximos.Count)</h3>
+                        @if (proximos.Count == 0)
+                        {
+                            <p class="small text-muted mb-0">Ningún lote vence pronto.</p>
+                        }
+                        <ul class="small mb-0 ps-3">
+                            @foreach (var lote in proximos)
+                            {
+                                <li>@NombreDe(lote.ArticuloId), lote @lote.Numero: @lote.Cantidad, vence @lote.Vencimiento.ToString("dd/MM/yyyy")</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h6">Avisos de stock mínimo (@alertas.Count)</h3>
+                        @if (alertas.Count == 0)
+                        {
+                            <p class="small text-muted mb-0">Sin avisos todavía.</p>
+                        }
+                        <ul class="small mb-0 ps-3">
+                            @foreach (var alerta in alertas.Take(8))
+                            {
+                                <li>@alerta.Fecha.ToString("dd/MM HH:mm") · @alerta.Articulo quedó en @alerta.StockQueQuedo (mínimo @alerta.StockMinimo) · @alerta.Origen</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* Stock por artículo y lotes *@
+    <section class="mb-4" aria-labelledby="titulo-stock">
+        <h2 class="h4" id="titulo-stock">Stock</h2>
+        <div class="table-responsive">
+            <table class="table table-sm align-middle">
+                <caption class="visually-hidden">Stock de cada artículo, lo apartado por consultas abiertas y su mínimo</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Artículo</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col" class="text-end">Stock</th>
+                        <th scope="col" class="text-end">Apartado</th>
+                        <th scope="col" class="text-end">Mínimo</th>
+                        <th scope="col">Lotes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var articulo in articulos)
+                    {
+                        var stock = Inventario.Stock(articulo.Id);
+                        <tr>
+                            <th scope="row">@articulo.Nombre</th>
+                            <td>@articulo.Tipo</td>
+                            <td class="text-end">
+                                @stock @articulo.Unidad
+                                @if (stock < articulo.StockMinimo)
+                                {
+                                    <span class="badge bg-warning text-dark ms-1">Bajo mínimo</span>
+                                }
+                            </td>
+                            <td class="text-end">@(stock - Inventario.StockDisponible(articulo.Id))</td>
+                            <td class="text-end">@articulo.StockMinimo</td>
+                            <td>
+                                <button type="button" class="btn btn-link btn-sm p-0" @onclick="() => VerLotes(articulo.Id)">
+                                    @(articuloAbierto == articulo.Id ? "Ocultar" : "Ver") lotes
+                                </button>
+                            </td>
+                        </tr>
+                        if (articuloAbierto == articulo.Id)
+                        {
+                            <tr>
+                                <td colspan="6" class="bg-light">
+                                    <ul class="small mb-0">
+                                        @foreach (var lote in Inventario.LotesDe(articulo.Id))
+                                        {
+                                            <li>
+                                                Lote <strong>@lote.Numero</strong> · vence @lote.Vencimiento.ToString("dd/MM/yyyy") · @lote.Cantidad @articulo.Unidad
+                                                @if (lote.Inhabilitado)
+                                                {
+                                                    <span class="badge bg-danger ms-1">Vencido, inhabilitado</span>
+                                                }
+                                                else if (Inventario.Reservado(lote) > 0)
+                                                {
+                                                    <span class="text-muted">(@Inventario.Reservado(lote) apartadas)</span>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    @if (EsAdministrador)
+    {
+        @* Acciones del Administrador (RF-ADM-05, RN-31) *@
+        <section class="mb-4" aria-labelledby="titulo-acciones">
+            <h2 class="h4" id="titulo-acciones">Registrar</h2>
+            <div class="btn-group mb-3" role="group" aria-label="Tipo de movimiento">
+                <button type="button" class="btn @(accion == "compra" ? "btn-primary" : "btn-outline-primary")" @onclick="@(() => Elegir("compra"))">Compra</button>
+                <button type="button" class="btn @(accion == "ajuste" ? "btn-primary" : "btn-outline-primary")" @onclick="@(() => Elegir("ajuste"))">Ajuste</button>
+                <button type="button" class="btn @(accion == "baja" ? "btn-primary" : "btn-outline-primary")" @onclick="@(() => Elegir("baja"))">Baja</button>
+            </div>
+
+            @if (accion == "compra")
+            {
+                <EditForm Model="compra" OnValidSubmit="RegistrarCompra" FormName="compra">
+                    <DataAnnotationsValidator />
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label class="form-label" for="articuloCompra">Artículo</label>
+                            <InputSelect id="articuloCompra" class="form-select" @bind-Value="compra.ArticuloId">
+                                <option value="0">Elegí un artículo…</option>
+                                @foreach (var articulo in articulos)
+                                {
+                                    <option value="@articulo.Id">@articulo.Nombre</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="() => compra.ArticuloId" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="numeroLote">Número de lote</label>
+                            <InputText id="numeroLote" class="form-control" @bind-Value="compra.Numero" />
+                            <ValidationMessage For="() => compra.Numero" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="vencimiento">Vencimiento</label>
+                            <InputDate id="vencimiento" class="form-control" @bind-Value="compra.Vencimiento" />
+                            <ValidationMessage For="() => compra.Vencimiento" />
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="cantidadCompra">Cantidad</label>
+                            <InputNumber id="cantidadCompra" class="form-control" @bind-Value="compra.Cantidad" min="1" />
+                            <ValidationMessage For="() => compra.Cantidad" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Ingresar lote</button>
+                </EditForm>
+            }
+            else if (accion == "ajuste" || accion == "baja")
+            {
+                <EditForm Model="ajuste" OnValidSubmit="RegistrarAjusteOBaja" FormName="ajuste">
+                    <DataAnnotationsValidator />
+                    <div class="row g-2">
+                        <div class="col-md-5">
+                            <label class="form-label" for="loteAjuste">Lote</label>
+                            <InputSelect id="loteAjuste" class="form-select" @bind-Value="ajuste.LoteId">
+                                <option value="0">Elegí un lote…</option>
+                                @foreach (var articulo in articulos)
+                                {
+                                    foreach (var lote in Inventario.LotesDe(articulo.Id).Where(l => !l.Inhabilitado))
+                                    {
+                                        <option value="@lote.Id">@articulo.Nombre · @lote.Numero (@lote.Cantidad, vence @lote.Vencimiento.ToString("dd/MM/yyyy"))</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="() => ajuste.LoteId" />
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="cantidadAjuste">@(accion == "ajuste" ? "Cantidad (+ o −)" : "Unidades")</label>
+                            <InputNumber id="cantidadAjuste" class="form-control" @bind-Value="ajuste.Cantidad" />
+                            <ValidationMessage For="() => ajuste.Cantidad" />
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label" for="motivoAjuste">Motivo <span class="text-danger">*</span></label>
+                            <InputText id="motivoAjuste" class="form-control" maxlength="200" @bind-Value="ajuste.Motivo"
+                                       placeholder="@(accion == "ajuste" ? "Ej.: conteo físico" : "Ej.: frasco roto")" />
+                            <ValidationMessage For="() => ajuste.Motivo" />
+                        </div>
+                    </div>
+                    <p class="small text-muted mt-2">
+                        @(accion == "ajuste" ? "Positivo si sobra, negativo si falta." : "La baja por vencimiento es automática; esta es para rotura, pérdida u otro motivo.")
+                        El stock nunca queda negativo ni por debajo de lo apartado por consultas abiertas.
+                    </p>
+                    <button type="submit" class="btn btn-primary">@(accion == "ajuste" ? "Registrar ajuste" : "Registrar baja")</button>
+                </EditForm>
+            }
+        </section>
+    }
+
+    @* Movimientos (RN-30) *@
+    <section class="mb-4" aria-labelledby="titulo-movimientos">
+        <h2 class="h4" id="titulo-movimientos">Movimientos</h2>
+        <div class="mb-2" style="max-width: 22rem;">
+            <label class="form-label small" for="filtroMovimientos">Artículo</label>
+            <select id="filtroMovimientos" class="form-select form-select-sm" @bind="filtroArticulo">
+                <option value="0">Todos</option>
+                @foreach (var articulo in articulos)
+                {
+                    <option value="@articulo.Id">@articulo.Nombre</option>
+                }
+            </select>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <caption class="visually-hidden">Últimos movimientos del inventario</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Artículo · lote</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col" class="text-end">Cantidad</th>
+                        <th scope="col">Origen y motivo</th>
+                        <th scope="col">Quién</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var movimiento in Inventario.Movimientos(filtroArticulo).Take(40))
+                    {
+                        <tr>
+                            <td>@movimiento.Fecha.ToString("dd/MM HH:mm")</td>
+                            <td>@NombreDe(movimiento.ArticuloId) · @(Inventario.ObtenerLote(movimiento.LoteId)?.Numero)</td>
+                            <td>@movimiento.Tipo</td>
+                            <td class="text-end">@movimiento.Cantidad.ToString("+#;-#;0")</td>
+                            <td>@OrigenYMotivo(movimiento)</td>
+                            <td>@movimiento.PersonaNombre</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <p class="small text-muted">Se muestran los últimos 40. La venta en mostrador llega con el cobro (A-023).</p>
+    </section>
+
+    <a href="panel">← Volver al panel</a>
+</RequierePersonal>
+
+@code {
+    private List<Articulo> articulos = new();
+    private List<Articulo> bajoMinimo = new();
+    private List<LoteProducto> proximos = new();
+    private List<AlertaStock> alertas = new();
+    private int articuloAbierto;
+    private int filtroArticulo;
+    private string accion = "";
+    private IngresoLoteFormulario compra = new();
+    private AjusteFormulario ajuste = new();
+    private string mensaje = "";
+    private bool exito;
+
+    private bool EsAdministrador => Sesion.TieneRol(PersonalService.Administrador);
+
+    protected override void OnInitialized()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        articulos = Inventario.Articulos();
+        bajoMinimo = Inventario.BajoMinimo();
+        proximos = Inventario.ProximosAVencer();
+        alertas = Inventario.Alertas();
+    }
+
+    private string NombreDe(int articuloId)
+    {
+        return Inventario.ObtenerArticulo(articuloId)?.Nombre ?? "";
+    }
+
+    private static string OrigenYMotivo(MovimientoStock movimiento)
+    {
+        return string.IsNullOrEmpty(movimiento.Motivo) ? movimiento.Origen : $"{movimiento.Origen}: {movimiento.Motivo}";
+    }
+
+    private void VerLotes(int articuloId)
+    {
+        articuloAbierto = articuloAbierto == articuloId ? 0 : articuloId;
+    }
+
+    private void Elegir(string tipo)
+    {
+        accion = accion == tipo ? "" : tipo;
+        compra = new();
+        ajuste = new();
+        mensaje = "";
+    }
+
+    private void RegistrarCompra()
+    {
+        Mostrar(Inventario.IngresarCompra(compra, Sesion.PersonalActual));
+        if (exito)
+        {
+            compra = new();
+        }
+    }
+
+    private void RegistrarAjusteOBaja()
+    {
+        var resultado = accion == "ajuste"
+            ? Inventario.Ajustar(ajuste, Sesion.PersonalActual)
+            : Inventario.DarDeBaja(ajuste, Sesion.PersonalActual);
+        Mostrar(resultado);
+        if (exito)
+        {
+            ajuste = new();
+        }
+    }
+
+    private void Mostrar(ResultadoOperacion resultado)
+    {
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        Cargar();
+    }
+}

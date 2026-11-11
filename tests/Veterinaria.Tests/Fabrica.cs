@@ -14,6 +14,7 @@ public class Fabrica
     public CuentaService Cuentas { get; }
     public SesionService Sesion { get; }
     public AgendaService Agenda { get; }
+    public InventarioService Inventario { get; } = new();
     public ConsultaService Consultas { get; }
     public VacunaService Vacunas { get; }
 
@@ -22,8 +23,8 @@ public class Fabrica
         Cuentas = new CuentaService(Legales);
         Sesion = new SesionService(Cuentas, Personal);
         Agenda = new AgendaService(Profesionales, Prestaciones, Animales);
-        Consultas = new ConsultaService(Agenda, Personal, Profesionales);
-        Vacunas = new VacunaService(Consultas, Animales);
+        Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario);
+        Vacunas = new VacunaService(Consultas, Animales, Inventario);
     }
 
     public static RegistroCliente RegistroValido(string correo = "cliente@prueba.uy", string cedula = "1.234.567-2")
