@@ -49,7 +49,7 @@ Avance completo en el [plan de tareas](docs/analisis/PLAN_TAREAS_PROYECTO.md) y 
 
 Requisitos: **Visual Studio 2026** (o el SDK de **.NET 10**).
 
-1. Clonar el repositorio y cambiar a la rama `desktop`.
+1. Clonar el repositorio y cambiar a la rama `desarrollo`.
 2. Abrir `desktop/Veterinaria.Blazor/Veterinaria.Blazor.slnx`.
 3. Ejecutar con **F5** y aceptar el certificado HTTPS de desarrollo si lo pide.
 
@@ -81,8 +81,8 @@ dotnet run
 
 ## Forma de trabajo
 
-- **Ramas:** `main` (versión integrada) · `desktop` (sección A, activa) · `desktop-mobile` (sección B) · `desktop-mobile-api` (sección C). Cada sección sale de la anterior.
-- Cada sesión de trabajo va en una rama `<nombre>/sesion-AAAA-MM-DD` desde la rama de la sección, con un PR al final. Quien trabajó la prueba y mezcla su PR. `main` se actualiza desde `desktop` en cada hito estable.
+- **Ramas:** `main` (versiones estables) · `desarrollo` (trabajo diario: escritorio, API y móvil juntos, cada uno en su carpeta). Cada aplicación se versiona con etiquetas (`desktop-vX.Y`, `api-vX.Y`, `mobile-vX.Y`).
+- Cada sesión de trabajo va en una rama `<nombre>/sesion-AAAA-MM-DD` desde `desarrollo`, con un PR al final. Quien trabajó la prueba y mezcla su PR. `main` se actualiza desde `desarrollo` en cada hito estable.
 - Al cerrar cada sesión se escribe una bitácora en `docs/sesiones/` con lo hecho y lo pendiente.
 - El código sigue el estilo del docente; las convenciones y reglas para asistentes de IA están en [`AGENTS.md`](AGENTS.md).
 
