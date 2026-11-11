@@ -1,0 +1,527 @@
+@page "/cuenta"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject SesionService Sesion
+@inject CuentaService CuentaService
+@inject AnimalService AnimalService
+@inject AgendaService Agenda
+@inject ConsultaService Consultas
+@inject PrestacionService PrestacionService
+
+@* Perfil del Cliente (A-009): datos personales con quién ve cada uno, animales con su historia,
+   turnos y servicios usados con «Reservar de nuevo». Los datos son de demostración. *@
+<PageTitle>Mi cuenta — VITALIA</PageTitle>
+
+<h1>Mi cuenta</h1>
+
+@* Después de cambiar correo o contraseña se cierra la sesión (D-PER-04, D-PER-05). *@
+@if (!string.IsNullOrEmpty(mensajeCierre))
+{
+    <div class="alert alert-success" role="status">
+        @mensajeCierre
+        <a class="alert-link ms-1" href="ingresar">Ingresar</a>
+    </div>
+}
+
+<RequiereSesion>
+    @if (cuenta is not null)
+    {
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+        }
+
+        <div class="alert alert-secondary small">
+            Demostración: los cambios se guardan solo mientras la aplicación está abierta. En la versión final los guarda la API.
+        </div>
+
+        @* Datos personales *@
+        <section class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h2 class="h4 card-title">Mis datos</h2>
+                    @if (!editando)
+                    {
+                        <button class="btn btn-outline-primary btn-sm" @onclick="EmpezarEdicion">Editar mis datos</button>
+                    }
+                </div>
+
+                @if (!editando)
+                {
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">Nombre</dt>
+                        <dd class="col-sm-9">@cuenta.Nombre @cuenta.Apellido <span class="d-block small text-muted">Lo ven: vos y el personal de la clínica.</span></dd>
+
+                        <dt class="col-sm-3">Correo</dt>
+                        <dd class="col-sm-9">@cuenta.Correo <span class="d-block small text-muted">Lo ven: vos, Recepción y Administración. Identifica tu cuenta: se cambia en «Seguridad de la cuenta», con un código.</span></dd>
+
+                        <dt class="col-sm-3">Teléfono</dt>
+                        <dd class="col-sm-9">@MostrarTelefono(cuenta.Telefono) <span class="d-block small text-muted">Lo ven: vos, Recepción y el veterinario asignado a una asistencia.</span></dd>
+
+                        <dt class="col-sm-3">Documento</dt>
+                        <dd class="col-sm-9">@MostrarDocumento() <span class="d-block small text-muted">Lo ven: vos, Recepción y Administración; nunca el veterinario. Para cambiarlo, consultá en Recepción.</span></dd>
+
+                        <dt class="col-sm-3">Dirección</dt>
+                        <dd class="col-sm-9">@MostrarDireccion() <span class="d-block small text-muted">La ven: vos, Recepción y el veterinario solo durante una asistencia a domicilio.</span></dd>
+                    </dl>
+                    <p class="small mt-3 mb-0">Para qué usamos cada dato: <a href="privacidad">Política de Privacidad</a>.</p>
+                }
+                else
+                {
+                    <EditForm Model="perfil" OnValidSubmit="Guardar" FormName="perfil">
+                        <DataAnnotationsValidator />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="nombre">Nombre</label>
+                                <InputText id="nombre" class="form-control" @bind-Value="perfil.Nombre" autocomplete="given-name" />
+                                <ValidationMessage For="() => perfil.Nombre" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="apellido">Apellido</label>
+                                <InputText id="apellido" class="form-control" @bind-Value="perfil.Apellido" autocomplete="family-name" />
+                                <ValidationMessage For="() => perfil.Apellido" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="telefono">Teléfono</label>
+                                <InputText id="telefono" type="tel" class="form-control" @bind-Value="perfil.Telefono" autocomplete="tel" placeholder="099 123 456" />
+                                <ValidationMessage For="() => perfil.Telefono" />
+                            </div>
+                        </div>
+
+                        <fieldset>
+                            <legend class="h6">Dirección del hogar</legend>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="calle">Calle</label>
+                                    <InputText id="calle" class="form-control" @bind-Value="perfil.Calle" />
+                                    <ValidationMessage For="() => perfil.Calle" />
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label" for="numero">Número</label>
+                                    <InputText id="numero" class="form-control" @bind-Value="perfil.NumeroPuerta" />
+                                    <ValidationMessage For="() => perfil.NumeroPuerta" />
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label" for="apartamento">Apartamento <span class="text-muted">(opcional)</span></label>
+                                    <InputText id="apartamento" class="form-control" @bind-Value="perfil.Apartamento" />
+                                    <ValidationMessage For="() => perfil.Apartamento" />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="localidad">Localidad</label>
+                                    <InputText id="localidad" class="form-control" @bind-Value="perfil.Localidad" />
+                                    <ValidationMessage For="() => perfil.Localidad" />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="departamento">Departamento</label>
+                                    <InputSelect id="departamento" class="form-select" @bind-Value="perfil.Departamento">
+                                        <option value="">Elegí el departamento</option>
+                                        @foreach (var departamento in CuentaService.Departamentos)
+                                        {
+                                            <option value="@departamento">@departamento</option>
+                                        }
+                                    </InputSelect>
+                                    <ValidationMessage For="() => perfil.Departamento" />
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label" for="referencias">Referencias <span class="text-muted">(opcional)</span></label>
+                                    <InputText id="referencias" class="form-control" @bind-Value="perfil.Referencias" />
+                                    <ValidationMessage For="() => perfil.Referencias" />
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <p class="small text-muted">El correo se cambia en «Seguridad de la cuenta». El documento identifica al titular de los animales y se corrige en Recepción.</p>
+
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        <button type="button" class="btn btn-link" @onclick="CancelarEdicion">Cancelar</button>
+                    </EditForm>
+                }
+            </div>
+        </section>
+
+        @* Seguridad: cambiar correo y contraseña (D-PER-04, D-PER-05) *@
+        <section class="card mb-4">
+            <div class="card-body">
+                <h2 class="h4 card-title">Seguridad de la cuenta</h2>
+
+                @if (!string.IsNullOrEmpty(mensajeSeguridad))
+                {
+                    <div class="alert @(exitoSeguridad ? "alert-info" : "alert-danger")" role="alert">@mensajeSeguridad</div>
+                }
+
+                @if (!string.IsNullOrEmpty(cuenta.CorreoNuevoPendiente))
+                {
+                    @* Paso 2 del cambio de correo: el código enviado al correo nuevo *@
+                    <p>Enviamos un código de 6 números a <strong>@cuenta.CorreoNuevoPendiente</strong>. Vence a los 15 minutos. Hasta que lo ingreses, tu cuenta sigue con <strong>@cuenta.Correo</strong>.</p>
+                    <div class="alert alert-warning small">
+                        Demostración: como todavía no se envían correos, el código es <strong>@cuenta.CodigoCorreoDemo</strong>.
+                    </div>
+                    <EditForm Model="codigoCorreo" OnValidSubmit="ConfirmarCorreo" FormName="codigo-correo">
+                        <DataAnnotationsValidator />
+                        <div class="mb-3" style="max-width: 16rem;">
+                            <label class="form-label" for="codigo-correo">Código</label>
+                            <InputText id="codigo-correo" class="form-control" @bind-Value="codigoCorreo.Codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
+                            <ValidationMessage For="() => codigoCorreo.Codigo" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Confirmar correo nuevo</button>
+                        <button type="button" class="btn btn-link" @onclick="CancelarCorreo">Cancelar el cambio</button>
+                    </EditForm>
+                }
+                else if (formulario == "correo")
+                {
+                    <EditForm Model="cambioCorreo" OnValidSubmit="PedirCambioCorreo" FormName="cambio-correo">
+                        <DataAnnotationsValidator />
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="correo-nuevo">Correo nuevo</label>
+                                <InputText id="correo-nuevo" type="email" class="form-control" @bind-Value="cambioCorreo.CorreoNuevo" autocomplete="email" />
+                                <ValidationMessage For="() => cambioCorreo.CorreoNuevo" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="contrasena-correo">Contraseña actual</label>
+                                <InputText id="contrasena-correo" type="password" class="form-control" @bind-Value="cambioCorreo.ContrasenaActual" autocomplete="current-password" />
+                                <ValidationMessage For="() => cambioCorreo.ContrasenaActual" />
+                            </div>
+                        </div>
+                        <p class="small text-muted">Te vamos a mandar un código al correo nuevo. Cuando lo confirmes, cerramos la sesión y ingresás con el correo nuevo.</p>
+                        <button type="submit" class="btn btn-primary">Enviar código</button>
+                        <button type="button" class="btn btn-link" @onclick="CerrarFormulario">Cancelar</button>
+                    </EditForm>
+                }
+                else if (formulario == "contrasena")
+                {
+                    <EditForm Model="cambioContrasena" OnValidSubmit="CambiarContrasena" FormName="cambio-contrasena">
+                        <DataAnnotationsValidator />
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="contrasena-actual">Contraseña actual</label>
+                                <InputText id="contrasena-actual" type="password" class="form-control" @bind-Value="cambioContrasena.ContrasenaActual" autocomplete="current-password" />
+                                <ValidationMessage For="() => cambioContrasena.ContrasenaActual" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="contrasena-nueva">Contraseña nueva</label>
+                                <InputText id="contrasena-nueva" type="password" class="form-control" @bind-Value="cambioContrasena.Contrasena" autocomplete="new-password" />
+                                <ValidationMessage For="() => cambioContrasena.Contrasena" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="contrasena-repetir">Repetir contraseña nueva</label>
+                                <InputText id="contrasena-repetir" type="password" class="form-control" @bind-Value="cambioContrasena.RepetirContrasena" autocomplete="new-password" />
+                                <ValidationMessage For="() => cambioContrasena.RepetirContrasena" />
+                            </div>
+                        </div>
+                        <p class="small text-muted">Entre 8 y 64 caracteres. Al cambiarla cerramos la sesión y ingresás con la nueva.</p>
+                        <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
+                        <button type="button" class="btn btn-link" @onclick="CerrarFormulario">Cancelar</button>
+                    </EditForm>
+                }
+                else
+                {
+                    <button class="btn btn-outline-primary btn-sm me-2" @onclick="@(() => AbrirFormulario("correo"))">Cambiar correo</button>
+                    <button class="btn btn-outline-primary btn-sm" @onclick="@(() => AbrirFormulario("contrasena"))">Cambiar contraseña</button>
+                }
+            </div>
+        </section>
+
+        @* Animales con acceso a su historia clínica *@
+        <section class="mb-4">
+            <h2 class="h4">Mis animales (@animales.Count)</h2>
+            @if (animales.Count == 0)
+            {
+                <p>Todavía no registraste ningún animal. <a href="animales/nuevo">Registrar animal</a></p>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var animal in animales)
+                    {
+                        <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+                            <span><strong>@animal.Nombre</strong> <span class="text-muted">· @animal.Especie</span>
+                                <span class="d-block small text-muted">@TextoConsultas(animal)</span></span>
+                            <span>
+                                <a class="btn btn-outline-secondary btn-sm" href="@($"animales/{animal.Id}")">Ver ficha</a>
+                                <a class="btn btn-outline-primary btn-sm" href="@($"animales/{animal.Id}/historia")">Historia clínica</a>
+                            </span>
+                        </li>
+                    }
+                </ul>
+                <a class="d-inline-block mt-2" href="animales">Ir a Mis animales</a>
+            }
+        </section>
+
+        @* Turnos *@
+        <section class="mb-4">
+            <h2 class="h4">Mis turnos</h2>
+            @if (proximos.Count == 0)
+            {
+                <p>No tenés turnos próximos. <a href="reservar">Reservar un turno</a></p>
+            }
+            else
+            {
+                var siguiente = proximos[0];
+                <p>
+                    Próximo: <strong>@siguiente.Inicio.ToString("dddd d 'de' MMMM, HH:mm")</strong>,
+                    @NombreServicio(siguiente.PrestacionId) para @NombreAnimal(siguiente.AnimalId).
+                    @if (proximos.Count > 1)
+                    {
+                        <span>Tenés @(proximos.Count - 1) más.</span>
+                    }
+                </p>
+            }
+            <a href="turnos">Ver todos mis turnos</a>
+        </section>
+
+        @* Servicios usados *@
+        <section class="mb-4">
+            <h2 class="h4">Servicios que usaste</h2>
+            @if (usados.Count == 0)
+            {
+                <p>Cuando la clínica termine una atención, el servicio aparece acá para reservarlo de nuevo.</p>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var uso in usados)
+                    {
+                        <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+                            <span><strong>@NombreServicio(uso.PrestacionId)</strong>
+                                <span class="d-block small text-muted">Última vez: @uso.Inicio.ToString("d 'de' MMMM 'de' yyyy") · @NombreAnimal(uso.AnimalId)</span></span>
+                            @if (reservables.Contains(uso.PrestacionId))
+                            {
+                                <a class="btn btn-primary btn-sm" href="@($"reservar?servicio={uso.PrestacionId}")">Reservar de nuevo</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-outline-primary btn-sm" href="@($"servicios/{uso.PrestacionId}")">Consultar o llamar</a>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        </section>
+    }
+</RequiereSesion>
+
+@code {
+    private Cuenta? cuenta;
+
+    // Seguridad (D-PER-04, D-PER-05)
+    private string formulario = "";
+    private CambioCorreoFormulario cambioCorreo = new();
+    private CodigoVerificacion codigoCorreo = new();
+    private CambioContrasenaFormulario cambioContrasena = new();
+    private string mensajeSeguridad = "";
+    private bool exitoSeguridad;
+    private string mensajeCierre = "";
+    private PerfilFormulario perfil = new();
+    private bool editando;
+    private string mensaje = "";
+    private bool exito;
+
+    private List<Animal> animales = new();
+    private List<Turno> proximos = new();
+    private List<Turno> usados = new();
+    private HashSet<int> reservables = new();
+
+    protected override void OnInitialized()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        cuenta = Sesion.CuentaActual;
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        animales = AnimalService.ObtenerDe(cuenta.Id);
+        proximos = Agenda.ProximosDe(cuenta.Id);
+
+        // Un servicio por fila, con la última atención terminada (Finalizado).
+        usados = Agenda.HistorialDe(cuenta.Id)
+            .Where(t => t.Estado == "Finalizado")
+            .GroupBy(t => t.PrestacionId)
+            .Select(g => g.OrderByDescending(t => t.Inicio).First())
+            .OrderByDescending(t => t.Inicio)
+            .ToList();
+
+        reservables = PrestacionService.ObtenerReservables().Select(p => p.Id).ToHashSet();
+    }
+
+    private void EmpezarEdicion()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        perfil = CuentaService.ParaEditarPerfil(cuenta);
+        mensaje = "";
+        editando = true;
+    }
+
+    private void CancelarEdicion()
+    {
+        editando = false;
+        mensaje = "";
+    }
+
+    private void Guardar()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        var resultado = CuentaService.ActualizarPerfil(cuenta.Id, perfil);
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        if (resultado.Exito)
+        {
+            editando = false;
+            Sesion.AvisarCambio();
+        }
+    }
+
+    private void AbrirFormulario(string cual)
+    {
+        formulario = cual;
+        mensajeSeguridad = "";
+        cambioCorreo = new();
+        cambioContrasena = new();
+    }
+
+    private void CerrarFormulario()
+    {
+        formulario = "";
+        mensajeSeguridad = "";
+    }
+
+    private void PedirCambioCorreo()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        var resultado = CuentaService.SolicitarCambioCorreo(cuenta.Id, cambioCorreo);
+        exitoSeguridad = resultado.Exito;
+        mensajeSeguridad = resultado.Mensaje;
+        cambioCorreo.ContrasenaActual = "";
+        if (resultado.Exito)
+        {
+            formulario = "";
+            codigoCorreo = new();
+        }
+    }
+
+    private void ConfirmarCorreo()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        var resultado = CuentaService.ConfirmarCambioCorreo(cuenta.Id, codigoCorreo.Codigo);
+        codigoCorreo = new();
+        if (resultado.Exito)
+        {
+            CerrarSesion(resultado.Mensaje);
+            return;
+        }
+
+        exitoSeguridad = false;
+        mensajeSeguridad = resultado.Mensaje;
+    }
+
+    private void CancelarCorreo()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        CuentaService.CancelarCambioCorreo(cuenta.Id);
+        exitoSeguridad = true;
+        mensajeSeguridad = "Cancelaste el cambio. Tu correo sigue siendo el mismo.";
+    }
+
+    private void CambiarContrasena()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        var resultado = CuentaService.CambiarContrasena(cuenta.Id, cambioContrasena);
+        cambioContrasena = new();
+        if (resultado.Exito)
+        {
+            CerrarSesion(resultado.Mensaje);
+            return;
+        }
+
+        exitoSeguridad = false;
+        mensajeSeguridad = resultado.Mensaje;
+    }
+
+    // Por seguridad, después de cambiar correo o contraseña se vuelve a ingresar.
+    private void CerrarSesion(string texto)
+    {
+        mensajeCierre = texto;
+        formulario = "";
+        Sesion.Salir();
+        cuenta = null;
+    }
+
+    private string TextoConsultas(Animal animal)
+    {
+        var cantidad = Consultas.HistoriaDe(animal.Id).Count;
+        return cantidad switch
+        {
+            0 => "Sin consultas registradas",
+            1 => "1 consulta registrada",
+            _ => $"{cantidad} consultas registradas"
+        };
+    }
+
+    private string NombreServicio(int prestacionId)
+    {
+        return PrestacionService.ObtenerPorId(prestacionId)?.Nombre ?? "Servicio";
+    }
+
+    private string NombreAnimal(int animalId)
+    {
+        return animales.FirstOrDefault(a => a.Id == animalId)?.Nombre ?? "tu animal";
+    }
+
+    private string MostrarTelefono(string telefono)
+    {
+        return string.IsNullOrEmpty(telefono) ? "No cargado" : telefono;
+    }
+
+    private string MostrarDocumento()
+    {
+        if (cuenta is null || string.IsNullOrEmpty(cuenta.NumeroDocumento))
+        {
+            return "No cargado";
+        }
+
+        var tipo = cuenta.TipoDocumento == "CI" ? "Cédula" : cuenta.TipoDocumento;
+        return $"{tipo} {cuenta.NumeroDocumento}";
+    }
+
+    private string MostrarDireccion()
+    {
+        if (cuenta is null || string.IsNullOrEmpty(cuenta.Calle))
+        {
+            return "No cargada";
+        }
+
+        var apartamento = string.IsNullOrEmpty(cuenta.Apartamento) ? "" : $", apto. {cuenta.Apartamento}";
+        var referencias = string.IsNullOrEmpty(cuenta.Referencias) ? "" : $" ({cuenta.Referencias})";
+        return $"{cuenta.Calle} {cuenta.NumeroPuerta}{apartamento}, {cuenta.Localidad}, {cuenta.Departamento}{referencias}";
+    }
+}

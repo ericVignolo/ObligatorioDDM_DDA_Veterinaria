@@ -9,7 +9,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (28)
+### Páginas (29)
 - [[Acceso]] · `/acceso`
 - [[AgendaRecepcion]] · `/panel/agenda`
 - [[AgendaVeterinario]] · `/panel/mi-agenda`
@@ -24,6 +24,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Home]] · `/`
 - [[Ingresar]] · `/ingresar`
 - [[LaClinica]] · `/clinica`
+- [[MiCuenta]] · `/cuenta`
 - [[PanelInicio]] · `/panel`
 - [[PrestacionDetalle]] · `/servicios/{Id:int}`
 - [[Privacidad]] · `/privacidad`
@@ -69,10 +70,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ProfesionalService]]
 - [[SesionService]]
 
-### Modelos (27)
+### Modelos (30)
 - [[Animal]]
 - [[AnimalFormulario]]
 - [[Ausencia]]
+- [[CambioContrasenaFormulario]]
+- [[CambioCorreoFormulario]]
 - [[Clinica]]
 - [[CodigoVerificacion]]
 - [[Consulta]]
@@ -89,6 +92,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[MotivoOpcionalFormulario]]
 - [[NivelUrgencia]]
 - [[NuevaContrasena]]
+- [[PerfilFormulario]]
 - [[Personal]]
 - [[Prestacion]]
 - [[Profesional]]

@@ -41,6 +41,14 @@ public class Cuenta
     public List<DateTime> PedidosRecuperacion { get; set; } = new();
     public string CodigoRecuperacionDemo { get; set; } = "";
 
+    // Cambio de correo (D-PER-04): el correo nuevo se guarda aparte hasta verificarlo con un código.
+    public string CorreoNuevoPendiente { get; set; } = "";
+    public string HashCodigoCorreo { get; set; } = "";
+    public DateTime CodigoCorreoVence { get; set; }
+    public int IntentosCorreo { get; set; }
+    public List<DateTime> PedidosCambioCorreo { get; set; } = new();
+    public string CodigoCorreoDemo { get; set; } = "";
+
     // SOLO DEMOSTRACIÓN: el código se muestra en pantalla porque todavía no se envían correos.
     // En la sección C lo genera la API y no se guarda en claro.
     public string CodigoDemo { get; set; } = "";

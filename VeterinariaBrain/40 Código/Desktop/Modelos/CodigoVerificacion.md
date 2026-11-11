@@ -18,4 +18,5 @@ Código de 6 dígitos enviado al correo (A-007, D-REG-02).
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[MiCuenta]]
 - [[Verificar]]

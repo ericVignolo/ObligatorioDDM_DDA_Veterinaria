@@ -11,13 +11,18 @@ generado: true
 
 Cuentas de demostración en memoria (sección A). Se pierden al reiniciar la aplicación.
 
-**Requisitos y decisiones:** CU-VIS-03, D-REG-02, D-REG-03, RNF-SEG-01
+**Tareas:** A-009
+
+**Requisitos y decisiones:** CU-VIS-03, D-PER-04, D-PER-05, D-REG-02, D-REG-03, RN-42, RNF-SEG-01
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
+- [[CambioContrasenaFormulario]]
+- [[CambioCorreoFormulario]]
 - [[Cuenta]]
 - [[DocumentoLegalService]]
+- [[PerfilFormulario]]
 - [[RegistroCliente]]
 - [[ResultadoOperacion]]
 - [[ValidacionDatos]]
@@ -26,6 +31,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AgendaRecepcion]]
 - [[AtencionConsulta]]
 - [[HistoriaClinica]]
+- [[MiCuenta]]
 - [[Recuperar]]
 - [[Registro]]
 - [[Restablecer]]

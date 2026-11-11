@@ -32,13 +32,12 @@ Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ning
 | A-007 | Verificación del correo por código y recuperación de contraseña | ✅ |
 | A-008 | Inicio y cierre de sesión | ✅ |
 | A-011 | Retomar la reserva después de ingresar | ✅ |
-| A-009, A-010 | Perfil del Cliente y perfiles del personal | Pendiente |
 | A-012, A-013 | Mis animales: listado, ficha, alta y edición (incluye grupos de campo) | ✅ |
 | A-014, A-015 | Disponibilidad y reserva en cuatro pasos, con Mis turnos | ✅ |
 | A-016 | Cancelar y reprogramar turnos (24 h), historial de turnos | ✅ |
-| A-010, A-017, A-018 | Panel del personal por rol, agenda de Recepción y del Veterinario, estados unificados | 🧪 En prueba |
-| A-009 | Perfil del Cliente («Mi cuenta») | Pendiente |
-| A-019, A-020 | Consulta veterinaria (borrador, firma con contraseña), enmiendas e historia clínica para veterinario y cliente | 🧪 En prueba |
+| A-010, A-017, A-018 | Panel del personal por rol, agenda de Recepción y del Veterinario, estados unificados | ✅ |
+| A-009 | Perfil del Cliente («Mi cuenta»): datos con quién ve cada uno, animales con historia, turnos y «Reservar de nuevo», cambio de correo y de contraseña con verificación | ✅ |
+| A-019, A-020 | Consulta veterinaria (borrador, firma con contraseña), enmiendas e historia clínica para veterinario y cliente | ✅ |
 | A-021 en adelante | Vacunación, inventario y demás módulos | Pendiente |
 
 El mapa de páginas, servicios y modelos (con diagrama) está en [`desktop/README.md`](desktop/README.md).

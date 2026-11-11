@@ -64,8 +64,8 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 - [x] **A-006 — Construir registro como Cliente.** Implementar el formulario visual desde la especificación aprobada, aceptaciones separadas y validaciones de presentación; el prototipo no crea credenciales reales.
 - [x] **A-007 — Construir verificación y recuperación demostrativas.** Mostrar estados y mensajes de código, expiración, reenvío y recuperación definidos en H0; indicar que son simulaciones mientras no exista API.
 - [x] **A-008 — Construir inicio y cierre de sesión demostrativos.** Crear rutas públicas/protegidas de presentación y estados de sesión simulados sin afirmar autorización real.
-- [ ] **A-009 — Crear perfil del Cliente.** Mostrar y editar solo datos y preferencias definidos, con estados de guardado/error demostrativos y privacidad por campo.
-- [ ] **A-010 — Crear perfiles de personal en el panel.** Preparar vistas de roles para Recepción, Veterinario y Administrador; separar permisos esperados de controles visuales simulados.
+- [x] **A-009 — Crear perfil del Cliente.** Mostrar y editar solo datos y preferencias definidos, con estados de guardado/error demostrativos y privacidad por campo.
+- [x] **A-010 — Crear perfiles de personal en el panel.** Preparar vistas de roles para Recepción, Veterinario y Administrador; separar permisos esperados de controles visuales simulados.
 - [x] **A-011 — Preparar recuperación de acción protegida.** Desde catálogo o agenda, guardar intención no sensible y retomarla después del acceso simulado; al retomarla volver a revisar disponibilidad en los datos de demostración.
 
 ### A.3 Animales y agenda
@@ -75,13 +75,13 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 - [x] **A-014 — Crear disponibilidad orientativa.** Mostrar servicios, profesional, recursos, fecha y horarios ficticios; marcar la disponibilidad como demostrativa hasta que la API la confirme.
 - [x] **A-015 — Crear reserva en cuatro pasos.** Animal; tipo/profesional; fecha/hora; revisión y confirmación. Conservar errores de cupo y estados descritos en H0.
 - [x] **A-016 — Crear turnos, cancelación y reprogramación.** Listar próximos/históricos y presentar consecuencias/confirmación según políticas ya definidas; no conservar cupos reales durante la demostración.
-- [ ] **A-017 — Crear agenda de Recepción y Veterinario.** Mostrar filtros, capacidad, estados y detalle de turno; permitir simular llegada/espera en el prototipo.
-- [ ] **A-018 — Diseñar estados de agenda.** Unificar etiquetas, permisos esperados, errores, vacío, carga, éxito y colisión en pantallas y documentación.
+- [x] **A-017 — Crear agenda de Recepción y Veterinario.** Mostrar filtros, capacidad, estados y detalle de turno; permitir simular llegada/espera en el prototipo.
+- [x] **A-018 — Diseñar estados de agenda.** Unificar etiquetas, permisos esperados, errores, vacío, carga, éxito y colisión en pantallas y documentación.
 
 ### A.4 Atención clínica y módulos de operación
 
-- [ ] **A-019 — Crear pantalla de consulta veterinaria.** Capturar anamnesis, evaluación, diagnóstico, tratamiento, alergias, adjuntos e indicaciones definidos; mantenerlo como borrador visual hasta API.
-- [ ] **A-020 — Mostrar historia clínica y firma.** Diferenciar borrador, firmado y enmienda; impedir edición visual del original firmado en el modelo de interacción.
+- [x] **A-019 — Crear pantalla de consulta veterinaria.** Capturar anamnesis, evaluación, diagnóstico, tratamiento, alergias, adjuntos e indicaciones definidos; mantenerlo como borrador visual hasta API.
+- [x] **A-020 — Mostrar historia clínica y firma.** Diferenciar borrador, firmado y enmienda; impedir edición visual del original firmado en el modelo de interacción.
 - [ ] **A-021 — Crear vistas de vacunación y alertas sanitarias.** Mostrar lote, fechas, intervalo, refuerzo y alertas según la especificación profesional; incluir estados de vacuna vencida y no aplicable.
 - [ ] **A-022 — Crear vistas de inventario.** Productos, lotes, vencimientos, movimientos, stock mínimo, ajustes y consumo; dejar claro que no hay saldos persistentes en modo demo.
 - [ ] **A-023 — Crear cargos, cobro y comprobante interno.** Separar cargo y pago; soportar medios acordados para el ejemplo, sin pasarela online mientras no se apruebe su cambio de alcance.

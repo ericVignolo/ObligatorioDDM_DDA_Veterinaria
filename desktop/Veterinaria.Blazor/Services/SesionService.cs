@@ -81,6 +81,12 @@ public class SesionService
         Cambio?.Invoke();
     }
 
+    // Después de editar «Mi cuenta» (A-009), para que la barra muestre el nombre nuevo.
+    public void AvisarCambio()
+    {
+        Cambio?.Invoke();
+    }
+
     public void Salir()
     {
         CuentaActual = null;
