@@ -70,10 +70,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ProfesionalService]]
 - [[SesionService]]
 
-### Modelos (28)
+### Modelos (30)
 - [[Animal]]
 - [[AnimalFormulario]]
 - [[Ausencia]]
+- [[CambioContrasenaFormulario]]
+- [[CambioCorreoFormulario]]
 - [[Clinica]]
 - [[CodigoVerificacion]]
 - [[Consulta]]

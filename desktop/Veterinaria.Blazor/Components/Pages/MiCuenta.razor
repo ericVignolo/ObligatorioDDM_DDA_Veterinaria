@@ -14,6 +14,15 @@
 
 <h1>Mi cuenta</h1>
 
+@* Después de cambiar correo o contraseña se cierra la sesión (D-PER-04, D-PER-05). *@
+@if (!string.IsNullOrEmpty(mensajeCierre))
+{
+    <div class="alert alert-success" role="status">
+        @mensajeCierre
+        <a class="alert-link ms-1" href="ingresar">Ingresar</a>
+    </div>
+}
+
 <RequiereSesion>
     @if (cuenta is not null)
     {
@@ -44,7 +53,7 @@
                         <dd class="col-sm-9">@cuenta.Nombre @cuenta.Apellido <span class="d-block small text-muted">Lo ven: vos y el personal de la clínica.</span></dd>
 
                         <dt class="col-sm-3">Correo</dt>
-                        <dd class="col-sm-9">@cuenta.Correo <span class="d-block small text-muted">Lo ven: vos, Recepción y Administración. Identifica tu cuenta y no se cambia desde acá.</span></dd>
+                        <dd class="col-sm-9">@cuenta.Correo <span class="d-block small text-muted">Lo ven: vos, Recepción y Administración. Identifica tu cuenta: se cambia en «Seguridad de la cuenta», con un código.</span></dd>
 
                         <dt class="col-sm-3">Teléfono</dt>
                         <dd class="col-sm-9">@MostrarTelefono(cuenta.Telefono) <span class="d-block small text-muted">Lo ven: vos, Recepción y el veterinario de una asistencia a domicilio.</span></dd>
@@ -122,11 +131,94 @@
                             </div>
                         </fieldset>
 
-                        <p class="small text-muted">El correo y el documento no se cambian desde acá: el correo identifica tu cuenta y el documento al titular de los animales.</p>
+                        <p class="small text-muted">El correo se cambia en «Seguridad de la cuenta». El documento identifica al titular de los animales y se corrige en Recepción.</p>
 
                         <button type="submit" class="btn btn-primary">Guardar cambios</button>
                         <button type="button" class="btn btn-link" @onclick="CancelarEdicion">Cancelar</button>
                     </EditForm>
+                }
+            </div>
+        </section>
+
+        @* Seguridad: cambiar correo y contraseña (D-PER-04, D-PER-05) *@
+        <section class="card mb-4">
+            <div class="card-body">
+                <h2 class="h4 card-title">Seguridad de la cuenta</h2>
+
+                @if (!string.IsNullOrEmpty(mensajeSeguridad))
+                {
+                    <div class="alert @(exitoSeguridad ? "alert-info" : "alert-danger")" role="alert">@mensajeSeguridad</div>
+                }
+
+                @if (!string.IsNullOrEmpty(cuenta.CorreoNuevoPendiente))
+                {
+                    @* Paso 2 del cambio de correo: el código enviado al correo nuevo *@
+                    <p>Enviamos un código de 6 números a <strong>@cuenta.CorreoNuevoPendiente</strong>. Vence a los 15 minutos. Hasta que lo ingreses, tu cuenta sigue con <strong>@cuenta.Correo</strong>.</p>
+                    <div class="alert alert-warning small">
+                        Demostración: como todavía no se envían correos, el código es <strong>@cuenta.CodigoCorreoDemo</strong>.
+                    </div>
+                    <EditForm Model="codigoCorreo" OnValidSubmit="ConfirmarCorreo" FormName="codigo-correo">
+                        <DataAnnotationsValidator />
+                        <div class="mb-3" style="max-width: 16rem;">
+                            <label class="form-label" for="codigo-correo">Código</label>
+                            <InputText id="codigo-correo" class="form-control" @bind-Value="codigoCorreo.Codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
+                            <ValidationMessage For="() => codigoCorreo.Codigo" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Confirmar correo nuevo</button>
+                        <button type="button" class="btn btn-link" @onclick="CancelarCorreo">Cancelar el cambio</button>
+                    </EditForm>
+                }
+                else if (formulario == "correo")
+                {
+                    <EditForm Model="cambioCorreo" OnValidSubmit="PedirCambioCorreo" FormName="cambio-correo">
+                        <DataAnnotationsValidator />
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="correo-nuevo">Correo nuevo</label>
+                                <InputText id="correo-nuevo" type="email" class="form-control" @bind-Value="cambioCorreo.CorreoNuevo" autocomplete="email" />
+                                <ValidationMessage For="() => cambioCorreo.CorreoNuevo" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="contrasena-correo">Contraseña actual</label>
+                                <InputText id="contrasena-correo" type="password" class="form-control" @bind-Value="cambioCorreo.ContrasenaActual" autocomplete="current-password" />
+                                <ValidationMessage For="() => cambioCorreo.ContrasenaActual" />
+                            </div>
+                        </div>
+                        <p class="small text-muted">Te vamos a mandar un código al correo nuevo. Cuando lo confirmes, cerramos la sesión y ingresás con el correo nuevo.</p>
+                        <button type="submit" class="btn btn-primary">Enviar código</button>
+                        <button type="button" class="btn btn-link" @onclick="CerrarFormulario">Cancelar</button>
+                    </EditForm>
+                }
+                else if (formulario == "contrasena")
+                {
+                    <EditForm Model="cambioContrasena" OnValidSubmit="CambiarContrasena" FormName="cambio-contrasena">
+                        <DataAnnotationsValidator />
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="contrasena-actual">Contraseña actual</label>
+                                <InputText id="contrasena-actual" type="password" class="form-control" @bind-Value="cambioContrasena.ContrasenaActual" autocomplete="current-password" />
+                                <ValidationMessage For="() => cambioContrasena.ContrasenaActual" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="contrasena-nueva">Contraseña nueva</label>
+                                <InputText id="contrasena-nueva" type="password" class="form-control" @bind-Value="cambioContrasena.Contrasena" autocomplete="new-password" />
+                                <ValidationMessage For="() => cambioContrasena.Contrasena" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="contrasena-repetir">Repetir contraseña nueva</label>
+                                <InputText id="contrasena-repetir" type="password" class="form-control" @bind-Value="cambioContrasena.RepetirContrasena" autocomplete="new-password" />
+                                <ValidationMessage For="() => cambioContrasena.RepetirContrasena" />
+                            </div>
+                        </div>
+                        <p class="small text-muted">Entre 8 y 64 caracteres. Al cambiarla cerramos la sesión y ingresás con la nueva.</p>
+                        <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
+                        <button type="button" class="btn btn-link" @onclick="CerrarFormulario">Cancelar</button>
+                    </EditForm>
+                }
+                else
+                {
+                    <button class="btn btn-outline-primary btn-sm me-2" @onclick="@(() => AbrirFormulario("correo"))">Cambiar correo</button>
+                    <button class="btn btn-outline-primary btn-sm" @onclick="@(() => AbrirFormulario("contrasena"))">Cambiar contraseña</button>
                 }
             </div>
         </section>
@@ -212,6 +304,15 @@
 
 @code {
     private Cuenta? cuenta;
+
+    // Seguridad (D-PER-04, D-PER-05)
+    private string formulario = "";
+    private CambioCorreoFormulario cambioCorreo = new();
+    private CodigoVerificacion codigoCorreo = new();
+    private CambioContrasenaFormulario cambioContrasena = new();
+    private string mensajeSeguridad = "";
+    private bool exitoSeguridad;
+    private string mensajeCierre = "";
     private PerfilFormulario perfil = new();
     private bool editando;
     private string mensaje = "";
@@ -282,6 +383,97 @@
             editando = false;
             Sesion.AvisarCambio();
         }
+    }
+
+    private void AbrirFormulario(string cual)
+    {
+        formulario = cual;
+        mensajeSeguridad = "";
+        cambioCorreo = new();
+        cambioContrasena = new();
+    }
+
+    private void CerrarFormulario()
+    {
+        formulario = "";
+        mensajeSeguridad = "";
+    }
+
+    private void PedirCambioCorreo()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        var resultado = CuentaService.SolicitarCambioCorreo(cuenta.Id, cambioCorreo);
+        exitoSeguridad = resultado.Exito;
+        mensajeSeguridad = resultado.Mensaje;
+        cambioCorreo.ContrasenaActual = "";
+        if (resultado.Exito)
+        {
+            formulario = "";
+            codigoCorreo = new();
+        }
+    }
+
+    private void ConfirmarCorreo()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        var resultado = CuentaService.ConfirmarCambioCorreo(cuenta.Id, codigoCorreo.Codigo);
+        codigoCorreo = new();
+        if (resultado.Exito)
+        {
+            CerrarSesion(resultado.Mensaje);
+            return;
+        }
+
+        exitoSeguridad = false;
+        mensajeSeguridad = resultado.Mensaje;
+    }
+
+    private void CancelarCorreo()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        CuentaService.CancelarCambioCorreo(cuenta.Id);
+        exitoSeguridad = true;
+        mensajeSeguridad = "Cancelaste el cambio. Tu correo sigue siendo el mismo.";
+    }
+
+    private void CambiarContrasena()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        var resultado = CuentaService.CambiarContrasena(cuenta.Id, cambioContrasena);
+        cambioContrasena = new();
+        if (resultado.Exito)
+        {
+            CerrarSesion(resultado.Mensaje);
+            return;
+        }
+
+        exitoSeguridad = false;
+        mensajeSeguridad = resultado.Mensaje;
+    }
+
+    // Por seguridad, después de cambiar correo o contraseña se vuelve a ingresar.
+    private void CerrarSesion(string texto)
+    {
+        mensajeCierre = texto;
+        formulario = "";
+        Sesion.Salir();
+        cuenta = null;
     }
 
     private string TextoConsultas(Animal animal)

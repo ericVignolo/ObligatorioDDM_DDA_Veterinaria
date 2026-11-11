@@ -15,12 +15,17 @@ Perfil del Cliente (A-009): datos personales con quién ve cada uno, animales co
 
 **Tareas:** A-009
 
+**Requisitos y decisiones:** D-PER-04, D-PER-05
+
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
 - [[AgendaService]]
 - [[Animal]]
 - [[AnimalService]]
+- [[CambioContrasenaFormulario]]
+- [[CambioCorreoFormulario]]
+- [[CodigoVerificacion]]
 - [[ConsultaService]]
 - [[Cuenta]]
 - [[CuentaService]]

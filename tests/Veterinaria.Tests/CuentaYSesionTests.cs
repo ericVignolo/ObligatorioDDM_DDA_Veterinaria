@@ -1,3 +1,4 @@
+using Veterinaria.Blazor.Models;
 using Veterinaria.Blazor.Services;
 
 namespace Veterinaria.Tests;
@@ -183,5 +184,80 @@ public class CuentaYSesionTests
 
         Assert.False(f.Cuentas.ActualizarPerfil(cuenta.Id, perfil).Exito);
         Assert.Equal("Nueva Palmira", cuenta.Localidad);
+    }
+
+    // D-PER-04: cambio de correo con verificación.
+    [Fact]
+    public void Cambio_de_correo_espera_el_codigo_y_despues_se_ingresa_con_el_nuevo()
+    {
+        var f = new Fabrica();
+        var cuenta = f.ClienteVerificado();
+
+        var pedido = f.Cuentas.SolicitarCambioCorreo(cuenta.Id, new CambioCorreoFormulario { CorreoNuevo = " Nuevo@Prueba.uy ", ContrasenaActual = "clave-segura-1" });
+
+        Assert.True(pedido.Exito);
+        Assert.Equal("cliente@prueba.uy", cuenta.Correo);
+        Assert.Equal("nuevo@prueba.uy", cuenta.CorreoNuevoPendiente);
+
+        var confirmado = f.Cuentas.ConfirmarCambioCorreo(cuenta.Id, cuenta.CodigoCorreoDemo);
+
+        Assert.True(confirmado.Exito);
+        Assert.Equal("nuevo@prueba.uy", cuenta.Correo);
+        Assert.Equal("", cuenta.CorreoNuevoPendiente);
+        Assert.Null(f.Cuentas.ValidarCredenciales("cliente@prueba.uy", "clave-segura-1"));
+        Assert.NotNull(f.Cuentas.ValidarCredenciales("nuevo@prueba.uy", "clave-segura-1"));
+    }
+
+    [Fact]
+    public void Cambio_de_correo_exige_contrasena_y_correo_libre()
+    {
+        var f = new Fabrica();
+        var cuenta = f.ClienteVerificado();
+        f.ClienteVerificado("otro@prueba.uy", "2.345.678-3");
+
+        var sinClave = f.Cuentas.SolicitarCambioCorreo(cuenta.Id, new CambioCorreoFormulario { CorreoNuevo = "nuevo@prueba.uy", ContrasenaActual = "otra-clave" });
+        var ocupado = f.Cuentas.SolicitarCambioCorreo(cuenta.Id, new CambioCorreoFormulario { CorreoNuevo = "OTRO@prueba.uy", ContrasenaActual = "clave-segura-1" });
+        var mismo = f.Cuentas.SolicitarCambioCorreo(cuenta.Id, new CambioCorreoFormulario { CorreoNuevo = "cliente@prueba.uy", ContrasenaActual = "clave-segura-1" });
+
+        Assert.False(sinClave.Exito);
+        Assert.False(ocupado.Exito);
+        Assert.False(mismo.Exito);
+        Assert.Equal("", cuenta.CorreoNuevoPendiente);
+    }
+
+    [Fact]
+    public void Codigo_de_cambio_de_correo_incorrecto_se_invalida_al_quinto()
+    {
+        var f = new Fabrica();
+        var cuenta = f.ClienteVerificado();
+        f.Cuentas.SolicitarCambioCorreo(cuenta.Id, new CambioCorreoFormulario { CorreoNuevo = "nuevo@prueba.uy", ContrasenaActual = "clave-segura-1" });
+        var correcto = cuenta.CodigoCorreoDemo;
+        var incorrecto = correcto == "000000" ? "111111" : "000000";
+
+        for (var i = 0; i < 5; i++)
+        {
+            Assert.False(f.Cuentas.ConfirmarCambioCorreo(cuenta.Id, incorrecto).Exito);
+        }
+
+        Assert.False(f.Cuentas.ConfirmarCambioCorreo(cuenta.Id, correcto).Exito);
+        Assert.Equal("cliente@prueba.uy", cuenta.Correo);
+    }
+
+    // D-PER-05: cambio de contraseña con la actual.
+    [Fact]
+    public void Cambio_de_contrasena_exige_la_actual_y_reemplaza_la_anterior()
+    {
+        var f = new Fabrica();
+        var cuenta = f.ClienteVerificado();
+
+        var malaActual = f.Cuentas.CambiarContrasena(cuenta.Id, new CambioContrasenaFormulario { ContrasenaActual = "otra-clave", Contrasena = "clave-nueva-2", RepetirContrasena = "clave-nueva-2" });
+        var igual = f.Cuentas.CambiarContrasena(cuenta.Id, new CambioContrasenaFormulario { ContrasenaActual = "clave-segura-1", Contrasena = "clave-segura-1", RepetirContrasena = "clave-segura-1" });
+        var bien = f.Cuentas.CambiarContrasena(cuenta.Id, new CambioContrasenaFormulario { ContrasenaActual = "clave-segura-1", Contrasena = "clave-nueva-2", RepetirContrasena = "clave-nueva-2" });
+
+        Assert.False(malaActual.Exito);
+        Assert.False(igual.Exito);
+        Assert.True(bien.Exito);
+        Assert.Null(f.Cuentas.ValidarCredenciales("cliente@prueba.uy", "clave-segura-1"));
+        Assert.NotNull(f.Cuentas.ValidarCredenciales("cliente@prueba.uy", "clave-nueva-2"));
     }
 }
