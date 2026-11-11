@@ -11,7 +11,7 @@ generado: true
 
 Sesión de demostración (A-008, A-010). Dura lo que dura la pestaña del navegador.
 
-**Tareas:** A-008, A-010
+**Tareas:** A-008, A-009, A-010
 
 **Requisitos y decisiones:** RN-38, RNF-SEG-03
 
@@ -39,6 +39,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Home]]
 - [[Ingresar]]
 - [[IntencionService]]
+- [[MiCuenta]]
 - [[PanelInicio]]
 - [[RequierePersonal]]
 - [[RequiereSesion]]

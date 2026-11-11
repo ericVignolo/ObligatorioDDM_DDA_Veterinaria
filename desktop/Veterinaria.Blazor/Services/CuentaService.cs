@@ -230,6 +230,55 @@ public class CuentaService
 
     // Devuelve la cuenta si el correo y la contraseña coinciden; si no, null.
     // No distingue entre correo inexistente y contraseña incorrecta.
+    // A-009: carga el formulario de «Mi cuenta» con los datos actuales.
+    public PerfilFormulario ParaEditarPerfil(Cuenta cuenta)
+    {
+        return new PerfilFormulario
+        {
+            Nombre = cuenta.Nombre,
+            Apellido = cuenta.Apellido,
+            Telefono = cuenta.Telefono,
+            Calle = cuenta.Calle,
+            NumeroPuerta = cuenta.NumeroPuerta,
+            Apartamento = cuenta.Apartamento,
+            Localidad = cuenta.Localidad,
+            Departamento = cuenta.Departamento,
+            Referencias = cuenta.Referencias
+        };
+    }
+
+    // A-009: guarda los datos editables. El servicio vuelve a validar aunque el formulario ya lo haya hecho.
+    // Correo y documento no se cambian acá (RN-37, RN-42).
+    public ResultadoOperacion ActualizarPerfil(int cuentaId, PerfilFormulario datos)
+    {
+        var cuenta = ObtenerPorId(cuentaId);
+        if (cuenta is null || !cuenta.Verificada)
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "No encontramos tu cuenta. Volvé a ingresar." };
+        }
+
+        var telefono = ValidacionDatos.NormalizarTelefono(datos.Telefono);
+        if (telefono is null
+            || string.IsNullOrWhiteSpace(datos.Nombre) || string.IsNullOrWhiteSpace(datos.Apellido)
+            || string.IsNullOrWhiteSpace(datos.Calle) || string.IsNullOrWhiteSpace(datos.NumeroPuerta)
+            || string.IsNullOrWhiteSpace(datos.Localidad) || !Departamentos.Contains(datos.Departamento))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Revisá los datos marcados antes de guardar." };
+        }
+
+        cuenta.Nombre = datos.Nombre.Trim();
+        cuenta.Apellido = datos.Apellido.Trim();
+        cuenta.Telefono = telefono;
+        cuenta.Calle = datos.Calle.Trim();
+        cuenta.NumeroPuerta = datos.NumeroPuerta.Trim();
+        cuenta.Apartamento = datos.Apartamento.Trim();
+        cuenta.Localidad = datos.Localidad.Trim();
+        cuenta.Departamento = datos.Departamento;
+        cuenta.Referencias = datos.Referencias.Trim();
+
+        return new ResultadoOperacion { Exito = true, Mensaje = "Guardamos los cambios de tu cuenta." };
+    }
+
     public Cuenta? ValidarCredenciales(string correo, string contrasena)
     {
         var cuenta = ObtenerPorCorreo(correo);

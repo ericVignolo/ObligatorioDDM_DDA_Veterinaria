@@ -130,4 +130,58 @@ public class CuentaYSesionTests
         Assert.False(f.Sesion.Iniciada);
         Assert.True(f.Sesion.TieneRol(rol));
     }
+
+    // A-009: «Mi cuenta».
+    [Fact]
+    public void Perfil_guarda_datos_editables_y_normaliza_el_telefono()
+    {
+        var f = new Fabrica();
+        var cuenta = f.ClienteVerificado();
+        var perfil = f.Cuentas.ParaEditarPerfil(cuenta);
+        perfil.Nombre = "  Juana María ";
+        perfil.Telefono = "098 765 432";
+        perfil.Localidad = "Carmelo";
+
+        var resultado = f.Cuentas.ActualizarPerfil(cuenta.Id, perfil);
+
+        Assert.True(resultado.Exito);
+        Assert.Equal("Juana María", cuenta.Nombre);
+        Assert.Equal("+59898765432", cuenta.Telefono);
+        Assert.Equal("Carmelo", cuenta.Localidad);
+        Assert.Equal("cliente@prueba.uy", cuenta.Correo);
+    }
+
+    [Theory]
+    [InlineData("telefono")]
+    [InlineData("nombre")]
+    [InlineData("departamento")]
+    public void Perfil_invalido_no_cambia_nada(string campo)
+    {
+        var f = new Fabrica();
+        var cuenta = f.ClienteVerificado();
+        var perfil = f.Cuentas.ParaEditarPerfil(cuenta);
+        perfil.Localidad = "Carmelo";
+        if (campo == "telefono") perfil.Telefono = "12";
+        if (campo == "nombre") perfil.Nombre = "   ";
+        if (campo == "departamento") perfil.Departamento = "Buenos Aires";
+
+        var resultado = f.Cuentas.ActualizarPerfil(cuenta.Id, perfil);
+
+        Assert.False(resultado.Exito);
+        Assert.Equal("Nueva Palmira", cuenta.Localidad);
+        Assert.Equal("+59899123456", cuenta.Telefono);
+    }
+
+    [Fact]
+    public void Perfil_de_cuenta_sin_verificar_no_se_guarda()
+    {
+        var f = new Fabrica();
+        f.Cuentas.Registrar(Fabrica.RegistroValido());
+        var cuenta = f.Cuentas.ObtenerPorCorreo("cliente@prueba.uy")!;
+        var perfil = f.Cuentas.ParaEditarPerfil(cuenta);
+        perfil.Localidad = "Carmelo";
+
+        Assert.False(f.Cuentas.ActualizarPerfil(cuenta.Id, perfil).Exito);
+        Assert.Equal("Nueva Palmira", cuenta.Localidad);
+    }
 }
