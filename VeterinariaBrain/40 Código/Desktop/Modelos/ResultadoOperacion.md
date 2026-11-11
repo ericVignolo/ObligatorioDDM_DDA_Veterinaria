@@ -14,7 +14,10 @@ Resultado simple de una operación del servicio: si salió bien y qué mostrar.
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AgendaRecepcion]]
 - [[AgendaService]]
 - [[AnimalService]]
+- [[AtencionConsulta]]
+- [[ConsultaService]]
 - [[CuentaService]]
 - [[SesionService]]

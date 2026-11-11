@@ -11,9 +11,9 @@ generado: true
 
 **Ruta:** `/ingresar`
 
-Vuelve a lo que estaba haciendo antes de ingresar (A-011).
+SOLO DEMOSTRACIÓN (A-010): cuentas del personal para probar el panel.
 
-**Tareas:** A-011
+**Tareas:** A-010, A-011
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 

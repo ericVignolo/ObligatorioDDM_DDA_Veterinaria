@@ -18,11 +18,15 @@ Datos ficticios de la sección A. En la sección C se reemplaza por PrestacionAp
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
+- [[Consulta]]
 - [[Prestacion]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Acceso]]
+- [[AgendaRecepcion]]
 - [[AgendaService]]
+- [[AgendaVeterinario]]
+- [[AtencionConsulta]]
 - [[Home]]
 - [[PrestacionDetalle]]
 - [[Reservar]]

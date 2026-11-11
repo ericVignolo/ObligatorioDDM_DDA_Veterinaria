@@ -15,7 +15,7 @@
     <p class="lead">@clinica.Lema</p>
     <p class="text-muted mb-3">Atendemos perros, gatos, caballos, ovinos y bovinos en @clinica.Ciudad.</p>
     <a class="btn btn-primary me-2" href="servicios">Ver servicios</a>
-    @if (!Sesion.Iniciada)
+    @if (!Sesion.HaySesion)
     {
         <a class="btn btn-outline-primary" href="acceso">Ingresar o crear cuenta</a>
     }

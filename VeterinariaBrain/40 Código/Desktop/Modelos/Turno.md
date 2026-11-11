@@ -18,6 +18,10 @@ Turno reservado (A-015, CU-CLI-02). En la sección C lo crea la API dentro de un
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AgendaRecepcion]]
 - [[AgendaService]]
+- [[AgendaVeterinario]]
+- [[AtencionConsulta]]
+- [[ConsultaService]]
 - [[Reservar]]
 - [[Turnos]]

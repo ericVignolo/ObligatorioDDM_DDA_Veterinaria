@@ -14,10 +14,12 @@ builder.Services.AddScoped<ClinicaService>();
 builder.Services.AddScoped<ProfesionalService>();
 builder.Services.AddScoped<DocumentoLegalService>();
 builder.Services.AddScoped<CuentaService>();
+builder.Services.AddScoped<PersonalService>();
 builder.Services.AddScoped<SesionService>();
 builder.Services.AddScoped<IntencionService>();
 builder.Services.AddScoped<AnimalService>();
 builder.Services.AddScoped<AgendaService>();
+builder.Services.AddScoped<ConsultaService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

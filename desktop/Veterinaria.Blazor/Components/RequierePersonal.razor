@@ -1,0 +1,30 @@
+@using Veterinaria.Blazor.Services
+@inject SesionService Sesion
+
+@* Muestra el contenido solo al personal con alguno de los roles indicados (A-010).
+   Es un control visual de la demostración: los permisos reales los valida la API (sección C). *@
+@if (Sesion.EsPersonal && (Roles.Length == 0 || Roles.Any(Sesion.TieneRol)))
+{
+    @ChildContent
+}
+else if (Sesion.EsPersonal)
+{
+    <div class="alert alert-warning">Tu rol (@Sesion.PersonalActual!.Rol) no tiene acceso a esta sección.</div>
+    <a href="panel">← Volver al panel</a>
+}
+else
+{
+    <div class="alert alert-info">
+        Esta sección es para el personal de la clínica.
+        <a class="alert-link ms-1" href="ingresar">Ingresar</a>
+    </div>
+}
+
+@code {
+    // Roles permitidos; vacío = cualquier rol del personal.
+    [Parameter]
+    public string[] Roles { get; set; } = Array.Empty<string>();
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

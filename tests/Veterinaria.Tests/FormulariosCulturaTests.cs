@@ -1,0 +1,102 @@
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using Veterinaria.Blazor.Models;
+
+namespace Veterinaria.Tests;
+
+// La aplicación corre en es-UY (Program.cs). Validar los formularios en esa cultura evita excepciones
+// que en el navegador dejan la pantalla en negro (los límites "0.01" con punto, por ejemplo).
+public class FormulariosCulturaTests
+{
+    public static IEnumerable<object[]> Formularios()
+    {
+        yield return new object[] { new ConsultaFormulario() };
+        yield return new object[] { new ConsultaFormulario { PesoKg = 18.4m, TemperaturaC = 38.5m, FrecuenciaCardiaca = 90, FrecuenciaRespiratoria = 20 } };
+        yield return new object[] { new EnmiendaFormulario() };
+        yield return new object[] { new FirmaConsulta() };
+        yield return new object[] { new AnimalFormulario() };
+        yield return new object[] { Fabrica.RegistroValido() };
+        yield return new object[] { new InicioSesion() };
+        yield return new object[] { new MotivoFormulario() };
+        yield return new object[] { new MotivoOpcionalFormulario() };
+    }
+
+    private static bool EsValido(object formulario)
+    {
+        return Validator.TryValidateObject(formulario, new ValidationContext(formulario), new List<ValidationResult>(), validateAllProperties: true);
+    }
+
+    [Theory]
+    [InlineData("", false)]
+    [InlineData("   ", false)]
+    [InlineData("El paciente se retiró", true)]
+    public void El_motivo_obligatorio_no_acepta_vacio(string motivo, bool valido)
+    {
+        Assert.Equal(valido, EsValido(new MotivoFormulario { Motivo = motivo }));
+    }
+
+    [Fact]
+    public void El_motivo_opcional_acepta_vacio_y_limita_a_200()
+    {
+        Assert.True(EsValido(new MotivoOpcionalFormulario()));
+        Assert.False(EsValido(new MotivoOpcionalFormulario { Motivo = new string('a', 201) }));
+        Assert.False(EsValido(new MotivoFormulario { Motivo = new string('a', 201) }));
+    }
+
+    [Theory]
+    [MemberData(nameof(Formularios))]
+    public void Validar_en_es_UY_no_tira_excepcion(object formulario)
+    {
+        var anterior = CultureInfo.CurrentCulture;
+        CultureInfo.CurrentCulture = new CultureInfo("es-UY");
+        try
+        {
+            var errores = new List<ValidationResult>();
+            Validator.TryValidateObject(formulario, new ValidationContext(formulario), errores, validateAllProperties: true);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = anterior;
+        }
+    }
+
+    [Theory]
+    [InlineData(0.005, false)]
+    [InlineData(0.01, true)]
+    [InlineData(2000, true)]
+    [InlineData(2001, false)]
+    public void Rango_de_peso_en_es_UY(double peso, bool valido)
+    {
+        var anterior = CultureInfo.CurrentCulture;
+        CultureInfo.CurrentCulture = new CultureInfo("es-UY");
+        try
+        {
+            var formulario = new ConsultaFormulario { PesoKg = (decimal)peso };
+            var errores = new List<ValidationResult>();
+            Validator.TryValidateObject(formulario, new ValidationContext(formulario), errores, validateAllProperties: true);
+
+            Assert.Equal(valido, !errores.Any(e => e.MemberNames.Contains(nameof(ConsultaFormulario.PesoKg))));
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = anterior;
+        }
+    }
+
+    // Independiente del orden de las pruebas: revisa los atributos directamente, en todos los modelos.
+    [Fact]
+    public void Todo_Range_con_decimales_lee_sus_limites_en_cultura_invariante()
+    {
+        var conDecimales = new[] { typeof(decimal), typeof(double), typeof(float) };
+        var malos = typeof(ConsultaFormulario).Assembly.GetTypes()
+            .Where(t => t.Namespace == "Veterinaria.Blazor.Models")
+            .SelectMany(t => t.GetProperties().Select(p => (Tipo: t, Propiedad: p)))
+            .SelectMany(x => x.Propiedad.GetCustomAttributes(typeof(RangeAttribute), true).Cast<RangeAttribute>()
+                .Select(r => (x.Tipo, x.Propiedad, Rango: r)))
+            .Where(x => conDecimales.Contains(x.Rango.OperandType) && !x.Rango.ParseLimitsInInvariantCulture)
+            .Select(x => $"{x.Tipo.Name}.{x.Propiedad.Name}")
+            .ToList();
+
+        Assert.Empty(malos);
+    }
+}

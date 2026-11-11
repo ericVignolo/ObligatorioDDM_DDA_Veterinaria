@@ -1,0 +1,37 @@
+@page "/panel"
+@using Veterinaria.Blazor.Services
+@inject SesionService Sesion
+
+<PageTitle>Panel — VITALIA</PageTitle>
+
+<RequierePersonal>
+    <h1>Panel de @Sesion.PersonalActual!.Rol</h1>
+    <p class="text-muted">Hola, @Sesion.PersonalActual.Nombre.</p>
+
+    @* A-010: lo que se ve depende del rol. Es un control visual: los permisos reales los valida la API (sección C). *@
+    <div class="alert alert-secondary small">
+        Demostración: el panel muestra lo que corresponde a tu rol, pero la autorización real la hará la API.
+    </div>
+
+    <div class="row">
+        @if (Sesion.TieneRol(PersonalService.Recepcion))
+        {
+            <Atajo Titulo="Agenda del día" Texto="Turnos de todos los profesionales: llegadas, ausencias y cancelaciones." Enlace="panel/agenda" />
+            <Atajo Titulo="Clientes y animales" Texto="Buscar y registrar clientes y animales en mostrador (RF-REC-03)." />
+            <Atajo Titulo="Cobros" Texto="Cobrar prestaciones finalizadas y emitir comprobantes (RF-REC-05)." />
+        }
+        @if (Sesion.TieneRol(PersonalService.Veterinario))
+        {
+            <Atajo Titulo="Mi agenda" Texto="Tus turnos del día y quién está en espera." Enlace="panel/mi-agenda" />
+            <Atajo Titulo="Consultas" Texto="Atender, registrar y firmar la consulta (A-019)." />
+            <Atajo Titulo="Internación" Texto="Evolución y alta de animales internados." />
+        }
+        @if (Sesion.TieneRol(PersonalService.Administrador))
+        {
+            <Atajo Titulo="Servicios y tarifas" Texto="Alta, baja y precios de servicios (RF-ADM-02)." />
+            <Atajo Titulo="Horarios del personal" Texto="Jornadas, licencias y feriados (RF-ADM-04)." />
+            <Atajo Titulo="Usuarios y roles" Texto="Cuentas del personal y permisos (RF-ADM-01)." />
+            <Atajo Titulo="Parámetros" Texto="24 h, 2 h, 60 días, tolerancia y demás reglas (RF-ADM-10)." />
+        }
+    </div>
+</RequierePersonal>

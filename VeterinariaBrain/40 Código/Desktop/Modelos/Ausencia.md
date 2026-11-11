@@ -16,6 +16,7 @@ Días en que un profesional no atiende: licencia, capacitación, etc. (RF-ADM-04
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AgendaRecepcion]]
 - [[Profesional]]
 - [[ProfesionalDetalle]]
 - [[ProfesionalService]]

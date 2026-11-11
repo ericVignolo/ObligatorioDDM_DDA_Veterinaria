@@ -9,16 +9,22 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (22)
+### Páginas (28)
 - [[Acceso]] · `/acceso`
+- [[AgendaRecepcion]] · `/panel/agenda`
+- [[AgendaVeterinario]] · `/panel/mi-agenda`
 - [[AnimalDetalle]] · `/animales/{Id:int}`
 - [[AnimalEditar]] · `/animales/{Id:int}/editar`
 - [[AnimalNuevo]] · `/animales/nuevo`
 - [[Animales]] · `/animales`
+- [[AtencionConsulta]] · `/panel/consulta/{TurnoId:int}`
 - [[Cookies]] · `/cookies`
+- [[HistoriaAnimal]] · `/animales/{Id:int}/historia`
+- [[HistoriaClinica]] · `/panel/historia/{AnimalId:int}`
 - [[Home]] · `/`
 - [[Ingresar]] · `/ingresar`
 - [[LaClinica]] · `/clinica`
+- [[PanelInicio]] · `/panel`
 - [[PrestacionDetalle]] · `/servicios/{Id:int}`
 - [[Privacidad]] · `/privacidad`
 - [[ProfesionalDetalle]] · `/profesionales/{Id:int}`
@@ -33,42 +39,57 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-### Componentes (11)
+### Componentes (15)
 - [[AnimalCard]]
 - [[AnimalForm]]
+- [[Atajo]]
 - [[BarraSesion]]
 - [[EncabezadoLegal]]
+- [[EstadoTurno]]
 - [[MainLayout]]
 - [[NavMenu]]
 - [[PasosReserva]]
 - [[PieLegal]]
 - [[PrestacionCard]]
 - [[ProfesionalCard]]
+- [[RegistroClinico]]
+- [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (9)
+### Servicios (11)
 - [[AgendaService]]
 - [[AnimalService]]
 - [[ClinicaService]]
+- [[ConsultaService]]
 - [[CuentaService]]
 - [[DocumentoLegalService]]
 - [[IntencionService]]
+- [[PersonalService]]
 - [[PrestacionService]]
 - [[ProfesionalService]]
 - [[SesionService]]
 
-### Modelos (18)
+### Modelos (27)
 - [[Animal]]
 - [[AnimalFormulario]]
 - [[Ausencia]]
 - [[Clinica]]
 - [[CodigoVerificacion]]
+- [[Consulta]]
+- [[ConsultaFormulario]]
 - [[Cuenta]]
 - [[DocumentoLegal]]
+- [[Enmienda]]
+- [[EnmiendaFormulario]]
+- [[FirmaConsulta]]
 - [[FranjaHoraria]]
 - [[InicioSesion]]
+- [[LecturaHistoria]]
+- [[MotivoFormulario]]
+- [[MotivoOpcionalFormulario]]
 - [[NivelUrgencia]]
 - [[NuevaContrasena]]
+- [[Personal]]
 - [[Prestacion]]
 - [[Profesional]]
 - [[RegistroCliente]]

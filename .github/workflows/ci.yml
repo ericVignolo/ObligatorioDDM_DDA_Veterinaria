@@ -1,0 +1,33 @@
+# Compila el proyecto Blazor y corre las pruebas en cada PR y en cada cambio de desktop y main.
+# Así el código que escribe Claude (que no puede compilar) llega verificado antes de probarlo con F5.
+name: Compilar y probar
+
+on:
+  pull_request:
+    branches: [desktop, main]
+  push:
+    branches: [desktop, main]
+  workflow_dispatch:
+
+jobs:
+  compilar-y-probar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Compilar Blazor
+        run: dotnet build desktop/Veterinaria.Blazor/Veterinaria.Blazor.csproj --configuration Release
+
+      - name: Correr pruebas
+        run: dotnet test tests/Veterinaria.Tests/Veterinaria.Tests.csproj --configuration Release --logger "console;verbosity=normal" --logger "trx;LogFileName=resultados.trx"
+
+      - name: Guardar resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-pruebas
+          path: tests/Veterinaria.Tests/TestResults/

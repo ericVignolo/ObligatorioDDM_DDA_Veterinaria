@@ -17,6 +17,10 @@ public class Profesional
     public List<string> Especies { get; set; } = new();
     public List<int> PrestacionIds { get; set; } = new();
 
+    // Matrícula profesional: sin una vigente no se firman consultas (RN-13). Vacía si no realiza atención clínica.
+    public string Matricula { get; set; } = "";
+    public DateOnly? MatriculaVigenteHasta { get; set; }
+
     // Solo se muestran los habilitados para publicación.
     public bool Publicado { get; set; } = true;
 }

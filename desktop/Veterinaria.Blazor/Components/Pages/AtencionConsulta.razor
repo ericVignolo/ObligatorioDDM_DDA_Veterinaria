@@ -1,0 +1,324 @@
+@page "/panel/consulta/{TurnoId:int}"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AgendaService Agenda
+@inject AnimalService AnimalService
+@inject CuentaService CuentaService
+@inject ConsultaService Consultas
+@inject PrestacionService PrestacionService
+@inject SesionService Sesion
+
+<PageTitle>Consulta — VITALIA</PageTitle>
+
+<RequierePersonal Roles="@(new[] { PersonalService.Veterinario })">
+    @if (turno is null || consulta is null || animal is null || consulta.AutorId != Sesion.PersonalActual!.Id)
+    {
+        <h1>Consulta no disponible</h1>
+        <p>No hay una consulta tuya para este turno. Iniciá la atención desde tu agenda cuando el paciente esté En espera.</p>
+    }
+    else
+    {
+        <h1>Consulta de @animal.Nombre</h1>
+        <p class="text-muted">
+            @EspecieYRaza
+            · responsable: @NombreResponsable
+            · @(PrestacionService.ObtenerPorId(turno.PrestacionId)?.Nombre) a las @turno.Inicio.ToString("HH:mm")
+            · <EstadoTurno Estado="@turno.Estado" />
+        </p>
+
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <div class="alert @(exito ? "alert-success" : "alert-danger")" role="status">@mensaje</div>
+        }
+
+        <div class="row">
+            @* Antecedentes destacados antes de atender (CU-VET-01, paso 4) *@
+            <aside class="col-lg-4 order-lg-2 mb-4">
+                <h2 class="h5">Antecedentes</h2>
+                @if (!lecturaRegistrada)
+                {
+                    <p class="small text-muted">Este animal ya no tiene un turno activo: para ver sus antecedentes abrí la historia completa (pide el motivo del acceso).</p>
+                }
+                @if (!string.IsNullOrWhiteSpace(alergiasPrevias))
+                {
+                    <div class="alert alert-warning py-2"><strong>Alergias registradas:</strong> @alergiasPrevias</div>
+                }
+                <p class="small mb-1"><strong>Informados por el responsable:</strong> @Mostrar(animal.Antecedentes)</p>
+                <p class="small"><strong>Señas:</strong> @Mostrar(animal.SenasParticulares)</p>
+                @if (historia.Count == 0)
+                {
+                    <p class="small text-muted">Sin consultas firmadas anteriores.</p>
+                }
+                else
+                {
+                    <ul class="small ps-3">
+                        @foreach (var anterior in historia.Take(3))
+                        {
+                            <li>@anterior.FechaFirma?.ToString("dd/MM/yyyy"): @anterior.Diagnostico</li>
+                        }
+                    </ul>
+                }
+                <a class="small" href="@($"panel/historia/{animal.Id}")">Ver historia completa</a>
+            </aside>
+
+            <section class="col-lg-8 order-lg-1">
+                @if (consulta.Estado == "Firmada")
+                {
+                    <RegistroClinico Consulta="consulta" MostrarHuella="true" />
+                    <a href="panel/mi-agenda">← Volver a mi agenda</a>
+                }
+                else if (turno.Estado != "En curso")
+                {
+                    <div class="alert alert-secondary">El turno quedó @turno.Estado.ToLower(). El borrador se conserva y no se publica.</div>
+                    <a href="panel/mi-agenda">← Volver a mi agenda</a>
+                }
+                else
+                {
+                    <EditForm EditContext="contexto" OnValidSubmit="Guardar" FormName="consulta">
+                        <DataAnnotationsValidator />
+
+                        <div class="mb-3">
+                            <label class="form-label" for="motivo">Motivo de consulta <span class="text-danger">*</span></label>
+                            <InputText id="motivo" class="form-control" @bind-Value="formulario.Motivo" />
+                            <ValidationMessage For="() => formulario.Motivo" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="anamnesis">Anamnesis</label>
+                            <InputTextArea id="anamnesis" class="form-control" rows="3" @bind-Value="formulario.Anamnesis" />
+                            <ValidationMessage For="() => formulario.Anamnesis" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="examen">Examen físico</label>
+                            <InputTextArea id="examen" class="form-control" rows="3" @bind-Value="formulario.ExamenFisico" />
+                            <ValidationMessage For="() => formulario.ExamenFisico" />
+                        </div>
+
+                        <fieldset class="row g-2 mb-3">
+                            <legend class="form-label fs-6">Signos vitales y peso <span class="text-muted small">(los que apliquen a la especie)</span></legend>
+                            <div class="col-6 col-md-3">
+                                <label class="form-label small" for="peso">Peso (kg)</label>
+                                <InputNumber id="peso" class="form-control" @bind-Value="formulario.PesoKg" step="0.01" />
+                                <ValidationMessage For="() => formulario.PesoKg" />
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label class="form-label small" for="temperatura">Temperatura (°C)</label>
+                                <InputNumber id="temperatura" class="form-control" @bind-Value="formulario.TemperaturaC" step="0.1" />
+                                <ValidationMessage For="() => formulario.TemperaturaC" />
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label class="form-label small" for="fc">FC (lpm)</label>
+                                <InputNumber id="fc" class="form-control" @bind-Value="formulario.FrecuenciaCardiaca" />
+                                <ValidationMessage For="() => formulario.FrecuenciaCardiaca" />
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label class="form-label small" for="fr">FR (rpm)</label>
+                                <InputNumber id="fr" class="form-control" @bind-Value="formulario.FrecuenciaRespiratoria" />
+                                <ValidationMessage For="() => formulario.FrecuenciaRespiratoria" />
+                            </div>
+                        </fieldset>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="alergias">Alergias y contraindicaciones</label>
+                            <InputText id="alergias" class="form-control" @bind-Value="formulario.Alergias" />
+                            <ValidationMessage For="() => formulario.Alergias" />
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-9">
+                                <label class="form-label" for="diagnostico">Diagnóstico <span class="text-danger">*</span></label>
+                                <InputTextArea id="diagnostico" class="form-control" rows="2" @bind-Value="formulario.Diagnostico" />
+                                <ValidationMessage For="() => formulario.Diagnostico" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="tipo">Tipo</label>
+                                <InputSelect id="tipo" class="form-select" @bind-Value="formulario.TipoDiagnostico">
+                                    <option value="Presuntivo">Presuntivo</option>
+                                    <option value="Definitivo">Definitivo</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="tratamiento">Tratamiento</label>
+                            <InputTextArea id="tratamiento" class="form-control" rows="3" @bind-Value="formulario.Tratamiento" />
+                            <ValidationMessage For="() => formulario.Tratamiento" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="indicaciones">Indicaciones para el responsable</label>
+                            <InputTextArea id="indicaciones" class="form-control" rows="2" @bind-Value="formulario.Indicaciones" />
+                            <ValidationMessage For="() => formulario.Indicaciones" />
+                        </div>
+
+                        <p class="small text-muted">* Obligatorios para firmar. El borrador se puede guardar incompleto y el cliente no lo ve.
+                            Adjuntos e insumos se agregan con la API y el inventario (RF-VET-03, A-022).</p>
+
+                        <button type="submit" class="btn btn-outline-primary">Guardar borrador</button>
+                        <button type="button" class="btn btn-success ms-2" @onclick="AbrirFirma">Revisar y firmar</button>
+                    </EditForm>
+
+                    @if (mostrarFirma)
+                    {
+                        <div class="border rounded p-3 mt-3 bg-light">
+                            <h2 class="h6">Firmar y cerrar</h2>
+                            <p class="small mb-2">Al firmar, la consulta no se puede modificar (solo enmendar) y el turno queda Finalizado.
+                                Volvé a ingresar tu contraseña para confirmar.</p>
+                            <EditForm Model="firma" OnValidSubmit="Firmar" FormName="firma">
+                                <DataAnnotationsValidator />
+                                <div class="mb-2" style="max-width: 20rem;">
+                                    <label class="form-label" for="contrasena">Contraseña</label>
+                                    <InputText id="contrasena" type="password" class="form-control" @bind-Value="firma.Contrasena" autocomplete="current-password" />
+                                    <ValidationMessage For="() => firma.Contrasena" />
+                                </div>
+                                <button type="submit" class="btn btn-success">Firmar consulta</button>
+                                <button type="button" class="btn btn-link" @onclick="() => mostrarFirma = false">Seguir editando</button>
+                            </EditForm>
+                        </div>
+                    }
+
+                    <details class="mt-4">
+                        <summary class="small">El paciente se retiró sin ser atendido</summary>
+                        <div class="mt-2" style="max-width: 30rem;">
+                            <p class="small">Solo si no hubo atención ni se usaron insumos (P-RC-04). El borrador se conserva como evidencia.</p>
+                            <EditForm Model="cancelacion" OnValidSubmit="CancelarSinAtencion" FormName="cancelacion-consulta">
+                                <DataAnnotationsValidator />
+                                <label class="form-label small" for="motivoCancelacion">Motivo</label>
+                                <InputText id="motivoCancelacion" class="form-control" maxlength="200" @bind-Value="cancelacion.Motivo" />
+                                <ValidationMessage For="() => cancelacion.Motivo" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm mt-2">Cancelar turno sin atención</button>
+                            </EditForm>
+                        </div>
+                    </details>
+                }
+            </section>
+        </div>
+    }
+</RequierePersonal>
+
+@code {
+    [Parameter]
+    public int TurnoId { get; set; }
+
+    private Turno? turno;
+    private Consulta? consulta;
+    private Animal? animal;
+    private List<Consulta> historia = new();
+    private string alergiasPrevias = "";
+    private ConsultaFormulario formulario = new();
+    private EditContext contexto = new(new ConsultaFormulario());
+
+    // Versión que esta pantalla cargó; el servicio rechaza un guardado con una versión vieja (A-RC-02).
+    private int version;
+    private bool lecturaRegistrada;
+    private int turnoCargado;
+    private FirmaConsulta firma = new();
+    private bool mostrarFirma;
+    private MotivoFormulario cancelacion = new();
+    private string mensaje = "";
+    private bool exito;
+
+    protected override void OnParametersSet()
+    {
+        // Solo se recarga al cambiar de turno, para no pisar lo que se está escribiendo.
+        if (turnoCargado == TurnoId)
+        {
+            return;
+        }
+
+        turnoCargado = TurnoId;
+        turno = Agenda.ObtenerPorId(TurnoId);
+        consulta = Consultas.ObtenerPorTurno(TurnoId);
+        animal = consulta is null ? null : AnimalService.ObtenerParaPersonal(consulta.AnimalId);
+        historia = new();
+        alergiasPrevias = "";
+        lecturaRegistrada = false;
+
+        if (consulta is null || animal is null || consulta.AutorId != Sesion.PersonalActual?.Id)
+        {
+            return;
+        }
+
+        formulario = Consultas.ParaEditar(consulta);
+        contexto = new EditContext(formulario);
+        // Al editar un campo, el aviso anterior (guardado, error de firma) deja de valer.
+        contexto.OnFieldChanged += (_, _) => mensaje = "";
+        version = consulta.Version;
+
+        // RN-40: ver los antecedentes es leer la historia. Si la lectura no se puede registrar
+        // (sin turno activo hace falta un motivo), no se muestran.
+        lecturaRegistrada = Consultas.RegistrarLectura(Sesion.PersonalActual, animal.Id, "").Exito;
+        if (lecturaRegistrada)
+        {
+            historia = Consultas.HistoriaDe(animal.Id);
+            alergiasPrevias = string.Join("; ", historia.Select(c => c.Alergias).Where(a => !string.IsNullOrWhiteSpace(a)).Distinct());
+        }
+    }
+
+    private string EspecieYRaza => string.IsNullOrWhiteSpace(animal?.Raza) ? animal?.Especie ?? "" : $"{animal.Especie} · {animal.Raza}";
+
+    private string NombreResponsable
+    {
+        get
+        {
+            var cuenta = animal is null ? null : CuentaService.ObtenerPorId(animal.ResponsableId);
+            return cuenta is null ? "sin dato" : $"{cuenta.Nombre} {cuenta.Apellido}";
+        }
+    }
+
+    private void Guardar()
+    {
+        var resultado = Consultas.Guardar(consulta!.Id, version, formulario, Sesion.PersonalActual);
+        if (resultado.Exito)
+        {
+            version = consulta.Version;
+        }
+
+        Mostrar(resultado);
+    }
+
+    private void AbrirFirma()
+    {
+        // El formulario tiene que ser válido antes de firmar; Validate marca los campos con error.
+        if (!contexto.Validate())
+        {
+            Mostrar(new ResultadoOperacion { Exito = false, Mensaje = "Corregí los campos marcados antes de firmar." });
+            return;
+        }
+
+        mostrarFirma = true;
+    }
+
+    private void Firmar()
+    {
+        var resultado = Consultas.Firmar(consulta!.Id, version, formulario, firma.Contrasena, Sesion.PersonalActual);
+        firma = new();
+        if (resultado.Exito)
+        {
+            mostrarFirma = false;
+            version = consulta.Version;
+        }
+
+        Mostrar(resultado);
+    }
+
+    private void CancelarSinAtencion()
+    {
+        var resultado = Consultas.CancelarSinAtencion(consulta!.Id, cancelacion.Motivo, Sesion.PersonalActual);
+
+        // Si salió bien, el estado ya lo explica el aviso «El turno quedó cancelado»; no se repite.
+        Mostrar(resultado.Exito ? new ResultadoOperacion { Exito = true } : resultado);
+    }
+
+    private void Mostrar(ResultadoOperacion resultado)
+    {
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+    }
+
+    private static string Mostrar(string texto)
+    {
+        return string.IsNullOrWhiteSpace(texto) ? "Sin dato" : texto;
+    }
+}

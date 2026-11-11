@@ -18,6 +18,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usado por (si cambia, revisar estos)
 - [[Animal]]
 - [[CuentaService]]
+- [[Personal]]
 - [[Privacidad]]
 - [[Restablecer]]
 - [[SesionService]]

@@ -23,6 +23,9 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[ValidacionDatos]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AgendaRecepcion]]
+- [[AtencionConsulta]]
+- [[HistoriaClinica]]
 - [[Recuperar]]
 - [[Registro]]
 - [[Restablecer]]

@@ -52,17 +52,21 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <h2 class="h5 card-title">@turno.Inicio.ToString("dddd d 'de' MMMM, HH:mm")</h2>
-                        <p class="card-text mb-2">@Resumen(turno) <span class="badge bg-success ms-1">@turno.Estado</span></p>
+                        <p class="card-text mb-2">@Resumen(turno) <EstadoTurno Estado="@turno.Estado" /></p>
 
                         @if (cancelandoId == turno.Id)
                         {
                             @* Confirmación antes de cancelar, con motivo opcional (A-016). *@
                             <div class="border rounded p-3 bg-light">
                                 <p class="mb-2"><strong>¿Cancelar este turno?</strong> El horario queda libre para otros.</p>
-                                <label class="form-label" for="motivo">Motivo <span class="text-muted">(opcional)</span></label>
-                                <input id="motivo" class="form-control mb-2" maxlength="200" @bind="motivo" />
-                                <button class="btn btn-danger btn-sm me-2" @onclick="() => ConfirmarCancelacion(turno.Id)">Sí, cancelar</button>
-                                <button class="btn btn-outline-secondary btn-sm" @onclick="() => cancelandoId = 0">No, volver</button>
+                                <EditForm Model="cancelacion" OnValidSubmit="() => ConfirmarCancelacion(turno.Id)" FormName="cancelacion-cliente">
+                                    <DataAnnotationsValidator />
+                                    <label class="form-label" for="motivo">Motivo <span class="text-muted">(opcional)</span></label>
+                                    <InputText id="motivo" class="form-control" maxlength="200" @bind-Value="cancelacion.Motivo" />
+                                    <ValidationMessage For="() => cancelacion.Motivo" />
+                                    <button type="submit" class="btn btn-danger btn-sm me-2 mt-2">Sí, cancelar</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm mt-2" @onclick="() => cancelandoId = 0">No, volver</button>
+                                </EditForm>
                             </div>
                         }
                         else if (Agenda.PuedeGestionar(turno))
@@ -109,7 +113,7 @@
                                     <div class="small text-muted">Motivo: @turno.MotivoCancelacion</div>
                                 }
                             </td>
-                            <td><span class="badge @(turno.Estado == "Cancelado" ? "bg-secondary" : "bg-success")">@(turno.Estado == "Confirmado" ? "Realizado" : turno.Estado)</span></td>
+                            <td><EstadoTurno Estado="@turno.Estado" Pasado="@(turno.Fin < DateTime.Now)" /></td>
                         </tr>
                     }
                 </tbody>
@@ -131,7 +135,7 @@
     private Turno? confirmado;
     private bool verHistorial;
     private int cancelandoId;
-    private string motivo = "";
+    private MotivoOpcionalFormulario cancelacion = new();
     private string mensaje = "";
     private bool exito;
 
@@ -156,7 +160,7 @@
     private void EmpezarCancelacion(int turnoId)
     {
         cancelandoId = turnoId;
-        motivo = "";
+        cancelacion = new();
         mensaje = "";
     }
 
@@ -167,7 +171,7 @@
             return;
         }
 
-        var resultado = Agenda.Cancelar(turnoId, Sesion.CuentaActual.Id, motivo);
+        var resultado = Agenda.Cancelar(turnoId, Sesion.CuentaActual.Id, cancelacion.Motivo);
         exito = resultado.Exito;
         mensaje = resultado.Mensaje;
         cancelandoId = 0;

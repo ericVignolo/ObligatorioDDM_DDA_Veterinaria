@@ -24,6 +24,8 @@ public class ProfesionalService
             new()
             {
                 Id = 1,
+                Matricula = "VET-4521",
+                MatriculaVigenteHasta = hoy.AddYears(1),
                 Nombre = "Dra. Lucía Ferreira",
                 Especialidad = "Clínica de pequeños animales",
                 Descripcion = "Consultas generales, vacunación y controles de perros, gatos y otros animales de compañía.",
@@ -37,6 +39,8 @@ public class ProfesionalService
             new()
             {
                 Id = 2,
+                Matricula = "VET-3378",
+                MatriculaVigenteHasta = hoy.AddYears(1),
                 Nombre = "Dr. Martín Silveira",
                 Especialidad = "Grandes animales",
                 Descripcion = "Atención de bovinos, ovinos, caprinos y porcinos, revisiones de rodeo y visitas a campo.",
@@ -50,6 +54,8 @@ public class ProfesionalService
             new()
             {
                 Id = 3,
+                Matricula = "VET-5102",
+                MatriculaVigenteHasta = hoy.AddYears(1),
                 Nombre = "Dra. Valentina Acosta",
                 Especialidad = "Equinos",
                 Descripcion = "Clínica y rehabilitación de caballos. La rehabilitación requiere evaluación previa.",
@@ -86,6 +92,12 @@ public class ProfesionalService
         return _profesionales
             .Where(p => p.Publicado)
             .ToList();
+    }
+
+    // Ficha interna, publicada o no (por ejemplo, para validar la matrícula al firmar).
+    public Profesional? ObtenerFicha(int id)
+    {
+        return _profesionales.FirstOrDefault(p => p.Id == id);
     }
 
     public Profesional? ObtenerPorId(int id)

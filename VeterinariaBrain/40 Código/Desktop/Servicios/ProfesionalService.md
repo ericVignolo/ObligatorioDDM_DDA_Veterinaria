@@ -23,7 +23,9 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Profesional]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AgendaRecepcion]]
 - [[AgendaService]]
+- [[ConsultaService]]
 - [[ProfesionalDetalle]]
 - [[Profesionales]]
 - [[Reservar]]
