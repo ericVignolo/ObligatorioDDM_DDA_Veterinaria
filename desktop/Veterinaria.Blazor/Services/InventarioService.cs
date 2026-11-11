@@ -4,6 +4,7 @@ using Veterinaria.Blazor.Models;
 namespace Veterinaria.Blazor.Services;
 
 // Inventario de demostración en memoria (A-022, RF-ADM-05, RF-ADM-06, RF-VET-06).
+// Solo material de trabajo de la clínica: no hay venta de productos ni comercio electrónico (DT-ALC-01).
 // Reglas: stock nunca negativo (RN-26), FEFO (RN-27), alerta al cruzar el mínimo (RN-28),
 // lote vencido inhabilitado y dado de baja (RN-29), todo movimiento con origen (RN-30)
 // y ajuste solo del Administrador con motivo (RN-31).

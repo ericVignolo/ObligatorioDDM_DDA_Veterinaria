@@ -1,7 +1,7 @@
 namespace Veterinaria.Blazor.Models;
 
 // Movimiento del inventario, con origen tipado y trazable (A-022, RN-30).
-// Tipos: Compra, Consumo, Ajuste o Baja (la venta llega con el cobro, A-023).
+// Tipos: Compra, Consumo, Ajuste o Baja. No hay venta: el inventario es solo material de trabajo (DT-ALC-01).
 public class MovimientoStock
 {
     public int Id { get; set; }

@@ -11,7 +11,7 @@ generado: true
 
 Movimiento del inventario, con origen tipado y trazable (A-022, RN-30).
 
-**Tareas:** A-022, A-023
+**Tareas:** A-022
 
 **Requisitos y decisiones:** RN-30
 

@@ -30,7 +30,7 @@ Fuera del alcance declarado:
 - Contabilidad, liquidación de sueldos y libros fiscales.
 - Facturación electrónica homologada ante DGI.
 - Integración directa con equipos de laboratorio o imagenología.
-- Comercio electrónico con logística de envíos.
+- Venta de productos al público y comercio electrónico (tienda, carrito, envíos). Descartado por DT-ALC-01 (2026-11-11): se podría agregar en una versión con más tiempo, pero no hace falta para la gestión de la clínica. El inventario es solo de material de trabajo.
 - Historia clínica interoperable entre clínicas.
 
 La facturación interna, la cuenta corriente y los pagos en línea sí aparecen como funcionalidad propuesta. Lo excluido es la homologación fiscal ante DGI.

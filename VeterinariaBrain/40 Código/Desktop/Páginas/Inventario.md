@@ -13,7 +13,7 @@ generado: true
 
 A-022: el Administrador gestiona (RF-ADM-05, RN-31); el Veterinario solo mira (decisión de Eric, 2026-11-11).
 
-**Tareas:** A-022, A-023
+**Tareas:** A-022
 
 **Requisitos y decisiones:** RF-ADM-05, RF-ADM-06, RN-28, RN-30, RN-31
 
