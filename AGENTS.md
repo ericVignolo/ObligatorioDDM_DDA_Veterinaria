@@ -36,12 +36,12 @@ Antes de planificar, diseñar o implementar, leer:
 - Al **iniciar** una sesión, leer la última bitácora de `docs/sesiones/` y su lista de pendientes.
 - Al **cerrar** una sesión, crear `docs/sesiones/AAAA-MM-DD_tema-breve.md` con: qué se hizo, archivos tocados, decisiones, cómo probarlo y qué falta.
 - **Una rama por sesión** (`<nombre>/sesion-AAAA-MM-DD`), que sale de la rama de la sección; todo lo de esa sesión va ahí y se abre **un solo PR** al final (DT-ORG-06). Quien trabajó la prueba y mezcla su propio PR; el otro puede revisarlo después (DT-ORG-05).
-- Claude no puede compilar: el código llega sin probar y se prueba con F5 antes de mezclar. Por eso nunca se trabaja directo sobre `desktop`.
+- Claude no puede compilar: el código llega sin probar y se prueba con F5 antes de mezclar. Por eso nunca se trabaja directo sobre `desarrollo`.
 - **Cerebro de Obsidian (`VeterinariaBrain/`):** antes de cambiar código, revisar en `VeterinariaBrain/40 Código/<Desktop|Api|Mobile>/` la sección «Usado por» de cada archivo que se va a tocar, para prever qué más se ve afectado. Al cerrar la sesión, regenerar las notas de código con `python VeterinariaBrain/_scripts/actualizar_codigo.py` y actualizar a mano las notas de documentos, sesiones y mapas que correspondan.
 
 ## Calidad: compilación, pruebas y revisión (2026-11-09)
 
-- **CI:** GitHub Actions («Compilar y probar», `.github/workflows/ci.yml`) compila y corre `tests/Veterinaria.Tests` en cada PR y en cada push a `desktop`/`main`. Claude lee el resultado con `gh api` y corrige lo que falle **antes** de pedir la prueba con F5.
+- **CI:** GitHub Actions («Compilar y probar», `.github/workflows/ci.yml`) compila y corre `tests/Veterinaria.Tests` en cada PR y en cada push a `desarrollo`/`main`. Claude lee el resultado con `gh api` y corrige lo que falle **antes** de pedir la prueba con F5.
 - Un PR con el CI en rojo no se mezcla.
 - Cada regla nueva o cambiada del backend agrega o ajusta su prueba xUnit en el mismo PR (`tests/README.md`).
 - **Agente revisor:** cuando quien trabaja en la sesión lo pide (por ejemplo «revisá el PR»), Claude lanza un agente revisor independiente que compara el cambio con `MATRIZ_REQUISITOS.md`, las decisiones y las convenciones del docente, y busca errores típicos de Razor. Sus hallazgos se corrigen o se informan en el PR.
@@ -68,7 +68,7 @@ Actualizado: 2026-11-09.
 - Equipo: Eric y Diego, con apoyo de asistentes de IA.
 - Decisiones del primer recorrido (catálogo → registro → reserva → consulta) cerradas por Diego: ver `docs/analisis/DECISIONES_PARA_DESARROLLO.md`.
 - Base de datos: MySQL 8.4 LTS; proveedor de EF Core en revisión (DT-BD-02); agenda protegida con `SELECT … FOR UPDATE` (DT-BD-01 y DT-BD-02).
-- Ramas: secciones A (`desktop`), B (`desktop-mobile`) y C (`desktop-mobile-api`), encadenadas, con merge a `main` al aprobar cada una; trabajo diario en ramas cortas con PR (DT-ORG-02).
+- Ramas (DT-ORG-09, 2026-11-11): una sola rama de trabajo, `desarrollo` (antes `desktop`), con escritorio, API y móvil en sus carpetas; una rama corta por sesión con PR contra `desarrollo`; `main` para versiones estables; etiquetas por aplicación (`desktop-vX.Y`, `api-vX.Y`, `mobile-vX.Y`).
 - Plan B de alcance listo, sin recortes aplicados: `docs/analisis/PLAN_B_ALCANCE.md`.
 - Estado de la sección A y próximos pasos: ver la última bitácora en `docs/sesiones/`.
 - Cobro, internación, avisos de refuerzo, parámetros de asistencia y proveedores: decididos el 2026-10-31 (`docs/analisis/DECISIONES_ERIC_2026-10-31.md`). Cada módulo los incorpora a su especificación al abordarse.

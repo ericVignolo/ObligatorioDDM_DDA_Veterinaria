@@ -27,3 +27,10 @@ Rama: `eric/sesion-2026-11-11-cerebro` desde `desktop`.
 
 - [ ] Después de mezclar la rama de Diego, correr el script y quitar de `Carpeta api` la frase «Las notas generadas cubren solo Blazor».
 - [ ] Al empezar `mobile/`, revisar que las carpetas usadas (`screens`, `components`, `services`) coincidan con las que reconoce el script.
+
+## Más tarde: rama `desarrollo` (DT-ORG-09)
+
+- Se mezcló el PR #20 (A-010, A-017 a A-020) después de traerle el cerebro dividido y regenerar sus notas.
+- Decisión de Eric: `desktop` pasa a llamarse `desarrollo` y es la única rama de trabajo; no se crean `desktop-mobile` ni `desktop-mobile-api`. Versiones por aplicación con etiquetas. Registrado en `CONTEXTO_BASE.md` (DT-ORG-09), `AGENTS.md`, `README.md` y la nota `Ramas git`.
+- El CI escucha `desarrollo` y, mientras dure el cambio de nombre, también `desktop`.
+- Pendiente: renombrar la rama en GitHub (*Branches* → lápiz) y, cuando Diego mezcle el #21, borrar las ramas ya integradas.

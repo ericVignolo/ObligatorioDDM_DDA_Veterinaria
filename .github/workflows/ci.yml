@@ -1,12 +1,12 @@
-# Compila el proyecto Blazor y corre las pruebas en cada PR y en cada cambio de desktop y main.
+# Compila el proyecto Blazor y corre las pruebas en cada PR y en cada cambio de desarrollo y main.
 # Así el código que escribe Claude (que no puede compilar) llega verificado antes de probarlo con F5.
 name: Compilar y probar
 
 on:
   pull_request:
-    branches: [desktop, main]
+    branches: [desarrollo, desktop, main]
   push:
-    branches: [desktop, main]
+    branches: [desarrollo, desktop, main]
   workflow_dispatch:
 
 jobs:
