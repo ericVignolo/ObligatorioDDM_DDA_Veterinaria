@@ -15,6 +15,7 @@ public class Fabrica
     public SesionService Sesion { get; }
     public AgendaService Agenda { get; }
     public ConsultaService Consultas { get; }
+    public VacunaService Vacunas { get; }
 
     public Fabrica()
     {
@@ -22,6 +23,7 @@ public class Fabrica
         Sesion = new SesionService(Cuentas, Personal);
         Agenda = new AgendaService(Profesionales, Prestaciones, Animales);
         Consultas = new ConsultaService(Agenda, Personal, Profesionales);
+        Vacunas = new VacunaService(Consultas, Animales);
     }
 
     public static RegistroCliente RegistroValido(string correo = "cliente@prueba.uy", string cedula = "1.234.567-2")

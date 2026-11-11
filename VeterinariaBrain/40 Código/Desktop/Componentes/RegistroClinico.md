@@ -20,6 +20,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usa
 - [[Consulta]]
 - [[Enmienda]]
+- [[VacunaService]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AtencionConsulta]]

@@ -13,7 +13,7 @@ generado: true
 
 Historia clínica completa para veterinarios (A-020, P-RC-05). Recepción y Administración no la ven.
 
-**Tareas:** A-020
+**Tareas:** A-020, A-021
 
 **Requisitos y decisiones:** RN-12, RN-40
 
@@ -22,6 +22,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usa
 - [[Animal]]
 - [[AnimalService]]
+- [[CarnetSanitario]]
 - [[Consulta]]
 - [[ConsultaService]]
 - [[CuentaService]]

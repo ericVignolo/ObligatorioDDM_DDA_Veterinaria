@@ -13,9 +13,9 @@ generado: true
 
 Perfil del Cliente (A-009): datos personales con quién ve cada uno, animales con su historia, turnos y servicios usados con «Reservar de nuevo». Los datos son de demostración.
 
-**Tareas:** A-009
+**Tareas:** A-009, A-021
 
-**Requisitos y decisiones:** D-PER-04, D-PER-05
+**Requisitos y decisiones:** D-PER-04, D-PER-05, RF-CLI-07
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -29,8 +29,11 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[ConsultaService]]
 - [[Cuenta]]
 - [[CuentaService]]
+- [[EstadoRefuerzo]]
+- [[ItemCarnet]]
 - [[PerfilFormulario]]
 - [[PrestacionService]]
 - [[RequiereSesion]]
 - [[SesionService]]
 - [[Turno]]
+- [[VacunaService]]

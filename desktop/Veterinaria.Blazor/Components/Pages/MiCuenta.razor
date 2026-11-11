@@ -7,6 +7,7 @@
 @inject AgendaService Agenda
 @inject ConsultaService Consultas
 @inject PrestacionService PrestacionService
+@inject VacunaService Vacunas
 
 @* Perfil del Cliente (A-009): datos personales con quién ve cada uno, animales con su historia,
    turnos y servicios usados con «Reservar de nuevo». Los datos son de demostración. *@
@@ -223,6 +224,30 @@
             </div>
         </section>
 
+        @* Alertas sanitarias: refuerzos próximos o vencidos de sus animales (RF-CLI-07, A-021) *@
+        @if (alertas.Count > 0)
+        {
+            <section class="mb-4" aria-labelledby="titulo-alertas">
+                <h2 class="h4" id="titulo-alertas">Alertas sanitarias (@alertas.Count)</h2>
+                <ul class="list-group">
+                    @foreach (var alerta in alertas)
+                    {
+                        <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+                            <span>
+                                <strong>@alerta.Animal.Nombre</strong> · @alerta.Item.Aplicacion.Producto
+                                <span class="d-block small text-muted">Refuerzo @alerta.Item.Aplicacion.FechaRefuerzo.ToString("dd/MM/yyyy")</span>
+                            </span>
+                            <span>
+                                <EstadoRefuerzo Estado="@alerta.Item.Estado" />
+                                <a class="btn btn-outline-primary btn-sm ms-2" href="@($"animales/{alerta.Animal.Id}")">Ver carnet</a>
+                            </span>
+                        </li>
+                    }
+                </ul>
+                <p class="small text-muted mt-1">Te avisamos @Vacunas.DiasAvisoRefuerzo días antes. El aviso por correo llega con la API.</p>
+            </section>
+        }
+
         @* Animales con acceso a su historia clínica *@
         <section class="mb-4">
             <h2 class="h4">Mis animales (@animales.Count)</h2>
@@ -319,6 +344,7 @@
     private bool exito;
 
     private List<Animal> animales = new();
+    private List<(Animal Animal, ItemCarnet Item)> alertas = new();
     private List<Turno> proximos = new();
     private List<Turno> usados = new();
     private HashSet<int> reservables = new();
@@ -337,6 +363,7 @@
         }
 
         animales = AnimalService.ObtenerDe(cuenta.Id);
+        alertas = Vacunas.AlertasDe(cuenta.Id);
         proximos = Agenda.ProximosDe(cuenta.Id);
 
         // Un servicio por fila, con la última atención terminada (Finalizado).

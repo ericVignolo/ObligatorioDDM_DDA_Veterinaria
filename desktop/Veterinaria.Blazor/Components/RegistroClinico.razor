@@ -1,4 +1,6 @@
 @using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject VacunaService Vacunas
 
 @* Una consulta firmada de la historia clínica, con su firma y sus enmiendas (A-020).
    Se usa en la historia del personal y en la del cliente; siempre es de solo lectura (RN-12). *@
@@ -42,6 +44,19 @@
                 <dd class="col-sm-9">@Consulta.Indicaciones</dd>
             }
         </dl>
+
+        @if (Consulta.Id != 0 && Vacunas.DeConsulta(Consulta.Id).Count > 0)
+        {
+            <div class="mt-3">
+                <div class="fw-semibold">Vacunas y antiparasitarios aplicados</div>
+                <ul class="mb-0">
+                    @foreach (var aplicacion in Vacunas.DeConsulta(Consulta.Id))
+                    {
+                        <li>@aplicacion.Producto · @aplicacion.Laboratorio · lote @aplicacion.Lote · refuerzo @aplicacion.FechaRefuerzo.ToString("dd/MM/yyyy")</li>
+                    }
+                </ul>
+            </div>
+        }
 
         @foreach (var enmienda in Consulta.Enmiendas.OrderBy(e => e.Fecha))
         {

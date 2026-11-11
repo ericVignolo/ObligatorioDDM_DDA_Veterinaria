@@ -42,6 +42,9 @@
                 <div class="alert @(exito ? "alert-success" : "alert-danger")" role="status">@mensaje</div>
             }
 
+            @* Carnet sanitario junto a la historia: el veterinario ve qué refuerzos están al día (A-021). *@
+            <div class="mb-4"><CarnetSanitario AnimalId="AnimalId" /></div>
+
             @if (historia.Count == 0)
             {
                 <p>Todavía no hay consultas firmadas.</p>
