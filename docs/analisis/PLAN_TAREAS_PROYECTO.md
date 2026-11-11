@@ -84,7 +84,7 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 - [x] **A-020 — Mostrar historia clínica y firma.** Diferenciar borrador, firmado y enmienda; impedir edición visual del original firmado en el modelo de interacción.
 - [x] **A-021 — Crear vistas de vacunación y alertas sanitarias.** Mostrar lote, fechas, intervalo, refuerzo y alertas según la especificación profesional; incluir estados de vacuna vencida y no aplicable.
 - [ ] **A-022 — Crear vistas de inventario.** Productos, lotes, vencimientos, movimientos, stock mínimo, ajustes y consumo; dejar claro que no hay saldos persistentes en modo demo.
-- [ ] **A-023 — Crear cargos, cobro y comprobante interno.** Separar cargo y pago; soportar medios acordados para el ejemplo, sin pasarela online mientras no se apruebe su cambio de alcance.
+- [ ] **A-023 — Crear cargos, cobro y comprobante interno.** Solo prestaciones de la clínica, sin venta de productos (DT-ALC-01). Separar cargo y pago; soportar medios acordados para el ejemplo, sin pasarela online mientras no se apruebe su cambio de alcance.
 - [ ] **A-024 — Crear gestión de internación.** Ingreso, box, plan, evolución, novedades internas/visibles y alta; representar la exclusividad del box y la protección de notas.
 - [ ] **A-025 — Crear consentimiento informado.** Mostrar versión, procedimiento, paciente, lectura/aceptación/firma según mecanismo aprobado; mantener separado de términos y privacidad.
 - [ ] **A-026 — Crear panel de asistencia para Recepción/Veterinario.** Cola por prioridad, elegibilidad, ofertas/asignación, escalamiento y estados; los tiempos y las competencias usan parámetros aprobados.

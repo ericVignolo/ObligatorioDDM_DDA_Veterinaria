@@ -13,7 +13,7 @@ Vacunas y antiparasitarios de demostración en memoria (A-021, RF-VET-04, RF-CLI
 
 **Tareas:** A-013, A-021, A-022
 
-**Requisitos y decisiones:** RF-ADM-10, RF-CLI-07, RF-VET-04, RN-12, RN-15, RN-18, RN-19
+**Requisitos y decisiones:** RF-ADM-10, RF-CLI-07, RF-VET-04, RN-12, RN-15, RN-18, RN-19, RN-27
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -24,6 +24,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AplicacionSanitaria]]
 - [[ConsultaService]]
 - [[Cuenta]]
+- [[InventarioService]]
 - [[ItemCarnet]]
 - [[LoteProducto]]
 - [[Personal]]

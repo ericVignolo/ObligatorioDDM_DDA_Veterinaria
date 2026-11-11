@@ -9,22 +9,26 @@ namespace Veterinaria.Blazor.Services;
 // Consultas e historia clínica de demostración en memoria (A-019, A-020, CU-VET-01).
 // En la sección C lo reemplaza ConsultaApiService: la API hace iniciar y firmar en una transacción,
 // con control de versión, clave idempotente, auditoría protegida, consumos de stock y cargos.
-// Fuera de esta versión: adjuntos (RF-VET-03), insumos (A-022) y cargos (cobro de Recepción).
+// Los insumos y las dosis de vacunas se apartan del inventario mientras la consulta está abierta y se
+// descuentan al firmar, en el mismo paso (RF-VET-06, RNF-CON-03, A-022).
+// Fuera de esta versión: adjuntos (RF-VET-03) y cargos (cobro de Recepción).
 public class ConsultaService
 {
     private readonly AgendaService _agenda;
     private readonly PersonalService _personal;
     private readonly ProfesionalService _profesionales;
+    private readonly InventarioService _inventario;
     private readonly List<Consulta> _consultas = new();
     private readonly List<LecturaHistoria> _lecturas = new();
     private int _ultimoId;
     private int _ultimaEnmiendaId;
 
-    public ConsultaService(AgendaService agenda, PersonalService personal, ProfesionalService profesionales)
+    public ConsultaService(AgendaService agenda, PersonalService personal, ProfesionalService profesionales, InventarioService inventario)
     {
         _agenda = agenda;
         _personal = personal;
         _profesionales = profesionales;
+        _inventario = inventario;
         CargarHistoriaDemo();
     }
 
@@ -230,13 +234,21 @@ public class ConsultaService
             return new ResultadoOperacion { Exito = false, Mensaje = "El turno de esta consulta ya no está En consulta." };
         }
 
-        // Desde acá no puede fallar: se aplican todos los cambios juntos.
+        // RN-26, RN-29: lo apartado del inventario tiene que seguir disponible.
+        var errorStock = _inventario.ValidarConsumo(consulta.Id);
+        if (errorStock is not null)
+        {
+            return errorStock;
+        }
+
+        // Desde acá no puede fallar: se aplican todos los cambios juntos (historia y stock, RNF-CON-03).
         CopiarDatos(datos, consulta);
         consulta.Version++;
         consulta.Estado = "Firmada";
         consulta.FechaFirma = DateTime.Now;
         consulta.HashContenido = Huella(Contenido(consulta));
         _agenda.Finalizar(consulta.TurnoId);
+        _inventario.ConfirmarConsumo(consulta.Id, veterinario);
 
         return new ResultadoOperacion { Exito = true, Mensaje = "Consulta firmada y turno finalizado. El resumen al cliente y el cobro llegan con la API." };
     }
@@ -253,6 +265,12 @@ public class ConsultaService
         if (string.IsNullOrWhiteSpace(motivo))
         {
             return new ResultadoOperacion { Exito = false, Mensaje = "Escribí el motivo de la cancelación." };
+        }
+
+        // P-RC-04: si se registraron insumos o vacunas hubo atención; primero se quitan.
+        if (_inventario.TieneConsumos(consulta.Id))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Registraste insumos o vacunas en esta consulta: si no se usaron, quitalos antes de cancelar sin atención." };
         }
 
         if (!_agenda.CancelarSinAtencion(consulta.TurnoId, motivo))
@@ -306,6 +324,63 @@ public class ConsultaService
         consulta.Enmiendas.Add(enmienda);
 
         return new ResultadoOperacion { Exito = true, Mensaje = "Enmienda firmada. El registro original quedó intacto." };
+    }
+
+    // RF-VET-06: insumo usado en la consulta abierta. El lote lo elige el inventario por vencimiento (RN-27)
+    // y queda apartado hasta la firma. Si no alcanza el stock, no se registra nada (RN-26).
+    public ResultadoOperacion RegistrarInsumo(int consultaId, ConsumoFormulario datos, Personal? veterinario)
+    {
+        var consulta = ObtenerPorId(consultaId);
+        if (consulta is null || !PuedeEditar(consulta, veterinario) || !EstaAbierta(consulta))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Esta consulta ya no se puede editar." };
+        }
+
+        if (!Validator.TryValidateObject(datos, new ValidationContext(datos), new List<ValidationResult>(), validateAllProperties: true))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Elegí un insumo y una cantidad entre 1 y 100." };
+        }
+
+        var articulo = _inventario.ObtenerArticulo(datos.ArticuloId);
+        if (articulo is null || articulo.Tipo != "Insumo")
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Elegí un insumo. Las vacunas y antiparasitarios se registran en su sección." };
+        }
+
+        if (_inventario.ReservasDe(consultaId).Any(r => r.ArticuloId == articulo.Id && r.AplicacionId == 0))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = $"Ya registraste {articulo.Nombre}: quitalo y cargalo con la cantidad total." };
+        }
+
+        if (_inventario.Reservar(consultaId, articulo.Id, datos.Cantidad, 0) is null)
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = $"No alcanza el stock de {articulo.Nombre}: hay {_inventario.StockDisponible(articulo.Id)} {articulo.Unidad} disponibles (RN-26)." };
+        }
+
+        return new ResultadoOperacion { Exito = true, Mensaje = $"{articulo.Nombre}: {datos.Cantidad} {articulo.Unidad} registrados. Se descuentan al firmar." };
+    }
+
+    public ResultadoOperacion QuitarInsumo(int consultaId, int articuloId, Personal? veterinario)
+    {
+        var consulta = ObtenerPorId(consultaId);
+        if (consulta is null || !PuedeEditar(consulta, veterinario) || !EstaAbierta(consulta))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Este insumo ya no se puede quitar." };
+        }
+
+        _inventario.Liberar(consultaId, articuloId, 0);
+        return new ResultadoOperacion { Exito = true, Mensaje = "Insumo quitado de la consulta." };
+    }
+
+    // Insumos de la consulta: artículo, cantidad total y lotes que se usan.
+    public List<(Articulo Articulo, int Cantidad, string Lotes)> InsumosDe(int consultaId)
+    {
+        return _inventario.ReservasDe(consultaId)
+            .Where(r => r.AplicacionId == 0)
+            .GroupBy(r => r.ArticuloId)
+            .Select(g => (_inventario.ObtenerArticulo(g.Key)!, g.Sum(r => r.Cantidad),
+                string.Join(", ", g.Select(r => _inventario.ObtenerLote(r.LoteId)?.Numero ?? ""))))
+            .ToList();
     }
 
     // Historia clínica: solo consultas firmadas, de la más reciente a la más antigua (RF-CLI-05).
