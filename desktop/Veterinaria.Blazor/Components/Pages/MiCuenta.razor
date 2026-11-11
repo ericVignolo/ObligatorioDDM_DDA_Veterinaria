@@ -28,7 +28,7 @@
     {
         @if (!string.IsNullOrEmpty(mensaje))
         {
-            <div class="alert @(exito ? "alert-success" : "alert-danger")" role="status">@mensaje</div>
+            <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
         }
 
         <div class="alert alert-secondary small">
@@ -56,7 +56,7 @@
                         <dd class="col-sm-9">@cuenta.Correo <span class="d-block small text-muted">Lo ven: vos, Recepción y Administración. Identifica tu cuenta: se cambia en «Seguridad de la cuenta», con un código.</span></dd>
 
                         <dt class="col-sm-3">Teléfono</dt>
-                        <dd class="col-sm-9">@MostrarTelefono(cuenta.Telefono) <span class="d-block small text-muted">Lo ven: vos, Recepción y el veterinario de una asistencia a domicilio.</span></dd>
+                        <dd class="col-sm-9">@MostrarTelefono(cuenta.Telefono) <span class="d-block small text-muted">Lo ven: vos, Recepción y el veterinario asignado a una asistencia.</span></dd>
 
                         <dt class="col-sm-3">Documento</dt>
                         <dd class="col-sm-9">@MostrarDocumento() <span class="d-block small text-muted">Lo ven: vos, Recepción y Administración; nunca el veterinario. Para cambiarlo, consultá en Recepción.</span></dd>

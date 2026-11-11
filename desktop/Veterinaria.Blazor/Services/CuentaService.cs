@@ -228,8 +228,6 @@ public class CuentaService
         return new ResultadoOperacion { Exito = true, Mensaje = "Listo, tu contraseña cambió. Ya podés ingresar con la nueva." };
     }
 
-    // Devuelve la cuenta si el correo y la contraseña coinciden; si no, null.
-    // No distingue entre correo inexistente y contraseña incorrecta.
     // A-009: carga el formulario de «Mi cuenta» con los datos actuales.
     public PerfilFormulario ParaEditarPerfil(Cuenta cuenta)
     {
@@ -261,7 +259,10 @@ public class CuentaService
         if (telefono is null
             || string.IsNullOrWhiteSpace(datos.Nombre) || string.IsNullOrWhiteSpace(datos.Apellido)
             || string.IsNullOrWhiteSpace(datos.Calle) || string.IsNullOrWhiteSpace(datos.NumeroPuerta)
-            || string.IsNullOrWhiteSpace(datos.Localidad) || !Departamentos.Contains(datos.Departamento))
+            || string.IsNullOrWhiteSpace(datos.Localidad) || !Departamentos.Contains(datos.Departamento)
+            || datos.Nombre.Trim().Length > 60 || datos.Apellido.Trim().Length > 60 || datos.Calle.Trim().Length > 100
+            || datos.NumeroPuerta.Trim().Length > 10 || (datos.Apartamento ?? "").Trim().Length > 10
+            || datos.Localidad.Trim().Length > 60 || (datos.Referencias ?? "").Trim().Length > 200)
         {
             return new ResultadoOperacion { Exito = false, Mensaje = "Revisá los datos marcados antes de guardar." };
         }
@@ -271,10 +272,10 @@ public class CuentaService
         cuenta.Telefono = telefono;
         cuenta.Calle = datos.Calle.Trim();
         cuenta.NumeroPuerta = datos.NumeroPuerta.Trim();
-        cuenta.Apartamento = datos.Apartamento.Trim();
+        cuenta.Apartamento = (datos.Apartamento ?? "").Trim();
         cuenta.Localidad = datos.Localidad.Trim();
         cuenta.Departamento = datos.Departamento;
-        cuenta.Referencias = datos.Referencias.Trim();
+        cuenta.Referencias = (datos.Referencias ?? "").Trim();
 
         return new ResultadoOperacion { Exito = true, Mensaje = "Guardamos los cambios de tu cuenta." };
     }
@@ -411,6 +412,8 @@ public class CuentaService
         return new ResultadoOperacion { Exito = true, Mensaje = "Tu contraseña cambió. Por seguridad cerramos la sesión: ingresá con la contraseña nueva." };
     }
 
+    // Devuelve la cuenta si el correo y la contraseña coinciden; si no, null.
+    // No distingue entre correo inexistente y contraseña incorrecta.
     public Cuenta? ValidarCredenciales(string correo, string contrasena)
     {
         var cuenta = ObtenerPorCorreo(correo);
