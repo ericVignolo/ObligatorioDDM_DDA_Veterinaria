@@ -130,7 +130,7 @@
                                 <EditForm Model="cancelacion" OnValidSubmit="() => Cancelar(turno.Id)" FormName="cancelacion-recepcion">
                                     <DataAnnotationsValidator />
                                     <InputText class="form-control form-control-sm mb-1" placeholder="Motivo (obligatorio)" maxlength="200" @bind-Value="cancelacion.Motivo" aria-label="Motivo de la cancelación" />
-                                    <ValidationMessage For="() => cancelacion.Motivo" class="small" />
+                                    <ValidationMessage For="() => cancelacion.Motivo" />
                                     <button type="submit" class="btn btn-danger btn-sm me-1">Confirmar</button>
                                     <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="() => cancelandoId = 0">Volver</button>
                                 </EditForm>
