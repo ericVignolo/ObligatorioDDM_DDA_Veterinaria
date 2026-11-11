@@ -8,7 +8,7 @@ Sistema de gestión para **[[VITALIA]]**, clínica veterinaria ficticia: una API
 
 ## Estado
 - Fase de construcción, **sección A (escritorio)**: A-001 a A-008 y A-011 a A-015 hechas: el primer recorrido (catálogo → registro → reserva) está completo. A-016 (cancelar y reprogramar) hecha. Detalle en [[Plan de tareas]].
-- Código actual: [[Mapa Código]] (páginas, componentes, servicios y modelos con sus dependencias).
+- Código actual: [[Mapa Código]], con una sección por aplicación (Desktop, Api y Mobile) y las dependencias de cada archivo.
 - Pendiente de [[Diego]]: proveedor MySQL (ver [[MySQL]]).
 
 ## Mapas
@@ -31,6 +31,7 @@ Sistema de gestión para **[[VITALIA]]**, clínica veterinaria ficticia: una API
 
 ## Mantenimiento
 - Las notas de `40 Código` y el [[Mapa Código]] se regeneran con `python VeterinariaBrain/_scripts/actualizar_codigo.py`. Se hace al cerrar cada sesión.
+- `40 Código` tiene una carpeta por aplicación: `Desktop/` (Blazor), `Api/` (notas con sufijo «(API)») y `Mobile/` (notas con sufijo «(Móvil)»). Si el mismo nombre existe en varias aplicaciones, cada nota enlaza a las otras.
 - Las demás notas se escriben a mano.
 
 ## Grafo
