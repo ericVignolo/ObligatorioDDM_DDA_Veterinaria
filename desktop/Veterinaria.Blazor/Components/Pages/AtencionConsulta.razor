@@ -7,6 +7,7 @@
 @inject ConsultaService Consultas
 @inject PrestacionService PrestacionService
 @inject SesionService Sesion
+@inject VacunaService Vacunas
 
 <PageTitle>Consulta — VITALIA</PageTitle>
 
@@ -153,11 +154,79 @@
                         </div>
 
                         <p class="small text-muted">* Obligatorios para firmar. El borrador se puede guardar incompleto y el cliente no lo ve.
-                            Adjuntos e insumos se agregan con la API y el inventario (RF-VET-03, A-022).</p>
+                            Adjuntos e insumos se agregan con la API y el inventario (RF-VET-03, A-022).
+                            Las vacunas y antiparasitarios se registran en la sección de abajo.</p>
 
                         <button type="submit" class="btn btn-outline-primary">Guardar borrador</button>
                         <button type="button" class="btn btn-success ms-2" @onclick="AbrirFirma">Revisar y firmar</button>
                     </EditForm>
+
+                    @* Vacunas y antiparasitarios aplicados en esta consulta (A-021, RF-VET-04).
+                       Fuera del formulario principal: tiene su propio envío y no pisa lo que se está escribiendo. *@
+                    <section class="border rounded p-3 mt-4" aria-labelledby="titulo-aplicaciones">
+                        <h2 class="h6" id="titulo-aplicaciones">Vacunas y antiparasitarios aplicados</h2>
+
+                        @if (!string.IsNullOrEmpty(mensajeAplicacion))
+                        {
+                            <div class="alert @(exitoAplicacion ? "alert-success" : "alert-danger") py-2" role="status">@mensajeAplicacion</div>
+                        }
+
+                        @if (aplicaciones.Count == 0)
+                        {
+                            <p class="small text-muted">Todavía no registraste ninguna aplicación en esta consulta.</p>
+                        }
+                        else
+                        {
+                            <ul class="list-group mb-3">
+                                @foreach (var aplicacion in aplicaciones)
+                                {
+                                    <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                        <span>
+                                            <strong>@aplicacion.Producto</strong>
+                                            <span class="small text-muted">· @aplicacion.Laboratorio · lote @aplicacion.Lote (vence @aplicacion.LoteVence.ToString("dd/MM/yyyy"))
+                                                · refuerzo @aplicacion.FechaRefuerzo.ToString("dd/MM/yyyy")</span>
+                                        </span>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" @onclick="() => QuitarAplicacion(aplicacion.Id)">Quitar</button>
+                                    </li>
+                                }
+                            </ul>
+                        }
+
+                        <EditForm Model="nuevaAplicacion" OnValidSubmit="RegistrarAplicacion" FormName="aplicacion">
+                            <DataAnnotationsValidator />
+                            <div class="row g-2 align-items-end">
+                                <div class="col-md-5">
+                                    <label class="form-label small" for="producto">Producto</label>
+                                    <InputSelect id="producto" class="form-select" Value="nuevaAplicacion.ProductoId"
+                                                 ValueChanged="@((int id) => ElegirProducto(id))"
+                                                 ValueExpression="@(() => nuevaAplicacion.ProductoId)">
+                                        <option value="0">Elegí un producto…</option>
+                                        @foreach (var producto in Vacunas.Productos)
+                                        {
+                                            <option value="@producto.Id" disabled="@(!Vacunas.Aplica(producto, animal.Especie))">@TextoProducto(producto)</option>
+                                        }
+                                    </InputSelect>
+                                    <ValidationMessage For="() => nuevaAplicacion.ProductoId" />
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label small" for="lote">Lote</label>
+                                    <InputSelect id="lote" class="form-select" @bind-Value="nuevaAplicacion.LoteId" disabled="@(nuevaAplicacion.ProductoId == 0)">
+                                        <option value="0">Elegí un lote…</option>
+                                        @foreach (var lote in Vacunas.LotesDe(nuevaAplicacion.ProductoId))
+                                        {
+                                            <option value="@lote.Id" disabled="@Vacunas.LoteVencido(lote)">@TextoLote(lote)</option>
+                                        }
+                                    </InputSelect>
+                                    <ValidationMessage For="() => nuevaAplicacion.LoteId" />
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-outline-primary w-100">Registrar</button>
+                                </div>
+                            </div>
+                        </EditForm>
+                        <p class="small text-muted mt-2 mb-0">La fecha de aplicación es hoy y la fecha de refuerzo la calcula el sistema según el producto.
+                            Las aplicaciones figuran en el carnet del animal cuando firmes la consulta. @VacunaService.AvisoCatalogoDemo</p>
+                    </section>
 
                     @if (mostrarFirma)
                     {
@@ -219,6 +288,12 @@
     private string mensaje = "";
     private bool exito;
 
+    // Vacunas y antiparasitarios de la consulta (A-021).
+    private List<AplicacionSanitaria> aplicaciones = new();
+    private AplicacionFormulario nuevaAplicacion = new();
+    private string mensajeAplicacion = "";
+    private bool exitoAplicacion;
+
     protected override void OnParametersSet()
     {
         // Solo se recarga al cambiar de turno, para no pisar lo que se está escribiendo.
@@ -240,6 +315,7 @@
             return;
         }
 
+        aplicaciones = Vacunas.DeConsulta(consulta.Id);
         formulario = Consultas.ParaEditar(consulta);
         contexto = new EditContext(formulario);
         // Al editar un campo, el aviso anterior (guardado, error de firma) deja de valer.
@@ -309,6 +385,50 @@
 
         // Si salió bien, el estado ya lo explica el aviso «El turno quedó cancelado»; no se repite.
         Mostrar(resultado.Exito ? new ResultadoOperacion { Exito = true } : resultado);
+    }
+
+    // RN-15 y «no aplicable»: lo que no se puede elegir se ve, deshabilitado y con el motivo.
+    private string TextoProducto(ProductoSanitario producto)
+    {
+        return Vacunas.Aplica(producto, animal!.Especie) ? producto.Nombre : $"{producto.Nombre} — no aplicable a {animal.Especie.ToLower()}";
+    }
+
+    private string TextoLote(LoteProducto lote)
+    {
+        var texto = $"{lote.Numero} · vence {lote.Vencimiento:dd/MM/yyyy}";
+        return Vacunas.LoteVencido(lote) ? texto + " — vencido, no se puede aplicar" : texto;
+    }
+
+    // Al cambiar de producto el lote elegido deja de valer: cada producto tiene sus lotes.
+    private void ElegirProducto(int productoId)
+    {
+        nuevaAplicacion.ProductoId = productoId;
+        nuevaAplicacion.LoteId = 0;
+        mensajeAplicacion = "";
+    }
+
+    private void RegistrarAplicacion()
+    {
+        var resultado = Vacunas.Registrar(consulta!.Id, nuevaAplicacion, Sesion.PersonalActual);
+        MostrarAplicacion(resultado);
+        if (resultado.Exito)
+        {
+            nuevaAplicacion = new();
+        }
+
+        aplicaciones = Vacunas.DeConsulta(consulta.Id);
+    }
+
+    private void QuitarAplicacion(int aplicacionId)
+    {
+        MostrarAplicacion(Vacunas.Quitar(aplicacionId, Sesion.PersonalActual));
+        aplicaciones = Vacunas.DeConsulta(consulta!.Id);
+    }
+
+    private void MostrarAplicacion(ResultadoOperacion resultado)
+    {
+        exitoAplicacion = resultado.Exito;
+        mensajeAplicacion = resultado.Mensaje;
     }
 
     private void Mostrar(ResultadoOperacion resultado)

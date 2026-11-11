@@ -105,6 +105,13 @@ public class ConsultaService
             && veterinario.Id == consulta.AutorId;
     }
 
+    // Borrador cuyo turno sigue En consulta: la única consulta a la que se le agregan cosas (A-021).
+    // Un borrador de turno cancelado sin atención se conserva como evidencia, pero ya no se toca.
+    public bool EstaAbierta(Consulta consulta)
+    {
+        return consulta.Estado == "Borrador" && _agenda.ObtenerPorId(consulta.TurnoId)?.Estado == "En curso";
+    }
+
     // RN-13: matrícula vigente del profesional para firmar.
     public bool MatriculaVigente(int profesionalId)
     {

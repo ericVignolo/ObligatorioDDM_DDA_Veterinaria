@@ -11,7 +11,7 @@ generado: true
 
 Consultas e historia clínica de demostración en memoria (A-019, A-020, CU-VET-01).
 
-**Tareas:** A-019, A-020, A-022
+**Tareas:** A-019, A-020, A-021, A-022
 
 **Requisitos y decisiones:** CU-VET-01, HU-VET-02, RF-CLI-05, RF-VET-03, RN-12, RN-13, RN-40
 
@@ -37,3 +37,4 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[HistoriaAnimal]]
 - [[HistoriaClinica]]
 - [[MiCuenta]]
+- [[VacunaService]]

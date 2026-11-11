@@ -13,9 +13,9 @@ generado: true
 
 Antecedentes destacados antes de atender (CU-VET-01, paso 4)
 
-**Tareas:** A-022
+**Tareas:** A-021, A-022
 
-**Requisitos y decisiones:** CU-VET-01, RF-VET-03, RN-40
+**Requisitos y decisiones:** CU-VET-01, RF-VET-03, RF-VET-04, RN-15, RN-40
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -23,16 +23,21 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AgendaService]]
 - [[Animal]]
 - [[AnimalService]]
+- [[AplicacionFormulario]]
+- [[AplicacionSanitaria]]
 - [[Consulta]]
 - [[ConsultaFormulario]]
 - [[ConsultaService]]
 - [[CuentaService]]
 - [[EstadoTurno]]
 - [[FirmaConsulta]]
+- [[LoteProducto]]
 - [[MotivoFormulario]]
 - [[PrestacionService]]
+- [[ProductoSanitario]]
 - [[RegistroClinico]]
 - [[RequierePersonal]]
 - [[ResultadoOperacion]]
 - [[SesionService]]
 - [[Turno]]
+- [[VacunaService]]

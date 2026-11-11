@@ -158,16 +158,16 @@ flowchart LR
 | `/recuperar` | `Pages/Recuperar.razor` | A-007 | CuentaService · modelo `SolicitudRecuperacion` |
 | `/restablecer` | `Pages/Restablecer.razor` | A-007 | CuentaService, SesionService · modelo `NuevaContrasena` |
 | `/animales` | `Pages/Animales.razor` | A-012 | AnimalService, SesionService · `AnimalCard`, `RequiereSesion` |
-| `/animales/{Id}` | `Pages/AnimalDetalle.razor` | A-012 | AnimalService, SesionService · `RequiereSesion` |
+| `/animales/{Id}` | `Pages/AnimalDetalle.razor` | A-012, A-021 | AnimalService, SesionService · `RequiereSesion`, `CarnetSanitario` |
 | `/animales/nuevo` | `Pages/AnimalNuevo.razor` | A-013 | AnimalService, SesionService · `AnimalForm` |
 | `/animales/{Id}/editar` | `Pages/AnimalEditar.razor` | A-013 | AnimalService, SesionService · `AnimalForm` |
 | `/reservar` | `Pages/Reservar.razor` | A-014, A-015, A-016 (`?reprogramar=`) | AgendaService, AnimalService, PrestacionService, ProfesionalService, SesionService · `PasosReserva` |
-| `/cuenta` | `Pages/MiCuenta.razor` | A-009 | AgendaService, AnimalService, ConsultaService, CuentaService, PrestacionService, SesionService · `RequiereSesion` |
+| `/cuenta` | `Pages/MiCuenta.razor` | A-009, A-021 | AgendaService, AnimalService, ConsultaService, CuentaService, PrestacionService, SesionService, VacunaService · `RequiereSesion`, `EstadoRefuerzo` |
 | `/panel` | `Pages/PanelInicio.razor` | A-010 | SesionService · `RequierePersonal`, `Atajo` |
 | `/panel/agenda` | `Pages/AgendaRecepcion.razor` | A-017 | AgendaService, AnimalService, CuentaService, PrestacionService, ProfesionalService · `EstadoTurno` |
 | `/panel/mi-agenda` | `Pages/AgendaVeterinario.razor` | A-017 | AgendaService, AnimalService, PrestacionService, SesionService · `EstadoTurno` |
-| `/panel/consulta/{TurnoId}` | `Pages/AtencionConsulta.razor` | A-019 | AgendaService, AnimalService, CuentaService, ConsultaService, PrestacionService, SesionService · `RegistroClinico`, `EstadoTurno` |
-| `/panel/historia/{AnimalId}` | `Pages/HistoriaClinica.razor` | A-020 | AnimalService, CuentaService, ConsultaService, SesionService · `RegistroClinico` |
+| `/panel/consulta/{TurnoId}` | `Pages/AtencionConsulta.razor` | A-019, A-021 | AgendaService, AnimalService, CuentaService, ConsultaService, PrestacionService, SesionService, VacunaService · `RegistroClinico`, `EstadoTurno` |
+| `/panel/historia/{AnimalId}` | `Pages/HistoriaClinica.razor` | A-020, A-021 | AnimalService, CuentaService, ConsultaService, SesionService · `RegistroClinico`, `CarnetSanitario` |
 | `/animales/{Id}/historia` | `Pages/HistoriaAnimal.razor` | A-020 | AnimalService, ConsultaService, SesionService · `RegistroClinico`, `RequiereSesion` |
 | `/turnos` | `Pages/Turnos.razor` | A-015, A-016 | AgendaService, AnimalService, PrestacionService, ProfesionalService, ClinicaService, SesionService |
 

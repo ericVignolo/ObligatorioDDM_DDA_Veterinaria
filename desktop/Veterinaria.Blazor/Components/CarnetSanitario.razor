@@ -1,0 +1,92 @@
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject VacunaService Vacunas
+
+@* Carnet de vacunas y antiparasitarios de un animal (A-021, RF-CLI-07). Es de solo lectura.
+   Muestra la última aplicación de cada producto con el estado de su refuerzo, y el historial completo debajo. *@
+<section aria-labelledby="titulo-carnet-@AnimalId">
+    <h2 class="h5" id="titulo-carnet-@AnimalId">Vacunas y antiparasitarios</h2>
+
+    @if (carnet.Count == 0)
+    {
+        <p class="text-muted">Todavía no hay vacunas ni antiparasitarios registrados.</p>
+    }
+    else
+    {
+        @foreach (var alerta in carnet.Where(i => i.Estado != VacunaService.Vigente))
+        {
+            <div class="alert @(alerta.Estado == VacunaService.Vencida ? "alert-danger" : "alert-warning") py-2" role="status">
+                <strong>@alerta.Aplicacion.Producto:</strong> @TextoAlerta(alerta)
+            </div>
+        }
+
+        <div class="table-responsive">
+            <table class="table table-sm align-middle">
+                <caption class="visually-hidden">Última aplicación de cada producto y estado de su refuerzo</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Producto</th>
+                        <th scope="col">Aplicada</th>
+                        <th scope="col">Lote</th>
+                        <th scope="col">Refuerzo</th>
+                        <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in carnet)
+                    {
+                        <tr>
+                            <th scope="row">@item.Aplicacion.Producto<div class="small text-muted fw-normal">@item.Aplicacion.Laboratorio</div></th>
+                            <td>@item.Aplicacion.FechaAplicacion.ToString("dd/MM/yyyy")</td>
+                            <td>@item.Aplicacion.Lote</td>
+                            <td>@item.Aplicacion.FechaRefuerzo.ToString("dd/MM/yyyy")</td>
+                            <td><EstadoRefuerzo Estado="@item.Estado" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (historial.Count > carnet.Count)
+        {
+            <details class="mb-2">
+                <summary class="small">Ver todas las aplicaciones (@historial.Count)</summary>
+                <ul class="small mt-2">
+                    @foreach (var aplicacion in historial)
+                    {
+                        <li>@aplicacion.FechaAplicacion.ToString("dd/MM/yyyy"): @aplicacion.Producto, lote @aplicacion.Lote · @aplicacion.AplicadaPor</li>
+                    }
+                </ul>
+            </details>
+        }
+    }
+
+    <p class="small text-muted mb-0">@VacunaService.AvisoCatalogoDemo</p>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public int AnimalId { get; set; }
+
+    private List<ItemCarnet> carnet = new();
+    private List<AplicacionSanitaria> historial = new();
+
+    protected override void OnParametersSet()
+    {
+        carnet = Vacunas.CarnetDe(AnimalId);
+        historial = Vacunas.HistorialDe(AnimalId);
+    }
+
+    private static string TextoAlerta(ItemCarnet item)
+    {
+        var fecha = item.Aplicacion.FechaRefuerzo.ToString("dd/MM/yyyy");
+        if (item.Estado == VacunaService.Vencida)
+        {
+            return $"el refuerzo venció el {fecha}. Pedí un turno para ponerlo al día.";
+        }
+
+        return item.DiasParaRefuerzo == 0
+            ? $"el refuerzo es hoy ({fecha})."
+            : $"el refuerzo es en {item.DiasParaRefuerzo} {(item.DiasParaRefuerzo == 1 ? "día" : "días")} ({fecha}).";
+    }
+}

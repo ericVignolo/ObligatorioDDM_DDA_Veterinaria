@@ -1,0 +1,17 @@
+@using Veterinaria.Blazor.Services
+
+@* Etiqueta única del estado de un refuerzo (A-021). El texto dice el estado: el color solo acompaña. *@
+<span class="badge @Clase">@Estado</span>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Estado { get; set; } = "";
+
+    private string Clase => Estado switch
+    {
+        VacunaService.Vigente => "bg-success",
+        VacunaService.RefuerzoProximo => "bg-warning text-dark",
+        VacunaService.Vencida => "bg-danger",
+        _ => "bg-light text-dark"
+    };
+}
