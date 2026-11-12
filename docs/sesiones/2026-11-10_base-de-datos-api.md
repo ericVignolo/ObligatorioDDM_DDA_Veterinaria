@@ -41,7 +41,8 @@ Diferencias con los modelos de Blazor:
 
 ## Qué falta
 
-- [ ] Diego: correr la migración inicial, subir `Migrations/` y mezclar el PR.
+- [x] Diego: migración `Inicial` aplicada (22 tablas) y `Migrations/` subida (2026-11-10). Agregó `Microsoft.OpenApi` 2.7.5 y `System.Security.Cryptography.Pkcs` 9.0.21 al `.csproj`.
+- [ ] Mezclar el PR #21 a `desktop`.
 - [ ] Primer endpoint con Controller → Service → Repository → DTOs: catálogo `GET /api/v1/prestaciones` (ESPECIFICACION_CATALOGO_SERVICIOS_API).
 - [ ] Hash de contraseñas y cuentas del personal (sin semilla por ahora).
 - [ ] Migraciones de los módulos siguientes: consulta e historia clínica, stock por lote, cargos y cobro, vacunas, internación, asistencia y notificaciones.

@@ -1,6 +1,6 @@
 # Mensaje para Diego — 2026-11-09
 
-> **Estado 2026-11-10 (Diego):** punto 2 resuelto — opción A, `MySql.EntityFrameworkCore` 10.0.7 + EF Core 10. Punto 3 en curso — primera versión de la base en `api/Veterinaria.Api` (falta correr `Add-Migration Inicial` / `Update-Database` en Visual Studio). Punto 4 resuelto — R1 y R2 no se aplican todavía. Punto 5 pendiente.
+> **Estado 2026-11-10 (Diego):** punto 2 resuelto — opción A, `MySql.EntityFrameworkCore` 10.0.7 + EF Core 10. Punto 3 resuelto — base `vitalia` creada con la migración `Inicial` (Diego, 2026-11-10). Punto 4 resuelto — R1 y R2 no se aplican todavía. Punto 5 pendiente.
 
 De parte de Eric. **Diego se encarga de la base de datos**: decidir el proveedor, crearla y lo que quedó pendiente de su parte.
 
