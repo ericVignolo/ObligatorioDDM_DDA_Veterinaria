@@ -140,8 +140,10 @@ public class AsistenciaTests
 
         var resultado = f.Asistencias.InformarEmpeoramiento(naranja.Id, new CambioNivelFormulario { Nivel = AsistenciaService.Verde, Motivo = "Mejoró" }, f.PersonalDe(Recepcion), Lunes(10));
 
-        Assert.False(resultado.Exito);
+        // El aviso queda registrado (sección 10), pero el nivel no baja (RN-52).
+        Assert.True(resultado.Exito, resultado.Mensaje);
         Assert.Equal(AsistenciaService.Naranja, naranja.Nivel);
+        Assert.Contains(f.Asistencias.Eventos(naranja.Id), e => e.Tipo == "Empeoramiento informado");
     }
 
     [Fact]

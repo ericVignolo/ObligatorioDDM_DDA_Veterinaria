@@ -564,12 +564,13 @@ public class AsistenciaService
             return new ResultadoOperacion { Exito = false, Mensaje = "Elegí el nivel y describí qué cambió." };
         }
 
+        // Sección 10: el evento queda siempre; el nivel nuevo es el mayor entre el actual y el informado.
+        Evento(s, ahora, "Empeoramiento informado", $"Nivel informado: {datos.Nivel}. {datos.Motivo.Trim()}", autor);
         if (Prioridad(datos.Nivel) > Prioridad(s.Nivel))
         {
-            return new ResultadoOperacion { Exito = false, Mensaje = "Un empeoramiento no baja el nivel: solo un veterinario puede reducirlo (RN-52)." };
+            return new ResultadoOperacion { Exito = true, Mensaje = "Registrado. El nivel no baja con un aviso del cliente: solo un veterinario puede reducirlo (RN-52)." };
         }
 
-        Evento(s, ahora, "Empeoramiento informado", datos.Motivo.Trim(), autor);
         if (datos.Nivel != s.Nivel)
         {
             AplicarNivel(s, datos.Nivel, "Nivel elevado por empeoramiento", datos.Motivo.Trim(), autor, ahora);
