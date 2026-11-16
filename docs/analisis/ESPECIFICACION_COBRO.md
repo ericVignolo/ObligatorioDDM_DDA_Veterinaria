@@ -1,6 +1,6 @@
 # Especificación: Cobrar consulta (CU-REC-01)
 
-Estado: implementada en escritorio con datos de demostración (A-023, 2026-11-16), pendiente de la prueba con F5. La advertencia común de los prototipos está en `CONTEXTO_BASE.md` §3.1.
+Estado: implementada en escritorio con datos de demostración (A-023, 2026-11-16). Probada por Eric con F5 el 2026-11-16. La advertencia común de los prototipos está en `CONTEXTO_BASE.md` §3.1.
 
 Decisiones: cobro **solo presencial** y sin pasarela (DT-ALC-02, Eric, 2026-11-16); el inventario no se vende (DT-ALC-01). Requisitos: RF-REC-05 (Must), RF-CLI-12 reducido a consultar, RN-32 a RN-34, RN-18, RNF-CON-03.
 
