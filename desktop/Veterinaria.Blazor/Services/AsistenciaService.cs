@@ -191,7 +191,7 @@ public class AsistenciaService
         var resultado = new List<Personal>();
         foreach (var persona in _personal.ObtenerTodos().Where(p => p.Rol == PersonalService.Veterinario))
         {
-            var ficha = _profesionales.ObtenerFicha(persona.ProfesionalId);
+            var ficha = persona.ProfesionalId is int profesionalId ? _profesionales.ObtenerFicha(profesionalId) : null;
             if (ficha is null || ficha.MatriculaVigenteHasta is not DateOnly hasta || hasta < DateOnly.FromDateTime(ahora))
             {
                 continue;
