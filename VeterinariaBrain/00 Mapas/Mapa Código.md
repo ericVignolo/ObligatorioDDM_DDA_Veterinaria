@@ -9,9 +9,10 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (43)
+### Páginas (45)
 - [[Acceso]] · `/acceso`
 - [[AdminAuditoria]] · `/panel/admin/auditoria`
+- [[AdminDerechos]] · `/panel/admin/derechos`
 - [[AdminHorarios]] · `/panel/admin/horarios`
 - [[AdminIndicadores]] · `/panel/admin/indicadores`
 - [[AdminParametros]] · `/panel/admin/parametros`
@@ -28,6 +29,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[AtencionConsulta]] · `/panel/consulta/{TurnoId:int}`
 - [[Cobros]] · `/panel/cobros`
 - [[Comprobante]] · `/panel/comprobantes/{Id:int}`
+- [[Comunicaciones]] · `/panel/comunicaciones`
 - [[Cookies]] · `/cookies`
 - [[FirmarConsentimiento]] · `/consentimiento/{TurnoId:int}`
 - [[HistoriaAnimal]] · `/animales/{Id:int}/historia`
@@ -54,7 +56,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-### Componentes (19)
+### Componentes (21)
 - [[AnimalCard]]
 - [[AnimalForm]]
 - [[Atajo]]
@@ -65,6 +67,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[EstadoRefuerzo]]
 - [[EstadoTurno]]
 - [[MainLayout]]
+- [[MisComunicaciones]]
+- [[MisDerechos]]
 - [[NavMenu]]
 - [[NivelAsistencia]]
 - [[PasosReserva]]
@@ -75,18 +79,21 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (21)
+### Servicios (24)
 - [[AdministracionService]]
 - [[AgendaService]]
 - [[AnimalService]]
 - [[AsistenciaService]]
 - [[AuditoriaService]]
+- [[AvisosRefuerzoService]]
 - [[BitacoraService]]
 - [[ClinicaService]]
 - [[CobroService]]
+- [[ComunicacionesService]]
 - [[ConsentimientoService]]
 - [[ConsultaService]]
 - [[CuentaService]]
+- [[DerechosService]]
 - [[DocumentoLegalService]]
 - [[IndicadoresService]]
 - [[IntencionService]]
@@ -98,7 +105,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (68)
+### Modelos (73)
 - [[AdmisionFormulario]]
 - [[AjusteFormulario]]
 - [[AlertaStock]]
@@ -119,6 +126,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Clinica]]
 - [[CobroFormulario]]
 - [[CodigoVerificacion]]
+- [[Comunicacion]]
 - [[Consentimiento]]
 - [[ConsentimientoFormulario]]
 - [[Consulta]]
@@ -152,6 +160,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[PerfilFormulario]]
 - [[Personal]]
 - [[PersonalFormulario]]
+- [[PoliticaConservacion]]
+- [[PreferenciaComunicacion]]
 - [[Prestacion]]
 - [[PrestacionFormulario]]
 - [[ProductoSanitario]]
@@ -161,10 +171,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ReservaStock]]
 - [[ResultadoOperacion]]
 - [[SolicitudAsistencia]]
+- [[SolicitudDerecho]]
 - [[SolicitudRecuperacion]]
 - [[SolicitudTelefonicaFormulario]]
 - [[TarifaFormulario]]
 - [[TarifaPrestacion]]
+- [[TipoComunicacion]]
 - [[Turno]]
 - [[ValidacionDatos]]
 

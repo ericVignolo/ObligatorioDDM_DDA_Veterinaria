@@ -60,7 +60,7 @@ Requisitos: RF-CLI-07, RF-CLI-10, RF-CLI-18, RF-CLI-19, RF-CLI-20, RF-REC-07, RN
 | AC-03 | Un mensaje enviado a la primera tiene 1 intento y `UltimoError` vacío. `Reintentar` devuelve éxito solo si el envío sale; si vuelve a fallar, devuelve error y el mensaje queda `Pendiente` con 1 intento. |
 | AC-04 | `NoLeidas` cuenta todos los mensajes del cliente sin leer, por correo o en la app. |
 | AC-05 | Orden de la bandeja: del `Id` más alto al más bajo (el más nuevo primero). |
-| AC-06 | Los filtros de texto no distinguen mayúsculas ni tildes de mayúscula; estado y tipo se comparan exactos. |
+| AC-06 | Los filtros de texto no distinguen mayúsculas de minúsculas (las tildes sí cuentan); estado y tipo se comparan exactos. |
 | AC-07 | Título y mensaje se recortan (espacios al inicio y al final) antes de medir el largo; uno de solo espacios es vacío y falla. El motivo de rechazo de solo espacios también falla. |
 | AC-08 | Un aviso o una alerta sin destinatarios (ningún cliente con esa especie, nadie verificado) sale bien con 0 generados. |
 | AC-09 | Valores neutros al anonimizar: nombre «Titular», apellido «eliminado», correo `eliminada-<id>@eliminada.invalid`, el resto vacío, verificada en falso. |

@@ -181,6 +181,9 @@ flowchart LR
 | `/panel/admin/parametros` | `Pages/AdminParametros.razor` | A-027 | AdministracionService, AsistenciaService, InternacionService, InventarioService, VacunaService, ConsentimientoService, PersonalService, SesionService · Administrador |
 | `/panel/admin/auditoria` | `Pages/AdminAuditoria.razor` | A-027 | BitacoraService, SesionService · Administrador |
 | `/panel/admin/indicadores` | `Pages/AdminIndicadores.razor` | A-027 | IndicadoresService · Administrador |
+| `/panel/comunicaciones` | `Pages/Comunicaciones.razor` | A-028 | ComunicacionesService, AvisosRefuerzoService, CuentaService, AnimalService, SesionService · Recepción, Administrador |
+| `/panel/admin/derechos` | `Pages/AdminDerechos.razor` | A-028 | DerechosService, CuentaService, SesionService · Administrador |
+| Mi cuenta → comunicaciones y datos | `Components/MisComunicaciones.razor`, `Components/MisDerechos.razor` | A-028 | ComunicacionesService, DerechosService · Cliente |
 | `/panel/historia/{AnimalId}` | `Pages/HistoriaClinica.razor` | A-020, A-021 | AnimalService, CuentaService, ConsultaService, SesionService · `RegistroClinico`, `CarnetSanitario` |
 | `/animales/{Id}/historia` | `Pages/HistoriaAnimal.razor` | A-020 | AnimalService, ConsultaService, SesionService · `RegistroClinico`, `RequiereSesion` |
 | `/turnos` | `Pages/Turnos.razor` | A-015, A-016 | AgendaService, AnimalService, PrestacionService, ProfesionalService, ClinicaService, SesionService |
