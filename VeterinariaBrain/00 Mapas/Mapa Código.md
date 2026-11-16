@@ -9,7 +9,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (35)
+### Páginas (37)
 - [[Acceso]] · `/acceso`
 - [[AgendaRecepcion]] · `/panel/agenda`
 - [[AgendaVeterinario]] · `/panel/mi-agenda`
@@ -17,6 +17,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[AnimalEditar]] · `/animales/{Id:int}/editar`
 - [[AnimalNuevo]] · `/animales/nuevo`
 - [[Animales]] · `/animales`
+- [[AsistenciaDetalle]] · `/panel/asistencia/{Id:int}`
+- [[Asistencias]] · `/panel/asistencia`
 - [[AtencionConsulta]] · `/panel/consulta/{TurnoId:int}`
 - [[Cobros]] · `/panel/cobros`
 - [[Comprobante]] · `/panel/comprobantes/{Id:int}`
@@ -46,7 +48,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-### Componentes (18)
+### Componentes (19)
 - [[AnimalCard]]
 - [[AnimalForm]]
 - [[Atajo]]
@@ -58,6 +60,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[EstadoTurno]]
 - [[MainLayout]]
 - [[NavMenu]]
+- [[NivelAsistencia]]
 - [[PasosReserva]]
 - [[PieLegal]]
 - [[PrestacionCard]]
@@ -66,9 +69,10 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (16)
+### Servicios (17)
 - [[AgendaService]]
 - [[AnimalService]]
+- [[AsistenciaService]]
 - [[ClinicaService]]
 - [[CobroService]]
 - [[ConsentimientoService]]
@@ -84,7 +88,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (57)
+### Modelos (61)
 - [[AdmisionFormulario]]
 - [[AjusteFormulario]]
 - [[AlertaStock]]
@@ -99,6 +103,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Box]]
 - [[CambioContrasenaFormulario]]
 - [[CambioCorreoFormulario]]
+- [[CambioNivelFormulario]]
 - [[Cargo]]
 - [[Clinica]]
 - [[CobroFormulario]]
@@ -113,6 +118,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[DocumentoLegal]]
 - [[Enmienda]]
 - [[EnmiendaFormulario]]
+- [[EventoAsistencia]]
 - [[FirmaConsulta]]
 - [[FranjaHoraria]]
 - [[IngresoClinicoFormulario]]
@@ -139,7 +145,9 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RegistroCliente]]
 - [[ReservaStock]]
 - [[ResultadoOperacion]]
+- [[SolicitudAsistencia]]
 - [[SolicitudRecuperacion]]
+- [[SolicitudTelefonicaFormulario]]
 - [[Turno]]
 - [[ValidacionDatos]]
 

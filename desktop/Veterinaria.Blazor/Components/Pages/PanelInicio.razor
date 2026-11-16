@@ -20,18 +20,21 @@
             <Atajo Titulo="Clientes y animales" Texto="Buscar y registrar clientes y animales en mostrador (RF-REC-03)." />
             <Atajo Titulo="Cobros" Texto="Cobrar prestaciones finalizadas y emitir comprobantes (RF-REC-05, A-023)." Enlace="panel/cobros" />
             <Atajo Titulo="Internación" Texto="Admitir el ingreso de un animal y ver los boxes (A-024)." Enlace="panel/internacion" />
+            <Atajo Titulo="Asistencia a domicilio" Texto="Cola por prioridad, asignación, escalamientos y solicitudes por teléfono (A-026)." Enlace="panel/asistencia" />
         }
         @if (Sesion.TieneRol(PersonalService.Veterinario))
         {
             <Atajo Titulo="Mi agenda" Texto="Tus turnos del día y quién está en espera." Enlace="panel/mi-agenda" />
             <Atajo Titulo="Consultas" Texto="Atender, registrar y firmar la consulta (A-019)." />
             <Atajo Titulo="Internación" Texto="Ingreso clínico, evolución, novedades y alta (RF-VET-09 a RF-VET-11)." Enlace="panel/internacion" />
+            <Atajo Titulo="Asistencias" Texto="Aceptar o rechazar, clasificar y actualizar el traslado (RF-VET-16, RF-VET-17)." Enlace="panel/asistencia" />
             <Atajo Titulo="Inventario" Texto="Stock, lotes y vencimientos, en solo lectura (A-022)." Enlace="panel/inventario" />
         }
         @if (Sesion.TieneRol(PersonalService.Administrador))
         {
             <Atajo Titulo="Inventario" Texto="Compras, ajustes, bajas y alertas de stock mínimo y vencimiento (RF-ADM-05, RF-ADM-06)." Enlace="panel/inventario" />
             <Atajo Titulo="Internación" Texto="Ocupación de boxes e internaciones en curso (A-024)." Enlace="panel/internacion" />
+            <Atajo Titulo="Asistencia a domicilio" Texto="Cola de solicitudes y su estado (A-026)." Enlace="panel/asistencia" />
             <Atajo Titulo="Cobros y comprobantes" Texto="Cobros registrados y anulación con nota de crédito (RN-34, A-023)." Enlace="panel/cobros" />
             <Atajo Titulo="Servicios y tarifas" Texto="Alta, baja y precios de servicios (RF-ADM-02)." />
             <Atajo Titulo="Horarios del personal" Texto="Jornadas, licencias y feriados (RF-ADM-04)." />

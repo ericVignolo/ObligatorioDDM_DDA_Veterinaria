@@ -72,6 +72,34 @@ public class CobroService
         return cargo;
     }
 
+    // RN-58: la asistencia finalizada genera su cargo con el costo informado. Idempotente.
+    public Cargo? GenerarCargoAsistencia(SolicitudAsistencia solicitud)
+    {
+        if (solicitud.Costo <= 0)
+        {
+            return null;
+        }
+
+        var existente = _cargos.FirstOrDefault(c => c.AsistenciaId == solicitud.Id);
+        if (existente is not null)
+        {
+            return existente;
+        }
+
+        var cargo = new Cargo
+        {
+            Id = ++_ultimoCargo,
+            AsistenciaId = solicitud.Id,
+            ClienteId = solicitud.ClienteId,
+            AnimalId = solicitud.AnimalId,
+            Descripcion = $"Asistencia a domicilio ({solicitud.Especie}, {solicitud.DistanciaKm} km)",
+            Monto = solicitud.Costo,
+            Fecha = DateTime.Now
+        };
+        _cargos.Add(cargo);
+        return cargo;
+    }
+
     public Cargo? ObtenerCargo(int id)
     {
         return _cargos.FirstOrDefault(c => c.Id == id);

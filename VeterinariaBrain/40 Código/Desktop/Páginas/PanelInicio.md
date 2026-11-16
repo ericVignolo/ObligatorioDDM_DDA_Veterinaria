@@ -13,9 +13,9 @@ generado: true
 
 A-010: lo que se ve depende del rol. Es un control visual: los permisos reales los valida la API (sección C).
 
-**Tareas:** A-010, A-019, A-022, A-023, A-024
+**Tareas:** A-010, A-019, A-022, A-023, A-024, A-026
 
-**Requisitos y decisiones:** RF-ADM-01, RF-ADM-02, RF-ADM-04, RF-ADM-05, RF-ADM-06, RF-ADM-10, RF-REC-03, RF-REC-05, RF-VET-09, RF-VET-11, RN-34
+**Requisitos y decisiones:** RF-ADM-01, RF-ADM-02, RF-ADM-04, RF-ADM-05, RF-ADM-06, RF-ADM-10, RF-REC-03, RF-REC-05, RF-VET-09, RF-VET-11, RF-VET-16, RF-VET-17, RN-34
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
