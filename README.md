@@ -32,12 +32,15 @@ Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ning
 | A-007 | Verificación del correo por código y recuperación de contraseña | ✅ |
 | A-008 | Inicio y cierre de sesión | ✅ |
 | A-011 | Retomar la reserva después de ingresar | ✅ |
-| A-009, A-010 | Perfil del Cliente y perfiles del personal | Pendiente |
 | A-012, A-013 | Mis animales: listado, ficha, alta y edición (incluye grupos de campo) | ✅ |
 | A-014, A-015 | Disponibilidad y reserva en cuatro pasos, con Mis turnos | ✅ |
 | A-016 | Cancelar y reprogramar turnos (24 h), historial de turnos | ✅ |
-| A-009 | Perfil del Cliente («Mi cuenta») | Pendiente |
-| A-017 en adelante | Agenda del personal, consulta y demás módulos | Pendiente |
+| A-010, A-017, A-018 | Panel del personal por rol, agenda de Recepción y del Veterinario, estados unificados | ✅ |
+| A-009 | Perfil del Cliente («Mi cuenta»): datos con quién ve cada uno, animales con historia, turnos y «Reservar de nuevo», cambio de correo y de contraseña con verificación | ✅ |
+| A-019, A-020 | Consulta veterinaria (borrador, firma con contraseña), enmiendas e historia clínica para veterinario y cliente | ✅ |
+| A-021 | Vacunas y antiparasitarios: se registran dentro de la consulta, lote que no vence (RN-15), refuerzo calculado (RN-19), carnet con estados y alertas sanitarias | ✅ |
+| A-022 | Inventario: lotes con vencimiento, FEFO, stock mínimo y alertas, compras, ajustes y bajas del Administrador, insumos y dosis que se descuentan al firmar la consulta | 🧪 En prueba |
+| A-023 en adelante | Cobro, internación y demás módulos | Pendiente |
 
 El mapa de páginas, servicios y modelos (con diagrama) está en [`desktop/README.md`](desktop/README.md).
 
@@ -47,7 +50,7 @@ Avance completo en el [plan de tareas](docs/analisis/PLAN_TAREAS_PROYECTO.md) y 
 
 Requisitos: **Visual Studio 2026** (o el SDK de **.NET 10**).
 
-1. Clonar el repositorio y cambiar a la rama `desktop`.
+1. Clonar el repositorio y cambiar a la rama `desarrollo`.
 2. Abrir `desktop/Veterinaria.Blazor/Veterinaria.Blazor.slnx`.
 3. Ejecutar con **F5** y aceptar el certificado HTTPS de desarrollo si lo pide.
 
@@ -79,8 +82,8 @@ dotnet run
 
 ## Forma de trabajo
 
-- **Ramas:** `main` (versión integrada) · `desktop` (sección A, activa) · `desktop-mobile` (sección B) · `desktop-mobile-api` (sección C). Cada sección sale de la anterior.
-- Cada sesión de trabajo va en una rama `<nombre>/sesion-AAAA-MM-DD` desde la rama de la sección, con un PR al final. Quien trabajó la prueba y mezcla su PR. `main` se actualiza desde `desktop` en cada hito estable.
+- **Ramas:** `main` (versiones estables) · `desarrollo` (trabajo diario: escritorio, API y móvil juntos, cada uno en su carpeta). Cada aplicación se versiona con etiquetas (`desktop-vX.Y`, `api-vX.Y`, `mobile-vX.Y`).
+- Cada sesión de trabajo va en una rama `<nombre>/sesion-AAAA-MM-DD` desde `desarrollo`, con un PR al final. Quien trabajó la prueba y mezcla su PR. `main` se actualiza desde `desarrollo` en cada hito estable.
 - Al cerrar cada sesión se escribe una bitácora en `docs/sesiones/` con lo hecho y lo pendiente.
 - El código sigue el estilo del docente; las convenciones y reglas para asistentes de IA están en [`AGENTS.md`](AGENTS.md).
 

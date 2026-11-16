@@ -142,7 +142,7 @@ Cada RF aparece una sola vez en esta tabla. “Base” mantiene la prioridad de 
 - RF-VET-05 puede esperar, pero la firma clínica, la matrícula y las enmiendas de RF-VET-12/RF-VET-13 permanecen en H2.
 - Los umbrales de agenda, stock y refuerzo requieren configuración válida desde el módulo que los usa; la pantalla administrativa completa puede terminar en H3. No se usarán valores inventados como reglas definitivas.
 - Antes de entregar funcionalidades de H1/H2 al público se deben cumplir sus RNF de privacidad y derechos, aunque la demostración interna se construya antes de H3/H5.
-- Permanecen fuera del alcance contabilidad/sueldos, homologación fiscal DGI, conexión directa a equipos clínicos, logística de comercio electrónico e interoperabilidad entre clínicas.
+- Permanecen fuera del alcance contabilidad/sueldos, homologación fiscal DGI, conexión directa a equipos clínicos, venta de productos y comercio electrónico (DT-ALC-01, 2026-11-11) e interoperabilidad entre clínicas.
 
 ## 6. Trabajo de los dos integrantes
 

@@ -152,8 +152,8 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RN-26 | El stock de un artículo nunca puede quedar negativo. | Bloqueante |
 | RN-27 | Se consume primero el lote con vencimiento más próximo, según FEFO. | Bloqueante |
 | RN-28 | Cuando el stock cruza el mínimo configurado se genera una alerta al administrador en la misma transacción. | Bloqueante |
-| RN-29 | Un lote vencido se inhabilita automáticamente para consumo y venta y genera una baja registrada. | Bloqueante |
-| RN-30 | Todo movimiento tiene origen tipado y trazable: compra, consumo, venta, ajuste o baja. | Bloqueante |
+| RN-29 | Un lote vencido se inhabilita automáticamente para consumo y genera una baja registrada. *(2026-11-11: se quitó «y venta», DT-ALC-01.)* | Bloqueante |
+| RN-30 | Todo movimiento tiene origen tipado y trazable: compra, consumo, ajuste o baja. *(2026-11-11: se quitó «venta», DT-ALC-01.)* | Bloqueante |
 | RN-31 | Un ajuste manual requiere motivo escrito y rol Administrador. | Bloqueante |
 
 ## Reglas de facturación y cuenta corriente

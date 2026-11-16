@@ -11,7 +11,7 @@ public class Turno
     public DateTime Inicio { get; set; }
     public DateTime Fin { get; set; }
 
-    // Confirmado o Cancelado por ahora; En espera, En curso, Finalizado y Ausente llegan con A-017 y A-018.
+    // Confirmado, En espera, En curso, Finalizado, Ausente o Cancelado (FLUJO_RESERVA_CONSULTA §4.1, A-018).
     public string Estado { get; set; } = "Confirmado";
 
     public DateTime FechaCreacion { get; set; }
@@ -19,6 +19,12 @@ public class Turno
     // Cancelación (A-016): motivo opcional y cuándo se canceló.
     public string MotivoCancelacion { get; set; } = "";
     public DateTime? FechaCancelacion { get; set; }
+
+    // Quién canceló: «Cliente» o «Recepción» (A-017).
+    public string CanceladoPor { get; set; } = "";
+
+    // Hora real de llegada que registra Recepción (Confirmado → En espera).
+    public DateTime? HoraLlegada { get; set; }
 
     // Reprogramación (A-016): el turno conserva su número y se guarda el horario anterior.
     public DateTime? InicioAnterior { get; set; }

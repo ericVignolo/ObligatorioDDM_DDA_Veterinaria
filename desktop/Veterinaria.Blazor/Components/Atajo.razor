@@ -1,0 +1,28 @@
+@* Tarjeta de acceso del panel (A-010). Sin enlace = módulo de una próxima tarea. *@
+<div class="col-md-6 col-lg-4 mb-3">
+    <div class="card h-100 @(string.IsNullOrEmpty(Enlace) ? "bg-light" : "")">
+        <div class="card-body">
+            <h2 class="h5 card-title">@Titulo</h2>
+            <p class="card-text">@Texto</p>
+            @if (string.IsNullOrEmpty(Enlace))
+            {
+                <span class="badge bg-secondary">Próximamente</span>
+            }
+            else
+            {
+                <a class="btn btn-primary btn-sm" href="@Enlace">Abrir</a>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Titulo { get; set; } = "";
+
+    [Parameter]
+    public string Texto { get; set; } = "";
+
+    [Parameter]
+    public string Enlace { get; set; } = "";
+}

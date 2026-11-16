@@ -2,6 +2,7 @@
 @using Veterinaria.Blazor.Models
 @using Veterinaria.Blazor.Services
 @inject AnimalService AnimalService
+@inject VacunaService Vacunas
 @inject SesionService Sesion
 
 <PageTitle>Mis animales — VITALIA</PageTitle>
@@ -58,6 +59,7 @@
         }
 
         AnimalService.CargarEjemplos(Sesion.CuentaActual.Id);
+        Vacunas.CargarCarnetEjemplo(Sesion.CuentaActual.Id);
         Cargar();
     }
 }
