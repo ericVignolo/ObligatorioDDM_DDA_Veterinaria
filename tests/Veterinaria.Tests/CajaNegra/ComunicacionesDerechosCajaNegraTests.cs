@@ -1508,7 +1508,7 @@ public class ComunicacionesDerechosCajaNegraTests
 
         var clinica = politicas.Where(p => p.Categoria.Contains("clínic", StringComparison.OrdinalIgnoreCase)
                                            || p.Categoria.Contains("clinic", StringComparison.OrdinalIgnoreCase)).ToList();
-        var cobros = politicas.Where(p => p.Categoria.Contains("cobr", StringComparison.OrdinalIgnoreCase)).ToList();
+        var cobros = politicas.Where(p => p.Categoria.Contains("pagos", StringComparison.OrdinalIgnoreCase)).ToList();
 
         Assert.NotEmpty(clinica);
         Assert.NotEmpty(cobros);

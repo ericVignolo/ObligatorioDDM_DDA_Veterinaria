@@ -49,7 +49,7 @@ Requisitos: RF-CLI-07, RF-CLI-10, RF-CLI-18, RF-CLI-19, RF-CLI-20, RF-REC-07, RN
 | DR-06 | Solo el Administrador activo resuelve. **Rechazar** exige motivo y deja la cuenta intacta. **Aprobar** vuelve a controlar DR-04, anonimiza la cuenta (nombre, contacto, documento, domicilio y credenciales vacíos o neutros; ingreso imposible), borra sus mensajes y preferencias, y marca el pedido `Completada`. |
 | DR-07 | Tras eliminar, el animal sigue existiendo con su historia y su `ResponsableId`, que ahora apunta a una cuenta anonimizada. Los cargos y consentimientos se conservan. |
 | DR-08 | Aprobar o rechazar deja un registro de auditoría, entidad «Datos personales», sin datos personales en el detalle. |
-| DR-09 | `Politicas` documenta por categoría finalidad, acceso, conservación y qué pasa al eliminar (RNF-LEG-06). Historia clínica y cobros dicen «a confirmar» (D-DER-03). |
+| DR-09 | `Politicas` documenta por categoría finalidad, acceso, conservación y qué pasa al eliminar (RNF-LEG-06). Categorías: «Datos de la cuenta…», «Animales e historia clínica», «Consentimientos informados», «Cargos, pagos y comprobantes», «Comunicaciones enviadas y preferencias», «Ubicación en una asistencia a domicilio» y «Aceptaciones de términos y privacidad». Las de historia clínica y de cargos, pagos y comprobantes dicen «a confirmar» en la conservación (D-DER-03). |
 
 ## Aclaraciones surgidas de las pruebas de caja negra (2026-11-16)
 
