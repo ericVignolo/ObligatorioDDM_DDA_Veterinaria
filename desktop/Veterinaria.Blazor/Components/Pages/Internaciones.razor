@@ -1,7 +1,7 @@
 @page "/panel/internacion"
 @using Veterinaria.Blazor.Models
 @using Veterinaria.Blazor.Services
-@inject InternacionService Internaciones
+@inject InternacionService Servicio
 @inject AnimalService Animales
 @inject CuentaService Cuentas
 @inject SesionService Sesion
@@ -38,9 +38,9 @@
     <section class="mb-4" aria-labelledby="titulo-boxes">
         <h2 class="h4" id="titulo-boxes">Boxes</h2>
         <div class="row g-3">
-            @foreach (var box in Internaciones.Boxes())
+            @foreach (var box in Servicio.Boxes())
             {
-                var ocupante = Internaciones.OcupanteDe(box.Id);
+                var ocupante = Servicio.OcupanteDe(box.Id);
                 <div class="col-md-3">
                     <div class="card h-100">
                         <div class="card-body">
@@ -98,7 +98,7 @@
                                         @(internacion.Estado == InternacionService.Admitida ? "Espera ingreso clínico" : "Internado")
                                     </span>
                                 </td>
-                                <td>@(Internaciones.ObtenerBox(internacion.BoxId)?.Nombre ?? "—")</td>
+                                <td>@(Servicio.ObtenerBox(internacion.BoxId)?.Nombre ?? "—")</td>
                                 <td>@internacion.FechaAdmision.ToString("dd/MM HH:mm")</td>
                                 <td><a class="btn btn-outline-primary btn-sm" href="@($"panel/internacion/{internacion.Id}")">Abrir</a></td>
                             </tr>
@@ -186,8 +186,8 @@
 
     private void Cargar()
     {
-        abiertas = Internaciones.Abiertas();
-        altas = Internaciones.Altas();
+        abiertas = Servicio.Abiertas();
+        altas = Servicio.Altas();
     }
 
     private string NombreAnimal(int animalId)
@@ -203,7 +203,7 @@
 
     private void Admitir()
     {
-        var resultado = Internaciones.Admitir(admision, Sesion.PersonalActual);
+        var resultado = Servicio.Admitir(admision, Sesion.PersonalActual);
         exito = resultado.Exito;
         mensaje = resultado.Mensaje;
         if (resultado.Exito)
