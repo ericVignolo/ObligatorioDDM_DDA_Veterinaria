@@ -11,7 +11,7 @@ generado: true
 
 Producto del catálogo sanitario: una vacuna o un antiparasitario (A-021, RF-VET-04).
 
-**Tareas:** A-021
+**Tareas:** A-021, A-022
 
 **Requisitos y decisiones:** RF-VET-04, RN-19
 

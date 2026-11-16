@@ -8,6 +8,7 @@
 @inject PrestacionService PrestacionService
 @inject SesionService Sesion
 @inject VacunaService Vacunas
+@inject InventarioService Inventario
 
 <PageTitle>Consulta — VITALIA</PageTitle>
 
@@ -154,8 +155,8 @@
                         </div>
 
                         <p class="small text-muted">* Obligatorios para firmar. El borrador se puede guardar incompleto y el cliente no lo ve.
-                            Adjuntos e insumos se agregan con la API y el inventario (RF-VET-03, A-022).
-                            Las vacunas y antiparasitarios se registran en la sección de abajo.</p>
+                            Los adjuntos llegan con la API (RF-VET-03).
+                            Las vacunas, antiparasitarios e insumos se registran en las secciones de abajo.</p>
 
                         <button type="submit" class="btn btn-outline-primary">Guardar borrador</button>
                         <button type="button" class="btn btn-success ms-2" @onclick="AbrirFirma">Revisar y firmar</button>
@@ -195,7 +196,7 @@
                         <EditForm Model="nuevaAplicacion" OnValidSubmit="RegistrarAplicacion" FormName="aplicacion">
                             <DataAnnotationsValidator />
                             <div class="row g-2 align-items-end">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <label class="form-label small" for="producto">Producto</label>
                                     <InputSelect id="producto" class="form-select" Value="nuevaAplicacion.ProductoId"
                                                  ValueChanged="@((int id) => ElegirProducto(id))"
@@ -203,29 +204,76 @@
                                         <option value="0">Elegí un producto…</option>
                                         @foreach (var producto in Vacunas.Productos)
                                         {
-                                            <option value="@producto.Id" disabled="@(!Vacunas.Aplica(producto, animal.Especie))">@TextoProducto(producto)</option>
+                                            <option value="@producto.Id" disabled="@(!Vacunas.Aplica(producto, animal.Especie) || Vacunas.LoteQueSeUsara(producto) is null)">@TextoProducto(producto)</option>
                                         }
                                     </InputSelect>
                                     <ValidationMessage For="() => nuevaAplicacion.ProductoId" />
                                 </div>
-                                <div class="col-md-5">
-                                    <label class="form-label small" for="lote">Lote</label>
-                                    <InputSelect id="lote" class="form-select" @bind-Value="nuevaAplicacion.LoteId" disabled="@(nuevaAplicacion.ProductoId == 0)">
-                                        <option value="0">Elegí un lote…</option>
-                                        @foreach (var lote in Vacunas.LotesDe(nuevaAplicacion.ProductoId))
-                                        {
-                                            <option value="@lote.Id" disabled="@Vacunas.LoteVencido(lote)">@TextoLote(lote)</option>
-                                        }
-                                    </InputSelect>
-                                    <ValidationMessage For="() => nuevaAplicacion.LoteId" />
+                                <div class="col-md-4 small">
+                                    @* RN-27: el lote lo elige el sistema (FEFO); acá se ve cuál usar. *@
+                                    @LoteSugerido
                                 </div>
                                 <div class="col-md-2">
                                     <button type="submit" class="btn btn-outline-primary w-100">Registrar</button>
                                 </div>
                             </div>
                         </EditForm>
-                        <p class="small text-muted mt-2 mb-0">La fecha de aplicación es hoy y la fecha de refuerzo la calcula el sistema según el producto.
+                        <p class="small text-muted mt-2 mb-0">El lote es el que vence antes con stock (los vencidos no se usan). La fecha de aplicación es hoy y la fecha de refuerzo la calcula el sistema según el producto.
                             Las aplicaciones figuran en el carnet del animal cuando firmes la consulta. @VacunaService.AvisoCatalogoDemo</p>
+                    </section>
+
+                    @* Insumos usados en la consulta (A-022, RF-VET-06). Se apartan del inventario y se descuentan al firmar. *@
+                    <section class="border rounded p-3 mt-3" aria-labelledby="titulo-insumos">
+                        <h2 class="h6" id="titulo-insumos">Insumos usados</h2>
+
+                        @if (!string.IsNullOrEmpty(mensajeInsumo))
+                        {
+                            <div class="alert @(exitoInsumo ? "alert-success" : "alert-danger") py-2" role="status">@mensajeInsumo</div>
+                        }
+
+                        @if (insumos.Count == 0)
+                        {
+                            <p class="small text-muted">Todavía no registraste insumos.</p>
+                        }
+                        else
+                        {
+                            <ul class="list-group mb-3">
+                                @foreach (var insumo in insumos)
+                                {
+                                    <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                        <span><strong>@insumo.Articulo.Nombre</strong>
+                                            <span class="small text-muted">· @insumo.Cantidad @insumo.Articulo.Unidad · lote @insumo.Lotes</span></span>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" @onclick="() => QuitarInsumo(insumo.Articulo.Id)">Quitar</button>
+                                    </li>
+                                }
+                            </ul>
+                        }
+
+                        <EditForm Model="nuevoInsumo" OnValidSubmit="RegistrarInsumo" FormName="insumo">
+                            <DataAnnotationsValidator />
+                            <div class="row g-2 align-items-end">
+                                <div class="col-md-7">
+                                    <label class="form-label small" for="insumo">Insumo</label>
+                                    <InputSelect id="insumo" class="form-select" @bind-Value="nuevoInsumo.ArticuloId">
+                                        <option value="0">Elegí un insumo…</option>
+                                        @foreach (var articulo in Inventario.Insumos())
+                                        {
+                                            <option value="@articulo.Id" disabled="@(Inventario.StockDisponible(articulo.Id) == 0)">@articulo.Nombre (@Inventario.StockDisponible(articulo.Id) @articulo.Unidad disponibles)</option>
+                                        }
+                                    </InputSelect>
+                                    <ValidationMessage For="() => nuevoInsumo.ArticuloId" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small" for="cantidadInsumo">Cantidad</label>
+                                    <InputNumber id="cantidadInsumo" class="form-control" @bind-Value="nuevoInsumo.Cantidad" min="1" max="100" />
+                                    <ValidationMessage For="() => nuevoInsumo.Cantidad" />
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-outline-primary w-100">Registrar</button>
+                                </div>
+                            </div>
+                        </EditForm>
+                        <p class="small text-muted mt-2 mb-0">Se usa primero el lote que vence antes. El stock se descuenta al firmar; si quitás un insumo, vuelve a quedar disponible.</p>
                     </section>
 
                     @if (mostrarFirma)
@@ -294,6 +342,12 @@
     private string mensajeAplicacion = "";
     private bool exitoAplicacion;
 
+    // Insumos de la consulta (A-022).
+    private List<(Articulo Articulo, int Cantidad, string Lotes)> insumos = new();
+    private ConsumoFormulario nuevoInsumo = new();
+    private string mensajeInsumo = "";
+    private bool exitoInsumo;
+
     protected override void OnParametersSet()
     {
         // Solo se recarga al cambiar de turno, para no pisar lo que se está escribiendo.
@@ -316,6 +370,7 @@
         }
 
         aplicaciones = Vacunas.DeConsulta(consulta.Id);
+        insumos = Consultas.InsumosDe(consulta.Id);
         formulario = Consultas.ParaEditar(consulta);
         contexto = new EditContext(formulario);
         // Al editar un campo, el aviso anterior (guardado, error de firma) deja de valer.
@@ -390,20 +445,35 @@
     // RN-15 y «no aplicable»: lo que no se puede elegir se ve, deshabilitado y con el motivo.
     private string TextoProducto(ProductoSanitario producto)
     {
-        return Vacunas.Aplica(producto, animal!.Especie) ? producto.Nombre : $"{producto.Nombre} — no aplicable a {animal.Especie.ToLower()}";
+        return Vacunas.Aplica(producto, animal!.Especie) ? TextoProductoConStock(producto) : $"{producto.Nombre} — no aplicable a {animal.Especie.ToLower()}";
     }
 
-    private string TextoLote(LoteProducto lote)
+    private string TextoProductoConStock(ProductoSanitario producto)
     {
-        var texto = $"{lote.Numero} · vence {lote.Vencimiento:dd/MM/yyyy}";
-        return Vacunas.LoteVencido(lote) ? texto + " — vencido, no se puede aplicar" : texto;
+        return Vacunas.LoteQueSeUsara(producto) is null ? $"{producto.Nombre} — sin stock vigente" : producto.Nombre;
     }
 
-    // Al cambiar de producto el lote elegido deja de valer: cada producto tiene sus lotes.
+    private string LoteSugerido
+    {
+        get
+        {
+            var producto = Vacunas.ObtenerProducto(nuevaAplicacion.ProductoId);
+            if (producto is null)
+            {
+                return "";
+            }
+
+            var lote = Vacunas.LoteQueSeUsara(producto);
+            return lote is null
+                ? "No hay stock vigente: los lotes vencidos no se aplican (RN-15)."
+                : $"Se usa el lote {lote.Numero} (vence {lote.Vencimiento:dd/MM/yyyy}).";
+        }
+    }
+
+    // Al cambiar de producto se borra el aviso anterior.
     private void ElegirProducto(int productoId)
     {
         nuevaAplicacion.ProductoId = productoId;
-        nuevaAplicacion.LoteId = 0;
         mensajeAplicacion = "";
     }
 
@@ -423,6 +493,27 @@
     {
         MostrarAplicacion(Vacunas.Quitar(aplicacionId, Sesion.PersonalActual));
         aplicaciones = Vacunas.DeConsulta(consulta!.Id);
+    }
+
+    private void RegistrarInsumo()
+    {
+        var resultado = Consultas.RegistrarInsumo(consulta!.Id, nuevoInsumo, Sesion.PersonalActual);
+        exitoInsumo = resultado.Exito;
+        mensajeInsumo = resultado.Mensaje;
+        if (resultado.Exito)
+        {
+            nuevoInsumo = new();
+        }
+
+        insumos = Consultas.InsumosDe(consulta.Id);
+    }
+
+    private void QuitarInsumo(int articuloId)
+    {
+        var resultado = Consultas.QuitarInsumo(consulta!.Id, articuloId, Sesion.PersonalActual);
+        exitoInsumo = resultado.Exito;
+        mensajeInsumo = resultado.Mensaje;
+        insumos = Consultas.InsumosDe(consulta.Id);
     }
 
     private void MostrarAplicacion(ResultadoOperacion resultado)

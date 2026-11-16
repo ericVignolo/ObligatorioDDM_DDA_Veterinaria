@@ -166,7 +166,8 @@ flowchart LR
 | `/panel` | `Pages/PanelInicio.razor` | A-010 | SesionService · `RequierePersonal`, `Atajo` |
 | `/panel/agenda` | `Pages/AgendaRecepcion.razor` | A-017 | AgendaService, AnimalService, CuentaService, PrestacionService, ProfesionalService · `EstadoTurno` |
 | `/panel/mi-agenda` | `Pages/AgendaVeterinario.razor` | A-017 | AgendaService, AnimalService, PrestacionService, SesionService · `EstadoTurno` |
-| `/panel/consulta/{TurnoId}` | `Pages/AtencionConsulta.razor` | A-019, A-021 | AgendaService, AnimalService, CuentaService, ConsultaService, PrestacionService, SesionService, VacunaService · `RegistroClinico`, `EstadoTurno` |
+| `/panel/consulta/{TurnoId}` | `Pages/AtencionConsulta.razor` | A-019, A-021 | AgendaService, AnimalService, CuentaService, ConsultaService, PrestacionService, SesionService, VacunaService, InventarioService · `RegistroClinico`, `EstadoTurno` |
+| `/panel/inventario` | `Pages/Inventario.razor` | A-022 | InventarioService, SesionService · `RequierePersonal` (Administrador; Veterinario solo lectura) |
 | `/panel/historia/{AnimalId}` | `Pages/HistoriaClinica.razor` | A-020, A-021 | AnimalService, CuentaService, ConsultaService, SesionService · `RegistroClinico`, `CarnetSanitario` |
 | `/animales/{Id}/historia` | `Pages/HistoriaAnimal.razor` | A-020 | AnimalService, ConsultaService, SesionService · `RegistroClinico`, `RequiereSesion` |
 | `/turnos` | `Pages/Turnos.razor` | A-015, A-016 | AgendaService, AnimalService, PrestacionService, ProfesionalService, ClinicaService, SesionService |

@@ -16,6 +16,9 @@ public class ProductoSanitario
     // Especies para las que está indicado (los mismos nombres que AnimalService.Especies).
     public List<string> Especies { get; set; } = new();
 
+    // Artículo del inventario con sus lotes (A-022). Cada aplicación descuenta una dosis.
+    public int ArticuloId { get; set; }
+
     // Días entre una aplicación y su refuerzo.
     public int IntervaloRefuerzoDias { get; set; }
 }

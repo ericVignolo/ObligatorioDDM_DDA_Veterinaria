@@ -21,10 +21,9 @@ public class VacunaTests
         return (f, vet, f.Consultas.ObtenerPorTurno(turno.Id)!);
     }
 
-    private static AplicacionFormulario Con(Fabrica f, int productoId, bool loteVencido = false)
+    private static AplicacionFormulario Con(int productoId)
     {
-        var lote = f.Vacunas.LotesDe(productoId).First(l => f.Vacunas.LoteVencido(l) == loteVencido);
-        return new AplicacionFormulario { ProductoId = productoId, LoteId = lote.Id };
+        return new AplicacionFormulario { ProductoId = productoId };
     }
 
     private static void Firmar(Fabrica f, Consulta consulta, Personal vet)
@@ -38,7 +37,7 @@ public class VacunaTests
     {
         var (f, vet, consulta) = ConsultaAbierta();
 
-        var resultado = f.Vacunas.Registrar(consulta.Id, Con(f, 6), vet);
+        var resultado = f.Vacunas.Registrar(consulta.Id, Con(6), vet);
 
         Assert.True(resultado.Exito, resultado.Mensaje);
         var aplicacion = Assert.Single(f.Vacunas.DeConsulta(consulta.Id));
@@ -50,11 +49,27 @@ public class VacunaTests
     }
 
     [Fact]
-    public void Un_lote_vencido_no_se_aplica()
+    public void Se_usa_el_lote_que_vence_antes_y_nunca_uno_vencido()
     {
         var (f, vet, consulta) = ConsultaAbierta();
 
-        var resultado = f.Vacunas.Registrar(consulta.Id, Con(f, 1, loteVencido: true), vet);
+        f.Vacunas.Registrar(consulta.Id, Con(1), vet);
+
+        // L1-VENC venció (RN-15) y L1-A vence antes que L1-B (FEFO, RN-27).
+        Assert.Equal("L1-A", f.Vacunas.DeConsulta(consulta.Id).Single().Lote);
+    }
+
+    [Fact]
+    public void Sin_stock_vigente_no_se_aplica()
+    {
+        var (f, vet, consulta) = ConsultaAbierta();
+        var admin = f.PersonalDe("admin@vitalia.uy");
+        foreach (var lote in f.Inventario.LotesDe(1).Where(l => !l.Inhabilitado))
+        {
+            f.Inventario.DarDeBaja(new AjusteFormulario { LoteId = lote.Id, Cantidad = lote.Cantidad, Motivo = "Rotura" }, admin);
+        }
+
+        var resultado = f.Vacunas.Registrar(consulta.Id, Con(1), vet);
 
         Assert.False(resultado.Exito);
         Assert.Contains("RN-15", resultado.Mensaje);
@@ -64,13 +79,8 @@ public class VacunaTests
     [Fact]
     public void El_ultimo_dia_de_vigencia_del_lote_todavia_sirve()
     {
-        var f = new Fabrica();
-
-        var ultimoDia = new LoteProducto { Vencimiento = Hoy };
-        var ayer = new LoteProducto { Vencimiento = Hoy.AddDays(-1) };
-
-        Assert.False(f.Vacunas.LoteVencido(ultimoDia));
-        Assert.True(f.Vacunas.LoteVencido(ayer));
+        Assert.False(InventarioService.Vencido(new LoteProducto { Vencimiento = Hoy }));
+        Assert.True(InventarioService.Vencido(new LoteProducto { Vencimiento = Hoy.AddDays(-1) }));
     }
 
     [Fact]
@@ -78,7 +88,7 @@ public class VacunaTests
     {
         var (f, vet, consulta) = ConsultaAbierta();
 
-        var resultado = f.Vacunas.Registrar(consulta.Id, Con(f, 3), vet);
+        var resultado = f.Vacunas.Registrar(consulta.Id, Con(3), vet);
 
         Assert.False(resultado.Exito);
         Assert.Contains("No aplicable", resultado.Mensaje);
@@ -86,34 +96,37 @@ public class VacunaTests
     }
 
     [Fact]
-    public void El_lote_tiene_que_ser_del_producto_elegido()
+    public void Sin_producto_no_se_registra()
     {
         var (f, vet, consulta) = ConsultaAbierta();
-        var loteDeOtro = f.Vacunas.LotesDe(2).First(l => !f.Vacunas.LoteVencido(l));
 
-        var resultado = f.Vacunas.Registrar(consulta.Id, new AplicacionFormulario { ProductoId = 1, LoteId = loteDeOtro.Id }, vet);
-
-        Assert.False(resultado.Exito);
+        Assert.False(f.Vacunas.Registrar(consulta.Id, new AplicacionFormulario { ProductoId = 0 }, vet).Exito);
         Assert.Empty(f.Vacunas.DeConsulta(consulta.Id));
     }
 
     [Fact]
-    public void Sin_producto_o_sin_lote_no_se_registra()
+    public void Firmar_descuenta_la_dosis_del_lote_y_quitar_antes_la_libera()
     {
         var (f, vet, consulta) = ConsultaAbierta();
+        var antes = f.Inventario.Stock(6);
 
-        Assert.False(f.Vacunas.Registrar(consulta.Id, new AplicacionFormulario { ProductoId = 0, LoteId = 0 }, vet).Exito);
-        Assert.False(f.Vacunas.Registrar(consulta.Id, new AplicacionFormulario { ProductoId = 1, LoteId = 0 }, vet).Exito);
-        Assert.Empty(f.Vacunas.DeConsulta(consulta.Id));
+        f.Vacunas.Registrar(consulta.Id, Con(6), vet);
+        Assert.Equal(antes, f.Inventario.Stock(6));
+        Assert.Equal(antes - 1, f.Inventario.StockDisponible(6));
+
+        Firmar(f, consulta, vet);
+
+        Assert.Equal(antes - 1, f.Inventario.Stock(6));
+        Assert.Contains(f.Inventario.Movimientos(6), m => m.Tipo == InventarioService.Consumo && m.Origen == $"Consulta {consulta.Id}");
     }
 
     [Fact]
     public void El_mismo_producto_no_se_registra_dos_veces_en_la_consulta()
     {
         var (f, vet, consulta) = ConsultaAbierta();
-        f.Vacunas.Registrar(consulta.Id, Con(f, 6), vet);
+        f.Vacunas.Registrar(consulta.Id, Con(6), vet);
 
-        var segundo = f.Vacunas.Registrar(consulta.Id, Con(f, 6), vet);
+        var segundo = f.Vacunas.Registrar(consulta.Id, Con(6), vet);
 
         Assert.False(segundo.Exito);
         Assert.Single(f.Vacunas.DeConsulta(consulta.Id));
@@ -124,7 +137,7 @@ public class VacunaTests
     {
         var (f, _, consulta) = ConsultaAbierta();
 
-        var resultado = f.Vacunas.Registrar(consulta.Id, Con(f, 6), f.PersonalDe("silveira@vitalia.uy"));
+        var resultado = f.Vacunas.Registrar(consulta.Id, Con(6), f.PersonalDe("silveira@vitalia.uy"));
 
         Assert.False(resultado.Exito);
         Assert.Empty(f.Vacunas.DeConsulta(consulta.Id));
@@ -134,7 +147,7 @@ public class VacunaTests
     public void Un_borrador_no_cuenta_para_el_carnet_hasta_firmar()
     {
         var (f, vet, consulta) = ConsultaAbierta();
-        f.Vacunas.Registrar(consulta.Id, Con(f, 7), vet);
+        f.Vacunas.Registrar(consulta.Id, Con(7), vet);
 
         Assert.DoesNotContain(f.Vacunas.CarnetDe(1), i => i.Aplicacion.ProductoId == 7);
 
@@ -148,11 +161,11 @@ public class VacunaTests
     public void Una_consulta_firmada_ya_no_acepta_ni_quita_aplicaciones()
     {
         var (f, vet, consulta) = ConsultaAbierta();
-        f.Vacunas.Registrar(consulta.Id, Con(f, 6), vet);
+        f.Vacunas.Registrar(consulta.Id, Con(6), vet);
         var aplicacion = f.Vacunas.DeConsulta(consulta.Id).Single();
         Firmar(f, consulta, vet);
 
-        Assert.False(f.Vacunas.Registrar(consulta.Id, Con(f, 7), vet).Exito);
+        Assert.False(f.Vacunas.Registrar(consulta.Id, Con(7), vet).Exito);
         Assert.False(f.Vacunas.Quitar(aplicacion.Id, vet).Exito);
         Assert.Single(f.Vacunas.DeConsulta(consulta.Id));
     }
@@ -161,7 +174,7 @@ public class VacunaTests
     public void En_el_borrador_se_puede_quitar_una_aplicacion()
     {
         var (f, vet, consulta) = ConsultaAbierta();
-        f.Vacunas.Registrar(consulta.Id, Con(f, 6), vet);
+        f.Vacunas.Registrar(consulta.Id, Con(6), vet);
         var aplicacion = f.Vacunas.DeConsulta(consulta.Id).Single();
 
         var resultado = f.Vacunas.Quitar(aplicacion.Id, vet);
@@ -171,14 +184,24 @@ public class VacunaTests
     }
 
     [Fact]
-    public void Un_turno_cancelado_sin_atencion_no_deja_vacunas_en_el_carnet()
+    public void Con_vacunas_registradas_no_se_cancela_sin_atencion()
     {
         var (f, vet, consulta) = ConsultaAbierta();
-        f.Vacunas.Registrar(consulta.Id, Con(f, 7), vet);
+        f.Vacunas.Registrar(consulta.Id, Con(7), vet);
+
+        var cancelar = f.Consultas.CancelarSinAtencion(consulta.Id, "El paciente se fue", vet);
+
+        Assert.False(cancelar.Exito);
+        Assert.DoesNotContain(f.Vacunas.CarnetDe(1), i => i.Aplicacion.ProductoId == 7);
+    }
+
+    [Fact]
+    public void Un_turno_cancelado_sin_atencion_ya_no_acepta_vacunas()
+    {
+        var (f, vet, consulta) = ConsultaAbierta();
         f.Consultas.CancelarSinAtencion(consulta.Id, "El paciente se fue", vet);
 
-        Assert.DoesNotContain(f.Vacunas.CarnetDe(1), i => i.Aplicacion.ProductoId == 7);
-        Assert.False(f.Vacunas.Registrar(consulta.Id, Con(f, 6), vet).Exito);
+        Assert.False(f.Vacunas.Registrar(consulta.Id, Con(6), vet).Exito);
     }
 
     [Fact]

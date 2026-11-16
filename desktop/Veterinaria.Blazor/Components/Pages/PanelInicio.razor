@@ -25,9 +25,11 @@
             <Atajo Titulo="Mi agenda" Texto="Tus turnos del día y quién está en espera." Enlace="panel/mi-agenda" />
             <Atajo Titulo="Consultas" Texto="Atender, registrar y firmar la consulta (A-019)." />
             <Atajo Titulo="Internación" Texto="Evolución y alta de animales internados." />
+            <Atajo Titulo="Inventario" Texto="Stock, lotes y vencimientos, en solo lectura (A-022)." Enlace="panel/inventario" />
         }
         @if (Sesion.TieneRol(PersonalService.Administrador))
         {
+            <Atajo Titulo="Inventario" Texto="Compras, ajustes, bajas y alertas de stock mínimo y vencimiento (RF-ADM-05, RF-ADM-06)." Enlace="panel/inventario" />
             <Atajo Titulo="Servicios y tarifas" Texto="Alta, baja y precios de servicios (RF-ADM-02)." />
             <Atajo Titulo="Horarios del personal" Texto="Jornadas, licencias y feriados (RF-ADM-04)." />
             <Atajo Titulo="Usuarios y roles" Texto="Cuentas del personal y permisos (RF-ADM-01)." />

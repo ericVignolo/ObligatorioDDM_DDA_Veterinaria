@@ -13,7 +13,7 @@ Lo que el veterinario elige para registrar una aplicación dentro de la consulta
 
 **Tareas:** A-021
 
-**Requisitos y decisiones:** RN-19
+**Requisitos y decisiones:** RN-19, RN-27
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 

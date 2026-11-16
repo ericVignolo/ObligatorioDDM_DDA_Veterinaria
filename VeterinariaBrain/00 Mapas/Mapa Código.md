@@ -9,7 +9,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (29)
+### Páginas (30)
 - [[Acceso]] · `/acceso`
 - [[AgendaRecepcion]] · `/panel/agenda`
 - [[AgendaVeterinario]] · `/panel/mi-agenda`
@@ -23,6 +23,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[HistoriaClinica]] · `/panel/historia/{AnimalId:int}`
 - [[Home]] · `/`
 - [[Ingresar]] · `/ingresar`
+- [[Inventario]] · `/panel/inventario`
 - [[LaClinica]] · `/clinica`
 - [[MiCuenta]] · `/cuenta`
 - [[PanelInicio]] · `/panel`
@@ -59,7 +60,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (12)
+### Servicios (13)
 - [[AgendaService]]
 - [[AnimalService]]
 - [[ClinicaService]]
@@ -67,17 +68,21 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[CuentaService]]
 - [[DocumentoLegalService]]
 - [[IntencionService]]
+- [[InventarioService]]
 - [[PersonalService]]
 - [[PrestacionService]]
 - [[ProfesionalService]]
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (35)
+### Modelos (42)
+- [[AjusteFormulario]]
+- [[AlertaStock]]
 - [[Animal]]
 - [[AnimalFormulario]]
 - [[AplicacionFormulario]]
 - [[AplicacionSanitaria]]
+- [[Articulo]]
 - [[Ausencia]]
 - [[CambioContrasenaFormulario]]
 - [[CambioCorreoFormulario]]
@@ -85,18 +90,21 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[CodigoVerificacion]]
 - [[Consulta]]
 - [[ConsultaFormulario]]
+- [[ConsumoFormulario]]
 - [[Cuenta]]
 - [[DocumentoLegal]]
 - [[Enmienda]]
 - [[EnmiendaFormulario]]
 - [[FirmaConsulta]]
 - [[FranjaHoraria]]
+- [[IngresoLoteFormulario]]
 - [[InicioSesion]]
 - [[ItemCarnet]]
 - [[LecturaHistoria]]
 - [[LoteProducto]]
 - [[MotivoFormulario]]
 - [[MotivoOpcionalFormulario]]
+- [[MovimientoStock]]
 - [[NivelUrgencia]]
 - [[NuevaContrasena]]
 - [[PerfilFormulario]]
@@ -105,6 +113,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ProductoSanitario]]
 - [[Profesional]]
 - [[RegistroCliente]]
+- [[ReservaStock]]
 - [[ResultadoOperacion]]
 - [[SolicitudRecuperacion]]
 - [[Turno]]
