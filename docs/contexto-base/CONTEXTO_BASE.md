@@ -42,6 +42,7 @@ El flujo general mencionado en los planes es:
 - **DT-API-01 — Un solo proyecto de API (Diego, 2026-11-10):** la API es un único proyecto `api/Veterinaria.Api` con carpetas `Models/`, `Data/` (`AppDbContext`), `Controllers/`, `Services/`, `Repositories/` y `DTOs/`, siguiendo el estilo del profesor. Reemplaza la propuesta de cinco proyectos (Api, Application, Domain, Infrastructure, Contracts). Las capas se mantienen como carpetas: Controller → Service → Repository → `AppDbContext`. Los modelos se copian en el proyecto Blazor (sin un proyecto de contratos compartido).
 - **DT-ORG-09 — Rama `desarrollo` integrada (Eric, 2026-11-11):** reemplaza las ramas encadenadas de DT-ORG-02. `desktop` se renombra `desarrollo` y es la única rama de trabajo: ahí conviven escritorio (`desktop/`), API (`api/`) y móvil (`mobile/`), cada uno en su carpeta y ejecutable por separado. No se crean `desktop-mobile` ni `desktop-mobile-api`. Se mantiene: una rama corta por sesión con un PR contra `desarrollo` (DT-ORG-06), `main` solo para versiones estables y la regla de quién prueba y mezcla (DT-ORG-05). Para versionar cada aplicación por separado se usan etiquetas (`desktop-vX.Y`, `api-vX.Y`, `mobile-vX.Y`). Las secciones A, B y C siguen siendo el orden de trabajo y de aprobación, pero ya no son ramas. Motivo: las tres aplicaciones comparten documentación, cerebro y contrato de la API; con ramas separadas cada cambio del contrato había que copiarlo a mano entre ramas.
 - **DT-ALC-01 — Sin venta de productos ni comercio electrónico (Eric, 2026-11-11, decisión de alcance):** el sistema no vende productos al público ni tiene tienda, carrito o envíos. El inventario es **solo de material de trabajo** de la clínica (vacunas, antiparasitarios, jeringas, gasas, guantes y demás insumos): se compra, se controla y se consume en la atención. El comercio electrónico se podría agregar en una versión con más tiempo, pero se consideró innecesario para un sistema de gestión veterinaria y se prioriza terminar lo que usan profesionales y clientes. Consecuencias: RN-29 y RN-30 dejan de mencionar la venta (`MATRIZ_REQUISITOS.md`), A-023 cobra solo prestaciones y no hay movimiento de stock «Venta». No había RNF propios de la venta que eliminar. El cobro de prestaciones (y la decisión pendiente sobre pago en línea con Mercado Pago, RF-CLI-12) no cambia con esta decisión.
+- **DT-ALC-02 — Cobro solo presencial, sin pasarela de pago (Eric, 2026-11-16, decisión de alcance):** con el tiempo que queda hasta la entrega (DT-ORG-07) no se integra Mercado Pago ni ninguna pasarela. El cliente paga **en Recepción** (efectivo, débito, crédito o transferencia) y Recepción registra el cobro y emite el comprobante interno (RF-REC-05). Reemplaza el «pagar en línea o en Recepción» y el acuerdo pendiente con el profesor de `DECISIONES_ERIC_2026-10-31.md`. RF-CLI-12 queda reducido a **consultar** cargos, saldo y comprobantes; no incluye abonar en línea. Un cobro puede ser parcial; solo el Administrador anula un comprobante, con nota de crédito y motivo (RN-34). Detalle en `../analisis/ESPECIFICACION_COBRO.md`.
 - **DT-BD-01 — Decisión técnica (Eric, 2026-10-09):** **MySQL** es el motor de la base de datos. Solo la API se conecta a ella.
 - **DT-BD-02 — Versión, proveedor y concurrencia (Diego, 2026-10-29; cierra P-RC-08):**
     - MySQL 8.4 LTS con **EF Core 10** y el proveedor de Oracle **`MySql.EntityFrameworkCore` 10.0.7** (`UseMySQL`), el mismo que usa el profesor (**Diego, 2026-11-10**). Reemplaza a Pomelo 9 + EF Core 9, que quedó sin soporte el 2026-11-10. Se descartaron `Microting.EntityFrameworkCore.MySql` (lo mantiene un grupo chico) y seguir con Pomelo (sin soporte).
@@ -207,7 +208,7 @@ En la documentación histórica, “mascota” identifica al paciente asociado a
 
 ### Facturación y administración
 
-- Cargos, tarifas históricas y comprobantes según RN-32 a RN-36. Se distingue el cargo generado al cerrar la atención del cobro posterior; falta completar el caso de uso de cobro.
+- Cargos, tarifas históricas y comprobantes según RN-32 a RN-36. Se distingue el cargo generado al cerrar la atención del cobro posterior. El caso de uso de cobro (presencial, DT-ALC-02) está en `../analisis/ESPECIFICACION_COBRO.md`.
 - Administración e indicadores en Blazor.
 
 ### Capacidades móviles adicionales
@@ -331,7 +332,7 @@ El orden funcional sigue siendo H0–H5 de `../analisis/ALCANCE_ENTREGA.md` (no 
 
 1. Empezar la sección A en `desktop`: esqueleto Blazor y catálogo público con datos de demostración (A-001 a A-003).
 2. Seguir con registro y reserva demostrativos (A-006 a A-015), usando las decisiones cerradas el 2026-10-29.
-3. Especificar «Cobrar consulta» e internación antes de sus pantallas (A-023, A-024).
+3. Especificar internación antes de su pantalla (A-024). «Cobrar consulta» ya está especificado e implementado en escritorio (A-023, pendiente de prueba).
 4. Cerrar alertas sanitarias y parámetros de asistencia antes de sus pantallas (A-021, A-026).
 5. Registrar la fecha de entrega cuando exista y aplicar el disparador del plan B.
 6. Mantener la trazabilidad RF → caso de uso → endpoint → pantalla → prueba y actualizar UML para el stack vigente.
@@ -342,6 +343,7 @@ Se incorporaron como borradores para validación los primeros artefactos funcion
 
 - `docs/analisis/HISTORIAS_USUARIO_VISITANTE_CLIENTE.md`: backlog con 35 historias, criterios de aceptación y trazabilidad.
 - `docs/analisis/CASOS_DE_USO_VISITANTE_CLIENTE.md`: catálogo de 25 casos de uso y especificación detallada de 11 recorridos esenciales.
+- `docs/analisis/ESPECIFICACION_COBRO.md`: caso de uso «Cobrar consulta» (cobro presencial, cargo, comprobante y nota de crédito), estados, reglas y pruebas (A-023).
 - `docs/analisis/ESPECIFICACION_ALERTAS_ASISTENCIA.md`: clasificación, estados, flujos, pseudocódigo, privacidad, excepciones y pruebas del nuevo módulo.
 - `docs/analisis/ALCANCE_ENTREGA.md`: tabla operativa de entrega base y extensiones, asignación de los 74 RF a hitos, límites y evidencia esperada.
 - `docs/analisis/FLUJO_RESERVA_CONSULTA.md`: detalle conectado de CU-CLI-02 y CU-VET-01 (Realizar consulta), estados, permisos, datos, pseudocódigo y criterios de aceptación.

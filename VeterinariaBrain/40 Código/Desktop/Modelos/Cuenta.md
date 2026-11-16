@@ -25,3 +25,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[SesionService]]
 - [[VacunaService]]
 - [[Verificar]]
+
+## En las otras aplicaciones
+- [[Cuenta (API)]]

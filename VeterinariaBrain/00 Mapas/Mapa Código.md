@@ -9,7 +9,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (30)
+### Páginas (32)
 - [[Acceso]] · `/acceso`
 - [[AgendaRecepcion]] · `/panel/agenda`
 - [[AgendaVeterinario]] · `/panel/mi-agenda`
@@ -18,6 +18,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[AnimalNuevo]] · `/animales/nuevo`
 - [[Animales]] · `/animales`
 - [[AtencionConsulta]] · `/panel/consulta/{TurnoId:int}`
+- [[Cobros]] · `/panel/cobros`
+- [[Comprobante]] · `/panel/comprobantes/{Id:int}`
 - [[Cookies]] · `/cookies`
 - [[HistoriaAnimal]] · `/animales/{Id:int}/historia`
 - [[HistoriaClinica]] · `/panel/historia/{AnimalId:int}`
@@ -60,10 +62,11 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (13)
+### Servicios (14)
 - [[AgendaService]]
 - [[AnimalService]]
 - [[ClinicaService]]
+- [[CobroService]]
 - [[ConsultaService]]
 - [[CuentaService]]
 - [[DocumentoLegalService]]
@@ -75,18 +78,21 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (42)
+### Modelos (47)
 - [[AjusteFormulario]]
 - [[AlertaStock]]
 - [[Animal]]
 - [[AnimalFormulario]]
+- [[AnulacionFormulario]]
 - [[AplicacionFormulario]]
 - [[AplicacionSanitaria]]
 - [[Articulo]]
 - [[Ausencia]]
 - [[CambioContrasenaFormulario]]
 - [[CambioCorreoFormulario]]
+- [[Cargo]]
 - [[Clinica]]
+- [[CobroFormulario]]
 - [[CodigoVerificacion]]
 - [[Consulta]]
 - [[ConsultaFormulario]]
@@ -106,7 +112,9 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[MotivoOpcionalFormulario]]
 - [[MovimientoStock]]
 - [[NivelUrgencia]]
+- [[NotaCredito]]
 - [[NuevaContrasena]]
+- [[Pago]]
 - [[PerfilFormulario]]
 - [[Personal]]
 - [[Prestacion]]
@@ -121,7 +129,19 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-Todavía sin código.
+### Modelos (9)
+- [[Animal (API)]]
+- [[CodigoCuenta (API)]]
+- [[Configuracion (API)]]
+- [[Cuenta (API)]]
+- [[DocumentoLegal (API)]]
+- [[Prestacion (API)]]
+- [[Profesional (API)]]
+- [[Rol (API)]]
+- [[Turno (API)]]
+
+### Datos (1)
+- [[AppDbContext (API)]]
 
 ## Mobile — [[Carpeta mobile]]
 

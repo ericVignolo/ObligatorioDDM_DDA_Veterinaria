@@ -26,3 +26,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[MiCuenta]]
 - [[Reservar]]
 - [[Turnos]]
+
+## En las otras aplicaciones
+- [[Turno (API)]]

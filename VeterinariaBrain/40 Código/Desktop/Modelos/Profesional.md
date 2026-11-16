@@ -29,3 +29,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[ProfesionalService]]
 - [[Profesionales]]
 - [[Reservar]]
+
+## En las otras aplicaciones
+- [[Profesional (API)]]

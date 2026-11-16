@@ -134,7 +134,7 @@ Cada RF aparece una sola vez en esta tabla. “Base” mantiene la prioridad de 
 
 ## 5. Límites y dependencias que no se pueden omitir
 
-- RF-CLI-12 se deja como extensión completa: el cobro de Recepción (RF-REC-05) sí entra en H2. Compartir cargos internos no implica que el portal del Cliente ni el pago online estén terminados.
+- RF-CLI-12 se reduce a consultar cargos, saldo y comprobantes: el pago en línea se descartó el 2026-11-16 (DT-ALC-02). El cobro de Recepción (RF-REC-05) sí entra en H2 y está implementado en escritorio (A-023, pendiente de prueba).
 - RNF-SEG-04 conserva 2FA obligatorio para Administrador. La sugerencia docente de “2FA como extensión” no se adopta globalmente.
 - RF-CLI-11 y RN-10 conservan el consentimiento clínico firmado. Su mecanismo concreto se definirá antes de habilitar procedimientos afectados. Firma de consulta y consentimiento del responsable son actos distintos.
 - RF-CLI-09 conserva tiempo real en internación. RF-CLI-23 y RF-VET-17 conservan el seguimiento de asistencia comprometido. Reducirlos requeriría una decisión de alcance y actualización de la matriz.

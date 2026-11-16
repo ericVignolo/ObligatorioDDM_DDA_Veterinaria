@@ -15,6 +15,7 @@ Estado: decididas y documentadas. No implementadas. Cada módulo las incorpora a
 
 ## Cobro
 
+- **Actualizado el 2026-11-16 (DT-ALC-02): no hay pago en línea.** Se descartó Mercado Pago por el tiempo disponible; el cobro es solo presencial en Recepción. Lo que sigue es la decisión original del 31/10.
 - Al pagar, el Cliente elige **pagar en línea** o **pagar en Recepción** (para quien no tiene tarjeta).
 - CU "Cobrar consulta": Recepción registra el cobro presencial y emite el comprobante (RF-REC-05, RN-32 a RN-34).
 - Pago en línea con Mercado Pago (RF-CLI-12): se define con el profesor antes de implementar.
