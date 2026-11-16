@@ -35,6 +35,48 @@ public class CuentaService
         return _cuentas.FirstOrDefault(c => c.Id == id);
     }
 
+    // Todas las cuentas de clientes, para comunicaciones masivas (A-028). Incluye las eliminadas: quien llama las filtra.
+    public List<Cuenta> Todas()
+    {
+        return _cuentas.ToList();
+    }
+
+    // A-028, RNF-LEG-02: reemplaza los datos personales por valores neutros y bloquea el ingreso.
+    // El Id se conserva para que los animales, cargos y consentimientos sigan apuntando a «un titular eliminado».
+    public bool Anonimizar(int id)
+    {
+        var cuenta = ObtenerPorId(id);
+        if (cuenta is null || cuenta.Eliminada)
+        {
+            return false;
+        }
+
+        cuenta.Eliminada = true;
+        cuenta.FechaEliminacion = DateTime.Now;
+        cuenta.Nombre = "Titular";
+        cuenta.Apellido = "eliminado";
+        cuenta.Correo = $"eliminada-{cuenta.Id}@eliminada.invalid";
+        cuenta.Telefono = "";
+        cuenta.TipoDocumento = "";
+        cuenta.NumeroDocumento = "";
+        cuenta.Calle = "";
+        cuenta.NumeroPuerta = "";
+        cuenta.Apartamento = "";
+        cuenta.Localidad = "";
+        cuenta.Departamento = "";
+        cuenta.Referencias = "";
+        cuenta.HashContrasena = "";
+        cuenta.HashCodigo = "";
+        cuenta.CodigoDemo = "";
+        cuenta.HashCodigoRecuperacion = "";
+        cuenta.CodigoRecuperacionDemo = "";
+        cuenta.CorreoNuevoPendiente = "";
+        cuenta.HashCodigoCorreo = "";
+        cuenta.CodigoCorreoDemo = "";
+        cuenta.Verificada = false;
+        return true;
+    }
+
     public List<string> Departamentos { get; } = new()
     {
         "Artigas", "Canelones", "Cerro Largo", "Colonia", "Durazno", "Flores", "Florida",

@@ -21,12 +21,13 @@ public class ConsultaService
     private readonly InventarioService _inventario;
     private readonly CobroService _cobros;
     private readonly ConsentimientoService _consentimientos;
+    private readonly ComunicacionesService _comunicaciones;
     private readonly List<Consulta> _consultas = new();
     private readonly List<LecturaHistoria> _lecturas = new();
     private int _ultimoId;
     private int _ultimaEnmiendaId;
 
-    public ConsultaService(AgendaService agenda, PersonalService personal, ProfesionalService profesionales, InventarioService inventario, CobroService cobros, ConsentimientoService consentimientos)
+    public ConsultaService(AgendaService agenda, PersonalService personal, ProfesionalService profesionales, InventarioService inventario, CobroService cobros, ConsentimientoService consentimientos, ComunicacionesService comunicaciones)
     {
         _agenda = agenda;
         _personal = personal;
@@ -34,6 +35,7 @@ public class ConsultaService
         _inventario = inventario;
         _cobros = cobros;
         _consentimientos = consentimientos;
+        _comunicaciones = comunicaciones;
         CargarHistoriaDemo();
     }
 
@@ -262,7 +264,11 @@ public class ConsultaService
         _inventario.ConfirmarConsumo(consulta.Id, veterinario);
         _cobros.GenerarCargo(consulta);
 
-        return new ResultadoOperacion { Exito = true, Mensaje = "Consulta firmada y turno finalizado. El cargo quedó pendiente de cobro en Recepción; el resumen al cliente llega con la API." };
+        // RF-CLI-10: el resumen al responsable se genera al firmar; se envía por el canal que eligió (A-028).
+        var resumen = _comunicaciones.EncolarResumenClinico(turno.ClienteId, consulta);
+        var aviso = resumen is null ? "El cliente no recibe el resumen por su preferencia o por su estado de cuenta." : $"El resumen al cliente quedó {resumen.Estado.ToLowerInvariant()} por {resumen.Canal.ToLowerInvariant()}.";
+
+        return new ResultadoOperacion { Exito = true, Mensaje = $"Consulta firmada y turno finalizado. El cargo quedó pendiente de cobro en Recepción. {aviso}" };
     }
 
     // P-RC-04: sin atención ni consumos, el autor cancela con motivo. El borrador se conserva como evidencia.

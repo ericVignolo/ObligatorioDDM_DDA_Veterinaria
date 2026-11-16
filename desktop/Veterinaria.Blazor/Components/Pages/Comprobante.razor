@@ -5,6 +5,8 @@
 @inject CuentaService Cuentas
 @inject AnimalService Animales
 @inject ClinicaService Clinicas
+@inject ComunicacionesService Comunicaciones
+@inject SesionService Sesion
 
 <PageTitle>Comprobante @pago?.Numero — VITALIA</PageTitle>
 
@@ -20,7 +22,12 @@
         <div class="d-print-none mb-3">
             <a href="panel/cobros">← Volver a Cobros</a>
             <button type="button" class="btn btn-primary btn-sm ms-3" onclick="window.print()">Imprimir</button>
+            <button type="button" class="btn btn-outline-primary btn-sm ms-2" @onclick="EnviarAlCliente">Enviar al cliente</button>
         </div>
+        @if (!string.IsNullOrEmpty(mensajeEnvio))
+        {
+            <div class="alert @(envioExitoso ? "alert-success" : "alert-warning") d-print-none" role="status">@mensajeEnvio</div>
+        }
 
         <article class="border p-4" style="max-width: 36rem;" aria-labelledby="titulo-comprobante">
             <header class="mb-3">
@@ -86,6 +93,17 @@
         cargo = pago is null ? null : Cobro.ObtenerCargo(pago.CargoId);
         nota = pago is null ? null : Cobro.NotaDe(pago.Id);
         clinica = Clinicas.Obtener();
+    }
+
+    private string mensajeEnvio = "";
+    private bool envioExitoso;
+
+    // RF-REC-07: Recepción envía el comprobante al cliente por el canal que eligió (A-028).
+    private void EnviarAlCliente()
+    {
+        var resultado = Comunicaciones.EnviarComprobante(pago!, cargo!, Sesion.PersonalActual);
+        mensajeEnvio = resultado.Mensaje;
+        envioExitoso = resultado.Exito;
     }
 
     private string NombreCliente()
