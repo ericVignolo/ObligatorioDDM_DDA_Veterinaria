@@ -28,3 +28,6 @@ VeterinariaBrain/.trash/
 
 # Claude Code: configuración y skills locales de cada computadora
 .claude/
+
+# API: cadena de conexión con la contraseña local de MySQL
+api/Veterinaria.Api/appsettings.Development.json

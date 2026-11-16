@@ -9,7 +9,12 @@
 
 <h1>Ingresar</h1>
 
-@if (Sesion.Iniciada)
+@if (Sesion.EsPersonal)
+{
+    <p>Ya ingresaste como <strong>@Sesion.PersonalActual!.Nombre</strong> (@Sesion.PersonalActual.Rol).</p>
+    <a class="btn btn-primary" href="panel">Ir al panel</a>
+}
+else if (Sesion.Iniciada)
 {
     <p>Ya ingresaste como <strong>@Sesion.CuentaActual!.Nombre @Sesion.CuentaActual.Apellido</strong>.</p>
     <a class="btn btn-primary" href="">Ir al inicio</a>
@@ -50,6 +55,17 @@ else
 
     <p class="mt-3">¿No tenés cuenta? <a href="registro">Creá una</a>.</p>
     <p><a href="recuperar">¿Olvidaste tu contraseña?</a></p>
+
+    @* SOLO DEMOSTRACIÓN (A-010): cuentas del personal para probar el panel. *@
+    <details class="mt-4">
+        <summary>Cuentas de demostración del personal</summary>
+        <p class="small mt-2 mb-1">Contraseña para todas: <code>@PersonalService.ContrasenaDemo</code></p>
+        <ul class="small">
+            <li><code>recepcion@@vitalia.uy</code> — Recepción</li>
+            <li><code>ferreira@@vitalia.uy</code>, <code>silveira@@vitalia.uy</code>, <code>acosta@@vitalia.uy</code> — Veterinario/a</li>
+            <li><code>admin@@vitalia.uy</code> — Administrador</li>
+        </ul>
+    </details>
 }
 
 @code {
@@ -71,7 +87,7 @@ else
             return;
         }
 
-        // Vuelve a lo que estaba haciendo antes de ingresar (A-011).
-        Navegacion.NavigateTo(Intencion.DestinoDespuesDeIngresar());
+        // El personal va a su panel (A-010); el Cliente vuelve a lo que estaba haciendo (A-011).
+        Navegacion.NavigateTo(Sesion.EsPersonal ? "panel" : Intencion.DestinoDespuesDeIngresar());
     }
 }

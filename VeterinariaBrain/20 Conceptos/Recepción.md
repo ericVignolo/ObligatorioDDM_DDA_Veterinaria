@@ -13,3 +13,4 @@ Parte de [[Mapa Equipo y roles]].
 - [[Matriz de requisitos]]
 - [[Flujo reserva y consulta]]
 - [[Historias de usuario atención]]
+- [[AgendaRecepcion]]

@@ -1,10 +1,16 @@
 @using Veterinaria.Blazor.Services
 @inject SesionService Sesion
 
-@* Muestra el contenido solo con sesión iniciada; si no, ofrece ingresar (RF-VIS-07, RN-38). *@
+@* Muestra el contenido solo con sesión de Cliente; si no, ofrece ingresar (RF-VIS-07, RN-38). *@
 @if (Sesion.Iniciada)
 {
     @ChildContent
+}
+else if (Sesion.EsPersonal)
+{
+    <div class="alert alert-info">
+        Esta sección es para clientes. Desde tu cuenta del personal usá el <a class="alert-link" href="panel">panel</a>.
+    </div>
 }
 else
 {

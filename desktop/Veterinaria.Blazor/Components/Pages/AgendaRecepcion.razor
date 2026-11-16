@@ -1,0 +1,232 @@
+@page "/panel/agenda"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AgendaService Agenda
+@inject AnimalService AnimalService
+@inject CuentaService CuentaService
+@inject PrestacionService PrestacionService
+@inject ProfesionalService ProfesionalService
+@inject ConsultaService Consultas
+
+<PageTitle>Agenda de Recepción — VITALIA</PageTitle>
+
+<RequierePersonal Roles="@(new[] { PersonalService.Recepcion })">
+    <h1>Agenda del día</h1>
+
+    @{ var abiertas = Consultas.Abiertas(); }
+    @if (abiertas.Count > 0)
+    {
+        @* P-RC-04: consultas que siguen abiertas; Recepción las ve sin el texto clínico. *@
+        <div class="alert alert-warning small">
+            <strong>Consultas abiertas:</strong>
+            @foreach (var abierta in abiertas)
+            {
+                <span class="ms-2">@(AnimalService.ObtenerParaPersonal(abierta.AnimalId)?.Nombre) con @abierta.AutorNombre desde las @abierta.FechaInicio.ToString("HH:mm")</span>
+            }
+        </div>
+    }
+
+    @* Filtros (A-017) *@
+    <div class="row g-2 mb-3">
+        <div class="col-md-3">
+            <label class="form-label" for="fecha">Día</label>
+            <input id="fecha" type="date" class="form-control" value="@fecha.ToString("yyyy-MM-dd")" @onchange="CambiarFecha" />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="profesional">Profesional</label>
+            <select id="profesional" class="form-select" value="@profesionalId" @onchange="CambiarProfesional">
+                <option value="0">Todos</option>
+                @foreach (var profesional in profesionales)
+                {
+                    <option value="@profesional.Id">@profesional.Nombre</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="estado">Estado</label>
+            <select id="estado" class="form-select" value="@estado" @onchange="CambiarEstado">
+                <option value="">Todos</option>
+                @foreach (var opcion in estados)
+                {
+                    <option value="@opcion">@opcion</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    @* Ocupación de cada profesional en el día *@
+    <div class="row mb-3">
+        @foreach (var profesional in profesionales.Where(p => profesionalId == 0 || p.Id == profesionalId))
+        {
+            var (ocupados, disponibles) = Agenda.Ocupacion(profesional.Id, fecha);
+            <div class="col-md-6 col-lg-4 mb-2">
+                <div class="border rounded p-2 small">
+                    <strong>@profesional.Nombre</strong><br />
+                    @if (disponibles == 0)
+                    {
+                        <span class="text-muted">No atiende este día.</span>
+                    }
+                    else
+                    {
+                        <span>@ocupados de @disponibles min ocupados (@(ocupados * 100 / disponibles) %)</span>
+                        <div class="progress mt-1" style="height: 6px;" role="progressbar" aria-label="Ocupación de @profesional.Nombre" aria-valuenow="@(ocupados * 100 / disponibles)" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: @(ocupados * 100 / disponibles)%"></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-warning")" role="status">@mensaje</div>
+    }
+
+    @if (turnos.Count == 0)
+    {
+        <p>No hay turnos con esos filtros.</p>
+    }
+    else
+    {
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Hora</th>
+                    <th scope="col">Animal y cliente</th>
+                    <th scope="col">Servicio</th>
+                    <th scope="col">Profesional</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var turno in turnos)
+                {
+                    var animal = AnimalService.ObtenerParaPersonal(turno.AnimalId);
+                    var cliente = CuentaService.ObtenerPorId(turno.ClienteId);
+                    <tr>
+                        <td>@turno.Inicio.ToString("HH:mm")–@turno.Fin.ToString("HH:mm")</td>
+                        <td>
+                            <strong>@animal?.Nombre</strong> <span class="text-muted">(@animal?.Especie)</span><br />
+                            <span class="small">@cliente?.Nombre @cliente?.Apellido · @cliente?.Telefono</span>
+                        </td>
+                        <td>@(PrestacionService.ObtenerPorId(turno.PrestacionId)?.Nombre)</td>
+                        <td>@(ProfesionalService.ObtenerPorId(turno.ProfesionalId)?.Nombre)</td>
+                        <td>
+                            <EstadoTurno Estado="@turno.Estado" />
+                            @if (turno.HoraLlegada is not null)
+                            {
+                                <div class="small text-muted">Llegó @turno.HoraLlegada.Value.ToString("HH:mm")</div>
+                            }
+                            @if (!string.IsNullOrEmpty(turno.MotivoCancelacion))
+                            {
+                                <div class="small text-muted">@turno.CanceladoPor: @turno.MotivoCancelacion</div>
+                            }
+                        </td>
+                        <td>
+                            @if (cancelandoId == turno.Id)
+                            {
+                                <EditForm Model="cancelacion" OnValidSubmit="() => Cancelar(turno.Id)" FormName="cancelacion-recepcion">
+                                    <DataAnnotationsValidator />
+                                    <InputText class="form-control form-control-sm mb-1" placeholder="Motivo (obligatorio)" maxlength="200" @bind-Value="cancelacion.Motivo" aria-label="Motivo de la cancelación" />
+                                    <ValidationMessage For="() => cancelacion.Motivo" />
+                                    <button type="submit" class="btn btn-danger btn-sm me-1">Confirmar</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="() => cancelandoId = 0">Volver</button>
+                                </EditForm>
+                            }
+                            else
+                            {
+                                @if (turno.Estado == "Confirmado")
+                                {
+                                    <button class="btn btn-outline-primary btn-sm me-1 mb-1" @onclick="() => Llegada(turno.Id)">Llegó</button>
+                                    <button class="btn btn-outline-secondary btn-sm me-1 mb-1" @onclick="() => Ausencia(turno.Id)">Ausente</button>
+                                }
+                                @if (turno.Estado == "Confirmado" || turno.Estado == "En espera")
+                                {
+                                    <button class="btn btn-outline-danger btn-sm mb-1" @onclick="() => EmpezarCancelacion(turno.Id)">@(turno.Estado == "En espera" ? "Se retiró" : "Cancelar")</button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</RequierePersonal>
+
+@code {
+    private readonly string[] estados = { "Confirmado", "En espera", "En curso", "Finalizado", "Ausente", "Cancelado" };
+
+    private DateOnly fecha = DateOnly.FromDateTime(DateTime.Today);
+    private int profesionalId;
+    private string estado = "";
+    private List<Profesional> profesionales = new();
+    private List<Turno> turnos = new();
+
+    private int cancelandoId;
+    private MotivoFormulario cancelacion = new();
+    private string mensaje = "";
+    private bool exito;
+
+    protected override void OnInitialized()
+    {
+        profesionales = ProfesionalService.ObtenerPublicos();
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        turnos = Agenda.TurnosDelDia(fecha, profesionalId == 0 ? null : profesionalId, estado);
+    }
+
+    private void CambiarFecha(ChangeEventArgs e)
+    {
+        if (DateOnly.TryParse(e.Value?.ToString(), out var nueva))
+        {
+            fecha = nueva;
+            Cargar();
+        }
+    }
+
+    private void CambiarProfesional(ChangeEventArgs e)
+    {
+        profesionalId = int.TryParse(e.Value?.ToString(), out var id) ? id : 0;
+        Cargar();
+    }
+
+    private void CambiarEstado(ChangeEventArgs e)
+    {
+        estado = e.Value?.ToString() ?? "";
+        Cargar();
+    }
+
+    private void Llegada(int turnoId) => Mostrar(Agenda.RegistrarLlegada(turnoId));
+
+    private void Ausencia(int turnoId) => Mostrar(Agenda.RegistrarAusencia(turnoId));
+
+    private void EmpezarCancelacion(int turnoId)
+    {
+        cancelandoId = turnoId;
+        cancelacion = new();
+        mensaje = "";
+    }
+
+    private void Cancelar(int turnoId)
+    {
+        var resultado = Agenda.CancelarPorRecepcion(turnoId, cancelacion.Motivo);
+        if (resultado.Exito)
+        {
+            cancelandoId = 0;
+        }
+
+        Mostrar(resultado);
+    }
+
+    private void Mostrar(ResultadoOperacion resultado)
+    {
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        Cargar();
+    }
+}

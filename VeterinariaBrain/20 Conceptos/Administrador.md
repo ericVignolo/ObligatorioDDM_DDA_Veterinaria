@@ -11,3 +11,4 @@ Parte de [[Mapa Equipo y roles]].
 ## Aparece en
 - [[Contexto base]]
 - [[Matriz de requisitos]]
+- [[PanelInicio]]

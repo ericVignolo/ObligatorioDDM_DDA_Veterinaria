@@ -1,5 +1,7 @@
 # Mensaje para Diego — 2026-11-09
 
+> **Estado 2026-11-10 (Diego):** punto 2 resuelto — opción A, `MySql.EntityFrameworkCore` 10.0.7 + EF Core 10. Punto 3 resuelto — base `vitalia` creada con la migración `Inicial` (Diego, 2026-11-10). Punto 4 resuelto — R1 y R2 no se aplican todavía. Punto 5 pendiente.
+
 De parte de Eric. **Diego se encarga de la base de datos**: decidir el proveedor, crearla y lo que quedó pendiente de su parte.
 
 1. **Fecha de entrega: jueves 4 de diciembre de 2026** (DT-ORG-07 en `CONTEXTO_BASE.md`). Quedan 25 días desde el 09/11.
