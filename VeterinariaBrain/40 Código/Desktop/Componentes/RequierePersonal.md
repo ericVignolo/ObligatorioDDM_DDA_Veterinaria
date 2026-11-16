@@ -19,6 +19,10 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[SesionService]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminHorarios]]
+- [[AdminParametros]]
+- [[AdminPersonal]]
+- [[AdminServicios]]
 - [[AgendaRecepcion]]
 - [[AgendaVeterinario]]
 - [[AsistenciaDetalle]]

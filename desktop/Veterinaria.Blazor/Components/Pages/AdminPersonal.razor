@@ -1,0 +1,176 @@
+@page "/panel/admin/personal"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AdministracionService Admin
+@inject PersonalService Equipo
+@inject ProfesionalService Profesionales
+@inject SesionService Sesion
+
+<PageTitle>Usuarios y roles — VITALIA</PageTitle>
+
+@* A-027, RF-ADM-01: cuentas del personal, roles y bloqueo. *@
+<RequierePersonal Roles="@(new[] { PersonalService.Administrador })">
+    <h1>Usuarios y roles</h1>
+    <p class="text-muted">Una cuenta bloqueada no puede ingresar; su historial se conserva. Siempre queda al menos un Administrador activo.</p>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    <div class="table-responsive mb-4">
+        <table class="table table-sm align-middle">
+            <caption class="visually-hidden">Cuentas del personal</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var persona in Equipo.ObtenerTodos())
+                {
+                    <tr>
+                        <th scope="row">@persona.Nombre</th>
+                        <td>@persona.Correo</td>
+                        <td>
+                            @if (cambiandoRolId == persona.Id)
+                            {
+                                <select class="form-select form-select-sm mb-1" aria-label="Rol nuevo" @bind="rolNuevo">
+                                    @foreach (var rol in AdministracionService.Roles)
+                                    {
+                                        <option value="@rol">@rol</option>
+                                    }
+                                </select>
+                                @if (rolNuevo == PersonalService.Veterinario)
+                                {
+                                    <select class="form-select form-select-sm mb-1" aria-label="Ficha de profesional" @bind="profesionalNuevo">
+                                        <option value="0">Ficha de profesional…</option>
+                                        @foreach (var ficha in Profesionales.ObtenerPublicos())
+                                        {
+                                            <option value="@ficha.Id">@ficha.Nombre</option>
+                                        }
+                                    </select>
+                                }
+                                <button type="button" class="btn btn-primary btn-sm" @onclick="() => GuardarRol(persona.Id)">Guardar</button>
+                                <button type="button" class="btn btn-link btn-sm" @onclick="() => cambiandoRolId = 0">Cancelar</button>
+                            }
+                            else
+                            {
+                                <span>@persona.Rol</span>
+                            }
+                        </td>
+                        <td><span class="badge @(persona.Activo ? "bg-success" : "bg-secondary")">@(persona.Activo ? "Activa" : "Bloqueada")</span></td>
+                        <td>
+                            @if (persona.Id != Sesion.PersonalActual?.Id)
+                            {
+                                <button type="button" class="btn btn-outline-primary btn-sm" @onclick="() => EmpezarCambioRol(persona)">Cambiar rol</button>
+                                <button type="button" class="btn btn-outline-@(persona.Activo ? "danger" : "success") btn-sm ms-1" @onclick="() => Bloqueo(persona)">@(persona.Activo ? "Bloquear" : "Desbloquear")</button>
+                            }
+                            else
+                            {
+                                <span class="small text-muted">Tu cuenta</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <section class="mb-4 border rounded p-3" aria-labelledby="titulo-alta">
+        <h2 class="h5" id="titulo-alta">Nueva cuenta</h2>
+        <EditForm Model="alta" OnValidSubmit="Crear" FormName="alta-personal">
+            <DataAnnotationsValidator />
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <label class="form-label" for="nombreAlta">Nombre</label>
+                    <InputText id="nombreAlta" class="form-control" maxlength="80" @bind-Value="alta.Nombre" />
+                    <ValidationMessage For="() => alta.Nombre" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" for="correoAlta">Correo</label>
+                    <InputText id="correoAlta" class="form-control" maxlength="120" @bind-Value="alta.Correo" />
+                    <ValidationMessage For="() => alta.Correo" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" for="rolAlta">Rol</label>
+                    <InputSelect id="rolAlta" class="form-select" @bind-Value="alta.Rol">
+                        <option value="">Elegí…</option>
+                        @foreach (var rol in AdministracionService.Roles)
+                        {
+                            <option value="@rol">@rol</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => alta.Rol" />
+                </div>
+                @if (alta.Rol == PersonalService.Veterinario)
+                {
+                    <div class="col-md-3">
+                        <label class="form-label" for="fichaAlta">Ficha de profesional</label>
+                        <InputSelect id="fichaAlta" class="form-select" @bind-Value="alta.ProfesionalId">
+                            <option value="0">Elegí…</option>
+                            @foreach (var ficha in Profesionales.ObtenerPublicos())
+                            {
+                                <option value="@ficha.Id">@ficha.Nombre</option>
+                            }
+                        </InputSelect>
+                    </div>
+                }
+            </div>
+            <p class="small text-muted mt-2 mb-1">En la demostración la contraseña inicial es «@PersonalService.ContrasenaDemo». Con la API se envía un enlace para crearla.</p>
+            <button type="submit" class="btn btn-primary">Crear cuenta</button>
+        </EditForm>
+    </section>
+
+    <a href="panel">← Volver al panel</a>
+</RequierePersonal>
+
+@code {
+    private PersonalFormulario alta = new();
+    private int cambiandoRolId;
+    private string rolNuevo = "";
+    private int profesionalNuevo;
+    private string mensaje = "";
+    private bool exito;
+
+    private void Crear()
+    {
+        Mostrar(Admin.CrearPersonal(alta, Sesion.PersonalActual));
+        if (exito)
+        {
+            alta = new();
+        }
+    }
+
+    private void EmpezarCambioRol(Personal persona)
+    {
+        cambiandoRolId = persona.Id;
+        rolNuevo = persona.Rol;
+        profesionalNuevo = persona.ProfesionalId ?? 0;
+        mensaje = "";
+    }
+
+    private void GuardarRol(int personaId)
+    {
+        Mostrar(Admin.CambiarRol(personaId, rolNuevo, profesionalNuevo, Sesion.PersonalActual));
+        if (exito)
+        {
+            cambiandoRolId = 0;
+        }
+    }
+
+    private void Bloqueo(Personal persona)
+    {
+        Mostrar(Admin.CambiarBloqueo(persona.Id, persona.Activo, Sesion.PersonalActual));
+    }
+
+    private void Mostrar(ResultadoOperacion r)
+    {
+        exito = r.Exito;
+        mensaje = r.Mensaje;
+    }
+}

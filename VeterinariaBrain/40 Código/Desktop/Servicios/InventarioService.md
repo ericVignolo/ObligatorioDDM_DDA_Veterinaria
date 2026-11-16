@@ -30,6 +30,8 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[ResultadoOperacion]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminParametros]]
+- [[AdministracionService]]
 - [[AtencionConsulta]]
 - [[ConsultaService]]
 - [[Inventario]]

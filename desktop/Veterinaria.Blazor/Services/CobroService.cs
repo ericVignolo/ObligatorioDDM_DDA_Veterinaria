@@ -49,7 +49,7 @@ public class CobroService
         }
 
         var turno = _agenda.ObtenerPorId(consulta.TurnoId);
-        var prestacion = turno is null ? null : _prestaciones.ObtenerPorId(turno.PrestacionId);
+        var prestacion = turno is null ? null : _prestaciones.ObtenerFicha(turno.PrestacionId);
         if (turno is null || prestacion is null)
         {
             return null;
@@ -64,8 +64,8 @@ public class CobroService
             AnimalId = turno.AnimalId,
             PrestacionId = prestacion.Id,
             Descripcion = prestacion.Nombre,
-            // RN-33: el precio de hoy queda fijado en el cargo.
-            Monto = prestacion.PrecioDesde,
+            // RN-33: el precio vigente en la fecha de la atención queda fijado en el cargo.
+            Monto = _prestaciones.PrecioVigente(prestacion.Id, DateOnly.FromDateTime(turno.Inicio)),
             Fecha = DateTime.Now
         };
         _cargos.Add(cargo);

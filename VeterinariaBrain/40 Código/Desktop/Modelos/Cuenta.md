@@ -16,6 +16,7 @@ Cuenta de Cliente de demostración. En la sección C la crea y guarda la API.
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdministracionService]]
 - [[Animal]]
 - [[AsistenciaService]]
 - [[Asistencias]]

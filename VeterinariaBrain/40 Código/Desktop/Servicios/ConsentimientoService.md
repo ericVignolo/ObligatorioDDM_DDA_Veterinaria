@@ -29,6 +29,8 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Turno]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminParametros]]
+- [[AdministracionService]]
 - [[ConsultaService]]
 - [[EstadoConsentimiento]]
 - [[FirmarConsentimiento]]

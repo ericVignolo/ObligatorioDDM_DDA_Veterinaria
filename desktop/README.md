@@ -175,6 +175,10 @@ flowchart LR
 | `/consentimiento/{TurnoId}` | `Pages/FirmarConsentimiento.razor` | A-025 | ConsentimientoService, AgendaService, AnimalService, PrestacionService, SesionService · `RequiereSesion` |
 | `/panel/asistencia` | `Pages/Asistencias.razor` | A-026 | AsistenciaService, CuentaService, AnimalService, SesionService · `RequierePersonal`, `NivelAsistencia` (Recepción: cola y solicitud por teléfono; Veterinario: «Para vos») |
 | `/panel/asistencia/{Id}` | `Pages/AsistenciaDetalle.razor` | A-026 | AsistenciaService, CuentaService, AnimalService, PersonalService, SesionService · ofrecer, empeoramiento, cierre, aceptar/rechazar, traslado, nivel con motivo, historial |
+| `/panel/admin/servicios` | `Pages/AdminServicios.razor` | A-027 | AdministracionService, PrestacionService, SesionService · Administrador |
+| `/panel/admin/personal` | `Pages/AdminPersonal.razor` | A-027 | AdministracionService, PersonalService, ProfesionalService, SesionService · Administrador |
+| `/panel/admin/horarios` | `Pages/AdminHorarios.razor` | A-027 | AdministracionService, ProfesionalService, AgendaService, SesionService · Administrador |
+| `/panel/admin/parametros` | `Pages/AdminParametros.razor` | A-027 | AdministracionService, AsistenciaService, InternacionService, InventarioService, VacunaService, ConsentimientoService, PersonalService, SesionService · Administrador |
 | `/panel/historia/{AnimalId}` | `Pages/HistoriaClinica.razor` | A-020, A-021 | AnimalService, CuentaService, ConsultaService, SesionService · `RegistroClinico`, `CarnetSanitario` |
 | `/animales/{Id}/historia` | `Pages/HistoriaAnimal.razor` | A-020 | AnimalService, ConsultaService, SesionService · `RegistroClinico`, `RequiereSesion` |
 | `/turnos` | `Pages/Turnos.razor` | A-015, A-016 | AgendaService, AnimalService, PrestacionService, ProfesionalService, ClinicaService, SesionService |
@@ -197,6 +201,8 @@ flowchart LR
 | `InternacionService` | Boxes, admisión de Recepción, ingreso clínico con box exclusivo y del tipo de la especie, novedades visibles o internas, rectificaciones y alta con indicaciones (A-024, RN-21 a RN-25) | AnimalService | API de internación con tiempo real (RF-CLI-09) |
 | `ConsentimientoService` | Documento de consentimiento por prestación y versión, firma del responsable (casilla + nombre), rechazo, historial con huella y bloqueo de la consulta sin consentimiento (A-025, RN-10) | AgendaService, PrestacionService | API de consentimientos (CU-CLI-10) |
 | `AsistenciaService` | Solicitudes de asistencia: cola rojo → verde por antigüedad, elegibilidad por especie, matrícula, guardia y jornada, cobertura 30 km, rojo a la guardia y a Recepción a los 10 min, reevaluación a las 24 h, empeoramiento, cambio de nivel con motivo, traslado y cargo al finalizar (A-026, RN-46 a RN-59) | PersonalService, ProfesionalService, AnimalService, CobroService | API de asistencia con tarea programada, mapa y notificaciones |
+| `AdministracionService` | Acciones del Administrador con permiso, validación y registro en la bitácora: servicios y tarifas con vigencia (RN-33), cuentas, roles y bloqueo, ausencias y feriados sin pisar turnos, boxes, guardia, tarifas de asistencia, avisos, stock mínimo y versiones del consentimiento (A-027) | Prestacion, Personal, Profesional, Agenda, Internacion, Asistencia, Inventario, Vacuna, Consentimiento y Auditoria | Endpoints de administración de la API |
+| `AuditoriaService` | Bitácora de auditoría con filtros por usuario, entidad, acción y fechas (RF-ADM-08) | — | Tabla Auditoria de la API |
 | `IntencionService` | Servicio elegido antes de ingresar; se retoma hasta 30 min | SesionService | Igual, en el cliente |
 
 > Todos los servicios son `AddScoped`: en Blazor Server duran lo que dura la pestaña. Cuentas y sesión se pierden al recargar; es lo esperado hasta tener la API.

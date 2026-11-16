@@ -1,0 +1,210 @@
+@page "/panel/admin/servicios"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AdministracionService Admin
+@inject PrestacionService Prestaciones
+@inject SesionService Sesion
+
+<PageTitle>Servicios y tarifas — VITALIA</PageTitle>
+
+@* A-027, RF-ADM-02: alta y edición de servicios y precios con fecha de vigencia (RN-33). *@
+<RequierePersonal Roles="@(new[] { PersonalService.Administrador })">
+    <h1>Servicios y tarifas</h1>
+    <p class="text-muted">El precio se cambia con una tarifa que rige desde una fecha: lo ya atendido conserva su precio (RN-33).</p>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    <div class="table-responsive mb-4">
+        <table class="table table-sm align-middle">
+            <caption class="visually-hidden">Servicios de la clínica</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Servicio</th>
+                    <th scope="col" class="text-end">Precio hoy</th>
+                    <th scope="col">Duración</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var prestacion in Prestaciones.ObtenerTodas())
+                {
+                    var proxima = Prestaciones.TarifasDe(prestacion.Id).FirstOrDefault(t => t.VigenteDesde > DateOnly.FromDateTime(DateTime.Today));
+                    <tr>
+                        <th scope="row">@prestacion.Nombre</th>
+                        <td class="text-end">
+                            $ @prestacion.PrecioDesde.ToString("N0")
+                            @if (proxima is not null)
+                            {
+                                <span class="d-block small text-muted">$ @proxima.Precio.ToString("N0") desde el @proxima.VigenteDesde.ToString("dd/MM/yyyy")</span>
+                            }
+                        </td>
+                        <td>@(prestacion.DuracionMinutos > 0 ? $"{prestacion.DuracionMinutos} min" : "—")</td>
+                        <td>
+                            <span class="badge @(prestacion.Publicado ? "bg-success" : "bg-secondary")">@(prestacion.Publicado ? "Publicado" : "No publicado")</span>
+                            @if (prestacion.ReservableEnLinea)
+                            {
+                                <span class="badge bg-info text-dark">Reserva en línea</span>
+                            }
+                            @if (prestacion.RequiereConsentimiento)
+                            {
+                                <span class="badge bg-warning text-dark">Pide consentimiento</span>
+                            }
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary btn-sm" @onclick="() => Editar(prestacion)">Editar</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm ms-1" @onclick="() => NuevaTarifa(prestacion)">Precio</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (modo == "tarifa")
+    {
+        <section class="mb-4 border rounded p-3" aria-labelledby="titulo-tarifa">
+            <h2 class="h5" id="titulo-tarifa">Nuevo precio de @(Prestaciones.ObtenerFicha(tarifa.PrestacionId)?.Nombre)</h2>
+            <EditForm Model="tarifa" OnValidSubmit="GuardarTarifa" FormName="tarifa">
+                <DataAnnotationsValidator />
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <label class="form-label" for="precioTarifa">Precio ($)</label>
+                        <InputNumber id="precioTarifa" class="form-control" @bind-Value="tarifa.Precio" />
+                        <ValidationMessage For="() => tarifa.Precio" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="desdeTarifa">Rige desde</label>
+                        <InputDate id="desdeTarifa" class="form-control" @bind-Value="tarifa.VigenteDesde" />
+                        <ValidationMessage For="() => tarifa.VigenteDesde" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Programar precio</button>
+                <button type="button" class="btn btn-outline-secondary mt-2 ms-2" @onclick="Cancelar">Cancelar</button>
+            </EditForm>
+            <h3 class="h6 mt-3">Historial de precios</h3>
+            <ul class="small mb-0">
+                @foreach (var t in Prestaciones.TarifasDe(tarifa.PrestacionId))
+                {
+                    <li>$ @t.Precio.ToString("N0") @(t.VigenteDesde == DateOnly.MinValue ? "(precio inicial)" : $"desde el {t.VigenteDesde:dd/MM/yyyy}") · @t.RegistradoPor</li>
+                }
+            </ul>
+        </section>
+    }
+    else if (modo == "editar" || modo == "nuevo")
+    {
+        <section class="mb-4 border rounded p-3" aria-labelledby="titulo-servicio">
+            <h2 class="h5" id="titulo-servicio">@(modo == "nuevo" ? "Nuevo servicio" : "Editar servicio")</h2>
+            <EditForm Model="servicio" OnValidSubmit="GuardarServicio" FormName="servicio">
+                <DataAnnotationsValidator />
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <label class="form-label" for="nombreServ">Nombre</label>
+                        <InputText id="nombreServ" class="form-control" maxlength="80" @bind-Value="servicio.Nombre" />
+                        <ValidationMessage For="() => servicio.Nombre" />
+                    </div>
+                    @if (modo == "nuevo")
+                    {
+                        <div class="col-md-2">
+                            <label class="form-label" for="precioServ">Precio ($)</label>
+                            <InputNumber id="precioServ" class="form-control" @bind-Value="servicio.Precio" />
+                            <ValidationMessage For="() => servicio.Precio" />
+                        </div>
+                    }
+                    <div class="col-md-2">
+                        <label class="form-label" for="duracionServ">Duración (min)</label>
+                        <InputNumber id="duracionServ" class="form-control" @bind-Value="servicio.DuracionMinutos" />
+                        <ValidationMessage For="() => servicio.DuracionMinutos" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="descServ">Descripción</label>
+                        <InputTextArea id="descServ" class="form-control" rows="2" maxlength="300" @bind-Value="servicio.Descripcion" />
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <InputCheckbox id="publicadoServ" class="form-check-input" @bind-Value="servicio.Publicado" />
+                            <label class="form-check-label" for="publicadoServ">Publicado en el catálogo</label>
+                        </div>
+                        <div class="form-check">
+                            <InputCheckbox id="reservableServ" class="form-check-input" @bind-Value="servicio.ReservableEnLinea" />
+                            <label class="form-check-label" for="reservableServ">Se reserva en línea (necesita duración)</label>
+                        </div>
+                    </div>
+                </div>
+                <p class="small text-muted mt-2 mb-1">Quién lo atiende se configura en la ficha de cada profesional. Los turnos ya reservados no cambian.</p>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-outline-secondary ms-2" @onclick="Cancelar">Cancelar</button>
+            </EditForm>
+        </section>
+    }
+    else
+    {
+        <button type="button" class="btn btn-primary mb-4" @onclick="Nuevo">Nuevo servicio</button>
+    }
+
+    <a href="panel">← Volver al panel</a>
+</RequierePersonal>
+
+@code {
+    private string modo = "";
+    private int editandoId;
+    private PrestacionFormulario servicio = new();
+    private TarifaFormulario tarifa = new();
+    private string mensaje = "";
+    private bool exito;
+
+    private void Nuevo()
+    {
+        modo = "nuevo";
+        servicio = new();
+        mensaje = "";
+    }
+
+    private void Editar(Prestacion prestacion)
+    {
+        modo = "editar";
+        editandoId = prestacion.Id;
+        servicio = new PrestacionFormulario
+        {
+            Nombre = prestacion.Nombre, Descripcion = prestacion.Descripcion, Precio = (int)prestacion.PrecioDesde,
+            DuracionMinutos = prestacion.DuracionMinutos, ReservableEnLinea = prestacion.ReservableEnLinea, Publicado = prestacion.Publicado
+        };
+        mensaje = "";
+    }
+
+    private void NuevaTarifa(Prestacion prestacion)
+    {
+        modo = "tarifa";
+        tarifa = new TarifaFormulario { PrestacionId = prestacion.Id, Precio = (int)prestacion.PrecioDesde, VigenteDesde = DateOnly.FromDateTime(DateTime.Today.AddDays(1)) };
+        mensaje = "";
+    }
+
+    private void Cancelar()
+    {
+        modo = "";
+    }
+
+    private void GuardarServicio()
+    {
+        var r = modo == "nuevo" ? Admin.CrearServicio(servicio, Sesion.PersonalActual) : Admin.EditarServicio(editandoId, servicio, Sesion.PersonalActual);
+        Mostrar(r);
+    }
+
+    private void GuardarTarifa()
+    {
+        Mostrar(Admin.ProgramarTarifa(tarifa, Sesion.PersonalActual));
+    }
+
+    private void Mostrar(ResultadoOperacion r)
+    {
+        exito = r.Exito;
+        mensaje = r.Mensaje;
+        if (r.Exito)
+        {
+            modo = "";
+        }
+    }
+}

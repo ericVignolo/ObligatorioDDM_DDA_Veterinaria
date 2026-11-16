@@ -11,7 +11,7 @@ generado: true
 
 Cuentas de demostración del personal (A-010). En la sección C las gestiona el Administrador (RF-ADM-01)
 
-**Tareas:** A-010
+**Tareas:** A-010, A-027
 
 **Requisitos y decisiones:** RF-ADM-01
 
@@ -21,6 +21,9 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Personal]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminParametros]]
+- [[AdminPersonal]]
+- [[AdministracionService]]
 - [[AsistenciaDetalle]]
 - [[AsistenciaService]]
 - [[ConsultaService]]

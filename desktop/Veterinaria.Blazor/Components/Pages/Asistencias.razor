@@ -14,7 +14,7 @@
     <h1>Asistencia a domicilio</h1>
     <p class="text-muted">
         Orden: rojo → naranja → amarillo → verde y, dentro de cada nivel, por antigüedad.
-        Cobertura @AsistenciaService.CoberturaKm km · un rojo sin aceptar en @AsistenciaService.MinutosParaEscalarRojo minutos pasa a Recepción.
+        Cobertura @Servicio.Cobertura km · un rojo sin aceptar en @Servicio.MinutosEscalarRojo minutos pasa a Recepción.
         @if (!AsistenciaService.EnHorarioClinica(DateTime.Now))
         {
             <strong>Fuera del horario de la clínica: lo que no es rojo queda para el próximo día de atención.</strong>
@@ -206,8 +206,8 @@
                 {
                     <p class="small mt-2 mb-1">
                         Costo a informar al cliente antes de confirmar (RF-CLI-25):
-                        <strong>$ @AsistenciaService.CalcularCosto(nueva.Modalidad, nueva.DistanciaKm, nueva.Cantidad).ToString("N0")</strong>
-                        (base $ @AsistenciaService.TarifaBase.ToString("N0") + $ @AsistenciaService.TarifaPorKm.ToString("N0") por km + $ @AsistenciaService.TarifaPorAnimalExtra.ToString("N0") por animal extra; la orientación no tiene costo).
+                        <strong>$ @Servicio.Costo(nueva.Modalidad, nueva.DistanciaKm, nueva.Cantidad).ToString("N0")</strong>
+                        (base $ @Servicio.Base.ToString("N0") + $ @Servicio.PorKm.ToString("N0") por km + $ @Servicio.PorAnimalExtra.ToString("N0") por animal extra; la orientación no tiene costo).
                     </p>
                 }
                 <button type="submit" class="btn btn-primary mt-2">Registrar solicitud</button>

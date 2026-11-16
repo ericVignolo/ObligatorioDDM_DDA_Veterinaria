@@ -86,6 +86,35 @@ public class AgendaService
         }
     }
 
+    // Feriados y turnos afectados (A-027, RF-ADM-04). El permiso lo controla AdministracionService.
+    public List<DateOnly> Feriados()
+    {
+        return _feriados.OrderBy(f => f).ToList();
+    }
+
+    public void AgregarFeriado(DateOnly fecha)
+    {
+        if (!_feriados.Contains(fecha))
+        {
+            _feriados.Add(fecha);
+        }
+    }
+
+    public bool QuitarFeriado(DateOnly fecha)
+    {
+        return _feriados.Remove(fecha);
+    }
+
+    // Turnos que siguen activos (Confirmado o En espera) en un rango, de un profesional o de todos.
+    public List<Turno> TurnosActivosEntre(DateOnly desde, DateOnly hasta, int? profesionalId = null)
+    {
+        return _turnos
+            .Where(t => (t.Estado == "Confirmado" || t.Estado == "En espera")
+                && DateOnly.FromDateTime(t.Inicio) >= desde && DateOnly.FromDateTime(t.Inicio) <= hasta
+                && (profesionalId is null || t.ProfesionalId == profesionalId))
+            .ToList();
+    }
+
     public bool EsFeriado(DateOnly fecha)
     {
         return _feriados.Contains(fecha);

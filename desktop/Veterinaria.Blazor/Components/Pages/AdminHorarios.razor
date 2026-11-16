@@ -1,0 +1,150 @@
+@page "/panel/admin/horarios"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AdministracionService Admin
+@inject ProfesionalService Profesionales
+@inject AgendaService Agenda
+@inject SesionService Sesion
+
+<PageTitle>Horarios del personal — VITALIA</PageTitle>
+
+@* A-027, RF-ADM-04: jornadas (consulta), licencias y feriados. No se cargan sobre turnos activos. *@
+<RequierePersonal Roles="@(new[] { PersonalService.Administrador })">
+    <h1>Horarios del personal</h1>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    <section class="mb-4" aria-labelledby="titulo-jornadas">
+        <h2 class="h4" id="titulo-jornadas">Jornadas y ausencias</h2>
+        <div class="row g-3">
+            @foreach (var profesional in Profesionales.ObtenerPublicos())
+            {
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="h6">@profesional.Nombre</h3>
+                            <ul class="small mb-2">
+                                @foreach (var linea in Profesionales.DescribirJornada(profesional))
+                                {
+                                    <li>@linea</li>
+                                }
+                            </ul>
+                            @if (profesional.Ausencias.Count == 0)
+                            {
+                                <p class="small text-muted mb-0">Sin ausencias cargadas.</p>
+                            }
+                            @foreach (var licencia in profesional.Ausencias.OrderBy(a => a.Desde))
+                            {
+                                <div class="small d-flex justify-content-between align-items-center">
+                                    <span>@licencia.Desde.ToString("dd/MM/yyyy") – @licencia.Hasta.ToString("dd/MM/yyyy") · @licencia.Motivo</span>
+                                    <button type="button" class="btn btn-link btn-sm text-danger" @onclick="() => QuitarAusencia(profesional.Id, licencia.Desde)">Quitar</button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <p class="small text-muted mt-2">Editar las franjas de la jornada llega con la API (sección C); en la demostración se consultan.</p>
+    </section>
+
+    <section class="mb-4 border rounded p-3" aria-labelledby="titulo-ausencia">
+        <h2 class="h5" id="titulo-ausencia">Nueva licencia o ausencia</h2>
+        <EditForm Model="ausencia" OnValidSubmit="AgregarAusencia" FormName="ausencia">
+            <DataAnnotationsValidator />
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <label class="form-label" for="profAus">Profesional</label>
+                    <InputSelect id="profAus" class="form-select" @bind-Value="ausencia.ProfesionalId">
+                        <option value="0">Elegí…</option>
+                        @foreach (var profesional in Profesionales.ObtenerPublicos())
+                        {
+                            <option value="@profesional.Id">@profesional.Nombre</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => ausencia.ProfesionalId" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label" for="desdeAus">Desde</label>
+                    <InputDate id="desdeAus" class="form-control" @bind-Value="ausencia.Desde" />
+                    <ValidationMessage For="() => ausencia.Desde" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label" for="hastaAus">Hasta</label>
+                    <InputDate id="hastaAus" class="form-control" @bind-Value="ausencia.Hasta" />
+                    <ValidationMessage For="() => ausencia.Hasta" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="motivoAus">Motivo</label>
+                    <InputText id="motivoAus" class="form-control" maxlength="100" @bind-Value="ausencia.Motivo" />
+                    <ValidationMessage For="() => ausencia.Motivo" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Agregar</button>
+        </EditForm>
+    </section>
+
+    <section class="mb-4 border rounded p-3" aria-labelledby="titulo-feriados">
+        <h2 class="h5" id="titulo-feriados">Feriados de la clínica</h2>
+        <ul class="small">
+            @foreach (var dia in Agenda.Feriados())
+            {
+                <li>
+                    @dia.ToString("dddd d 'de' MMMM 'de' yyyy")
+                    <button type="button" class="btn btn-link btn-sm text-danger" @onclick="() => QuitarFeriado(dia)">Quitar</button>
+                </li>
+            }
+        </ul>
+        <div class="input-group" style="max-width: 22rem;">
+            <label class="visually-hidden" for="nuevoFeriado">Fecha</label>
+            <input id="nuevoFeriado" type="date" class="form-control" @bind="feriado" />
+            <button type="button" class="btn btn-primary" @onclick="AgregarFeriado">Agregar feriado</button>
+        </div>
+    </section>
+
+    <a href="panel">← Volver al panel</a>
+</RequierePersonal>
+
+@code {
+    private AusenciaFormulario ausencia = new();
+    private DateOnly? feriado;
+    private string mensaje = "";
+    private bool exito;
+
+    private void AgregarAusencia()
+    {
+        Mostrar(Admin.AgregarAusencia(ausencia, Sesion.PersonalActual));
+        if (exito)
+        {
+            ausencia = new();
+        }
+    }
+
+    private void QuitarAusencia(int profesionalId, DateOnly desde)
+    {
+        Mostrar(Admin.QuitarAusencia(profesionalId, desde, Sesion.PersonalActual));
+    }
+
+    private void AgregarFeriado()
+    {
+        Mostrar(Admin.AgregarFeriado(feriado, Sesion.PersonalActual));
+        if (exito)
+        {
+            feriado = null;
+        }
+    }
+
+    private void QuitarFeriado(DateOnly fecha)
+    {
+        Mostrar(Admin.QuitarFeriado(fecha, Sesion.PersonalActual));
+    }
+
+    private void Mostrar(ResultadoOperacion r)
+    {
+        exito = r.Exito;
+        mensaje = r.Mensaje;
+    }
+}
