@@ -24,6 +24,12 @@ public class AnimalService
         return _animales.FirstOrDefault(a => a.Id == id);
     }
 
+    // Para el personal: todos los animales, por nombre (RF-REC-03, A-024).
+    public List<Animal> ObtenerTodos()
+    {
+        return _animales.OrderBy(a => a.Nombre).ToList();
+    }
+
     public List<string> Especies { get; } = new()
     {
         "Perro", "Gato", "Caballo", "Oveja", "Vaca", "Cerdo", "Cabra", "Ave", "Conejo", "Reptil", "Otra"

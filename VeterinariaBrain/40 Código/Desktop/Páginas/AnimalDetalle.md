@@ -13,7 +13,9 @@ generado: true
 
 RN-18: no se distingue entre «no existe» y «no es tuyo».
 
-**Requisitos y decisiones:** RN-18
+**Tareas:** A-024
+
+**Requisitos y decisiones:** RF-CLI-09, RN-18, RN-23, RNF-DIS-04
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -21,5 +23,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Animal]]
 - [[AnimalService]]
 - [[CarnetSanitario]]
+- [[Internacion]]
+- [[InternacionService]]
 - [[RequiereSesion]]
 - [[SesionService]]

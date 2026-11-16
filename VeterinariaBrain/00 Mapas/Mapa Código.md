@@ -9,7 +9,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (32)
+### Páginas (34)
 - [[Acceso]] · `/acceso`
 - [[AgendaRecepcion]] · `/panel/agenda`
 - [[AgendaVeterinario]] · `/panel/mi-agenda`
@@ -25,6 +25,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[HistoriaClinica]] · `/panel/historia/{AnimalId:int}`
 - [[Home]] · `/`
 - [[Ingresar]] · `/ingresar`
+- [[InternacionDetalle]] · `/panel/internacion/{Id:int}`
+- [[Internaciones]] · `/panel/internacion`
 - [[Inventario]] · `/panel/inventario`
 - [[LaClinica]] · `/clinica`
 - [[MiCuenta]] · `/cuenta`
@@ -62,7 +64,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (14)
+### Servicios (15)
 - [[AgendaService]]
 - [[AnimalService]]
 - [[ClinicaService]]
@@ -71,6 +73,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[CuentaService]]
 - [[DocumentoLegalService]]
 - [[IntencionService]]
+- [[InternacionService]]
 - [[InventarioService]]
 - [[PersonalService]]
 - [[PrestacionService]]
@@ -78,9 +81,11 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (47)
+### Modelos (54)
+- [[AdmisionFormulario]]
 - [[AjusteFormulario]]
 - [[AlertaStock]]
+- [[AltaFormulario]]
 - [[Animal]]
 - [[AnimalFormulario]]
 - [[AnulacionFormulario]]
@@ -88,6 +93,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[AplicacionSanitaria]]
 - [[Articulo]]
 - [[Ausencia]]
+- [[Box]]
 - [[CambioContrasenaFormulario]]
 - [[CambioCorreoFormulario]]
 - [[Cargo]]
@@ -103,8 +109,10 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[EnmiendaFormulario]]
 - [[FirmaConsulta]]
 - [[FranjaHoraria]]
+- [[IngresoClinicoFormulario]]
 - [[IngresoLoteFormulario]]
 - [[InicioSesion]]
+- [[Internacion]]
 - [[ItemCarnet]]
 - [[LecturaHistoria]]
 - [[LoteProducto]]
@@ -113,6 +121,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[MovimientoStock]]
 - [[NivelUrgencia]]
 - [[NotaCredito]]
+- [[NovedadFormulario]]
+- [[NovedadInternacion]]
 - [[NuevaContrasena]]
 - [[Pago]]
 - [[PerfilFormulario]]

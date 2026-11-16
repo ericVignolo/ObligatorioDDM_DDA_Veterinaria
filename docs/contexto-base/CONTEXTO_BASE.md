@@ -332,7 +332,7 @@ El orden funcional sigue siendo H0–H5 de `../analisis/ALCANCE_ENTREGA.md` (no 
 
 1. Empezar la sección A en `desktop`: esqueleto Blazor y catálogo público con datos de demostración (A-001 a A-003).
 2. Seguir con registro y reserva demostrativos (A-006 a A-015), usando las decisiones cerradas el 2026-10-29.
-3. Especificar internación antes de su pantalla (A-024). «Cobrar consulta» ya está especificado e implementado en escritorio (A-023, probado).
+3. Internación especificada (`../analisis/ESPECIFICACION_INTERNACION.md`) e implementada en escritorio (A-024, pendiente de prueba). «Cobrar consulta» ya está especificado e implementado en escritorio (A-023, probado).
 4. Cerrar alertas sanitarias y parámetros de asistencia antes de sus pantallas (A-021, A-026).
 5. Registrar la fecha de entrega cuando exista y aplicar el disparador del plan B.
 6. Mantener la trazabilidad RF → caso de uso → endpoint → pantalla → prueba y actualizar UML para el stack vigente.
@@ -343,6 +343,7 @@ Se incorporaron como borradores para validación los primeros artefactos funcion
 
 - `docs/analisis/HISTORIAS_USUARIO_VISITANTE_CLIENTE.md`: backlog con 35 historias, criterios de aceptación y trazabilidad.
 - `docs/analisis/CASOS_DE_USO_VISITANTE_CLIENTE.md`: catálogo de 25 casos de uso y especificación detallada de 11 recorridos esenciales.
+- `docs/analisis/ESPECIFICACION_INTERNACION.md`: caso de uso «Internar animal» (admisión, ingreso clínico, box exclusivo, novedades, rectificación y alta), estados, permisos y pruebas (A-024).
 - `docs/analisis/ESPECIFICACION_COBRO.md`: caso de uso «Cobrar consulta» (cobro presencial, cargo, comprobante y nota de crédito), estados, reglas y pruebas (A-023).
 - `docs/analisis/ESPECIFICACION_ALERTAS_ASISTENCIA.md`: clasificación, estados, flujos, pseudocódigo, privacidad, excepciones y pruebas del nuevo módulo.
 - `docs/analisis/ALCANCE_ENTREGA.md`: tabla operativa de entrega base y extensiones, asignación de los 74 RF a hitos, límites y evidencia esperada.

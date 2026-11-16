@@ -3,6 +3,7 @@
 @using Veterinaria.Blazor.Services
 @inject AnimalService AnimalService
 @inject SesionService Sesion
+@inject InternacionService Internaciones
 
 <RequiereSesion>
     @if (animal is null)
@@ -67,6 +68,59 @@
             <a class="btn btn-outline-primary ms-2" href="@($"animales/{animal.Id}/historia")">Historia clínica</a>
         </div>
 
+        @* Internación (A-024, RF-CLI-09): el responsable ve solo lo publicado como visible (RN-23). *@
+        @foreach (var internacion in internaciones)
+        {
+            <section class="card mb-4" aria-labelledby="@($"titulo-internacion-{internacion.Id}")">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between gap-2">
+                        <h2 class="h5 card-title" id="@($"titulo-internacion-{internacion.Id}")">
+                            @(internacion.Estado == InternacionService.Alta ? "Internación terminada" : "Internación en curso")
+                        </h2>
+                        @if (internacion.Estado != InternacionService.Alta)
+                        {
+                            <button type="button" class="btn btn-outline-primary btn-sm" @onclick="Actualizar">Actualizar novedades</button>
+                        }
+                    </div>
+                    <p class="small text-muted mb-2">
+                        Ingresó el @internacion.FechaAdmision.ToString("dd/MM/yyyy HH:mm") · @internacion.Motivo
+                        @if (internacion.Estado == InternacionService.Admitida)
+                        {
+                            <span>· esperando que el veterinario lo reciba</span>
+                        }
+                    </p>
+
+                    @if (internacion.Estado == InternacionService.Alta)
+                    {
+                        <div class="alert alert-success">
+                            <strong>Alta el @internacion.FechaAlta?.ToString("dd/MM/yyyy HH:mm").</strong>
+                            <span class="d-block">@internacion.EvolucionFinal</span>
+                            <strong class="d-block mt-2">Indicaciones para casa</strong>
+                            <span>@internacion.IndicacionesDomicilio</span>
+                        </div>
+                    }
+
+                    @{ var visibles = Internaciones.NovedadesVisibles(internacion.Id); }
+                    @if (visibles.Count == 0)
+                    {
+                        <p class="mb-0">Todavía no hay novedades. Te avisamos acá apenas el veterinario publique una.</p>
+                    }
+                    else
+                    {
+                        <ul class="list-unstyled mb-0">
+                            @foreach (var entrada in visibles)
+                            {
+                                <li class="border-start ps-2 mb-2">
+                                    <span class="small text-muted d-block">@entrada.Fecha.ToString("dd/MM HH:mm") · @entrada.AutorNombre @(entrada.RectificaId != 0 ? "· corrección" : "")</span>
+                                    @entrada.Texto
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </section>
+        }
+
         <CarnetSanitario AnimalId="animal.Id" />
     }
 
@@ -82,10 +136,18 @@
     public string? Mensaje { get; set; }
 
     private Animal? animal;
+    private List<Internacion> internaciones = new();
 
     protected override void OnParametersSet()
     {
         animal = Sesion.CuentaActual is null ? null : AnimalService.ObtenerPorId(Id, Sesion.CuentaActual.Id);
+        internaciones = animal is null ? new() : Internaciones.DeAnimal(animal.Id, Sesion.CuentaActual!.Id);
+    }
+
+    // En la demostración las novedades se ven al actualizar; con la API llegan solas (RF-CLI-09, RNF-DIS-04).
+    private void Actualizar()
+    {
+        OnParametersSet();
     }
 
     private static string Mostrar(string texto)
