@@ -86,7 +86,7 @@ public class AdministracionCajaNegraTests
         var recepcion = f.PersonalDe("recepcion@vitalia.uy");
         var cantidadServicios = f.Prestaciones.ObtenerTodas().Count();
         var cantidadPersonal = f.Personal.ObtenerTodos().Count();
-        var registros = f.Administracion.Buscar().Count;
+        var registros = f.Auditoria.Buscar().Count;
 
         Assert.False(f.Administracion.CrearServicio(Servicio(), recepcion).Exito);
         Assert.False(f.Administracion.CrearPersonal(NuevaCuenta(), recepcion).Exito);
@@ -97,7 +97,7 @@ public class AdministracionCajaNegraTests
         Assert.Equal(cantidadServicios, f.Prestaciones.ObtenerTodas().Count());
         Assert.Equal(cantidadPersonal, f.Personal.ObtenerTodos().Count());
         Assert.True(f.Personal.ObtenerPorId(3)!.Activo);
-        Assert.Equal(registros, f.Administracion.Buscar().Count);
+        Assert.Equal(registros, f.Auditoria.Buscar().Count);
     }
 
     [Fact]
@@ -152,20 +152,20 @@ public class AdministracionCajaNegraTests
     {
         var f = new Fabrica();
         var admin = Admin(f);
-        var antes = f.Administracion.Buscar().Count;
+        var antes = f.Auditoria.Buscar().Count;
 
         Assert.True(f.Administracion.CrearServicio(Servicio("Servicio auditado"), admin).Exito);
-        var despuesExito = f.Administracion.Buscar().Count;
+        var despuesExito = f.Auditoria.Buscar().Count;
         Assert.Equal(antes + 1, despuesExito);
 
-        var ultimo = f.Administracion.Buscar().OrderBy(r => r.Id).Last();
+        var ultimo = f.Auditoria.Buscar().OrderBy(r => r.Id).Last();
         Assert.False(string.IsNullOrWhiteSpace(ultimo.Usuario));
         Assert.False(string.IsNullOrWhiteSpace(ultimo.Rol));
         Assert.False(string.IsNullOrWhiteSpace(ultimo.Entidad));
         Assert.False(string.IsNullOrWhiteSpace(ultimo.Accion));
 
         Assert.False(f.Administracion.CrearServicio(Servicio("Servicio auditado"), admin).Exito);
-        Assert.Equal(despuesExito, f.Administracion.Buscar().Count);
+        Assert.Equal(despuesExito, f.Auditoria.Buscar().Count);
     }
 
     // ---------- SV-01 / SV-02: alta de servicio ----------
