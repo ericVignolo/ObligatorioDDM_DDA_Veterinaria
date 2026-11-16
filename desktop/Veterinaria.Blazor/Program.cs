@@ -24,6 +24,8 @@ builder.Services.AddScoped<CobroService>();
 builder.Services.AddScoped<ConsentimientoService>();
 builder.Services.AddScoped<InternacionService>();
 builder.Services.AddScoped<AsistenciaService>();
+builder.Services.AddScoped<AuditoriaService>();
+builder.Services.AddScoped<AdministracionService>();
 builder.Services.AddScoped<ConsultaService>();
 builder.Services.AddScoped<VacunaService>();
 

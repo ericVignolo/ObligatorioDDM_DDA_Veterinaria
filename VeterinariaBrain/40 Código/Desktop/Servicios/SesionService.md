@@ -27,6 +27,10 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Acceso]]
+- [[AdminHorarios]]
+- [[AdminParametros]]
+- [[AdminPersonal]]
+- [[AdminServicios]]
 - [[AgendaVeterinario]]
 - [[AnimalDetalle]]
 - [[AnimalEditar]]

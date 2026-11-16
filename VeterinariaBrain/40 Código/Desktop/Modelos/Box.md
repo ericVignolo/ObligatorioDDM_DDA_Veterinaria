@@ -11,13 +11,16 @@ generado: true
 
 Box de internación (A-024, RF-ADM-03). Admite un solo paciente a la vez (RN-22).
 
-**Tareas:** A-024
+**Tareas:** A-024, A-027
 
 **Requisitos y decisiones:** RF-ADM-03, RN-22
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminParametros]]
+- [[AdministracionService]]
 - [[InternacionDetalle]]
 - [[InternacionService]]
 - [[Internaciones]]
+- [[RegistroAuditoria]]

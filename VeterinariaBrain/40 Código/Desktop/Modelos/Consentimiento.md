@@ -18,6 +18,9 @@ Respuesta del responsable a un consentimiento informado (A-025, RF-CLI-11, RN-10
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminParametros]]
+- [[AdministracionService]]
 - [[ConsentimientoService]]
 - [[EstadoConsentimiento]]
 - [[FirmarConsentimiento]]
+- [[RegistroAuditoria]]

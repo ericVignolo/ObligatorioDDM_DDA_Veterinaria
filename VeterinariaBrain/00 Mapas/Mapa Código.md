@@ -9,8 +9,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (37)
+### Páginas (41)
 - [[Acceso]] · `/acceso`
+- [[AdminHorarios]] · `/panel/admin/horarios`
+- [[AdminParametros]] · `/panel/admin/parametros`
+- [[AdminPersonal]] · `/panel/admin/personal`
+- [[AdminServicios]] · `/panel/admin/servicios`
 - [[AgendaRecepcion]] · `/panel/agenda`
 - [[AgendaVeterinario]] · `/panel/mi-agenda`
 - [[AnimalDetalle]] · `/animales/{Id:int}`
@@ -69,10 +73,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (17)
+### Servicios (19)
+- [[AdministracionService]]
 - [[AgendaService]]
 - [[AnimalService]]
 - [[AsistenciaService]]
+- [[AuditoriaService]]
 - [[ClinicaService]]
 - [[CobroService]]
 - [[ConsentimientoService]]
@@ -88,7 +94,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (61)
+### Modelos (67)
 - [[AdmisionFormulario]]
 - [[AjusteFormulario]]
 - [[AlertaStock]]
@@ -100,6 +106,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[AplicacionSanitaria]]
 - [[Articulo]]
 - [[Ausencia]]
+- [[AusenciaFormulario]]
 - [[Box]]
 - [[CambioContrasenaFormulario]]
 - [[CambioCorreoFormulario]]
@@ -139,15 +146,20 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Pago]]
 - [[PerfilFormulario]]
 - [[Personal]]
+- [[PersonalFormulario]]
 - [[Prestacion]]
+- [[PrestacionFormulario]]
 - [[ProductoSanitario]]
 - [[Profesional]]
+- [[RegistroAuditoria]]
 - [[RegistroCliente]]
 - [[ReservaStock]]
 - [[ResultadoOperacion]]
 - [[SolicitudAsistencia]]
 - [[SolicitudRecuperacion]]
 - [[SolicitudTelefonicaFormulario]]
+- [[TarifaFormulario]]
+- [[TarifaPrestacion]]
 - [[Turno]]
 - [[ValidacionDatos]]
 

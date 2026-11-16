@@ -23,6 +23,9 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Profesional]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminHorarios]]
+- [[AdminPersonal]]
+- [[AdministracionService]]
 - [[AgendaRecepcion]]
 - [[AgendaService]]
 - [[AsistenciaService]]

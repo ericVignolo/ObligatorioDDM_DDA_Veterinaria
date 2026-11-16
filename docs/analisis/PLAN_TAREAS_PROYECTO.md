@@ -88,7 +88,7 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 - [x] **A-024 — Crear gestión de internación.** Ingreso, box, plan, evolución, novedades internas/visibles y alta; representar la exclusividad del box y la protección de notas.
 - [x] **A-025 — Crear consentimiento informado.** Mostrar versión, procedimiento, paciente, lectura/aceptación/firma según mecanismo aprobado; mantener separado de términos y privacidad.
 - [x] **A-026 — Crear panel de asistencia para Recepción/Veterinario.** Cola por prioridad, elegibilidad, ofertas/asignación, escalamiento y estados; los tiempos y las competencias usan parámetros aprobados.
-- [ ] **A-027 — Crear vistas de configuración y administración.** Catálogo, horarios, recursos, tarifas, roles, parámetros, competencias, cobertura, auditoría e indicadores según RF.
+- [~] **A-027 — Crear vistas de configuración y administración.** Catálogo, horarios, recursos, tarifas, roles, parámetros, competencias, cobertura, auditoría e indicadores según RF.
 - [ ] **A-028 — Crear comunicaciones y derechos.** Resumen/correo y su estado, alertas sanitarias/operativas, preferencias, exportación/eliminación y conservación con controles visibles.
 
 ### A.5 Cierre de escritorio

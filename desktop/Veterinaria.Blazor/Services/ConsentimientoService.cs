@@ -52,7 +52,7 @@ public class ConsentimientoService
     // El turno es de una prestación que exige consentimiento.
     public bool Requiere(Turno turno)
     {
-        return _prestaciones.ObtenerPorId(turno.PrestacionId)?.RequiereConsentimiento == true;
+        return _prestaciones.ObtenerFicha(turno.PrestacionId)?.RequiereConsentimiento == true;
     }
 
     public DocumentoConsentimiento? DocumentoVigente(int prestacionId)

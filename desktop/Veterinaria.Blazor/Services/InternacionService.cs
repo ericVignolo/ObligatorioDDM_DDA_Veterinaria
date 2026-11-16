@@ -93,6 +93,14 @@ public class InternacionService
         return _boxes.ToList();
     }
 
+    // Alta de un box (A-027, RF-ADM-03). El permiso lo controla AdministracionService.
+    public Box AgregarBox(string nombre, string tipo)
+    {
+        var box = new Box { Id = _boxes.Max(b => b.Id) + 1, Nombre = nombre.Trim(), Tipo = tipo };
+        _boxes.Add(box);
+        return box;
+    }
+
     public Box? ObtenerBox(int id)
     {
         return _boxes.FirstOrDefault(b => b.Id == id);
@@ -113,7 +121,7 @@ public class InternacionService
     public List<Box> BoxesLibresPara(Animal animal)
     {
         var tipo = TipoDeBoxPara(animal);
-        return _boxes.Where(b => b.Tipo == tipo && OcupanteDe(b.Id) is null).ToList();
+        return _boxes.Where(b => b.Activo && b.Tipo == tipo && OcupanteDe(b.Id) is null).ToList();
     }
 
     public Internacion? ObtenerPorId(int id)
@@ -251,6 +259,11 @@ public class InternacionService
         if (box is null || animal is null)
         {
             return new ResultadoOperacion { Exito = false, Mensaje = "Ese box no existe." };
+        }
+
+        if (!box.Activo)
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = $"{box.Nombre} está fuera de servicio." };
         }
 
         if (OcupanteDe(box.Id) is not null)

@@ -14,6 +14,11 @@ Resultado simple de una operación del servicio: si salió bien y qué mostrar.
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminHorarios]]
+- [[AdminParametros]]
+- [[AdminPersonal]]
+- [[AdminServicios]]
+- [[AdministracionService]]
 - [[AgendaRecepcion]]
 - [[AgendaService]]
 - [[AnimalService]]

@@ -14,4 +14,7 @@ public class Personal
     public int? ProfesionalId { get; set; }
 
     public string HashContrasena { get; set; } = "";
+
+    // Una cuenta bloqueada no puede ingresar (RF-ADM-01, A-027).
+    public bool Activo { get; set; } = true;
 }

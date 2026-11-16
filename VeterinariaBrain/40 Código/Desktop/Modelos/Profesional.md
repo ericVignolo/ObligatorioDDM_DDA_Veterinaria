@@ -23,6 +23,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Prestacion]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminHorarios]]
 - [[AgendaRecepcion]]
 - [[AsistenciaService]]
 - [[ProfesionalCard]]

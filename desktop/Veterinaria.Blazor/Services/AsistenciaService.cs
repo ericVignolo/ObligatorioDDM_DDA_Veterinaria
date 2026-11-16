@@ -62,8 +62,21 @@ public class AsistenciaService
         CargarDemo();
     }
 
-    // Veterinario de guardia (Personal.Id). Demo: la Dra. Ferreira; lo carga el Administrador en A-027.
-    public int GuardiaId { get; private set; } = 2;
+    // Veterinario de guardia (Personal.Id). Demo: la Dra. Ferreira; lo cambia el Administrador (A-027, RF-ADM-13).
+    public int GuardiaId { get; set; } = 2;
+
+    // Parámetros vigentes (RF-ADM-13). Arrancan con los valores por defecto de arriba y los edita el Administrador.
+    public int Cobertura { get; set; } = CoberturaKm;
+    public int MinutosEscalarRojo { get; set; } = MinutosParaEscalarRojo;
+    public decimal Base { get; set; } = TarifaBase;
+    public decimal PorKm { get; set; } = TarifaPorKm;
+    public decimal PorAnimalExtra { get; set; } = TarifaPorAnimalExtra;
+
+    // Costo con las tarifas vigentes.
+    public decimal Costo(string modalidad, int distanciaKm, int cantidad)
+    {
+        return modalidad == Visita ? Base + PorKm * distanciaKm + PorAnimalExtra * Math.Max(0, cantidad - 1) : 0;
+    }
 
     private void CargarDemo()
     {
@@ -189,7 +202,7 @@ public class AsistenciaService
     public List<Personal> Elegibles(SolicitudAsistencia s, DateTime ahora)
     {
         var resultado = new List<Personal>();
-        foreach (var persona in _personal.ObtenerTodos().Where(p => p.Rol == PersonalService.Veterinario))
+        foreach (var persona in _personal.ObtenerTodos().Where(p => p.Rol == PersonalService.Veterinario && p.Activo))
         {
             var ficha = persona.ProfesionalId is int profesionalId ? _profesionales.ObtenerFicha(profesionalId) : null;
             if (ficha is null || ficha.MatriculaVigenteHasta is not DateOnly hasta || hasta < DateOnly.FromDateTime(ahora))
@@ -285,14 +298,14 @@ public class AsistenciaService
             Nivel = datos.Nivel,
             Estado = Pendiente,
             FechaCreacion = ahora,
-            Costo = CalcularCosto(datos.Modalidad, datos.Modalidad == Visita ? datos.DistanciaKm : 0, cantidad)
+            Costo = this.Costo(datos.Modalidad, datos.Modalidad == Visita ? datos.DistanciaKm : 0, cantidad)
         };
         _solicitudes.Add(solicitud);
         Evento(solicitud, ahora, "Recibida", $"Por teléfono. Nivel indicado: {solicitud.Nivel}. Costo informado: $ {solicitud.Costo:N0}.", persona.Nombre);
 
-        if (solicitud.Modalidad == Visita && solicitud.DistanciaKm > CoberturaKm)
+        if (solicitud.Modalidad == Visita && solicitud.DistanciaKm > Cobertura)
         {
-            AEscalar(solicitud, ahora, $"Fuera de cobertura ({solicitud.DistanciaKm} km, máximo {CoberturaKm} km): la visita no está confirmada.");
+            AEscalar(solicitud, ahora, $"Fuera de cobertura ({solicitud.DistanciaKm} km, máximo {Cobertura} km): la visita no está confirmada.");
         }
         else if (solicitud.Nivel == Rojo)
         {
@@ -333,9 +346,9 @@ public class AsistenciaService
         var ahora = momento ?? DateTime.Now;
         foreach (var s in _solicitudes.Where(EstaActiva).ToList())
         {
-            if (s.Nivel == Rojo && s.Estado == Ofrecida && s.FechaOferta is DateTime oferta && ahora - oferta >= TimeSpan.FromMinutes(MinutosParaEscalarRojo))
+            if (s.Nivel == Rojo && s.Estado == Ofrecida && s.FechaOferta is DateTime oferta && ahora - oferta >= TimeSpan.FromMinutes(MinutosEscalarRojo))
             {
-                AEscalar(s, ahora, $"Nadie aceptó el rojo en {MinutosParaEscalarRojo} minutos: contactar al cliente.");
+                AEscalar(s, ahora, $"Nadie aceptó el rojo en {MinutosEscalarRojo} minutos: contactar al cliente.");
             }
 
             if (SinAceptar(s) && !s.ReevaluacionPedida && ahora - s.FechaCreacion >= TimeSpan.FromHours(HorasParaReevaluar))
