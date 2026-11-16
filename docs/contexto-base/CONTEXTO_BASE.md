@@ -332,7 +332,7 @@ El orden funcional sigue siendo H0–H5 de `../analisis/ALCANCE_ENTREGA.md` (no 
 
 1. Empezar la sección A en `desktop`: esqueleto Blazor y catálogo público con datos de demostración (A-001 a A-003).
 2. Seguir con registro y reserva demostrativos (A-006 a A-015), usando las decisiones cerradas el 2026-10-29.
-3. Internación especificada (`../analisis/ESPECIFICACION_INTERNACION.md`) e implementada en escritorio (A-024, pendiente de prueba). «Cobrar consulta» ya está especificado e implementado en escritorio (A-023, probado).
+3. Internación especificada (`../analisis/ESPECIFICACION_INTERNACION.md`) e implementada en escritorio (A-024, probada). «Cobrar consulta» ya está especificado e implementado en escritorio (A-023, probado).
 4. Cerrar alertas sanitarias y parámetros de asistencia antes de sus pantallas (A-021, A-026).
 5. Registrar la fecha de entrega cuando exista y aplicar el disparador del plan B.
 6. Mantener la trazabilidad RF → caso de uso → endpoint → pantalla → prueba y actualizar UML para el stack vigente.

@@ -1,6 +1,6 @@
 # Especificación: Firmar consentimiento informado (CU-CLI-10)
 
-Estado: implementada en escritorio con datos de demostración (A-025, 2026-11-16), pendiente de la prueba con F5. La advertencia común de los prototipos está en `CONTEXTO_BASE.md` §3.1.
+Estado: implementada en escritorio con datos de demostración (A-025, 2026-11-16). Probada por Eric con F5 el 2026-11-16. La advertencia común de los prototipos está en `CONTEXTO_BASE.md` §3.1.
 
 Requisitos: RF-CLI-11 (Must), RN-10, RN-18, RN-43, CU-CLI-10, HU-CLI-11, A-RC-13, CA-RC-17. Mecanismo de firma ya decidido en P-RC-06 (`FLUJO_RESERVA_CONSULTA.md`): el responsable marca la aceptación y escribe su nombre completo; se guarda versión, procedimiento, animal, fecha, canal y hash. **No** es una firma electrónica avanzada.
 

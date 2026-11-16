@@ -1,6 +1,6 @@
 # Especificación: Internar animal (CU-VET-02)
 
-Estado: implementada en escritorio con datos de demostración (A-024, 2026-11-16), pendiente de la prueba con F5. La advertencia común de los prototipos está en `CONTEXTO_BASE.md` §3.1.
+Estado: implementada en escritorio con datos de demostración (A-024, 2026-11-16). Probada por Eric con F5 el 2026-11-16. La advertencia común de los prototipos está en `CONTEXTO_BASE.md` §3.1.
 
 Requisitos: RF-VET-09, RF-VET-10, RF-VET-11, RF-CLI-09, RN-18, RN-21 a RN-25, RNF-DIS-04. Decisión de Eric del 31/10: Recepción carga lo administrativo; el Veterinario, lo clínico y el alta.
 

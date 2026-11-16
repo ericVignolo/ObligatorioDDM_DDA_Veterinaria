@@ -50,6 +50,6 @@ Rama: `eric/sesion-2026-11-16-internacion-a024` desde `desarrollo`. PR contra `d
 
 ## Qué falta
 
-- [ ] Eric: probar con F5 y mezclar el PR.
+- [x] Eric: probó A-024 y A-025 con F5 y las aprobó; PR #29 mezclado.
 - [ ] Borrar en GitHub las ramas ya integradas (el proxy de Claude no deja borrar ramas; ver el mensaje de la sesión).
 - [ ] Siguiente: A-026 panel de asistencia, A-027 configuración, A-028 comunicaciones, A-029 accesibilidad.
