@@ -19,7 +19,9 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[SesionService]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminAuditoria]]
 - [[AdminHorarios]]
+- [[AdminIndicadores]]
 - [[AdminParametros]]
 - [[AdminPersonal]]
 - [[AdminServicios]]

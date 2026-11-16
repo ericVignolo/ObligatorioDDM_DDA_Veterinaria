@@ -20,6 +20,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usado por (si cambia, revisar estos)
 - [[AdminParametros]]
 - [[AdministracionService]]
+- [[BitacoraService]]
 - [[ConsentimientoService]]
 - [[EstadoConsentimiento]]
 - [[FirmarConsentimiento]]

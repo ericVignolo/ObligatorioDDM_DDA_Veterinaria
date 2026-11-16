@@ -11,7 +11,7 @@ generado: true
 
 Cargo por una prestación atendida (A-023, RN-32, RN-33). Lo genera la firma de la consulta; el cobro es un paso aparte.
 
-**Tareas:** A-023, A-026
+**Tareas:** A-023, A-026, A-027
 
 **Requisitos y decisiones:** RN-32, RN-33, RN-58
 

@@ -24,8 +24,11 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AdminHorarios]]
+- [[AdminIndicadores]]
 - [[AgendaRecepcion]]
 - [[AsistenciaService]]
+- [[Indicadores]]
+- [[IndicadoresService]]
 - [[ProfesionalCard]]
 - [[ProfesionalDetalle]]
 - [[ProfesionalService]]

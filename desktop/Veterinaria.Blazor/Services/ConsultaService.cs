@@ -446,6 +446,17 @@ public class ConsultaService
         return new ResultadoOperacion { Exito = true, Mensaje = "" };
     }
 
+    // Para la bitácora (RF-ADM-08): todas las lecturas y las consultas firmadas, sin texto clínico.
+    public List<LecturaHistoria> Lecturas()
+    {
+        return _lecturas.ToList();
+    }
+
+    public List<Consulta> Firmadas()
+    {
+        return _consultas.Where(c => c.Estado == "Firmada").ToList();
+    }
+
     public List<LecturaHistoria> LecturasDe(int animalId)
     {
         return _lecturas.Where(l => l.AnimalId == animalId).OrderByDescending(l => l.Fecha).ToList();

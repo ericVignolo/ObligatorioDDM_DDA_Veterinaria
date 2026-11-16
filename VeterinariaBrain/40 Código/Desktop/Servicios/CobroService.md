@@ -32,7 +32,9 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AsistenciaService]]
+- [[BitacoraService]]
 - [[Cobros]]
 - [[Comprobante]]
 - [[ConsultaService]]
+- [[IndicadoresService]]
 - [[MiCuenta]]

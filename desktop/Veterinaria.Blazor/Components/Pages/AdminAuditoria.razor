@@ -1,0 +1,95 @@
+@page "/panel/admin/auditoria"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject BitacoraService Bitacora
+@inject SesionService Sesion
+
+<PageTitle>Auditoría — VITALIA</PageTitle>
+
+@* A-027 parte 2, RF-ADM-08: bitácora con filtros por usuario, entidad, acción y fechas. Sin texto clínico (RN-40). *@
+<RequierePersonal Roles="@(new[] { PersonalService.Administrador })">
+    <h1>Auditoría</h1>
+    <p class="text-muted">Configuración, lecturas de historia clínica, firmas, stock, cobros, consentimientos, internaciones y asistencias. Solo lectura: nada se modifica ni se borra.</p>
+
+    <div class="row g-2 mb-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label" for="usuarioF">Usuario</label>
+            <input id="usuarioF" class="form-control" @bind="usuario" placeholder="Nombre" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="entidadF">Entidad</label>
+            <select id="entidadF" class="form-select" @bind="entidad">
+                <option value="">Todas</option>
+                @foreach (var e in BitacoraService.Entidades)
+                {
+                    <option value="@e">@e</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="accionF">Acción</label>
+            <input id="accionF" class="form-control" @bind="accion" placeholder="Ej.: firma" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="desdeF">Desde</label>
+            <input id="desdeF" type="date" class="form-control" @bind="desde" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="hastaF">Hasta</label>
+            <input id="hastaF" type="date" class="form-control" @bind="hasta" />
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary w-100" @onclick="Filtrar">Filtrar</button>
+        </div>
+    </div>
+
+    <p class="small text-muted">@registros.Count registros. @(registros.Count > 200 ? "Se muestran los 200 más recientes." : "")</p>
+
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <caption class="visually-hidden">Bitácora de auditoría</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Entidad</th>
+                    <th scope="col">Acción</th>
+                    <th scope="col">Detalle</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in registros.Take(200))
+                {
+                    <tr>
+                        <td class="text-nowrap">@r.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@r.Usuario <span class="d-block small text-muted">@r.Rol</span></td>
+                        <td>@r.Entidad</td>
+                        <td>@r.Accion</td>
+                        <td>@r.Detalle</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <a href="panel">← Volver al panel</a>
+</RequierePersonal>
+
+@code {
+    private string usuario = "";
+    private string entidad = "";
+    private string accion = "";
+    private DateOnly? desde;
+    private DateOnly? hasta;
+    private List<RegistroAuditoria> registros = new();
+
+    protected override void OnInitialized()
+    {
+        Filtrar();
+    }
+
+    private void Filtrar()
+    {
+        registros = Bitacora.Buscar(Sesion.PersonalActual, usuario, entidad, accion, desde, hasta);
+    }
+}

@@ -9,9 +9,11 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (41)
+### Páginas (43)
 - [[Acceso]] · `/acceso`
+- [[AdminAuditoria]] · `/panel/admin/auditoria`
 - [[AdminHorarios]] · `/panel/admin/horarios`
+- [[AdminIndicadores]] · `/panel/admin/indicadores`
 - [[AdminParametros]] · `/panel/admin/parametros`
 - [[AdminPersonal]] · `/panel/admin/personal`
 - [[AdminServicios]] · `/panel/admin/servicios`
@@ -73,18 +75,20 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (19)
+### Servicios (21)
 - [[AdministracionService]]
 - [[AgendaService]]
 - [[AnimalService]]
 - [[AsistenciaService]]
 - [[AuditoriaService]]
+- [[BitacoraService]]
 - [[ClinicaService]]
 - [[CobroService]]
 - [[ConsentimientoService]]
 - [[ConsultaService]]
 - [[CuentaService]]
 - [[DocumentoLegalService]]
+- [[IndicadoresService]]
 - [[IntencionService]]
 - [[InternacionService]]
 - [[InventarioService]]
@@ -94,7 +98,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (67)
+### Modelos (68)
 - [[AdmisionFormulario]]
 - [[AjusteFormulario]]
 - [[AlertaStock]]
@@ -128,6 +132,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[EventoAsistencia]]
 - [[FirmaConsulta]]
 - [[FranjaHoraria]]
+- [[Indicadores]]
 - [[IngresoClinicoFormulario]]
 - [[IngresoLoteFormulario]]
 - [[InicioSesion]]

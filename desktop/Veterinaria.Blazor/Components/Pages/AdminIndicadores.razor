@@ -1,0 +1,132 @@
+@page "/panel/admin/indicadores"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject IndicadoresService Indicadores
+
+<PageTitle>Indicadores — VITALIA</PageTitle>
+
+@* A-027 parte 2, RF-ADM-07: ocupación de agenda, ingresos por servicio, ausencias y rotación de stock. *@
+<RequierePersonal Roles="@(new[] { PersonalService.Administrador })">
+    <h1>Indicadores de gestión</h1>
+
+    <div class="row g-2 mb-4 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label" for="diaInd">Día (ocupación)</label>
+            <input id="diaInd" type="date" class="form-control" @bind="dia" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="desdeInd">Período desde</label>
+            <input id="desdeInd" type="date" class="form-control" @bind="desde" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="hastaInd">Hasta</label>
+            <input id="hastaInd" type="date" class="form-control" @bind="hasta" />
+        </div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary" @onclick="Calcular">Actualizar</button>
+        </div>
+    </div>
+
+    <section class="mb-4" aria-labelledby="titulo-ocupacion">
+        <h2 class="h5" id="titulo-ocupacion">Ocupación de agenda · @dia.ToString("dddd d/MM")</h2>
+        <table class="table table-sm">
+            <caption class="visually-hidden">Ocupación por profesional</caption>
+            <thead><tr><th scope="col">Profesional</th><th scope="col" class="text-end">Minutos ocupados</th><th scope="col" class="text-end">Minutos de atención</th><th scope="col">Ocupación</th></tr></thead>
+            <tbody>
+                @foreach (var o in ocupacion)
+                {
+                    <tr>
+                        <th scope="row">@o.Profesional</th>
+                        <td class="text-end">@o.MinutosOcupados</td>
+                        <td class="text-end">@(o.MinutosDisponibles > 0 ? o.MinutosDisponibles.ToString() : "No atiende")</td>
+                        <td style="min-width: 10rem;">
+                            <div class="progress" role="progressbar" aria-label="Ocupación de @o.Profesional" aria-valuenow="@o.Porcentaje" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" style="width: @(o.Porcentaje)%"></div>
+                            </div>
+                            <span class="small">@o.Porcentaje %</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+
+    <div class="row">
+        <section class="col-md-6 mb-4" aria-labelledby="titulo-ingresos">
+            <h2 class="h5" id="titulo-ingresos">Ingresos por servicio</h2>
+            @if (ingresos.Count == 0)
+            {
+                <p class="text-muted small">Sin cobros en el período.</p>
+            }
+            else
+            {
+                <table class="table table-sm">
+                    <caption class="visually-hidden">Cobrado por servicio sin comprobantes anulados</caption>
+                    <thead><tr><th scope="col">Servicio</th><th scope="col" class="text-end">Cobros</th><th scope="col" class="text-end">Total</th></tr></thead>
+                    <tbody>
+                        @foreach (var i in ingresos)
+                        {
+                            <tr><th scope="row">@i.Servicio</th><td class="text-end">@i.Cobros</td><td class="text-end">$ @i.Total.ToString("N0")</td></tr>
+                        }
+                        <tr class="fw-bold"><th scope="row">Total</th><td class="text-end">@ingresos.Sum(i => i.Cobros)</td><td class="text-end">$ @ingresos.Sum(i => i.Total).ToString("N0")</td></tr>
+                    </tbody>
+                </table>
+            }
+        </section>
+
+        <section class="col-md-6 mb-4" aria-labelledby="titulo-ausencias">
+            <h2 class="h5" id="titulo-ausencias">Ausencias</h2>
+            <dl class="row small">
+                <dt class="col-7">Turnos del período</dt><dd class="col-5">@ausencias.Turnos</dd>
+                <dt class="col-7">Atendidos</dt><dd class="col-5">@ausencias.Atendidos</dd>
+                <dt class="col-7">Ausentes sin aviso</dt><dd class="col-5">@ausencias.Ausentes</dd>
+                <dt class="col-7">Cancelados</dt><dd class="col-5">@ausencias.Cancelados</dd>
+                <dt class="col-7">Tasa de ausencias</dt><dd class="col-5">@ausencias.PorcentajeAusencias %</dd>
+            </dl>
+        </section>
+    </div>
+
+    <section class="mb-4" aria-labelledby="titulo-rotacion">
+        <h2 class="h5" id="titulo-rotacion">Rotación de stock (últimos 30 días)</h2>
+        <table class="table table-sm">
+            <caption class="visually-hidden">Consumo y días de cobertura por artículo</caption>
+            <thead><tr><th scope="col">Artículo</th><th scope="col" class="text-end">Consumido</th><th scope="col" class="text-end">Stock</th><th scope="col" class="text-end">Alcanza para</th></tr></thead>
+            <tbody>
+                @foreach (var r in rotacion)
+                {
+                    <tr>
+                        <th scope="row">@r.Articulo</th>
+                        <td class="text-end">@r.Consumo @r.Unidad</td>
+                        <td class="text-end">@r.Stock</td>
+                        <td class="text-end">@(r.DiasCobertura is null ? "Sin consumo" : $"{r.DiasCobertura} días")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+
+    <a href="panel">← Volver al panel</a>
+</RequierePersonal>
+
+@code {
+    private DateOnly dia = DateOnly.FromDateTime(DateTime.Today);
+    private DateOnly desde = DateOnly.FromDateTime(DateTime.Today.AddDays(-30));
+    private DateOnly hasta = DateOnly.FromDateTime(DateTime.Today);
+    private List<OcupacionProfesional> ocupacion = new();
+    private List<IngresoServicio> ingresos = new();
+    private ResumenAusencias ausencias = new();
+    private List<RotacionArticulo> rotacion = new();
+
+    protected override void OnInitialized()
+    {
+        Calcular();
+    }
+
+    private void Calcular()
+    {
+        ocupacion = Indicadores.Ocupacion(dia);
+        ingresos = Indicadores.IngresosPorServicio(desde, hasta);
+        ausencias = Indicadores.Ausencias(desde, hasta);
+        rotacion = Indicadores.Rotacion(30);
+    }
+}

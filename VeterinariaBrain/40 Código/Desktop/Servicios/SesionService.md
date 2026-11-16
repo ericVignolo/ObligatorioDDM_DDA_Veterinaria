@@ -27,6 +27,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Acceso]]
+- [[AdminAuditoria]]
 - [[AdminHorarios]]
 - [[AdminParametros]]
 - [[AdminPersonal]]

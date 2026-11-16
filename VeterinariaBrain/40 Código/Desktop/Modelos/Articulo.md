@@ -18,8 +18,11 @@ Artículo del inventario: una vacuna, un antiparasitario o un insumo de la atenc
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminIndicadores]]
 - [[AlertaStock]]
 - [[AtencionConsulta]]
 - [[ConsultaService]]
+- [[Indicadores]]
+- [[IndicadoresService]]
 - [[Inventario]]
 - [[InventarioService]]

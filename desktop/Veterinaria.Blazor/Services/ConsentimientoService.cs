@@ -66,6 +66,12 @@ public class ConsentimientoService
     }
 
     // Respuestas de un turno, de la más reciente a la más antigua (historial: nada se borra).
+    // Para la bitácora (RF-ADM-08).
+    public List<Consentimiento> Respuestas()
+    {
+        return _respuestas.ToList();
+    }
+
     public List<Consentimiento> RespuestasDe(int turnoId)
     {
         return _respuestas.Where(r => r.TurnoId == turnoId).OrderByDescending(r => r.Id).ToList();
