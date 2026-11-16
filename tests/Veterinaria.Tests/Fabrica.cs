@@ -15,6 +15,7 @@ public class Fabrica
     public SesionService Sesion { get; }
     public AgendaService Agenda { get; }
     public InventarioService Inventario { get; } = new();
+    public CobroService Cobros { get; }
     public ConsultaService Consultas { get; }
     public VacunaService Vacunas { get; }
 
@@ -23,7 +24,8 @@ public class Fabrica
         Cuentas = new CuentaService(Legales);
         Sesion = new SesionService(Cuentas, Personal);
         Agenda = new AgendaService(Profesionales, Prestaciones, Animales);
-        Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario);
+        Cobros = new CobroService(Agenda, Prestaciones);
+        Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario, Cobros);
         Vacunas = new VacunaService(Consultas, Animales, Inventario);
     }
 

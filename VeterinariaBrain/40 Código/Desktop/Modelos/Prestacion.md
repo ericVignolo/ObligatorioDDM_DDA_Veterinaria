@@ -24,3 +24,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Profesional]]
 - [[Reservar]]
 - [[Servicios]]
+
+## En las otras aplicaciones
+- [[Prestacion (API)]]

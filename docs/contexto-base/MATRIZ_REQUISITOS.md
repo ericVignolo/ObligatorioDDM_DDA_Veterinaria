@@ -36,7 +36,7 @@ Esta matriz conserva los requerimientos recuperados del documento original. Las 
 | RF-CLI-09 | Seguir en tiempo real las novedades publicadas durante la internación de su mascota. | Must | 3 |
 | RF-CLI-10 | Recibir por correo el resumen clínico al finalizar cada consulta u operación. | Must | 3 |
 | RF-CLI-11 | Leer y firmar digitalmente el consentimiento informado antes de una cirugía o procedimiento con anestesia. | Must | 4 |
-| RF-CLI-12 | Consultar su cuenta corriente, ver comprobantes y abonar en línea. | Should | 4 |
+| RF-CLI-12 | Consultar su cuenta corriente, ver comprobantes y abonar en línea. *(2026-11-16: sin «abonar en línea»; el pago es en Recepción, DT-ALC-02.)* | Should | 4 |
 | RF-CLI-13 | Autorizar a un segundo responsable sobre una mascota o transferir la titularidad. | Should | 2 |
 | RF-CLI-14 | Registrar el peso de la mascota en casa y ver la curva de evolución junto a los pesos medidos en clínica. | Could | 4 |
 | RF-CLI-15 | Solicitar la renovación de un tratamiento crónico sin agendar consulta presencial. | Could | 4 |

@@ -20,6 +20,7 @@ builder.Services.AddScoped<IntencionService>();
 builder.Services.AddScoped<AnimalService>();
 builder.Services.AddScoped<AgendaService>();
 builder.Services.AddScoped<InventarioService>();
+builder.Services.AddScoped<CobroService>();
 builder.Services.AddScoped<ConsultaService>();
 builder.Services.AddScoped<VacunaService>();
 

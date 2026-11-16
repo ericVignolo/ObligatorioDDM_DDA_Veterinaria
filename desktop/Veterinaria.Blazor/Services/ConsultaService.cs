@@ -11,24 +11,27 @@ namespace Veterinaria.Blazor.Services;
 // con control de versión, clave idempotente, auditoría protegida, consumos de stock y cargos.
 // Los insumos y las dosis de vacunas se apartan del inventario mientras la consulta está abierta y se
 // descuentan al firmar, en el mismo paso (RF-VET-06, RNF-CON-03, A-022).
-// Fuera de esta versión: adjuntos (RF-VET-03) y cargos (cobro de Recepción).
+// Al firmar se genera el cargo de la prestación, que Recepción cobra después (A-023, RN-32).
+// Fuera de esta versión: adjuntos (RF-VET-03).
 public class ConsultaService
 {
     private readonly AgendaService _agenda;
     private readonly PersonalService _personal;
     private readonly ProfesionalService _profesionales;
     private readonly InventarioService _inventario;
+    private readonly CobroService _cobros;
     private readonly List<Consulta> _consultas = new();
     private readonly List<LecturaHistoria> _lecturas = new();
     private int _ultimoId;
     private int _ultimaEnmiendaId;
 
-    public ConsultaService(AgendaService agenda, PersonalService personal, ProfesionalService profesionales, InventarioService inventario)
+    public ConsultaService(AgendaService agenda, PersonalService personal, ProfesionalService profesionales, InventarioService inventario, CobroService cobros)
     {
         _agenda = agenda;
         _personal = personal;
         _profesionales = profesionales;
         _inventario = inventario;
+        _cobros = cobros;
         CargarHistoriaDemo();
     }
 
@@ -249,8 +252,9 @@ public class ConsultaService
         consulta.HashContenido = Huella(Contenido(consulta));
         _agenda.Finalizar(consulta.TurnoId);
         _inventario.ConfirmarConsumo(consulta.Id, veterinario);
+        _cobros.GenerarCargo(consulta);
 
-        return new ResultadoOperacion { Exito = true, Mensaje = "Consulta firmada y turno finalizado. El resumen al cliente y el cobro llegan con la API." };
+        return new ResultadoOperacion { Exito = true, Mensaje = "Consulta firmada y turno finalizado. El cargo quedó pendiente de cobro en Recepción; el resumen al cliente llega con la API." };
     }
 
     // P-RC-04: sin atención ni consumos, el autor cancela con motivo. El borrador se conserva como evidencia.
