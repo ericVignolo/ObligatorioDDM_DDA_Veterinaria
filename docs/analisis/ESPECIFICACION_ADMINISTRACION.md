@@ -1,6 +1,6 @@
 # Especificación: Configuración y administración (A-027)
 
-Estado: parte 1 implementada en escritorio con datos de demostración (2026-11-16), pendiente de la prueba con F5. Parte 2 (bitácora de auditoría completa e indicadores, RF-ADM-07 y RF-ADM-08) en el próximo PR. La advertencia común de los prototipos está en `CONTEXTO_BASE.md` §3.1.
+Estado: parte 1 implementada en escritorio con datos de demostración y aprobada por Eric (2026-11-16). Parte 2 (bitácora de auditoría completa e indicadores, RF-ADM-07 y RF-ADM-08) en el próximo PR. La advertencia común de los prototipos está en `CONTEXTO_BASE.md` §3.1.
 
 Requisitos: RF-ADM-01, RF-ADM-02, RF-ADM-03, RF-ADM-04, RF-ADM-10, RF-ADM-13, RN-33, RN-34 (no aplica), K-07 (consentimiento).
 

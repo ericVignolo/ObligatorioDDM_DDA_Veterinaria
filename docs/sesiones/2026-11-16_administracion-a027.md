@@ -33,6 +33,6 @@ Rama: `eric/sesion-2026-11-16-administracion-a027` desde `desarrollo`. PR contra
 
 ## Qué falta
 
-- [ ] Eric: probar con F5 y mezclar el PR.
+- [x] Eric: aprobó la parte 1 y pidió mezclar; PR #31 mezclado.
 - [ ] A-027 parte 2: pantalla de auditoría (RF-ADM-08) que junte la bitácora con lecturas de historia, movimientos de stock, cobros y asistencias, e indicadores (RF-ADM-07).
 - [ ] A-028 comunicaciones y derechos, A-029 accesibilidad.
