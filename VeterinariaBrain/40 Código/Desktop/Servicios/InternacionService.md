@@ -13,7 +13,7 @@ Internaciones de demostración en memoria (A-024, RF-VET-09 a RF-VET-11, RF-CLI-
 
 **Tareas:** A-024, A-027
 
-**Requisitos y decisiones:** RF-ADM-03, RF-CLI-09, RF-VET-09, RF-VET-10, RF-VET-11, RN-18, RN-21, RN-22, RN-23, RN-24, RN-25, RNF-DIS-04
+**Requisitos y decisiones:** RF-ADM-03, RF-ADM-08, RF-CLI-09, RF-VET-09, RF-VET-10, RF-VET-11, RN-18, RN-21, RN-22, RN-23, RN-24, RN-25, RNF-DIS-04
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -34,5 +34,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AdminParametros]]
 - [[AdministracionService]]
 - [[AnimalDetalle]]
+- [[BitacoraService]]
 - [[InternacionDetalle]]
 - [[Internaciones]]

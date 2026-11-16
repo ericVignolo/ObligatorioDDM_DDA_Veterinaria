@@ -26,6 +26,8 @@ builder.Services.AddScoped<InternacionService>();
 builder.Services.AddScoped<AsistenciaService>();
 builder.Services.AddScoped<AuditoriaService>();
 builder.Services.AddScoped<AdministracionService>();
+builder.Services.AddScoped<BitacoraService>();
+builder.Services.AddScoped<IndicadoresService>();
 builder.Services.AddScoped<ConsultaService>();
 builder.Services.AddScoped<VacunaService>();
 

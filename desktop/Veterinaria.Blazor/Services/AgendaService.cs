@@ -105,6 +105,12 @@ public class AgendaService
         return _feriados.Remove(fecha);
     }
 
+    // Todos los turnos de un rango, en cualquier estado (indicadores, RF-ADM-07).
+    public List<Turno> TurnosEntre(DateOnly desde, DateOnly hasta)
+    {
+        return _turnos.Where(t => DateOnly.FromDateTime(t.Inicio) >= desde && DateOnly.FromDateTime(t.Inicio) <= hasta).ToList();
+    }
+
     // Turnos que siguen activos (Confirmado o En espera) en un rango, de un profesional o de todos.
     public List<Turno> TurnosActivosEntre(DateOnly desde, DateOnly hasta, int? profesionalId = null)
     {

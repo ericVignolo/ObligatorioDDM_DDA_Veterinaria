@@ -18,6 +18,7 @@ Corrección de una consulta firmada (A-020, RF-VET-13, RN-12). El original nunca
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[BitacoraService]]
 - [[Consulta]]
 - [[ConsultaService]]
 - [[HistoriaClinica]]

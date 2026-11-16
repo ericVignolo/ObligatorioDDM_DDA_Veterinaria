@@ -23,6 +23,8 @@ public class Fabrica
     public AsistenciaService Asistencias { get; }
     public AuditoriaService Auditoria { get; } = new();
     public AdministracionService Administracion { get; }
+    public BitacoraService Bitacora { get; }
+    public IndicadoresService Indicadores { get; }
 
     public Fabrica()
     {
@@ -36,6 +38,8 @@ public class Fabrica
         Internaciones = new InternacionService(Animales);
         Asistencias = new AsistenciaService(Personal, Profesionales, Animales, Cobros);
         Administracion = new AdministracionService(Prestaciones, Personal, Profesionales, Agenda, Internaciones, Asistencias, Inventario, Vacunas, Consentimientos, Auditoria);
+        Bitacora = new BitacoraService(Auditoria, Consultas, Inventario, Cobros, Consentimientos, Internaciones, Asistencias, Personal, Cuentas);
+        Indicadores = new IndicadoresService(Agenda, Profesionales, Cobros, Inventario);
     }
 
     public static RegistroCliente RegistroValido(string correo = "cliente@prueba.uy", string cedula = "1.234.567-2")

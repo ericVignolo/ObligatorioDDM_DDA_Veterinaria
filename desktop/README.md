@@ -179,6 +179,8 @@ flowchart LR
 | `/panel/admin/personal` | `Pages/AdminPersonal.razor` | A-027 | AdministracionService, PersonalService, ProfesionalService, SesionService · Administrador |
 | `/panel/admin/horarios` | `Pages/AdminHorarios.razor` | A-027 | AdministracionService, ProfesionalService, AgendaService, SesionService · Administrador |
 | `/panel/admin/parametros` | `Pages/AdminParametros.razor` | A-027 | AdministracionService, AsistenciaService, InternacionService, InventarioService, VacunaService, ConsentimientoService, PersonalService, SesionService · Administrador |
+| `/panel/admin/auditoria` | `Pages/AdminAuditoria.razor` | A-027 | BitacoraService, SesionService · Administrador |
+| `/panel/admin/indicadores` | `Pages/AdminIndicadores.razor` | A-027 | IndicadoresService · Administrador |
 | `/panel/historia/{AnimalId}` | `Pages/HistoriaClinica.razor` | A-020, A-021 | AnimalService, CuentaService, ConsultaService, SesionService · `RegistroClinico`, `CarnetSanitario` |
 | `/animales/{Id}/historia` | `Pages/HistoriaAnimal.razor` | A-020 | AnimalService, ConsultaService, SesionService · `RegistroClinico`, `RequiereSesion` |
 | `/turnos` | `Pages/Turnos.razor` | A-015, A-016 | AgendaService, AnimalService, PrestacionService, ProfesionalService, ClinicaService, SesionService |
@@ -203,6 +205,8 @@ flowchart LR
 | `AsistenciaService` | Solicitudes de asistencia: cola rojo → verde por antigüedad, elegibilidad por especie, matrícula, guardia y jornada, cobertura 30 km, rojo a la guardia y a Recepción a los 10 min, reevaluación a las 24 h, empeoramiento, cambio de nivel con motivo, traslado y cargo al finalizar (A-026, RN-46 a RN-59) | PersonalService, ProfesionalService, AnimalService, CobroService | API de asistencia con tarea programada, mapa y notificaciones |
 | `AdministracionService` | Acciones del Administrador con permiso, validación y registro en la bitácora: servicios y tarifas con vigencia (RN-33), cuentas, roles y bloqueo, ausencias y feriados sin pisar turnos, boxes, guardia, tarifas de asistencia, avisos, stock mínimo y versiones del consentimiento (A-027) | Prestacion, Personal, Profesional, Agenda, Internacion, Asistencia, Inventario, Vacuna, Consentimiento y Auditoria | Endpoints de administración de la API |
 | `AuditoriaService` | Bitácora de auditoría con filtros por usuario, entidad, acción y fechas (RF-ADM-08) | — | Tabla Auditoria de la API |
+| `BitacoraService` | Bitácora unificada de solo lectura: configuración, lecturas de historia, firmas, stock, cobros, consentimientos, internación y asistencia, sin texto clínico (RF-ADM-08, RN-40) | Auditoria, Consulta, Inventario, Cobro, Consentimiento, Internacion, Asistencia, Personal, Cuenta | Consulta de la tabla Auditoria |
+| `IndicadoresService` | Ocupación de agenda, ingresos por servicio, ausencias y rotación de stock (RF-ADM-07) | Agenda, Profesional, Cobro, Inventario | Consultas agregadas de la API |
 | `IntencionService` | Servicio elegido antes de ingresar; se retoma hasta 30 min | SesionService | Igual, en el cliente |
 
 > Todos los servicios son `AddScoped`: en Blazor Server duran lo que dura la pestaña. Cuentas y sesión se pierden al recargar; es lo esperado hasta tener la API.

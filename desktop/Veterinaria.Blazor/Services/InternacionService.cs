@@ -150,6 +150,12 @@ public class InternacionService
             .ToList();
     }
 
+    // Para la bitácora (RF-ADM-08): todas, incluidas las anuladas.
+    public List<Internacion> Todas()
+    {
+        return _internaciones.ToList();
+    }
+
     public List<Internacion> Altas()
     {
         return _internaciones.Where(i => i.Estado == Alta).OrderByDescending(i => i.FechaAlta).ToList();

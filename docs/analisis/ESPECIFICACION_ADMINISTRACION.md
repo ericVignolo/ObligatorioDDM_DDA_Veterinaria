@@ -1,6 +1,6 @@
 # Especificación: Configuración y administración (A-027)
 
-Estado: parte 1 implementada en escritorio con datos de demostración y aprobada por Eric (2026-11-16). Parte 2 (bitácora de auditoría completa e indicadores, RF-ADM-07 y RF-ADM-08) en el próximo PR. La advertencia común de los prototipos está en `CONTEXTO_BASE.md` §3.1.
+Estado: parte 1 implementada en escritorio con datos de demostración y aprobada por Eric (2026-11-16). Parte 2 (bitácora de auditoría e indicadores, RF-ADM-07 y RF-ADM-08) implementada el 2026-11-16, pendiente de la prueba con F5. La advertencia común de los prototipos está en `CONTEXTO_BASE.md` §3.1.
 
 Requisitos: RF-ADM-01, RF-ADM-02, RF-ADM-03, RF-ADM-04, RF-ADM-10, RF-ADM-13, RN-33, RN-34 (no aplica), K-07 (consentimiento).
 
@@ -52,6 +52,24 @@ Requisitos: RF-ADM-01, RF-ADM-02, RF-ADM-03, RF-ADM-04, RF-ADM-10, RF-ADM-13, RN
 | PA-06 | Consentimiento: versión nueva distinta de la vigente y texto obligatorio (K-07, K-13). |
 | PA-07 | Las reglas de la agenda (24 h, 2 h, 60 días, 15 min) se muestran pero no se editan en la demostración. |
 
+## Auditoría (RF-ADM-08, RN-40) — `/panel/admin/auditoria`
+
+| Id | Regla |
+|---|---|
+| AU-01 | Solo un Administrador activo consulta la bitácora; para otro rol o sin sesión devuelve una lista vacía. |
+| AU-02 | Junta: cambios de configuración, lecturas de historia, consultas y enmiendas firmadas, movimientos de stock, cobros y notas de crédito, consentimientos, admisiones, ingresos y altas de internación y eventos de asistencia. Entidades: Configuración, Historia clínica, Inventario, Cobros, Consentimiento, Internación, Asistencia. |
+| AU-03 | Nunca copia texto clínico (motivo, diagnóstico, síntomas, novedades): solo números de consulta, animal, solicitud o comprobante, y el motivo de acceso de las lecturas. |
+| AU-04 | Filtros combinables: usuario (contiene, sin mayúsculas), entidad (exacta), acción (contiene, sin mayúsculas), desde y hasta (inclusive). Orden: lo más reciente primero. |
+
+## Indicadores (RF-ADM-07) — `/panel/admin/indicadores`
+
+| Id | Regla |
+|---|---|
+| IN-01 | Ocupación del día por profesional publicado: minutos con turnos activos sobre minutos de atención (sin descansos). 0 % si ese día no atiende, está ausente o es feriado. |
+| IN-02 | Ingresos por servicio en un período: suma de comprobantes **no anulados**, agrupada por la descripción del cargo, de mayor a menor. |
+| IN-03 | Ausencias en un período: turnos totales, finalizados, ausentes y cancelados; tasa = ausentes / (finalizados + ausentes), redondeada; 0 si no hay. |
+| IN-04 | Rotación: consumos por consultas en los últimos N días por artículo, stock actual y días que alcanza (stock ÷ consumo diario, hacia abajo); sin consumo, «sin dato». |
+
 ## Aclaraciones (preguntas del agente probador)
 
 - La consulta de la bitácora no cambia nada y la usa la pantalla del Administrador; en la API exige el rol.
@@ -64,4 +82,4 @@ Requisitos: RF-ADM-01, RF-ADM-02, RF-ADM-03, RF-ADM-04, RF-ADM-10, RF-ADM-13, RN
 
 ## Pruebas
 
-`tests/Veterinaria.Tests/AdministracionTests.cs` y `tests/Veterinaria.Tests/CajaNegra/AdministracionCajaNegraTests.cs`.
+`tests/Veterinaria.Tests/AdministracionTests.cs`, `AuditoriaEIndicadoresTests.cs` y en `CajaNegra/` las de administración y de auditoría e indicadores.

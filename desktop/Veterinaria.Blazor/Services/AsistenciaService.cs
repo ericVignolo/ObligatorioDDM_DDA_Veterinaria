@@ -168,6 +168,12 @@ public class AsistenciaService
         return _solicitudes.FirstOrDefault(s => s.Id == id);
     }
 
+    // Para la bitácora (RF-ADM-08).
+    public List<EventoAsistencia> TodosLosEventos()
+    {
+        return _eventos.ToList();
+    }
+
     public List<EventoAsistencia> Eventos(int solicitudId)
     {
         return _eventos.Where(e => e.SolicitudId == solicitudId).OrderByDescending(e => e.Id).ToList();
