@@ -29,6 +29,8 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AgendaRecepcion]]
+- [[AsistenciaDetalle]]
+- [[Asistencias]]
 - [[AtencionConsulta]]
 - [[Cobros]]
 - [[Comprobante]]

@@ -20,6 +20,7 @@ public class Fabrica
     public ConsultaService Consultas { get; }
     public VacunaService Vacunas { get; }
     public InternacionService Internaciones { get; }
+    public AsistenciaService Asistencias { get; }
 
     public Fabrica()
     {
@@ -31,6 +32,7 @@ public class Fabrica
         Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario, Cobros, Consentimientos);
         Vacunas = new VacunaService(Consultas, Animales, Inventario);
         Internaciones = new InternacionService(Animales);
+        Asistencias = new AsistenciaService(Personal, Profesionales, Animales, Cobros);
     }
 
     public static RegistroCliente RegistroValido(string correo = "cliente@prueba.uy", string cedula = "1.234.567-2")

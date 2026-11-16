@@ -21,5 +21,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Personal]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AsistenciaDetalle]]
+- [[AsistenciaService]]
 - [[ConsultaService]]
 - [[SesionService]]

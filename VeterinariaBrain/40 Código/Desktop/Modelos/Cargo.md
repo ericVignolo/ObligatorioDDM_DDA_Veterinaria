@@ -11,13 +11,14 @@ generado: true
 
 Cargo por una prestación atendida (A-023, RN-32, RN-33). Lo genera la firma de la consulta; el cobro es un paso aparte.
 
-**Tareas:** A-023
+**Tareas:** A-023, A-026
 
-**Requisitos y decisiones:** RN-32, RN-33
+**Requisitos y decisiones:** RN-32, RN-33, RN-58
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AsistenciaService]]
 - [[CobroService]]
 - [[Cobros]]
 - [[Comprobante]]

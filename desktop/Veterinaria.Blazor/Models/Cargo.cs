@@ -7,6 +7,9 @@ public class Cargo
 {
     public int Id { get; set; }
     public int ConsultaId { get; set; }
+
+    // Si el cargo es de una asistencia a domicilio (A-026, RN-58); 0 si es de una consulta.
+    public int AsistenciaId { get; set; }
     public int TurnoId { get; set; }
     public int ClienteId { get; set; }
     public int AnimalId { get; set; }

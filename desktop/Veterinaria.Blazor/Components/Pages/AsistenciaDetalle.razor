@@ -1,0 +1,356 @@
+@page "/panel/asistencia/{Id:int}"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AsistenciaService Servicio
+@inject CuentaService Cuentas
+@inject AnimalService Animales
+@inject SesionService Sesion
+@inject PersonalService Equipo
+
+<PageTitle>Asistencia n.º @Id — VITALIA</PageTitle>
+
+<RequierePersonal>
+    @if (solicitud is null)
+    {
+        <div class="alert alert-warning">Esa solicitud no existe.</div>
+    }
+    else
+    {
+        <h1>Asistencia n.º @solicitud.Id</h1>
+        <p class="lead"><NivelAsistencia Nivel="@solicitud.Nivel" ConDescripcion="true" /> · @solicitud.Estado</p>
+
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+        }
+
+        @if (solicitud.Estado == AsistenciaService.Coordinacion)
+        {
+            <div class="alert alert-danger" role="alert">
+                <strong>Requiere coordinación de Recepción:</strong> @solicitud.MotivoCoordinacion
+                Contactá al cliente para coordinar guardia, traslado, punto de encuentro u otra alternativa (RN-55).
+            </div>
+        }
+        @if (solicitud.ReevaluacionPedida && AsistenciaService.SinAceptar(solicitud))
+        {
+            <div class="alert alert-info">Pasaron 24 horas: preguntale al cliente si el estado se mantuvo o empeoró. Sin respuesta, no se cierra ni baja el nivel (RN-50).</div>
+        }
+
+        <div class="row">
+            <section class="col-md-6 mb-3" aria-labelledby="titulo-datos">
+                <h2 class="h5" id="titulo-datos">Solicitud</h2>
+                <dl class="row small mb-0">
+                    <dt class="col-sm-4">Cliente</dt>
+                    <dd class="col-sm-8">@NombreCliente() · @solicitud.TelefonoContacto</dd>
+                    <dt class="col-sm-4">Animal</dt>
+                    <dd class="col-sm-8">@(solicitud.AnimalId == 0 ? "No registrado" : Animales.ObtenerParaPersonal(solicitud.AnimalId)?.Nombre) · @solicitud.Especie · @solicitud.Cantidad</dd>
+                    <dt class="col-sm-4">Síntomas</dt>
+                    <dd class="col-sm-8">@solicitud.Sintomas</dd>
+                    <dt class="col-sm-4">Nivel del cliente</dt>
+                    <dd class="col-sm-8">@solicitud.NivelCliente</dd>
+                    <dt class="col-sm-4">Modalidad</dt>
+                    <dd class="col-sm-8">@solicitud.Modalidad</dd>
+                    @if (solicitud.Modalidad == AsistenciaService.Visita)
+                    {
+                        <dt class="col-sm-4">Dirección</dt>
+                        <dd class="col-sm-8">@solicitud.Direccion @(string.IsNullOrEmpty(solicitud.Referencias) ? "" : $"({solicitud.Referencias})") · @solicitud.DistanciaKm km</dd>
+                    }
+                    <dt class="col-sm-4">Costo informado</dt>
+                    <dd class="col-sm-8">$ @solicitud.Costo.ToString("N0")</dd>
+                    <dt class="col-sm-4">Recibida</dt>
+                    <dd class="col-sm-8">@solicitud.FechaCreacion.ToString("dd/MM HH:mm") (@solicitud.Canal)</dd>
+                </dl>
+            </section>
+            <section class="col-md-6 mb-3" aria-labelledby="titulo-asignacion">
+                <h2 class="h5" id="titulo-asignacion">Asignación</h2>
+                @if (solicitud.VeterinarioId != 0)
+                {
+                    <p class="small mb-1">Aceptó <strong>@solicitud.VeterinarioNombre</strong> el @solicitud.FechaAceptacion?.ToString("dd/MM HH:mm").</p>
+                    @if (solicitud.EtaMinutos is not null)
+                    {
+                        <p class="small mb-1">Llegada estimada: <strong>@solicitud.EtaMinutos min</strong> (estimación, RN-53).</p>
+                    }
+                    @if (AsistenciaService.CompartiendoUbicacion(solicitud))
+                    {
+                        <p class="small mb-1">El cliente ve la ubicación del veterinario hasta la llegada (RN-57).</p>
+                    }
+                }
+                else if (solicitud.Estado == AsistenciaService.Ofrecida)
+                {
+                    <p class="small mb-1">Ofrecida a: @string.Join(", ", solicitud.OfrecidaA.Select(NombrePersonal)). Sin estimación de llegada hasta que alguien acepte.</p>
+                }
+                else
+                {
+                    <p class="small mb-1">Sin veterinario todavía.</p>
+                }
+                @if (!string.IsNullOrEmpty(solicitud.Resultado))
+                {
+                    <p class="small mb-1"><strong>Resultado:</strong> @solicitud.Resultado</p>
+                }
+                @if (!string.IsNullOrEmpty(solicitud.MotivoCierre))
+                {
+                    <p class="small mb-1"><strong>Cierre:</strong> @solicitud.MotivoCierre</p>
+                }
+            </section>
+        </div>
+
+        @* Recepción *@
+        @if (EsRecepcion && AsistenciaService.EstaActiva(solicitud))
+        {
+            <section class="mb-4 border rounded p-3" aria-labelledby="titulo-recepcion">
+                <h2 class="h5" id="titulo-recepcion">Recepción</h2>
+
+                @if (solicitud.Estado == AsistenciaService.Pendiente || solicitud.Estado == AsistenciaService.Coordinacion)
+                {
+                    <div class="mb-3">
+                        <label class="form-label" for="vetAsignar">Ofrecer a un veterinario elegible</label>
+                        @if (elegibles.Count == 0)
+                        {
+                            <p class="small text-danger mb-0">No hay veterinarios elegibles para @solicitud.Especie @(solicitud.Nivel == AsistenciaService.Rojo ? "de guardia o en jornada" : ""). Coordiná otra alternativa con el cliente.</p>
+                        }
+                        else
+                        {
+                            <div class="input-group" style="max-width: 32rem;">
+                                <select id="vetAsignar" class="form-select" @bind="veterinarioElegido">
+                                    <option value="0">Elegí…</option>
+                                    @foreach (var vet in elegibles)
+                                    {
+                                        <option value="@vet.Id">@(vet.Nombre + (vet.Id == Servicio.GuardiaId ? " (guardia)" : ""))</option>
+                                    }
+                                </select>
+                                <button type="button" class="btn btn-primary" @onclick="Asignar">Ofrecer</button>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <EditForm Model="empeoramiento" OnValidSubmit="Empeoro" FormName="empeoramiento" class="mb-3">
+                    <DataAnnotationsValidator />
+                    <p class="small fw-semibold mb-1">El cliente llamó para avisar que empeoró (RN-51)</p>
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <label class="visually-hidden" for="nivelEmp">Nivel</label>
+                            <InputSelect id="nivelEmp" class="form-select" @bind-Value="empeoramiento.Nivel">
+                                <option value="">Nivel…</option>
+                                @foreach (var nivel in AsistenciaService.Niveles.Where(n => AsistenciaService.Prioridad(n) <= AsistenciaService.Prioridad(solicitud.Nivel)))
+                                {
+                                    <option value="@nivel">@nivel</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="col-md-7">
+                            <label class="visually-hidden" for="motivoEmp">Qué cambió</label>
+                            <InputText id="motivoEmp" class="form-control" maxlength="300" placeholder="Qué cambió" @bind-Value="empeoramiento.Motivo" />
+                        </div>
+                        <div class="col-md-2"><button type="submit" class="btn btn-outline-danger w-100">Registrar</button></div>
+                    </div>
+                    <ValidationSummary />
+                </EditForm>
+
+                @if (AsistenciaService.SinAceptar(solicitud) || solicitud.Estado == AsistenciaService.Aceptada)
+                {
+                    <p class="small fw-semibold mb-1">Cerrar sin atención</p>
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <label class="visually-hidden" for="tipoCierre">Cómo se cierra</label>
+                            <select id="tipoCierre" class="form-select" @bind="tipoCierre">
+                                <option value="@AsistenciaService.CanceladaClinica">Cancelada por la clínica</option>
+                                <option value="@AsistenciaService.NoConcretada">No concretada</option>
+                            </select>
+                        </div>
+                        <div class="col-md-7">
+                            <label class="visually-hidden" for="motivoCierre">Motivo y contacto</label>
+                            <input id="motivoCierre" class="form-control" maxlength="300" placeholder="Motivo y contacto con el cliente" @bind="motivoCierre" />
+                        </div>
+                        <div class="col-md-2"><button type="button" class="btn btn-outline-secondary w-100" @onclick="Cerrar">Cerrar</button></div>
+                    </div>
+                }
+            </section>
+        }
+
+        @* Veterinario *@
+        @if (EsVeterinario && AsistenciaService.EstaActiva(solicitud))
+        {
+            <section class="mb-4 border rounded p-3" aria-labelledby="titulo-vet">
+                <h2 class="h5" id="titulo-vet">Veterinario</h2>
+
+                @if (solicitud.Estado == AsistenciaService.Ofrecida && solicitud.OfrecidaA.Contains(MiId))
+                {
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-success" @onclick="Aceptar">Aceptar</button>
+                        <div class="input-group mt-2" style="max-width: 32rem;">
+                            <label class="visually-hidden" for="motivoRechazo">Motivo del rechazo</label>
+                            <input id="motivoRechazo" class="form-control" maxlength="200" placeholder="Motivo del rechazo" @bind="motivoRechazo" />
+                            <button type="button" class="btn btn-outline-danger" @onclick="Rechazar">Rechazar</button>
+                        </div>
+                    </div>
+                }
+
+                @if (solicitud.VeterinarioId == MiId)
+                {
+                    var siguiente = AsistenciaService.SiguienteEstado(solicitud);
+                    if (siguiente is not null)
+                    {
+                        <button type="button" class="btn btn-primary mb-3" @onclick="Avanzar">Pasar a «@siguiente»</button>
+                    }
+                    if (solicitud.Estado == AsistenciaService.EnAtencion)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label" for="resultado">Resultado de la atención</label>
+                            <textarea id="resultado" class="form-control" rows="2" maxlength="1000" @bind="resultado"></textarea>
+                            <button type="button" class="btn btn-success mt-2" @onclick="Finalizar">Finalizar asistencia</button>
+                        </div>
+                    }
+                }
+
+                <EditForm Model="cambioNivel" OnValidSubmit="CambiarNivel" FormName="cambio-nivel">
+                    <DataAnnotationsValidator />
+                    <p class="small fw-semibold mb-1">Confirmar o cambiar la clasificación, con motivo (RN-52)</p>
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <label class="visually-hidden" for="nivelVet">Nivel</label>
+                            <InputSelect id="nivelVet" class="form-select" @bind-Value="cambioNivel.Nivel">
+                                <option value="">Nivel…</option>
+                                @foreach (var nivel in AsistenciaService.Niveles)
+                                {
+                                    <option value="@nivel">@nivel</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="col-md-7">
+                            <label class="visually-hidden" for="motivoVet">Motivo</label>
+                            <InputText id="motivoVet" class="form-control" maxlength="300" placeholder="Motivo" @bind-Value="cambioNivel.Motivo" />
+                        </div>
+                        <div class="col-md-2"><button type="submit" class="btn btn-outline-primary w-100">Guardar</button></div>
+                    </div>
+                    <ValidationSummary />
+                </EditForm>
+            </section>
+        }
+
+        <section class="mb-4" aria-labelledby="titulo-historial">
+            <h2 class="h5" id="titulo-historial">Historial</h2>
+            <ul class="list-group small">
+                @foreach (var evento in Servicio.Eventos(solicitud.Id))
+                {
+                    <li class="list-group-item">
+                        <span class="text-muted">@evento.Fecha.ToString("dd/MM HH:mm") · @evento.Autor ·</span>
+                        <strong>@evento.Tipo</strong>
+                        @if (!string.IsNullOrEmpty(evento.NivelNuevo))
+                        {
+                            <span>(@evento.NivelAnterior → @evento.NivelNuevo)</span>
+                        }
+                        @if (!string.IsNullOrEmpty(evento.Texto))
+                        {
+                            <span>: @evento.Texto</span>
+                        }
+                    </li>
+                }
+            </ul>
+        </section>
+    }
+
+    <a href="panel/asistencia">← Volver a Asistencia</a>
+</RequierePersonal>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private SolicitudAsistencia? solicitud;
+    private List<Personal> elegibles = new();
+    private int veterinarioElegido;
+    private CambioNivelFormulario empeoramiento = new();
+    private CambioNivelFormulario cambioNivel = new();
+    private string tipoCierre = AsistenciaService.CanceladaClinica;
+    private string motivoCierre = "";
+    private string motivoRechazo = "";
+    private string resultado = "";
+    private string mensaje = "";
+    private bool exito;
+
+    private bool EsRecepcion => Sesion.TieneRol(PersonalService.Recepcion);
+    private bool EsVeterinario => Sesion.TieneRol(PersonalService.Veterinario);
+    private int MiId => Sesion.PersonalActual?.Id ?? -1;
+
+    protected override void OnParametersSet()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        Servicio.RevisarPlazos();
+        solicitud = Servicio.ObtenerPorId(Id);
+        elegibles = solicitud is null ? new() : Servicio.Elegibles(solicitud, DateTime.Now);
+    }
+
+    private string NombreCliente()
+    {
+        var cuenta = Cuentas.ObtenerPorId(solicitud!.ClienteId);
+        return cuenta is null ? "Cliente" : $"{cuenta.Nombre} {cuenta.Apellido}";
+    }
+
+    private string NombrePersonal(int personalId)
+    {
+        return Equipo.ObtenerTodos().FirstOrDefault(p => p.Id == personalId)?.Nombre ?? $"veterinario {personalId}";
+    }
+
+    private void Mostrar(ResultadoOperacion r)
+    {
+        exito = r.Exito;
+        mensaje = r.Mensaje;
+        Cargar();
+    }
+
+    private void Asignar() => Mostrar(Servicio.Asignar(Id, veterinarioElegido, Sesion.PersonalActual));
+
+    private void Empeoro()
+    {
+        Mostrar(Servicio.InformarEmpeoramiento(Id, empeoramiento, Sesion.PersonalActual));
+        if (exito)
+        {
+            empeoramiento = new();
+        }
+    }
+
+    private void Cerrar()
+    {
+        Mostrar(Servicio.Cerrar(Id, tipoCierre, motivoCierre, Sesion.PersonalActual));
+        if (exito)
+        {
+            motivoCierre = "";
+        }
+    }
+
+    private void Aceptar() => Mostrar(Servicio.Aceptar(Id, Sesion.PersonalActual));
+
+    private void Rechazar()
+    {
+        Mostrar(Servicio.Rechazar(Id, motivoRechazo, Sesion.PersonalActual));
+        if (exito)
+        {
+            motivoRechazo = "";
+        }
+    }
+
+    private void Avanzar() => Mostrar(Servicio.Avanzar(Id, Sesion.PersonalActual));
+
+    private void Finalizar()
+    {
+        Mostrar(Servicio.Finalizar(Id, resultado, Sesion.PersonalActual));
+        if (exito)
+        {
+            resultado = "";
+        }
+    }
+
+    private void CambiarNivel()
+    {
+        Mostrar(Servicio.CambiarNivel(Id, cambioNivel, Sesion.PersonalActual));
+        if (exito)
+        {
+            cambioNivel = new();
+        }
+    }
+}
