@@ -51,6 +51,23 @@ Requisitos: RF-CLI-07, RF-CLI-10, RF-CLI-18, RF-CLI-19, RF-CLI-20, RF-REC-07, RN
 | DR-08 | Aprobar o rechazar deja un registro de auditoría, entidad «Datos personales», sin datos personales en el detalle. |
 | DR-09 | `Politicas` documenta por categoría finalidad, acceso, conservación y qué pasa al eliminar (RNF-LEG-06). Historia clínica y cobros dicen «a confirmar» (D-DER-03). |
 
+## Aclaraciones surgidas de las pruebas de caja negra (2026-11-16)
+
+| Id | Aclaración |
+|---|---|
+| AC-01 | **Turno próximo (DR-04):** el que ocupa la agenda (Confirmado, En espera o En curso) y todavía no terminó. Un turno Cancelado, Ausente o Finalizado no es obstáculo, ni el de otro cliente. |
+| AC-02 | **Canal por defecto de los esenciales:** Correo. |
+| AC-03 | Un mensaje enviado a la primera tiene 1 intento y `UltimoError` vacío. `Reintentar` devuelve éxito solo si el envío sale; si vuelve a fallar, devuelve error y el mensaje queda `Pendiente` con 1 intento. |
+| AC-04 | `NoLeidas` cuenta todos los mensajes del cliente sin leer, por correo o en la app. |
+| AC-05 | Orden de la bandeja: del `Id` más alto al más bajo (el más nuevo primero). |
+| AC-06 | Los filtros de texto no distinguen mayúsculas ni tildes de mayúscula; estado y tipo se comparan exactos. |
+| AC-07 | Título y mensaje se recortan (espacios al inicio y al final) antes de medir el largo; uno de solo espacios es vacío y falla. El motivo de rechazo de solo espacios también falla. |
+| AC-08 | Un aviso o una alerta sin destinatarios (ningún cliente con esa especie, nadie verificado) sale bien con 0 generados. |
+| AC-09 | Valores neutros al anonimizar: nombre «Titular», apellido «eliminado», correo `eliminada-<id>@eliminada.invalid`, el resto vacío, verificada en falso. |
+| AC-10 | Se puede pedir la exportación todas las veces que se quiera. `Resolver` solo vale para pedidos de eliminación: sobre una exportación devuelve error. |
+| AC-11 | `Bitacora.Buscar` devuelve una lista vacía si quien consulta no es un Administrador activo. |
+| AC-12 | `Exportar` y los pedidos no controlan si la cuenta está verificada; sí que no esté eliminada (los pedidos). |
+
 ## Pantallas
 
 | Ruta | Quién | Qué |

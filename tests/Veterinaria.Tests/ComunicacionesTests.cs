@@ -281,7 +281,8 @@ public class ComunicacionesTests
         var primera = f.AvisosRefuerzo.Generar();
         var segunda = f.AvisosRefuerzo.Generar();
 
-        Assert.Equal(esperados, primera);
+        // Generar() cuenta todas las cuentas (las de demostración también tienen refuerzos): acá importa la de la prueba.
+        Assert.True(primera >= esperados);
         Assert.Equal(0, segunda);
         Assert.Equal(esperados, f.Comunicaciones.DeCuenta(cuenta.Id).Count(c => c.Tipo == ComunicacionesService.AvisoRefuerzo));
     }
