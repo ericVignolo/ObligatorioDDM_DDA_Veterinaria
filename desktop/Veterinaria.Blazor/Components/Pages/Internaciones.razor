@@ -1,0 +1,216 @@
+@page "/panel/internacion"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject InternacionService Servicio
+@inject AnimalService Animales
+@inject CuentaService Cuentas
+@inject SesionService Sesion
+
+<PageTitle>Internación — VITALIA</PageTitle>
+
+@* A-024: Recepción admite; el Veterinario hace el ingreso clínico, publica novedades y da el alta.
+   El Administrador mira el estado de los boxes. *@
+<RequierePersonal>
+    <h1>Internación</h1>
+    <p class="text-muted">
+        @if (EsRecepcion)
+        {
+            <span>Admití el ingreso con los datos administrativos; después un veterinario asigna box y plan.</span>
+        }
+        else if (EsVeterinario)
+        {
+            <span>Hacé el ingreso clínico de las admisiones, publicá la evolución y dá el alta.</span>
+        }
+        else
+        {
+            <span>Estado de los boxes y de las internaciones en curso.</span>
+        }
+    </p>
+
+    <div class="alert alert-secondary small">@InternacionService.AvisoDemo</div>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    @* Boxes (RN-22: un paciente por box) *@
+    <section class="mb-4" aria-labelledby="titulo-boxes">
+        <h2 class="h4" id="titulo-boxes">Boxes</h2>
+        <div class="row g-3">
+            @foreach (var box in Servicio.Boxes())
+            {
+                var ocupante = Servicio.OcupanteDe(box.Id);
+                <div class="col-md-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="h6 mb-1">@box.Nombre</h3>
+                            <p class="small text-muted mb-2">@box.Tipo</p>
+                            @if (ocupante is null)
+                            {
+                                <span class="badge bg-success">Libre</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Ocupado</span>
+                                <a class="d-block small mt-1" href="@($"panel/internacion/{ocupante.Id}")">@NombreAnimal(ocupante.AnimalId)</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    @* Internaciones abiertas *@
+    <section class="mb-4" aria-labelledby="titulo-abiertas">
+        <h2 class="h4" id="titulo-abiertas">En curso</h2>
+        @if (abiertas.Count == 0)
+        {
+            <p class="text-muted">No hay animales internados ni admisiones pendientes.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                    <caption class="visually-hidden">Admisiones e internaciones en curso</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Animal</th>
+                            <th scope="col">Responsable</th>
+                            <th scope="col">Motivo</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Box</th>
+                            <th scope="col">Desde</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var internacion in abiertas)
+                        {
+                            var animal = Animales.ObtenerParaPersonal(internacion.AnimalId);
+                            <tr>
+                                <th scope="row">@animal?.Nombre <span class="fw-normal text-muted">(@animal?.Especie)</span></th>
+                                <td>@NombreCliente(internacion.ClienteId)<span class="d-block small">@internacion.TelefonoContacto</span></td>
+                                <td>@internacion.Motivo</td>
+                                <td>
+                                    <span class="badge @(internacion.Estado == InternacionService.Admitida ? "bg-warning text-dark" : "bg-primary")">
+                                        @(internacion.Estado == InternacionService.Admitida ? "Espera ingreso clínico" : "Internado")
+                                    </span>
+                                </td>
+                                <td>@(Servicio.ObtenerBox(internacion.BoxId)?.Nombre ?? "—")</td>
+                                <td>@internacion.FechaAdmision.ToString("dd/MM HH:mm")</td>
+                                <td><a class="btn btn-outline-primary btn-sm" href="@($"panel/internacion/{internacion.Id}")">Abrir</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
+    @* Admisión de Recepción *@
+    @if (EsRecepcion)
+    {
+        <section class="mb-4" aria-labelledby="titulo-admision">
+            <h2 class="h4" id="titulo-admision">Nueva admisión</h2>
+            <EditForm Model="admision" OnValidSubmit="Admitir" FormName="admision">
+                <DataAnnotationsValidator />
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <label class="form-label" for="animalAdmision">Animal</label>
+                        <InputSelect id="animalAdmision" class="form-select" @bind-Value="admision.AnimalId">
+                            <option value="0">Elegí un animal…</option>
+                            @foreach (var animal in Animales.ObtenerTodos().Where(a => !a.EsGrupo))
+                            {
+                                <option value="@animal.Id">@animal.Nombre (@animal.Especie) · @NombreCliente(animal.ResponsableId)</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => admision.AnimalId" />
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label" for="motivoAdmision">Motivo</label>
+                        <InputText id="motivoAdmision" class="form-control" maxlength="200" @bind-Value="admision.Motivo" placeholder="Ej.: postoperatorio, observación" />
+                        <ValidationMessage For="() => admision.Motivo" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="telefonoAdmision">Teléfono de contacto</label>
+                        <InputText id="telefonoAdmision" class="form-control" maxlength="30" @bind-Value="admision.TelefonoContacto" />
+                        <ValidationMessage For="() => admision.TelefonoContacto" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="obsAdmision">Observaciones (opcional)</label>
+                        <InputTextArea id="obsAdmision" class="form-control" rows="2" maxlength="500" @bind-Value="admision.Observaciones" />
+                        <ValidationMessage For="() => admision.Observaciones" />
+                    </div>
+                </div>
+                <p class="small text-muted mt-2">Los grupos de animales no se internan. Un animal no puede tener dos internaciones abiertas.</p>
+                <button type="submit" class="btn btn-primary">Admitir</button>
+            </EditForm>
+        </section>
+    }
+
+    @if (altas.Count > 0)
+    {
+        <section class="mb-4" aria-labelledby="titulo-altas">
+            <h2 class="h4" id="titulo-altas">Altas recientes</h2>
+            <ul class="small">
+                @foreach (var internacion in altas.Take(10))
+                {
+                    <li>
+                        <a href="@($"panel/internacion/{internacion.Id}")">@NombreAnimal(internacion.AnimalId)</a>
+                        · alta el @internacion.FechaAlta?.ToString("dd/MM HH:mm") por @internacion.VeterinarioAlta
+                    </li>
+                }
+            </ul>
+        </section>
+    }
+
+    <a href="panel">← Volver al panel</a>
+</RequierePersonal>
+
+@code {
+    private List<Internacion> abiertas = new();
+    private List<Internacion> altas = new();
+    private AdmisionFormulario admision = new();
+    private string mensaje = "";
+    private bool exito;
+
+    private bool EsRecepcion => Sesion.TieneRol(PersonalService.Recepcion);
+    private bool EsVeterinario => Sesion.TieneRol(PersonalService.Veterinario);
+
+    protected override void OnInitialized()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        abiertas = Servicio.Abiertas();
+        altas = Servicio.Altas();
+    }
+
+    private string NombreAnimal(int animalId)
+    {
+        return Animales.ObtenerParaPersonal(animalId)?.Nombre ?? "Animal";
+    }
+
+    private string NombreCliente(int clienteId)
+    {
+        var cuenta = Cuentas.ObtenerPorId(clienteId);
+        return cuenta is null ? "Responsable" : $"{cuenta.Nombre} {cuenta.Apellido}";
+    }
+
+    private void Admitir()
+    {
+        var resultado = Servicio.Admitir(admision, Sesion.PersonalActual);
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        if (resultado.Exito)
+        {
+            admision = new();
+        }
+
+        Cargar();
+    }
+}

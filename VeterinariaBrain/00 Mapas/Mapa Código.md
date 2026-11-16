@@ -9,7 +9,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (32)
+### Páginas (35)
 - [[Acceso]] · `/acceso`
 - [[AgendaRecepcion]] · `/panel/agenda`
 - [[AgendaVeterinario]] · `/panel/mi-agenda`
@@ -21,10 +21,13 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Cobros]] · `/panel/cobros`
 - [[Comprobante]] · `/panel/comprobantes/{Id:int}`
 - [[Cookies]] · `/cookies`
+- [[FirmarConsentimiento]] · `/consentimiento/{TurnoId:int}`
 - [[HistoriaAnimal]] · `/animales/{Id:int}/historia`
 - [[HistoriaClinica]] · `/panel/historia/{AnimalId:int}`
 - [[Home]] · `/`
 - [[Ingresar]] · `/ingresar`
+- [[InternacionDetalle]] · `/panel/internacion/{Id:int}`
+- [[Internaciones]] · `/panel/internacion`
 - [[Inventario]] · `/panel/inventario`
 - [[LaClinica]] · `/clinica`
 - [[MiCuenta]] · `/cuenta`
@@ -43,13 +46,14 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-### Componentes (17)
+### Componentes (18)
 - [[AnimalCard]]
 - [[AnimalForm]]
 - [[Atajo]]
 - [[BarraSesion]]
 - [[CarnetSanitario]]
 - [[EncabezadoLegal]]
+- [[EstadoConsentimiento]]
 - [[EstadoRefuerzo]]
 - [[EstadoTurno]]
 - [[MainLayout]]
@@ -62,15 +66,17 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (14)
+### Servicios (16)
 - [[AgendaService]]
 - [[AnimalService]]
 - [[ClinicaService]]
 - [[CobroService]]
+- [[ConsentimientoService]]
 - [[ConsultaService]]
 - [[CuentaService]]
 - [[DocumentoLegalService]]
 - [[IntencionService]]
+- [[InternacionService]]
 - [[InventarioService]]
 - [[PersonalService]]
 - [[PrestacionService]]
@@ -78,9 +84,11 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (47)
+### Modelos (57)
+- [[AdmisionFormulario]]
 - [[AjusteFormulario]]
 - [[AlertaStock]]
+- [[AltaFormulario]]
 - [[Animal]]
 - [[AnimalFormulario]]
 - [[AnulacionFormulario]]
@@ -88,23 +96,29 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[AplicacionSanitaria]]
 - [[Articulo]]
 - [[Ausencia]]
+- [[Box]]
 - [[CambioContrasenaFormulario]]
 - [[CambioCorreoFormulario]]
 - [[Cargo]]
 - [[Clinica]]
 - [[CobroFormulario]]
 - [[CodigoVerificacion]]
+- [[Consentimiento]]
+- [[ConsentimientoFormulario]]
 - [[Consulta]]
 - [[ConsultaFormulario]]
 - [[ConsumoFormulario]]
 - [[Cuenta]]
+- [[DocumentoConsentimiento]]
 - [[DocumentoLegal]]
 - [[Enmienda]]
 - [[EnmiendaFormulario]]
 - [[FirmaConsulta]]
 - [[FranjaHoraria]]
+- [[IngresoClinicoFormulario]]
 - [[IngresoLoteFormulario]]
 - [[InicioSesion]]
+- [[Internacion]]
 - [[ItemCarnet]]
 - [[LecturaHistoria]]
 - [[LoteProducto]]
@@ -113,6 +127,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[MovimientoStock]]
 - [[NivelUrgencia]]
 - [[NotaCredito]]
+- [[NovedadFormulario]]
+- [[NovedadInternacion]]
 - [[NuevaContrasena]]
 - [[Pago]]
 - [[PerfilFormulario]]

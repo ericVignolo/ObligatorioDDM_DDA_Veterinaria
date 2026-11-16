@@ -16,8 +16,10 @@ public class Fabrica
     public AgendaService Agenda { get; }
     public InventarioService Inventario { get; } = new();
     public CobroService Cobros { get; }
+    public ConsentimientoService Consentimientos { get; }
     public ConsultaService Consultas { get; }
     public VacunaService Vacunas { get; }
+    public InternacionService Internaciones { get; }
 
     public Fabrica()
     {
@@ -25,8 +27,10 @@ public class Fabrica
         Sesion = new SesionService(Cuentas, Personal);
         Agenda = new AgendaService(Profesionales, Prestaciones, Animales);
         Cobros = new CobroService(Agenda, Prestaciones);
-        Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario, Cobros);
+        Consentimientos = new ConsentimientoService(Agenda, Prestaciones);
+        Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario, Cobros, Consentimientos);
         Vacunas = new VacunaService(Consultas, Animales, Inventario);
+        Internaciones = new InternacionService(Animales);
     }
 
     public static RegistroCliente RegistroValido(string correo = "cliente@prueba.uy", string cedula = "1.234.567-2")
@@ -93,6 +97,18 @@ public class Fabrica
         var inicio = DateTime.Today.AddHours(7);
         Agenda.OcuparComoOtroCliente(1, 1, inicio);
         var turno = Agenda.TurnosDelDia(DateOnly.FromDateTime(inicio), 1).Last(t => t.Inicio == inicio);
+        Agenda.RegistrarLlegada(turno.Id);
+        return turno;
+    }
+
+    // Castración de hoy (prestación 8, pide consentimiento) para un animal del cliente, con la llegada registrada.
+    public Turno CirugiaEnEspera(int clienteId, int animalId)
+    {
+        var inicio = DateTime.Today.AddHours(7);
+        Agenda.OcuparComoOtroCliente(1, 8, inicio);
+        var turno = Agenda.TurnosDelDia(DateOnly.FromDateTime(inicio), 1).Last(t => t.Inicio == inicio);
+        turno.ClienteId = clienteId;
+        turno.AnimalId = animalId;
         Agenda.RegistrarLlegada(turno.Id);
         return turno;
     }

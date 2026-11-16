@@ -11,7 +11,9 @@ generado: true
 
 Duración del turno en minutos; solo para los servicios que se reservan en línea (A-014).
 
-**Tareas:** A-014
+**Tareas:** A-014, A-025
+
+**Requisitos y decisiones:** RF-CLI-11, RN-10
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 

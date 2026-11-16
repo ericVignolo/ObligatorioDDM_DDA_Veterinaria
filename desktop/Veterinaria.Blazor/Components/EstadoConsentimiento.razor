@@ -1,0 +1,28 @@
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ConsentimientoService Consentimientos
+
+@* Estado del consentimiento informado de un turno (A-025, RN-10). No muestra nada si el servicio no lo pide. *@
+@if (Turno is not null && Consentimientos.Requiere(Turno))
+{
+    var estado = Consentimientos.Estado(Turno);
+    var ultima = Consentimientos.UltimaRespuesta(Turno.Id);
+    <span class="badge @Clase(estado) ms-1" title="@(ultima is null ? "Sin respuesta del responsable" : $"{ultima.Respuesta} el {ultima.Fecha:dd/MM HH:mm}, versión {ultima.Version}")">
+        Consentimiento: @estado.ToLower()
+    </span>
+}
+
+@code {
+    [Parameter]
+    public Turno? Turno { get; set; }
+
+    private static string Clase(string estado)
+    {
+        return estado switch
+        {
+            ConsentimientoService.Firmado => "bg-success",
+            ConsentimientoService.Rechazado => "bg-danger",
+            _ => "bg-warning text-dark"
+        };
+    }
+}

@@ -158,7 +158,7 @@ flowchart LR
 | `/recuperar` | `Pages/Recuperar.razor` | A-007 | CuentaService · modelo `SolicitudRecuperacion` |
 | `/restablecer` | `Pages/Restablecer.razor` | A-007 | CuentaService, SesionService · modelo `NuevaContrasena` |
 | `/animales` | `Pages/Animales.razor` | A-012 | AnimalService, SesionService · `AnimalCard`, `RequiereSesion` |
-| `/animales/{Id}` | `Pages/AnimalDetalle.razor` | A-012, A-021 | AnimalService, SesionService · `RequiereSesion`, `CarnetSanitario` |
+| `/animales/{Id}` | `Pages/AnimalDetalle.razor` | A-012, A-021, A-024 | AnimalService, InternacionService, SesionService · `RequiereSesion`, `CarnetSanitario` |
 | `/animales/nuevo` | `Pages/AnimalNuevo.razor` | A-013 | AnimalService, SesionService · `AnimalForm` |
 | `/animales/{Id}/editar` | `Pages/AnimalEditar.razor` | A-013 | AnimalService, SesionService · `AnimalForm` |
 | `/reservar` | `Pages/Reservar.razor` | A-014, A-015, A-016 (`?reprogramar=`) | AgendaService, AnimalService, PrestacionService, ProfesionalService, SesionService · `PasosReserva` |
@@ -170,6 +170,9 @@ flowchart LR
 | `/panel/inventario` | `Pages/Inventario.razor` | A-022 | InventarioService, SesionService · `RequierePersonal` (Administrador; Veterinario solo lectura) |
 | `/panel/cobros` | `Pages/Cobros.razor` | A-023 | CobroService, CuentaService, AnimalService, SesionService · `RequierePersonal` (Recepción cobra; Administrador anula) |
 | `/panel/comprobantes/{Id}` | `Pages/Comprobante.razor` | A-023 | CobroService, CuentaService, AnimalService, ClinicaService · `RequierePersonal` |
+| `/panel/internacion` | `Pages/Internaciones.razor` | A-024 | InternacionService, AnimalService, CuentaService, SesionService · `RequierePersonal` (Recepción admite; Veterinario abre) |
+| `/panel/internacion/{Id}` | `Pages/InternacionDetalle.razor` | A-024 | InternacionService, AnimalService, CuentaService, SesionService · `RequierePersonal` (Veterinario: ingreso, novedades, alta; Recepción: anular admisión) |
+| `/consentimiento/{TurnoId}` | `Pages/FirmarConsentimiento.razor` | A-025 | ConsentimientoService, AgendaService, AnimalService, PrestacionService, SesionService · `RequiereSesion` |
 | `/panel/historia/{AnimalId}` | `Pages/HistoriaClinica.razor` | A-020, A-021 | AnimalService, CuentaService, ConsultaService, SesionService · `RegistroClinico`, `CarnetSanitario` |
 | `/animales/{Id}/historia` | `Pages/HistoriaAnimal.razor` | A-020 | AnimalService, ConsultaService, SesionService · `RegistroClinico`, `RequiereSesion` |
 | `/turnos` | `Pages/Turnos.razor` | A-015, A-016 | AgendaService, AnimalService, PrestacionService, ProfesionalService, ClinicaService, SesionService |
@@ -189,6 +192,8 @@ flowchart LR
 | `AgendaService` | Horarios libres cada 15 min bloqueando toda la duración; 2 h de anticipación, 60 días, feriados y ausencias; reserva con revalidación; cancelar y reprogramar con 24 h (A-016) | ProfesionalService, PrestacionService, AnimalService | API de turnos con `SELECT … FOR UPDATE` (DT-BD-02) |
 | `ConsultaService` | Iniciar la consulta (una por turno), guardar borrador con versión, firmar con contraseña y matrícula vigente (genera el cargo), cancelar sin atención, enmiendas, historia y lecturas auditadas (A-019, A-020) | AgendaService, PersonalService, ProfesionalService, InventarioService, CobroService | API de consultas con transacción de cierre, stock y cargos (CU-VET-01) |
 | `CobroService` | Cargo al firmar la consulta (RN-32, RN-33), cobro presencial total o parcial de Recepción, comprobante numerado y nota de crédito del Administrador (RN-34) (A-023) | AgendaService, PrestacionService | API de cobros; el cargo se genera en la transacción de la firma (RNF-CON-03) |
+| `InternacionService` | Boxes, admisión de Recepción, ingreso clínico con box exclusivo y del tipo de la especie, novedades visibles o internas, rectificaciones y alta con indicaciones (A-024, RN-21 a RN-25) | AnimalService | API de internación con tiempo real (RF-CLI-09) |
+| `ConsentimientoService` | Documento de consentimiento por prestación y versión, firma del responsable (casilla + nombre), rechazo, historial con huella y bloqueo de la consulta sin consentimiento (A-025, RN-10) | AgendaService, PrestacionService | API de consentimientos (CU-CLI-10) |
 | `IntencionService` | Servicio elegido antes de ingresar; se retoma hasta 30 min | SesionService | Igual, en el cliente |
 
 > Todos los servicios son `AddScoped`: en Blazor Server duran lo que dura la pestaña. Cuentas y sesión se pierden al recargar; es lo esperado hasta tener la API.

@@ -45,7 +45,8 @@ Antes de planificar, diseñar o implementar, leer:
 - Un PR con el CI en rojo no se mezcla.
 - Cada regla nueva o cambiada del backend agrega o ajusta su prueba xUnit en el mismo PR (`tests/README.md`).
 - **Agente revisor:** cuando quien trabaja en la sesión lo pide (por ejemplo «revisá el PR»), Claude lanza un agente revisor independiente que compara el cambio con `MATRIZ_REQUISITOS.md`, las decisiones y las convenciones del docente, y busca errores típicos de Razor. Sus hallazgos se corrigen o se informan en el PR.
-- El CI y el revisor no reemplazan la prueba con F5 de quien trabajó.
+- **Agente probador (Eric, 2026-11-16):** después de implementar cada tarea, Claude lanza el probador de caja negra (`.claude/agents/probador.md`), que escribe pruebas xUnit en `tests/Veterinaria.Tests/CajaNegra/` leyendo solo la especificación, los modelos y las firmas públicas, sin ver la implementación. Lo que falle se corrige (código o especificación) antes de pedir la prueba con F5.
+- El CI, el revisor y el probador no reemplazan la prueba con F5 de quien trabajó.
 
 ## Convenciones de código (estilo del docente)
 

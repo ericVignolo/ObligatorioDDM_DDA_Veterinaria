@@ -11,7 +11,7 @@ generado: true
 
 Animales de demostración en memoria (sección A). En la sección C se reemplaza por AnimalApiService
 
-**Tareas:** A-013
+**Tareas:** A-013, A-024
 
 **Requisitos y decisiones:** CU-CLI-01, RF-REC-03, RN-18, RN-41
 
@@ -34,8 +34,12 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AtencionConsulta]]
 - [[Cobros]]
 - [[Comprobante]]
+- [[FirmarConsentimiento]]
 - [[HistoriaAnimal]]
 - [[HistoriaClinica]]
+- [[InternacionDetalle]]
+- [[InternacionService]]
+- [[Internaciones]]
 - [[MiCuenta]]
 - [[Reservar]]
 - [[Turnos]]

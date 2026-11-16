@@ -1,0 +1,153 @@
+@page "/consentimiento/{TurnoId:int}"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ConsentimientoService Consentimientos
+@inject AgendaService Agenda
+@inject AnimalService AnimalService
+@inject PrestacionService PrestacionService
+@inject SesionService Sesion
+
+<PageTitle>Consentimiento informado — VITALIA</PageTitle>
+
+@* A-025, CU-CLI-10: el responsable lee y acepta (o rechaza) el consentimiento del procedimiento.
+   Es independiente de Términos y Privacidad (RN-43). Mecanismo: casilla + nombre completo (P-RC-06). *@
+<RequiereSesion>
+    @if (turno is null || documento is null)
+    {
+        <h1>Consentimiento no disponible</h1>
+        <p>No encontramos ese turno entre los tuyos o no necesita consentimiento.</p>
+    }
+    else
+    {
+        <h1>@documento.Titulo</h1>
+
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+        }
+
+        <dl class="row">
+            <dt class="col-sm-3">Procedimiento</dt>
+            <dd class="col-sm-9">@(PrestacionService.ObtenerPorId(turno.PrestacionId)?.Nombre)</dd>
+            <dt class="col-sm-3">Paciente</dt>
+            <dd class="col-sm-9">@(AnimalService.ObtenerParaPersonal(turno.AnimalId)?.Nombre)</dd>
+            <dt class="col-sm-3">Turno</dt>
+            <dd class="col-sm-9">@turno.Inicio.ToString("dddd d 'de' MMMM, HH:mm") (n.º @turno.Id)</dd>
+            <dt class="col-sm-3">Versión del documento</dt>
+            <dd class="col-sm-9">@documento.Version, vigente desde el @documento.FechaVigencia.ToString("dd/MM/yyyy")</dd>
+        </dl>
+
+        <section class="border p-3 mb-3" aria-labelledby="titulo-texto">
+            <h2 class="h6" id="titulo-texto">Texto del consentimiento</h2>
+            <p class="mb-0">@documento.Texto</p>
+        </section>
+
+        @if (Consentimientos.EsValido(turno.Id))
+        {
+            var firmado = Consentimientos.UltimaRespuesta(turno.Id)!;
+            <div class="alert alert-success">
+                Firmado por <strong>@firmado.NombreEscrito</strong> el @firmado.Fecha.ToString("dd/MM/yyyy HH:mm") (@firmado.Canal).
+                <span class="d-block small text-break">Huella: @firmado.Hash</span>
+            </div>
+        }
+        else if (puedeResponder)
+        {
+            @if (Consentimientos.Estado(turno) == ConsentimientoService.Desactualizado)
+            {
+                <div class="alert alert-warning">La clínica actualizó el documento: tenés que volver a firmarlo.</div>
+            }
+            else if (Consentimientos.Estado(turno) == ConsentimientoService.Rechazado)
+            {
+                <div class="alert alert-warning">Rechazaste este consentimiento. Si cambiaste de opinión, podés firmarlo ahora.</div>
+            }
+
+            <EditForm Model="formulario" OnValidSubmit="Firmar" FormName="consentimiento">
+                <DataAnnotationsValidator />
+                <div class="form-check mb-2">
+                    <InputCheckbox id="leyo" class="form-check-input" @bind-Value="formulario.LeyoYAcepta" />
+                    <label class="form-check-label" for="leyo">Leí el texto, pude hacer preguntas y autorizo el procedimiento.</label>
+                    <ValidationMessage For="() => formulario.LeyoYAcepta" />
+                </div>
+                <div class="mb-2" style="max-width: 28rem;">
+                    <label class="form-label" for="nombreFirma">Tu nombre completo, como figura en tu cuenta</label>
+                    <InputText id="nombreFirma" class="form-control" maxlength="120" autocomplete="name" @bind-Value="formulario.NombreCompleto" />
+                    <ValidationMessage For="() => formulario.NombreCompleto" />
+                </div>
+                <p class="small text-muted">Se guardan la versión, la fecha, el canal y una huella del texto. Es independiente de los Términos y la Política de privacidad.</p>
+                <button type="submit" class="btn btn-primary">Firmar consentimiento</button>
+                @if (Consentimientos.Estado(turno) != ConsentimientoService.Rechazado)
+                {
+                    <button type="button" class="btn btn-outline-danger ms-2" @onclick="Rechazar">No autorizo</button>
+                }
+            </EditForm>
+        }
+        else
+        {
+            <p class="text-muted">El turno ya empezó o terminó: el consentimiento no se puede cambiar.</p>
+        }
+
+        @if (historial.Count > 1)
+        {
+            <h2 class="h6 mt-4">Historial de respuestas</h2>
+            <ul class="small">
+                @foreach (var respuesta in historial)
+                {
+                    <li>@respuesta.Fecha.ToString("dd/MM/yyyy HH:mm") · @respuesta.Respuesta · versión @respuesta.Version</li>
+                }
+            </ul>
+        }
+    }
+
+    <a href="turnos">← Volver a mis turnos</a>
+</RequiereSesion>
+
+@code {
+    [Parameter]
+    public int TurnoId { get; set; }
+
+    private Turno? turno;
+    private DocumentoConsentimiento? documento;
+    private List<Consentimiento> historial = new();
+    private bool puedeResponder;
+    private ConsentimientoFormulario formulario = new();
+    private string mensaje = "";
+    private bool exito;
+
+    protected override void OnParametersSet()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        var cuenta = Sesion.CuentaActual;
+        var encontrado = Agenda.ObtenerPorId(TurnoId);
+
+        // RN-18: solo turnos propios.
+        turno = cuenta is not null && encontrado is not null && encontrado.ClienteId == cuenta.Id && Consentimientos.Requiere(encontrado) ? encontrado : null;
+        documento = turno is null ? null : Consentimientos.DocumentoVigente(turno.PrestacionId);
+        historial = turno is null ? new() : Consentimientos.RespuestasDe(turno.Id);
+        puedeResponder = turno is not null && (turno.Estado == "Confirmado" || turno.Estado == "En espera");
+    }
+
+    private void Firmar()
+    {
+        var resultado = Consentimientos.Firmar(TurnoId, formulario, Sesion.CuentaActual);
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        if (resultado.Exito)
+        {
+            formulario = new();
+        }
+
+        Cargar();
+    }
+
+    private void Rechazar()
+    {
+        var resultado = Consentimientos.Rechazar(TurnoId, Sesion.CuentaActual);
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        Cargar();
+    }
+}

@@ -85,8 +85,8 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 - [x] **A-021 — Crear vistas de vacunación y alertas sanitarias.** Mostrar lote, fechas, intervalo, refuerzo y alertas según la especificación profesional; incluir estados de vacuna vencida y no aplicable.
 - [x] **A-022 — Crear vistas de inventario.** Productos, lotes, vencimientos, movimientos, stock mínimo, ajustes y consumo; dejar claro que no hay saldos persistentes en modo demo.
 - [x] **A-023 — Crear cargos, cobro y comprobante interno.** Solo prestaciones de la clínica, sin venta de productos (DT-ALC-01). Separar cargo y pago; soportar medios acordados para el ejemplo, sin pasarela online (DT-ALC-02, 2026-11-16: el cobro es solo presencial).
-- [ ] **A-024 — Crear gestión de internación.** Ingreso, box, plan, evolución, novedades internas/visibles y alta; representar la exclusividad del box y la protección de notas.
-- [ ] **A-025 — Crear consentimiento informado.** Mostrar versión, procedimiento, paciente, lectura/aceptación/firma según mecanismo aprobado; mantener separado de términos y privacidad.
+- [x] **A-024 — Crear gestión de internación.** Ingreso, box, plan, evolución, novedades internas/visibles y alta; representar la exclusividad del box y la protección de notas.
+- [x] **A-025 — Crear consentimiento informado.** Mostrar versión, procedimiento, paciente, lectura/aceptación/firma según mecanismo aprobado; mantener separado de términos y privacidad.
 - [ ] **A-026 — Crear panel de asistencia para Recepción/Veterinario.** Cola por prioridad, elegibilidad, ofertas/asignación, escalamiento y estados; los tiempos y las competencias usan parámetros aprobados.
 - [ ] **A-027 — Crear vistas de configuración y administración.** Catálogo, horarios, recursos, tarifas, roles, parámetros, competencias, cobertura, auditoría e indicadores según RF.
 - [ ] **A-028 — Crear comunicaciones y derechos.** Resumen/correo y su estado, alertas sanitarias/operativas, preferencias, exportación/eliminación y conservación con controles visibles.

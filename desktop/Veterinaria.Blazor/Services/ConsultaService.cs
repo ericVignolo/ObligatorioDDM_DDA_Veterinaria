@@ -20,18 +20,20 @@ public class ConsultaService
     private readonly ProfesionalService _profesionales;
     private readonly InventarioService _inventario;
     private readonly CobroService _cobros;
+    private readonly ConsentimientoService _consentimientos;
     private readonly List<Consulta> _consultas = new();
     private readonly List<LecturaHistoria> _lecturas = new();
     private int _ultimoId;
     private int _ultimaEnmiendaId;
 
-    public ConsultaService(AgendaService agenda, PersonalService personal, ProfesionalService profesionales, InventarioService inventario, CobroService cobros)
+    public ConsultaService(AgendaService agenda, PersonalService personal, ProfesionalService profesionales, InventarioService inventario, CobroService cobros, ConsentimientoService consentimientos)
     {
         _agenda = agenda;
         _personal = personal;
         _profesionales = profesionales;
         _inventario = inventario;
         _cobros = cobros;
+        _consentimientos = consentimientos;
         CargarHistoriaDemo();
     }
 
@@ -145,6 +147,12 @@ public class ConsultaService
         if (turno.Estado != "En espera")
         {
             return new ResultadoOperacion { Exito = false, Mensaje = "Solo se inicia la atención de un paciente En espera (Recepción registra la llegada)." };
+        }
+
+        // RN-10: una cirugía no pasa a En curso sin el consentimiento informado firmado (A-025).
+        if (_consentimientos.Requiere(turno) && !_consentimientos.EsValido(turnoId))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Este procedimiento necesita el consentimiento informado firmado por el responsable (RN-10). Todavía no está firmado." };
         }
 
         _agenda.IniciarAtencion(turnoId);
