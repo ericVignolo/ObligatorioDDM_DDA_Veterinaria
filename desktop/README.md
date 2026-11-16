@@ -172,6 +172,7 @@ flowchart LR
 | `/panel/comprobantes/{Id}` | `Pages/Comprobante.razor` | A-023 | CobroService, CuentaService, AnimalService, ClinicaService · `RequierePersonal` |
 | `/panel/internacion` | `Pages/Internaciones.razor` | A-024 | InternacionService, AnimalService, CuentaService, SesionService · `RequierePersonal` (Recepción admite; Veterinario abre) |
 | `/panel/internacion/{Id}` | `Pages/InternacionDetalle.razor` | A-024 | InternacionService, AnimalService, CuentaService, SesionService · `RequierePersonal` (Veterinario: ingreso, novedades, alta; Recepción: anular admisión) |
+| `/consentimiento/{TurnoId}` | `Pages/FirmarConsentimiento.razor` | A-025 | ConsentimientoService, AgendaService, AnimalService, PrestacionService, SesionService · `RequiereSesion` |
 | `/panel/historia/{AnimalId}` | `Pages/HistoriaClinica.razor` | A-020, A-021 | AnimalService, CuentaService, ConsultaService, SesionService · `RegistroClinico`, `CarnetSanitario` |
 | `/animales/{Id}/historia` | `Pages/HistoriaAnimal.razor` | A-020 | AnimalService, ConsultaService, SesionService · `RegistroClinico`, `RequiereSesion` |
 | `/turnos` | `Pages/Turnos.razor` | A-015, A-016 | AgendaService, AnimalService, PrestacionService, ProfesionalService, ClinicaService, SesionService |
@@ -192,6 +193,7 @@ flowchart LR
 | `ConsultaService` | Iniciar la consulta (una por turno), guardar borrador con versión, firmar con contraseña y matrícula vigente (genera el cargo), cancelar sin atención, enmiendas, historia y lecturas auditadas (A-019, A-020) | AgendaService, PersonalService, ProfesionalService, InventarioService, CobroService | API de consultas con transacción de cierre, stock y cargos (CU-VET-01) |
 | `CobroService` | Cargo al firmar la consulta (RN-32, RN-33), cobro presencial total o parcial de Recepción, comprobante numerado y nota de crédito del Administrador (RN-34) (A-023) | AgendaService, PrestacionService | API de cobros; el cargo se genera en la transacción de la firma (RNF-CON-03) |
 | `InternacionService` | Boxes, admisión de Recepción, ingreso clínico con box exclusivo y del tipo de la especie, novedades visibles o internas, rectificaciones y alta con indicaciones (A-024, RN-21 a RN-25) | AnimalService | API de internación con tiempo real (RF-CLI-09) |
+| `ConsentimientoService` | Documento de consentimiento por prestación y versión, firma del responsable (casilla + nombre), rechazo, historial con huella y bloqueo de la consulta sin consentimiento (A-025, RN-10) | AgendaService, PrestacionService | API de consentimientos (CU-CLI-10) |
 | `IntencionService` | Servicio elegido antes de ingresar; se retoma hasta 30 min | SesionService | Igual, en el cliente |
 
 > Todos los servicios son `AddScoped`: en Blazor Server duran lo que dura la pestaña. Cuentas y sesión se pierden al recargar; es lo esperado hasta tener la API.

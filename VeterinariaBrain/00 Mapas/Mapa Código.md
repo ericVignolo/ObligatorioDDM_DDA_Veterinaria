@@ -9,7 +9,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (34)
+### Páginas (35)
 - [[Acceso]] · `/acceso`
 - [[AgendaRecepcion]] · `/panel/agenda`
 - [[AgendaVeterinario]] · `/panel/mi-agenda`
@@ -21,6 +21,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Cobros]] · `/panel/cobros`
 - [[Comprobante]] · `/panel/comprobantes/{Id:int}`
 - [[Cookies]] · `/cookies`
+- [[FirmarConsentimiento]] · `/consentimiento/{TurnoId:int}`
 - [[HistoriaAnimal]] · `/animales/{Id:int}/historia`
 - [[HistoriaClinica]] · `/panel/historia/{AnimalId:int}`
 - [[Home]] · `/`
@@ -45,13 +46,14 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-### Componentes (17)
+### Componentes (18)
 - [[AnimalCard]]
 - [[AnimalForm]]
 - [[Atajo]]
 - [[BarraSesion]]
 - [[CarnetSanitario]]
 - [[EncabezadoLegal]]
+- [[EstadoConsentimiento]]
 - [[EstadoRefuerzo]]
 - [[EstadoTurno]]
 - [[MainLayout]]
@@ -64,11 +66,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (15)
+### Servicios (16)
 - [[AgendaService]]
 - [[AnimalService]]
 - [[ClinicaService]]
 - [[CobroService]]
+- [[ConsentimientoService]]
 - [[ConsultaService]]
 - [[CuentaService]]
 - [[DocumentoLegalService]]
@@ -81,7 +84,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (54)
+### Modelos (57)
 - [[AdmisionFormulario]]
 - [[AjusteFormulario]]
 - [[AlertaStock]]
@@ -100,10 +103,13 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Clinica]]
 - [[CobroFormulario]]
 - [[CodigoVerificacion]]
+- [[Consentimiento]]
+- [[ConsentimientoFormulario]]
 - [[Consulta]]
 - [[ConsultaFormulario]]
 - [[ConsumoFormulario]]
 - [[Cuenta]]
+- [[DocumentoConsentimiento]]
 - [[DocumentoLegal]]
 - [[Enmienda]]
 - [[EnmiendaFormulario]]

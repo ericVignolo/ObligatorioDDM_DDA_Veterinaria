@@ -56,7 +56,8 @@ public class AgendaService
             (5, 100, 1, 6, 12, 0),   // Méndez: Toby, baño y estética
             (2, 101, 3, 1, 14, 0),   // Silveira: rodeo, consulta
             (2, 101, 3, 2, 15, 0),   // Silveira: rodeo, vacunación
-            (3, 101, 4, 1, 9, 0)     // Acosta: Canela, consulta
+            (3, 101, 4, 1, 9, 0),    // Acosta: Canela, consulta
+            (1, 100, 2, 8, 12, 0)    // Ferreira: Mishi, castración (pide consentimiento, A-025)
         };
 
         foreach (var (profesionalId, clienteId, animalId, prestacionId, hora, minuto) in demo)

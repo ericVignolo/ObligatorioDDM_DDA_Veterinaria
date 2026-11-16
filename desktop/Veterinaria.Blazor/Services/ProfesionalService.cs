@@ -34,7 +34,7 @@ public class ProfesionalService
                 // Ausencia de ejemplo, relativa a hoy para que siempre se vea en la demostración.
                 Ausencias = new() { new() { Desde = hoy.AddDays(8), Hasta = hoy.AddDays(8), Motivo = "Capacitación" } },
                 Especies = new() { "Perro", "Gato", "Ave", "Conejo", "Reptil", "Otra" },
-                PrestacionIds = new() { 1, 2, 3 }
+                PrestacionIds = new() { 1, 2, 3, 8 }
             },
             new()
             {

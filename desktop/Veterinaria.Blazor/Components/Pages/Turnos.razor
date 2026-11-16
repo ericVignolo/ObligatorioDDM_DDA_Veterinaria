@@ -7,6 +7,7 @@
 @inject ProfesionalService ProfesionalService
 @inject ClinicaService ClinicaService
 @inject SesionService Sesion
+@inject ConsentimientoService Consentimientos
 
 <PageTitle>Mis turnos — VITALIA</PageTitle>
 
@@ -52,7 +53,15 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <h2 class="h5 card-title">@turno.Inicio.ToString("dddd d 'de' MMMM, HH:mm")</h2>
-                        <p class="card-text mb-2">@Resumen(turno) <EstadoTurno Estado="@turno.Estado" /></p>
+                        <p class="card-text mb-2">@Resumen(turno) <EstadoTurno Estado="@turno.Estado" /> <EstadoConsentimiento Turno="turno" /></p>
+                        @if (Consentimientos.Requiere(turno) && !Consentimientos.EsValido(turno.Id))
+                        {
+                            <a class="btn btn-warning btn-sm mb-2" href="@($"consentimiento/{turno.Id}")">Leer y firmar el consentimiento</a>
+                        }
+                        else if (Consentimientos.Requiere(turno))
+                        {
+                            <a class="btn btn-link btn-sm mb-2 ps-0" href="@($"consentimiento/{turno.Id}")">Ver el consentimiento firmado</a>
+                        }
 
                         @if (cancelandoId == turno.Id)
                         {

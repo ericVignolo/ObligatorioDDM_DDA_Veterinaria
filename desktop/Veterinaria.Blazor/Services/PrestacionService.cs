@@ -13,6 +13,7 @@ public class PrestacionService
         new() { Id = 4, Nombre = "Revisión de ovinos y bovinos", Descripcion = "Revisión individual o por grupo. Se coordina con la clínica.", PrecioDesde = 1500, ReservableEnLinea = false },
         new() { Id = 5, Nombre = "Rehabilitación equina", Descripcion = "Fisioterapia para caballos. Requiere evaluación previa.", PrecioDesde = 2500, ReservableEnLinea = false },
         new() { Id = 6, Nombre = "Baño y estética", Descripcion = "Baño, secado, corte y cuidado estético de perros y gatos.", PrecioDesde = 900, ReservableEnLinea = true, DuracionMinutos = 60 },
+        new() { Id = 8, Nombre = "Castración", Descripcion = "Cirugía programada con anestesia general. Requiere firmar el consentimiento informado antes del día del turno.", PrecioDesde = 4500, ReservableEnLinea = true, DuracionMinutos = 90, RequiereConsentimiento = true },
         new() { Id = 7, Nombre = "Guardería", Descripcion = "No publicado: no debe aparecer.", PrecioDesde = 700, ReservableEnLinea = false, Publicado = false }
     };
 

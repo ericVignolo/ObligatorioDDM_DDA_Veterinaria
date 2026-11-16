@@ -343,6 +343,7 @@ Se incorporaron como borradores para validación los primeros artefactos funcion
 
 - `docs/analisis/HISTORIAS_USUARIO_VISITANTE_CLIENTE.md`: backlog con 35 historias, criterios de aceptación y trazabilidad.
 - `docs/analisis/CASOS_DE_USO_VISITANTE_CLIENTE.md`: catálogo de 25 casos de uso y especificación detallada de 11 recorridos esenciales.
+- `docs/analisis/ESPECIFICACION_CONSENTIMIENTO.md`: caso de uso «Firmar consentimiento informado» (mecanismo de P-RC-06, versiones, rechazo y bloqueo RN-10) (A-025).
 - `docs/analisis/ESPECIFICACION_INTERNACION.md`: caso de uso «Internar animal» (admisión, ingreso clínico, box exclusivo, novedades, rectificación y alta), estados, permisos y pruebas (A-024).
 - `docs/analisis/ESPECIFICACION_COBRO.md`: caso de uso «Cobrar consulta» (cobro presencial, cargo, comprobante y nota de crédito), estados, reglas y pruebas (A-023).
 - `docs/analisis/ESPECIFICACION_ALERTAS_ASISTENCIA.md`: clasificación, estados, flujos, pseudocódigo, privacidad, excepciones y pruebas del nuevo módulo.

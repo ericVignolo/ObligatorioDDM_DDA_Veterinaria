@@ -11,7 +11,7 @@ generado: true
 
 Disponibilidad y turnos de demostración (A-014 a A-018). Los horarios son orientativos:
 
-**Tareas:** A-014, A-017, A-018, A-019
+**Tareas:** A-014, A-017, A-018, A-019, A-025
 
 **Requisitos y decisiones:** CU-CLI-02, RF-ADM-04, RF-ADM-10, RF-CLI-04, RN-01, RN-02, RN-05, RN-06, RN-07, RN-11, RN-18
 
@@ -31,7 +31,9 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AgendaVeterinario]]
 - [[AtencionConsulta]]
 - [[CobroService]]
+- [[ConsentimientoService]]
 - [[ConsultaService]]
+- [[FirmarConsentimiento]]
 - [[MiCuenta]]
 - [[Reservar]]
 - [[Turnos]]

@@ -115,6 +115,7 @@
                         <td>@(ProfesionalService.ObtenerPorId(turno.ProfesionalId)?.Nombre)</td>
                         <td>
                             <EstadoTurno Estado="@turno.Estado" />
+                            <EstadoConsentimiento Turno="turno" />
                             @if (turno.HoraLlegada is not null)
                             {
                                 <div class="small text-muted">Llegó @turno.HoraLlegada.Value.ToString("HH:mm")</div>

@@ -9,6 +9,7 @@
 @inject PrestacionService PrestacionService
 @inject VacunaService Vacunas
 @inject CobroService Cobro
+@inject ConsentimientoService Consentimientos
 
 @* Perfil del Cliente (A-009): datos personales con quién ve cada uno, animales con su historia,
    turnos y servicios usados con «Reservar de nuevo». Los datos son de demostración. *@
@@ -225,6 +226,24 @@
             </div>
         </section>
 
+        @* Consentimientos pendientes (A-025, CU-CLI-10 paso 1) *@
+        @if (consentimientosPendientes.Count > 0)
+        {
+            <div class="alert alert-warning" role="status">
+                <strong>Tenés @consentimientosPendientes.Count @(consentimientosPendientes.Count == 1 ? "consentimiento" : "consentimientos") para firmar.</strong>
+                Sin firmarlo, la clínica no puede hacer el procedimiento.
+                <ul class="mb-0 mt-1">
+                    @foreach (var turno in consentimientosPendientes)
+                    {
+                        <li>
+                            @NombreServicio(turno.PrestacionId) de @NombreAnimal(turno.AnimalId), @turno.Inicio.ToString("dddd d 'de' MMMM, HH:mm") ·
+                            <a class="alert-link" href="@($"consentimiento/{turno.Id}")">Leer y firmar</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+
         @* Alertas sanitarias: refuerzos próximos o vencidos de sus animales (RF-CLI-07, A-021) *@
         @if (alertas.Count > 0)
         {
@@ -392,6 +411,7 @@
     private List<Turno> proximos = new();
     private List<Turno> usados = new();
     private List<Cargo> misCargos = new();
+    private List<Turno> consentimientosPendientes = new();
     private HashSet<int> reservables = new();
 
     protected override void OnInitialized()
@@ -411,6 +431,7 @@
         alertas = Vacunas.AlertasDe(cuenta.Id);
         proximos = Agenda.ProximosDe(cuenta.Id);
         misCargos = Cobro.CargosDe(cuenta.Id);
+        consentimientosPendientes = Consentimientos.PendientesDe(cuenta.Id);
 
         // Un servicio por fila, con la última atención terminada (Finalizado).
         usados = Agenda.HistorialDe(cuenta.Id)
