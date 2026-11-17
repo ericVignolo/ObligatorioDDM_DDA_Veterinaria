@@ -92,7 +92,7 @@
 
                     @if (internacion.Estado == InternacionService.Alta)
                     {
-                        <div class="alert alert-success">
+                        <div class="alert alert-success" role="status">
                             <strong>Alta el @internacion.FechaAlta?.ToString("dd/MM/yyyy HH:mm").</strong>
                             <span class="d-block">@internacion.EvolucionFinal</span>
                             <strong class="d-block mt-2">Indicaciones para casa</strong>

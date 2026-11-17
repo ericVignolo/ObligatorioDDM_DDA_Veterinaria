@@ -29,26 +29,28 @@
 
     <section class="mb-4" aria-labelledby="titulo-ocupacion">
         <h2 class="h5" id="titulo-ocupacion">Ocupación de agenda · @dia.ToString("dddd d/MM")</h2>
-        <table class="table table-sm">
-            <caption class="visually-hidden">Ocupación por profesional</caption>
-            <thead><tr><th scope="col">Profesional</th><th scope="col" class="text-end">Minutos ocupados</th><th scope="col" class="text-end">Minutos de atención</th><th scope="col">Ocupación</th></tr></thead>
-            <tbody>
-                @foreach (var o in ocupacion)
-                {
-                    <tr>
-                        <th scope="row">@o.Profesional</th>
-                        <td class="text-end">@o.MinutosOcupados</td>
-                        <td class="text-end">@(o.MinutosDisponibles > 0 ? o.MinutosDisponibles.ToString() : "No atiende")</td>
-                        <td style="min-width: 10rem;">
-                            <div class="progress" role="progressbar" aria-label="Ocupación de @o.Profesional" aria-valuenow="@o.Porcentaje" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar" style="width: @(o.Porcentaje)%"></div>
-                            </div>
-                            <span class="small">@o.Porcentaje %</span>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <caption class="visually-hidden">Ocupación por profesional</caption>
+                <thead><tr><th scope="col">Profesional</th><th scope="col" class="text-end">Minutos ocupados</th><th scope="col" class="text-end">Minutos de atención</th><th scope="col">Ocupación</th></tr></thead>
+                <tbody>
+                    @foreach (var o in ocupacion)
+                    {
+                        <tr>
+                            <th scope="row">@o.Profesional</th>
+                            <td class="text-end">@o.MinutosOcupados</td>
+                            <td class="text-end">@(o.MinutosDisponibles > 0 ? o.MinutosDisponibles.ToString() : "No atiende")</td>
+                            <td style="min-width: 10rem;">
+                                <div class="progress" role="progressbar" aria-label="Ocupación de @o.Profesional" aria-valuenow="@o.Porcentaje" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" style="width: @(o.Porcentaje)%"></div>
+                                </div>
+                                <span class="small">@o.Porcentaje %</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <div class="row">
@@ -60,17 +62,19 @@
             }
             else
             {
-                <table class="table table-sm">
-                    <caption class="visually-hidden">Cobrado por servicio sin comprobantes anulados</caption>
-                    <thead><tr><th scope="col">Servicio</th><th scope="col" class="text-end">Cobros</th><th scope="col" class="text-end">Total</th></tr></thead>
-                    <tbody>
-                        @foreach (var i in ingresos)
-                        {
-                            <tr><th scope="row">@i.Servicio</th><td class="text-end">@i.Cobros</td><td class="text-end">$ @i.Total.ToString("N0")</td></tr>
-                        }
-                        <tr class="fw-bold"><th scope="row">Total</th><td class="text-end">@ingresos.Sum(i => i.Cobros)</td><td class="text-end">$ @ingresos.Sum(i => i.Total).ToString("N0")</td></tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <caption class="visually-hidden">Cobrado por servicio sin comprobantes anulados</caption>
+                        <thead><tr><th scope="col">Servicio</th><th scope="col" class="text-end">Cobros</th><th scope="col" class="text-end">Total</th></tr></thead>
+                        <tbody>
+                            @foreach (var i in ingresos)
+                            {
+                                <tr><th scope="row">@i.Servicio</th><td class="text-end">@i.Cobros</td><td class="text-end">$ @i.Total.ToString("N0")</td></tr>
+                            }
+                            <tr class="fw-bold"><th scope="row">Total</th><td class="text-end">@ingresos.Sum(i => i.Cobros)</td><td class="text-end">$ @ingresos.Sum(i => i.Total).ToString("N0")</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             }
         </section>
 
@@ -88,21 +92,23 @@
 
     <section class="mb-4" aria-labelledby="titulo-rotacion">
         <h2 class="h5" id="titulo-rotacion">Rotación de stock (últimos 30 días)</h2>
-        <table class="table table-sm">
-            <caption class="visually-hidden">Consumo y días de cobertura por artículo</caption>
-            <thead><tr><th scope="col">Artículo</th><th scope="col" class="text-end">Consumido</th><th scope="col" class="text-end">Stock</th><th scope="col" class="text-end">Alcanza para</th></tr></thead>
-            <tbody>
-                @foreach (var r in rotacion)
-                {
-                    <tr>
-                        <th scope="row">@r.Articulo</th>
-                        <td class="text-end">@r.Consumo @r.Unidad</td>
-                        <td class="text-end">@r.Stock</td>
-                        <td class="text-end">@(r.DiasCobertura is null ? "Sin consumo" : $"{r.DiasCobertura} días")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <caption class="visually-hidden">Consumo y días de cobertura por artículo</caption>
+                <thead><tr><th scope="col">Artículo</th><th scope="col" class="text-end">Consumido</th><th scope="col" class="text-end">Stock</th><th scope="col" class="text-end">Alcanza para</th></tr></thead>
+                <tbody>
+                    @foreach (var r in rotacion)
+                    {
+                        <tr>
+                            <th scope="row">@r.Articulo</th>
+                            <td class="text-end">@r.Consumo @r.Unidad</td>
+                            <td class="text-end">@r.Stock</td>
+                            <td class="text-end">@(r.DiasCobertura is null ? "Sin consumo" : $"{r.DiasCobertura} días")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <a href="panel">← Volver al panel</a>

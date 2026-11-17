@@ -62,7 +62,7 @@ Antes de planificar, diseñar o implementar, leer:
 
 Actualizado: 2026-11-10.
 
-- **Entrega: jueves 4 de diciembre de 2026** (DT-ORG-07).
+- **Entrega: domingo 13 de diciembre de 2026** (DT-ORG-07; antes jueves 4 de diciembre).
 - **Diego (2026-11-10):** proveedor decidido — `MySql.EntityFrameworkCore` 10.0.7 (Oracle) con EF Core 10 (DT-BD-02). API en un solo proyecto `api/Veterinaria.Api` (DT-API-01), empezada en paralelo (DT-ORG-08); primera versión de la base con `AppDbContext` y semilla, ver `api/README.md`. Plan B: R1 y R2 no se aplican todavía.
 - Fase: construcción, sección A (DT-ORG-04, 2026-10-31).
 

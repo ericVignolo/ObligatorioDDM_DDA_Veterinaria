@@ -102,31 +102,34 @@
         }
         else
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Día y hora</th>
-                        <th scope="col">Detalle</th>
-                        <th scope="col">Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var turno in historial)
-                    {
+            <div class="table-responsive">
+                <table class="table">
+                    <caption class="visually-hidden">Turnos reservados</caption>
+                    <thead>
                         <tr>
-                            <td>@turno.Inicio.ToString("ddd d/MM/yyyy HH:mm")</td>
-                            <td>
-                                @Resumen(turno)
-                                @if (!string.IsNullOrEmpty(turno.MotivoCancelacion))
-                                {
-                                    <div class="small text-muted">Motivo: @turno.MotivoCancelacion</div>
-                                }
-                            </td>
-                            <td><EstadoTurno Estado="@turno.Estado" Pasado="@(turno.Fin < DateTime.Now)" /></td>
+                            <th scope="col">Día y hora</th>
+                            <th scope="col">Detalle</th>
+                            <th scope="col">Estado</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var turno in historial)
+                        {
+                            <tr>
+                                <td>@turno.Inicio.ToString("ddd d/MM/yyyy HH:mm")</td>
+                                <td>
+                                    @Resumen(turno)
+                                    @if (!string.IsNullOrEmpty(turno.MotivoCancelacion))
+                                    {
+                                        <div class="small text-muted">Motivo: @turno.MotivoCancelacion</div>
+                                    }
+                                </td>
+                                <td><EstadoTurno Estado="@turno.Estado" Pasado="@(turno.Fin < DateTime.Now)" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
     }
 </RequiereSesion>

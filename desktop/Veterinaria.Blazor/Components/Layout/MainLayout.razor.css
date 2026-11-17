@@ -91,6 +91,9 @@ main {
 }
 
     #blazor-error-ui .dismiss {
+        background: transparent;
+        border: 0;
+        color: inherit;
         cursor: pointer;
         position: absolute;
         right: 0.75rem;

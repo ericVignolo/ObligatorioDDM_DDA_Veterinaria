@@ -41,7 +41,13 @@ public class AuditoriaEIndicadoresTests
     {
         var (f, consulta) = ConsultaCobrada();
         var admin = f.PersonalDe(Admin);
-        f.Administracion.AgregarFeriado(Hoy.AddDays(50), admin);
+        var dia = Hoy.AddDays(50);
+        while (f.Agenda.EsFeriado(dia))
+        {
+            dia = dia.AddDays(1); // la semilla ya trae feriados (p. ej. 6 de enero)
+        }
+
+        f.Administracion.AgregarFeriado(dia, admin);
 
         var todo = f.Bitacora.Buscar(admin);
 

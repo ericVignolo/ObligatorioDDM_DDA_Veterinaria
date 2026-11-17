@@ -66,13 +66,16 @@
                 <dd class="col-sm-8">@pago.PersonalNombre</dd>
             </dl>
 
-            <table class="table table-sm mb-2">
-                <tbody>
-                    <tr><th scope="row">Importe del cargo</th><td class="text-end">$ @cargo.Monto.ToString("N0")</td></tr>
-                    <tr><th scope="row">Importe cobrado en este comprobante</th><td class="text-end fw-bold">$ @pago.Monto.ToString("N0")</td></tr>
-                    <tr><th scope="row">Saldo actual del cargo</th><td class="text-end">$ @Cobro.Saldo(cargo).ToString("N0")</td></tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-sm mb-2">
+                    <caption class="visually-hidden">Detalle del cobro</caption>
+                    <tbody>
+                        <tr><th scope="row">Importe del cargo</th><td class="text-end">$ @cargo.Monto.ToString("N0")</td></tr>
+                        <tr><th scope="row">Importe cobrado en este comprobante</th><td class="text-end fw-bold">$ @pago.Monto.ToString("N0")</td></tr>
+                        <tr><th scope="row">Saldo actual del cargo</th><td class="text-end">$ @Cobro.Saldo(cargo).ToString("N0")</td></tr>
+                    </tbody>
+                </table>
+            </div>
             <p class="small text-muted mb-0">Comprobante interno de la clínica. No modifica el registro clínico.</p>
         </article>
     }

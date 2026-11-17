@@ -9,6 +9,8 @@ generado: true
 
 > Fuente: `desktop/Veterinaria.Blazor/Components/Layout/MainLayout.razor` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
+Con <base href="/"> un enlace "#..." navegaría al inicio: se lleva el foco al contenido sin cambiar la URL.
+
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa

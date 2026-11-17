@@ -153,6 +153,10 @@ public class AdministracionTests
         var f = new Fabrica();
         var admin = f.PersonalDe(Admin);
         var dia = Hoy.AddDays(45);
+        while (f.Agenda.EsFeriado(dia))
+        {
+            dia = dia.AddDays(1); // la semilla ya trae feriados (p. ej. 1 de enero)
+        }
 
         Assert.True(f.Administracion.AgregarFeriado(dia, admin).Exito);
         Assert.True(f.Agenda.EsFeriado(dia));
