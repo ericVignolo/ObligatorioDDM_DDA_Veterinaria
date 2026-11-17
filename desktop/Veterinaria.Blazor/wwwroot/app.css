@@ -152,3 +152,22 @@ main:focus {
         display: none;
     }
 }
+
+/* A-030: marca de simulación visible en todas las pantallas. */
+.demo-banner {
+    background: #fff3cd;
+    color: #4d3b00;
+    border-bottom: 1px solid #e0c97a;
+    font-size: 0.875rem;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+}
+
+.demo-banner a {
+    color: #4d3b00;
+    font-weight: 600;
+}
+
+@media print {
+    .demo-banner { display: none; }
+}

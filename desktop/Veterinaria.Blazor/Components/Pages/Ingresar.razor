@@ -22,7 +22,7 @@ else if (Sesion.Iniciada)
 else
 {
     <div class="alert alert-secondary small">
-        Demostración: solo podés ingresar con una cuenta creada desde que abriste esta pestaña.
+        Demostración: podés ingresar con las cuentas de la guía o con una creada desde que abriste esta pestaña. <a href="demo">Ver la guía</a>.
     </div>
 
     @if (!string.IsNullOrEmpty(error))
@@ -58,9 +58,10 @@ else
 
     @* SOLO DEMOSTRACIÓN (A-010): cuentas del personal para probar el panel. *@
     <details class="mt-4">
-        <summary>Cuentas de demostración del personal</summary>
+        <summary>Cuentas de demostración</summary>
         <p class="small mt-2 mb-1">Contraseña para todas: <code>@PersonalService.ContrasenaDemo</code></p>
         <ul class="small">
+            <li><code>ana.demo@@vitalia.uy</code>, <code>pedro.demo@@vitalia.uy</code> — Cliente</li>
             <li><code>recepcion@@vitalia.uy</code> — Recepción</li>
             <li><code>ferreira@@vitalia.uy</code>, <code>silveira@@vitalia.uy</code>, <code>acosta@@vitalia.uy</code> — Veterinario/a</li>
             <li><code>admin@@vitalia.uy</code> — Administrador</li>

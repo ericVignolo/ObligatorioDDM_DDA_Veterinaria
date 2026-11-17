@@ -22,6 +22,7 @@ public class Fabrica
     public VacunaService Vacunas { get; }
     public AvisosRefuerzoService AvisosRefuerzo { get; }
     public DerechosService Derechos { get; }
+    public RecorridosService Recorridos { get; } = new();
     public InternacionService Internaciones { get; }
     public AsistenciaService Asistencias { get; }
     public AuditoriaService Auditoria { get; } = new();

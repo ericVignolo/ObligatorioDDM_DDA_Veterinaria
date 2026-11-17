@@ -23,11 +23,15 @@ public class CuentaService
         CargarClientesDemo();
     }
 
-    // Clientes de demostración con turnos y animales ya cargados (sin contraseña: no pueden ingresar).
+    // Hash de la contraseña de demostración, calculado una sola vez (la derivación es lenta a propósito).
+    private static readonly Lazy<string> HashDemo = new(() => DerivarContrasena(PersonalService.ContrasenaDemo));
+
+    // Clientes de demostración con turnos y animales ya cargados (A-030): entran con la contraseña de demostración
+    // del personal, así el recorrido del Cliente se puede hacer sin registrarse.
     private void CargarClientesDemo()
     {
-        _cuentas.Add(new Cuenta { Id = 100, Nombre = "Ana", Apellido = "Rodríguez", Correo = "ana.demo@vitalia.uy", Telefono = "+59899111222", Verificada = true, FechaCreacion = new DateTime(2026, 10, 1) });
-        _cuentas.Add(new Cuenta { Id = 101, Nombre = "Pedro", Apellido = "Gómez", Correo = "pedro.demo@vitalia.uy", Telefono = "+59899333444", Verificada = true, FechaCreacion = new DateTime(2026, 10, 1) });
+        _cuentas.Add(new Cuenta { Id = 100, Nombre = "Ana", Apellido = "Rodríguez", Correo = "ana.demo@vitalia.uy", Telefono = "+59899111222", Verificada = true, HashContrasena = HashDemo.Value, FechaCreacion = new DateTime(2026, 10, 1) });
+        _cuentas.Add(new Cuenta { Id = 101, Nombre = "Pedro", Apellido = "Gómez", Correo = "pedro.demo@vitalia.uy", Telefono = "+59899333444", Verificada = true, HashContrasena = HashDemo.Value, FechaCreacion = new DateTime(2026, 10, 1) });
     }
 
     public Cuenta? ObtenerPorId(int id)

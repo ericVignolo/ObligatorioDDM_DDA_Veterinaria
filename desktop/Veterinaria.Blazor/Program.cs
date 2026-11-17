@@ -33,6 +33,7 @@ builder.Services.AddScoped<ConsultaService>();
 builder.Services.AddScoped<VacunaService>();
 builder.Services.AddScoped<AvisosRefuerzoService>();
 builder.Services.AddScoped<DerechosService>();
+builder.Services.AddScoped<RecorridosService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
