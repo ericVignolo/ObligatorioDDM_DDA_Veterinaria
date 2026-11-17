@@ -28,7 +28,7 @@ CI: en verde, con 992 pruebas (incluidas las 12 nuevas).
 ## Cómo probarlo
 
 1. GitHub Desktop → *Fetch origin* → rama `diego/sesion-2026-11-16`.
-2. Abrir `api/Veterinaria.Api/Veterinaria.Api.slnx` y F5. MySQL tiene que estar corriendo y `appsettings.Development.json` con tu contraseña.
+2. Abrir `api/Veterinaria.Api/Veterinaria.Api.slnx`, perfil **https**, y F5. MySQL tiene que estar corriendo. Si es un clon nuevo, copiar `appsettings.Development.example.json` como `appsettings.Development.json` y poner la contraseña; si no, MySQL responde `Access denied for user 'root'`.
 3. En el navegador:
    - `https://localhost:7191/api/v1/servicios` → 6 servicios, `totalItems: 6`, sin «Guardería».
    - `https://localhost:7191/api/v1/servicios?page=2&pageSize=4` → 2 servicios (Id 5 y 6).
@@ -39,7 +39,9 @@ CI: en verde, con 992 pruebas (incluidas las 12 nuevas).
 
 ## Qué falta
 
-- [ ] Diego: probar con F5 y mezclar el PR #39.
+- [x] Diego probó con F5 (2026-11-17): lista de 6 servicios desde MySQL, paginación `page=2&pageSize=4` (Id 5 y 6), 404 del servicio 7 y 400 con `pageSize=100`. Todo bien.
+- [ ] Mezclar el PR #39.
+- [ ] Detalles: el importe sale como `1200.00` (D-CAT-04 pide pesos enteros) y el OpenAPI no documenta las respuestas 400/404.
 - [ ] Probador de caja negra para el catálogo (`.claude/agents/probador.md`).
 - [ ] Conectar el catálogo de Blazor a la API (`PrestacionApiService` con `AddHttpClient`), a coordinar con Eric. Va a hacer falta CORS o la URL de la API en la configuración de Blazor.
 - [ ] Tarifas con vigencia (D-CAT-04, RN-33) en una migración.
