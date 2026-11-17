@@ -72,4 +72,5 @@ Actualizado: 2026-11-10.
 - Ramas (DT-ORG-09, 2026-11-11): una sola rama de trabajo, `desarrollo` (antes `desktop`), con escritorio, API y móvil en sus carpetas; una rama corta por sesión con PR contra `desarrollo`; `main` para versiones estables; etiquetas por aplicación (`desktop-vX.Y`, `api-vX.Y`, `mobile-vX.Y`).
 - Plan B de alcance sin recortes aplicados (Diego, 2026-11-10: R1 y R2 todavía no): `docs/analisis/PLAN_B_ALCANCE.md`.
 - Estado de la sección A y próximos pasos: ver la última bitácora en `docs/sesiones/`.
+- **Diseño (Eric, 2026-11-17):** propuesta de sistema de diseño en dos opciones (A de Eric, B de Claude) en `design/vitalia/`; Diego elige y luego se aplica a Blazor (A-032) y a React Native. OpenPencil se maneja con el CLI `op` desde Claude Code en la PC (ver `design/vitalia/README.md`).
 - Cobro, internación, avisos de refuerzo, parámetros de asistencia y proveedores: decididos el 2026-10-31 (`docs/analisis/DECISIONES_ERIC_2026-10-31.md`). Cada módulo los incorpora a su especificación al abordarse.
