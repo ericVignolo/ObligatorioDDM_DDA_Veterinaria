@@ -17,7 +17,7 @@ Esta tarea no agrega requisitos de la matriz: ordena la demostración de lo ya c
 | RD-08 | Los datos de partida son repetibles: dos sesiones nuevas tienen la misma cantidad de cuentas de clientes, personal, animales y servicios, y los mismos animales de Ana. |
 | RD-09 | La demostración muestra una marca de simulación en todas las pantallas (franja con enlace a `/demo`) y la guía `/demo` indica que todo es simulado, que no se envían correos ni se cobra y que recargar la pestaña reinicia los datos. |
 | RD-10 | Ana tiene dos animales (Toby y Mishi) y Pedro dos (el rodeo y Canela); un cliente no ve los animales del otro. |
-| RD-11 | Aclaraciones del probador: `DeRol` distingue mayúsculas y tildes y con rol nulo devuelve nulo sin error. El correo al ingresar se normaliza (sin espacios en los extremos y sin distinguir mayúsculas). Las cuentas de cliente de demostración son exactamente dos: `ana.demo@vitalia.uy` (Mishi y Toby) y `pedro.demo@vitalia.uy` (Canela y «Rodeo La Esperanza»). Una ruta de paso no lleva parámetros de consulta ni ancla; la ruta vacía (`""`) es el inicio y cuenta como pantalla. |
+| RD-11 | Aclaraciones del probador: `DeRol` distingue mayúsculas y tildes y con rol nulo devuelve nulo sin error. El correo al ingresar se normaliza (sin espacios en los extremos y sin distinguir mayúsculas). Las cuentas de cliente de demostración son exactamente dos: `ana.demo@vitalia.uy` (Mishi y Toby) y `pedro.demo@vitalia.uy` (Canela y «Rodeo La Esperanza»). Las rutas de paso empiezan con «/», no llevan parámetros, consulta ni ancla, y el inicio es «/». `SesionService.Iniciada` es verdadera solo para un Cliente; `HaySesion` lo es para cualquier persona con sesión (Cliente o personal). |
 
 ## Decisiones
 

@@ -17,7 +17,7 @@ public class PasoRecorrido
 {
     public string Accion { get; set; } = "";
 
-    // Ruta relativa de la pantalla (por ejemplo "panel/agenda"), sin barra inicial.
+    // Ruta de la pantalla con barra inicial (por ejemplo "/panel/agenda"); el inicio es "/". Sin parámetros.
     public string Ruta { get; set; } = "";
 
     public string Resultado { get; set; } = "";

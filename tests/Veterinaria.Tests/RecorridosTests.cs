@@ -104,7 +104,7 @@ public class RecorridosTests
             .SelectMany(File.ReadAllLines)
             .Select(l => Regex.Match(l, @"^@page ""/([^""]*)"""))
             .Where(m => m.Success)
-            .Select(m => m.Groups[1].Value)
+            .Select(m => "/" + m.Groups[1].Value)
             .ToList();
         var f = new Fabrica();
 

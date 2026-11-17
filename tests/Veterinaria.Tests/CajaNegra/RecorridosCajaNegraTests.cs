@@ -302,7 +302,7 @@ public class RecorridosCajaNegraTests
             var r = Del(f, rol);
             var res = f.Sesion.Ingresar(Datos(r.Correo, PersonalService.ContrasenaDemo));
             Assert.True(res.Exito, "No pudo ingresar: " + rol);
-            Assert.True(f.Sesion.Iniciada, "Sesion no iniciada: " + rol);
+            Assert.True(f.Sesion.HaySesion, "Sesion no iniciada: " + rol);
         }
     }
 
@@ -838,8 +838,8 @@ public class RecorridosCajaNegraTests
         var a = new Fabrica();
         var b = new Fabrica();
         a.Sesion.Ingresar(Datos(Del(a, PersonalService.Administrador).Correo, PersonalService.ContrasenaDemo));
-        Assert.True(a.Sesion.Iniciada);
-        Assert.False(b.Sesion.Iniciada);
+        Assert.True(a.Sesion.HaySesion);
+        Assert.False(b.Sesion.HaySesion);
     }
 
     // ---------------- RD-10 ----------------
