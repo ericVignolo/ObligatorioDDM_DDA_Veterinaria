@@ -186,6 +186,11 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
+### Servicios (3)
+- [[IPrestacionService (API)]]
+- [[PrestacionService (API)]]
+- [[ReglasCatalogo (API)]]
+
 ### Modelos (9)
 - [[Animal (API)]]
 - [[CodigoCuenta (API)]]
@@ -196,6 +201,17 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Profesional (API)]]
 - [[Rol (API)]]
 - [[Turno (API)]]
+
+### Controladores (1)
+- [[ServiciosController (API)]] · `api/v1/servicios`
+
+### Repositorios (2)
+- [[IPrestacionRepository (API)]]
+- [[PrestacionRepository (API)]]
+
+### DTOs (2)
+- [[PaginaDto (API)]]
+- [[ServicioReadDto (API)]]
 
 ### Datos (1)
 - [[AppDbContext (API)]]
