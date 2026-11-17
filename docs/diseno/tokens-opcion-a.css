@@ -1,0 +1,37 @@
+/* VITALIA — tokens de diseño, Opción A (Eric: verde salud + naranja cálido, Nunito, redondeo suave).
+   Un solo conjunto de variables --vt-* que consumen Blazor (escritorio) y React Native (móvil, mismos valores).
+   Contraste verificado WCAG AA: texto normal ≥ 4,5:1 en claro y oscuro (ver DISENO_COMPARACION.md). */
+[data-opcion="a"] {
+  /* Marca */
+  --vt-primario: #1B7F53;          --vt-primario-hover: #156A45;   --vt-primario-suave: #E3F4EA;   --vt-sobre-primario: #FFFFFF;
+  --vt-acento: #B8530A;            --vt-acento-hover: #9A4408;     --vt-acento-suave: #FDEBD9;     --vt-sobre-acento: #FFFFFF;
+  /* Estados */
+  --vt-exito: #1B7F53; --vt-exito-suave: #E3F4EA;
+  --vt-aviso: #8A5A00; --vt-aviso-suave: #FFF1D6;
+  --vt-peligro: #B42318; --vt-peligro-suave: #FDE8E6;
+  --vt-info: #1D5FA8; --vt-info-suave: #E5EFFB;
+  /* Superficies y texto */
+  --vt-fondo: #F4FAF6; --vt-superficie: #FFFFFF; --vt-superficie-2: #ECF5EF;
+  --vt-texto: #1F2A24; --vt-texto-suave: #5A6B62; --vt-borde: #D3E3D9;
+  --vt-foco: #F28C28;
+  /* Forma */
+  --vt-radio-s: 6px; --vt-radio-m: 10px; --vt-radio-l: 16px; --vt-radio-pill: 999px;
+  --vt-sombra-1: 0 1px 3px rgba(31,42,36,.10), 0 1px 2px rgba(31,42,36,.06); --vt-sombra-2: 0 10px 28px rgba(31,42,36,.14);
+  /* Tipografía */
+  --vt-fuente: 'Nunito', system-ui, 'Segoe UI', sans-serif;
+  --vt-t-xs: .75rem; --vt-t-s: .875rem; --vt-t-m: 1rem; --vt-t-l: 1.25rem; --vt-t-xl: 1.625rem; --vt-t-2xl: 2.125rem;
+  --vt-peso-normal: 400; --vt-peso-medio: 600; --vt-peso-fuerte: 800;
+  /* Espacio (escala de 4 px) y movimiento */
+  --vt-e1: .25rem; --vt-e2: .5rem; --vt-e3: .75rem; --vt-e4: 1rem; --vt-e6: 1.5rem; --vt-e8: 2rem;
+  --vt-rapido: 120ms; --vt-normal: 220ms; --vt-lento: 400ms; --vt-curva: cubic-bezier(.2,.7,.2,1);
+  --vt-icono: "Lucide, contorno fino, trazo 1.75 px, 24 px";
+}
+[data-opcion="a"][data-tema="oscuro"] {
+  --vt-primario: #4ADE9A; --vt-primario-hover: #7CE8B5; --vt-primario-suave: #173528; --vt-sobre-primario: #0B1F16;
+  --vt-acento: #F5A25D; --vt-acento-hover: #F8B77F; --vt-acento-suave: #3A2512; --vt-sobre-acento: #1F1206;
+  --vt-exito: #5FD39A; --vt-exito-suave: #153325; --vt-aviso: #F5C467; --vt-aviso-suave: #3A2C0E;
+  --vt-peligro: #FF8A80; --vt-peligro-suave: #3C1815; --vt-info: #7DB6F2; --vt-info-suave: #14283F;
+  --vt-fondo: #101A15; --vt-superficie: #17241D; --vt-superficie-2: #1D2E25;
+  --vt-texto: #E6F2EB; --vt-texto-suave: #9DB3A7; --vt-borde: #2C4236; --vt-foco: #F5A25D;
+  --vt-sombra-1: 0 1px 2px rgba(0,0,0,.5); --vt-sombra-2: 0 8px 24px rgba(0,0,0,.45);
+}

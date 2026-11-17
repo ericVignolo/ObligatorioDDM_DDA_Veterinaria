@@ -1,0 +1,37 @@
+/* VITALIA — tokens de diseño, Opción B (Claude: verde azulado profundo + coral, fondo arena, Plus Jakarta Sans, formas más amplias).
+   Un solo conjunto de variables --vt-* que consumen Blazor (escritorio) y React Native (móvil, mismos valores).
+   Contraste verificado WCAG AA: texto normal ≥ 4,5:1 en claro y oscuro (ver DISENO_COMPARACION.md). */
+[data-opcion="b"] {
+  /* Marca */
+  --vt-primario: #0B7A75;          --vt-primario-hover: #095F5B;   --vt-primario-suave: #DDF1EF;   --vt-sobre-primario: #FFFFFF;
+  --vt-acento: #C4452E;            --vt-acento-hover: #A53824;     --vt-acento-suave: #FBE3DD;     --vt-sobre-acento: #FFFFFF;
+  /* Estados */
+  --vt-exito: #1B7F53; --vt-exito-suave: #E3F4EA;
+  --vt-aviso: #8A5A00; --vt-aviso-suave: #FFF1D6;
+  --vt-peligro: #B42318; --vt-peligro-suave: #FDE8E6;
+  --vt-info: #1D5FA8; --vt-info-suave: #E5EFFB;
+  /* Superficies y texto */
+  --vt-fondo: #FBF8F3; --vt-superficie: #FFFFFF; --vt-superficie-2: #F3EEE5;
+  --vt-texto: #1B2625; --vt-texto-suave: #5C6B6A; --vt-borde: #E4DDD0;
+  --vt-foco: #C4452E;
+  /* Forma */
+  --vt-radio-s: 8px; --vt-radio-m: 14px; --vt-radio-l: 22px; --vt-radio-pill: 999px;
+  --vt-sombra-1: 0 1px 2px rgba(27,38,37,.08), 0 2px 6px rgba(27,38,37,.06); --vt-sombra-2: 0 14px 32px rgba(27,38,37,.16);
+  /* Tipografía */
+  --vt-fuente: 'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif;
+  --vt-t-xs: .75rem; --vt-t-s: .875rem; --vt-t-m: 1rem; --vt-t-l: 1.25rem; --vt-t-xl: 1.625rem; --vt-t-2xl: 2.125rem;
+  --vt-peso-normal: 400; --vt-peso-medio: 600; --vt-peso-fuerte: 800;
+  /* Espacio (escala de 4 px) y movimiento */
+  --vt-e1: .25rem; --vt-e2: .5rem; --vt-e3: .75rem; --vt-e4: 1rem; --vt-e6: 1.5rem; --vt-e8: 2rem;
+  --vt-rapido: 120ms; --vt-normal: 220ms; --vt-lento: 400ms; --vt-curva: cubic-bezier(.2,.7,.2,1);
+  --vt-icono: "Phosphor duotono, 24 px";
+}
+[data-opcion="b"][data-tema="oscuro"] {
+  --vt-primario: #5EC9C2; --vt-primario-hover: #86DAD4; --vt-primario-suave: #12312F; --vt-sobre-primario: #06201F;
+  --vt-acento: #FF9A85; --vt-acento-hover: #FFB3A3; --vt-acento-suave: #3D1E18; --vt-sobre-acento: #2A0F0A;
+  --vt-exito: #5FD39A; --vt-exito-suave: #153325; --vt-aviso: #F5C467; --vt-aviso-suave: #3A2C0E;
+  --vt-peligro: #FF8A80; --vt-peligro-suave: #3C1815; --vt-info: #7DB6F2; --vt-info-suave: #14283F;
+  --vt-fondo: #0F1B1A; --vt-superficie: #162423; --vt-superficie-2: #1C2F2D;
+  --vt-texto: #E8F1F0; --vt-texto-suave: #9DB5B3; --vt-borde: #2B4140; --vt-foco: #FF9A85;
+  --vt-sombra-1: 0 1px 2px rgba(0,0,0,.5); --vt-sombra-2: 0 8px 24px rgba(0,0,0,.45);
+}

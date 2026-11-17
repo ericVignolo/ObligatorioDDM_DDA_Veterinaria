@@ -1,0 +1,39 @@
+/* VITALIA — componentes base que usan solo variables --vt-*. Sirven para la previsualización y, más adelante,
+   reemplazan los estilos de app.css de Blazor. En React Native se traducen los mismos valores a StyleSheet. */
+[data-opcion] { font-family: var(--vt-fuente); background: var(--vt-fondo); color: var(--vt-texto); font-size: var(--vt-t-m); line-height: 1.5; }
+[data-opcion] h1,[data-opcion] h2,[data-opcion] h3 { font-weight: var(--vt-peso-fuerte); letter-spacing: -.01em; margin: 0 0 var(--vt-e2); }
+[data-opcion] .vt-muted { color: var(--vt-texto-suave); font-size: var(--vt-t-s); }
+[data-opcion] :focus-visible { outline: 3px solid var(--vt-foco); outline-offset: 2px; }
+
+.vt-btn { display: inline-flex; align-items: center; gap: var(--vt-e2); min-height: 44px; padding: 0 var(--vt-e4); border: 2px solid transparent; border-radius: var(--vt-radio-m); font: inherit; font-weight: var(--vt-peso-medio); cursor: pointer; transition: background var(--vt-rapido) var(--vt-curva), transform var(--vt-rapido) var(--vt-curva), box-shadow var(--vt-rapido) var(--vt-curva); }
+.vt-btn:active { transform: translateY(1px) scale(.99); }
+.vt-btn-primario { background: var(--vt-primario); color: var(--vt-sobre-primario); box-shadow: var(--vt-sombra-1); }
+.vt-btn-primario:hover { background: var(--vt-primario-hover); }
+.vt-btn-acento { background: var(--vt-acento); color: var(--vt-sobre-acento); }
+.vt-btn-acento:hover { background: var(--vt-acento-hover); }
+.vt-btn-borde { background: transparent; color: var(--vt-primario); border-color: var(--vt-primario); }
+.vt-btn-borde:hover { background: var(--vt-primario-suave); }
+.vt-btn-peligro { background: var(--vt-peligro-suave); color: var(--vt-peligro); border-color: var(--vt-peligro); }
+.vt-btn:disabled { opacity: .5; cursor: not-allowed; }
+.vt-btn svg, .vt-ico { width: 1.25rem; height: 1.25rem; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+.vt-card { background: var(--vt-superficie); border: 1px solid var(--vt-borde); border-radius: var(--vt-radio-l); padding: var(--vt-e4); box-shadow: var(--vt-sombra-1); transition: box-shadow var(--vt-normal) var(--vt-curva), transform var(--vt-normal) var(--vt-curva); }
+.vt-card:hover { box-shadow: var(--vt-sombra-2); transform: translateY(-2px); }
+.vt-badge { display: inline-block; padding: 2px var(--vt-e3); border-radius: var(--vt-radio-pill); font-size: var(--vt-t-xs); font-weight: var(--vt-peso-medio); }
+.vt-badge-exito { background: var(--vt-exito-suave); color: var(--vt-exito); }
+.vt-badge-aviso { background: var(--vt-aviso-suave); color: var(--vt-aviso); }
+.vt-badge-peligro { background: var(--vt-peligro-suave); color: var(--vt-peligro); }
+.vt-badge-info { background: var(--vt-info-suave); color: var(--vt-info); }
+.vt-input { width: 100%; min-height: 44px; padding: 0 var(--vt-e3); background: var(--vt-superficie); color: var(--vt-texto); border: 1.5px solid var(--vt-borde); border-radius: var(--vt-radio-m); font: inherit; }
+.vt-input:focus { border-color: var(--vt-primario); }
+.vt-icono-caja { display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--vt-radio-m); background: var(--vt-primario-suave); color: var(--vt-primario); }
+
+/* Carga: esqueletos que muestran la forma del contenido y se animan (se quietan con prefers-reduced-motion). */
+.vt-esqueleto { background: linear-gradient(90deg, var(--vt-superficie-2) 25%, var(--vt-borde) 50%, var(--vt-superficie-2) 75%); background-size: 200% 100%; animation: vt-brillo 1.3s linear infinite; border-radius: var(--vt-radio-s); min-height: 14px; }
+@keyframes vt-brillo { to { background-position: -200% 0; } }
+/* Respuestas: avisos flotantes que desaparecen solos; los errores no. */
+.vt-toasts { position: fixed; right: var(--vt-e4); bottom: var(--vt-e4); display: grid; gap: var(--vt-e2); z-index: 50; }
+.vt-toast { display: flex; gap: var(--vt-e2); align-items: center; padding: var(--vt-e3) var(--vt-e4); background: var(--vt-superficie); border: 1px solid var(--vt-borde); border-left: 5px solid var(--vt-primario); border-radius: var(--vt-radio-m); box-shadow: var(--vt-sombra-2); animation: vt-entra var(--vt-normal) var(--vt-curva); }
+.vt-toast-exito { border-left-color: var(--vt-exito); } .vt-toast-error { border-left-color: var(--vt-peligro); } .vt-toast-aviso { border-left-color: var(--vt-aviso); }
+@keyframes vt-entra { from { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce) { .vt-esqueleto, .vt-toast, .vt-btn, .vt-card { animation: none; transition: none; } }
