@@ -133,14 +133,14 @@
         <div class="form-check mb-2">
             <InputCheckbox id="aceptaTerminos" class="form-check-input" @bind-Value="registro.AceptaTerminos" />
             <label class="form-check-label" for="aceptaTerminos">
-                Leí y acepto los <a href="terminos" target="_blank">Términos y Condiciones</a> (versión 1.0).
+                Leí y acepto los <a href="terminos" target="_blank" rel="noopener noreferrer">Términos y Condiciones</a> (versión 1.0).
             </label>
             <ValidationMessage For="() => registro.AceptaTerminos" />
         </div>
         <div class="form-check mb-2">
             <InputCheckbox id="aceptaPrivacidad" class="form-check-input" @bind-Value="registro.AceptaPrivacidad" />
             <label class="form-check-label" for="aceptaPrivacidad">
-                Leí y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> (versión 1.0).
+                Leí y acepto la <a href="privacidad" target="_blank" rel="noopener noreferrer">Política de Privacidad</a> (versión 1.0).
             </label>
             <ValidationMessage For="() => registro.AceptaPrivacidad" />
         </div>

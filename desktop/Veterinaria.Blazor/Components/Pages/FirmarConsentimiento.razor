@@ -45,7 +45,7 @@
         @if (Consentimientos.EsValido(turno.Id))
         {
             var firmado = Consentimientos.UltimaRespuesta(turno.Id)!;
-            <div class="alert alert-success">
+            <div class="alert alert-success" role="status">
                 Firmado por <strong>@firmado.NombreEscrito</strong> el @firmado.Fecha.ToString("dd/MM/yyyy HH:mm") (@firmado.Canal).
                 <span class="d-block small text-break">Huella: @firmado.Hash</span>
             </div>
