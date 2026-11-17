@@ -309,6 +309,8 @@
 
     protected override void OnInitialized()
     {
+        // RN-35: las señas de las cirugías reservadas en línea aparecen como cargos a cobrar.
+        Cobro.GenerarSenasPendientes();
         Cargar();
     }
 

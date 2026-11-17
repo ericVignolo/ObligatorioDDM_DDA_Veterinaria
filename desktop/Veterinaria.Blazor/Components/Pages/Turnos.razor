@@ -18,8 +18,12 @@
     @if (confirmado is not null)
     {
         <div class="alert alert-success" role="status">
-            <strong>@(Reprogramado is not null ? "¡Turno reprogramado!" : "¡Turno confirmado!")</strong>
+            <strong>@(Reprogramado is not null ? "¡Turno reprogramado!" : confirmado.Estado == AgendaService.PendienteSena ? "¡Horario reservado!" : "¡Turno confirmado!")</strong>
             @Describir(confirmado). Número de turno: @confirmado.Id.
+            @if (confirmado.Estado == AgendaService.PendienteSena)
+            {
+                <span>La cirugía se confirma cuando pagues la seña en Recepción.</span>
+            }
             Podés cancelar o reprogramar sin costo hasta @AgendaService.HorasParaCancelar horas antes.
         </div>
     }

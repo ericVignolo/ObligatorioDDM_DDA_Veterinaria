@@ -13,8 +13,16 @@ public class AgendaService
     public const int HorasParaCancelar = 24;
     public const int MinutosToleranciaAusencia = 15;
 
+    // RN-35: una cirugía programada espera la seña antes de confirmarse; mientras tanto conserva el horario.
+    public const string PendienteSena = "Pendiente de seña";
+
+    // RN-08: ausencias sin aviso en 12 meses. Desde AvisoAusencias se advierte; desde LimiteAusencias el cliente
+    // ya no reserva solo y lo hace Recepción (decisión de Eric, 2026-11-17: 2 y 3, configurable).
+    public const int AvisoAusencias = 2;
+    public int LimiteAusencias { get; set; } = 3;
+
     // Estados que ocupan la agenda (FLUJO_RESERVA_CONSULTA §4.1).
-    private static readonly string[] EstadosQueOcupan = { "Confirmado", "En espera", "En curso" };
+    private static readonly string[] EstadosQueOcupan = { PendienteSena, "Confirmado", "En espera", "En curso" };
 
     public static bool Ocupa(Turno turno) => EstadosQueOcupan.Contains(turno.Estado);
 
@@ -32,8 +40,11 @@ public class AgendaService
         new DateOnly(2027, 1, 6)
     };
 
-    public AgendaService(ProfesionalService profesionales, PrestacionService prestaciones, AnimalService animales)
+    private readonly AuditoriaService? _auditoria;
+
+    public AgendaService(ProfesionalService profesionales, PrestacionService prestaciones, AnimalService animales, AuditoriaService? auditoria = null)
     {
+        _auditoria = auditoria;
         _profesionales = profesionales;
         _prestaciones = prestaciones;
         _animales = animales;
@@ -199,6 +210,12 @@ public class AgendaService
             return new ResultadoOperacion { Exito = false, Mensaje = "No encontramos ese animal entre los tuyos." };
         }
 
+        // RN-08: con demasiadas ausencias sin aviso, el turno se pide en Recepción.
+        if (BloqueadoPorAusencias(clienteId))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = MensajeAusencias(clienteId) };
+        }
+
         var prestacion = _prestaciones.ObtenerPorId(prestacionId);
         if (prestacion is null || !HorariosLibres(profesionalId, prestacionId, animalId, DateOnly.FromDateTime(inicio)).Contains(inicio))
         {
@@ -215,12 +232,164 @@ public class AgendaService
             ProfesionalId = profesionalId,
             Inicio = inicio,
             Fin = inicio.AddMinutes(prestacion.DuracionMinutos),
-            Estado = "Confirmado",
+            Estado = EstadoInicial(prestacion),
             FechaCreacion = DateTime.Now
         };
         _turnos.Add(turno);
 
-        return new ResultadoOperacion { Exito = true, Mensaje = "Turno confirmado." };
+        return new ResultadoOperacion { Exito = true, Mensaje = turno.Estado == PendienteSena ? MensajeSena : "Turno confirmado." };
+    }
+
+    public const string MensajeSena = "Horario reservado. La cirugía se confirma cuando pagues la seña en Recepción (RN-35).";
+
+    // RN-35: las cirugías (las prestaciones que piden consentimiento) arrancan esperando la seña.
+    public static string EstadoInicial(Prestacion prestacion)
+    {
+        return prestacion.RequiereConsentimiento ? PendienteSena : "Confirmado";
+    }
+
+    // Lo llama CobroService cuando la seña quedó pagada, y al anularla para volver atrás.
+    public bool ConfirmarSena(int turnoId)
+    {
+        var turno = ObtenerPorId(turnoId);
+        if (turno is null || turno.Estado != PendienteSena)
+        {
+            return false;
+        }
+
+        turno.Estado = "Confirmado";
+        return true;
+    }
+
+    public bool VolverAPendienteSena(int turnoId)
+    {
+        var turno = ObtenerPorId(turnoId);
+        if (turno is null || turno.Estado != "Confirmado")
+        {
+            return false;
+        }
+
+        turno.Estado = PendienteSena;
+        return true;
+    }
+
+    // RN-08: ausencias sin aviso del cliente en los últimos 12 meses.
+    public int AusenciasRecientes(int clienteId)
+    {
+        var desde = DateTime.Now.AddMonths(-12);
+        return _turnos.Count(t => t.ClienteId == clienteId && t.Estado == "Ausente" && t.Inicio >= desde);
+    }
+
+    public bool BloqueadoPorAusencias(int clienteId) => AusenciasRecientes(clienteId) >= LimiteAusencias;
+
+    // Texto para el cliente: vacío si no tiene ausencias para advertir.
+    public string MensajeAusencias(int clienteId)
+    {
+        var ausencias = AusenciasRecientes(clienteId);
+        if (ausencias >= LimiteAusencias)
+        {
+            return $"Tenés {ausencias} turnos sin asistir ni avisar en los últimos 12 meses: para reservar comunicate con Recepción.";
+        }
+
+        if (ausencias >= AvisoAusencias)
+        {
+            return $"Tenés {ausencias} turnos sin asistir ni avisar en los últimos 12 meses. Si llegás a {LimiteAusencias}, vas a tener que reservar por Recepción. Si no podés venir, cancelá con anticipación.";
+        }
+
+        return "";
+    }
+
+    // RF-REC-02 y RN-09: turno dado en el mostrador. Sin sobreturno respeta los horarios libres; con sobreturno puede
+    // ocupar un horario ya tomado o fuera de la grilla, solo lo da Recepción o el Administrador y exige motivo.
+    // El profesional tiene que atender ese día y el animal no puede tener otro turno a esa hora. No aplica RN-08.
+    public ResultadoOperacion ReservarPorMostrador(int clienteId, int animalId, int prestacionId, int profesionalId, DateTime inicio,
+        bool sobreturno, string motivo, Personal? persona, out Turno? turno)
+    {
+        turno = null;
+        if (persona is null || (persona.Rol != PersonalService.Recepcion && persona.Rol != PersonalService.Administrador))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Solo Recepción o el Administrador dan turnos por mostrador." };
+        }
+
+        if (_animales.ObtenerPorId(animalId, clienteId) is null)
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Ese animal no es de ese cliente." };
+        }
+
+        var prestacion = _prestaciones.ObtenerPorId(prestacionId);
+        var profesional = _profesionales.ObtenerPorId(profesionalId);
+        if (prestacion is null || prestacion.DuracionMinutos <= 0 || profesional is null)
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Elegí un servicio con turno y un profesional." };
+        }
+
+        var fecha = DateOnly.FromDateTime(inicio);
+        var fin = inicio.AddMinutes(prestacion.DuracionMinutos);
+        motivo = (motivo ?? "").Trim();
+
+        if (!sobreturno)
+        {
+            if (!HorariosLibres(profesionalId, prestacionId, animalId, fecha).Contains(inicio))
+            {
+                return new ResultadoOperacion { Exito = false, Mensaje = "Ese horario no está libre. Elegí otro o marcá sobreturno con su motivo." };
+            }
+        }
+        else
+        {
+            if (motivo.Length < 5)
+            {
+                return new ResultadoOperacion { Exito = false, Mensaje = "Para un sobreturno escribí el motivo (al menos 5 caracteres)." };
+            }
+
+            if (inicio < DateTime.Now.AddMinutes(-MinutosEntreHorarios))
+            {
+                return new ResultadoOperacion { Exito = false, Mensaje = "No se da un sobreturno en un horario que ya pasó." };
+            }
+
+            var atiende = profesional.Jornada.Where(f => f.Dia == fecha.DayOfWeek)
+                .Any(f => inicio >= fecha.ToDateTime(f.Inicio) && inicio < fecha.ToDateTime(f.Fin));
+            if (EsFeriado(fecha) || profesional.Ausencias.Any(a => fecha >= a.Desde && fecha <= a.Hasta) || !atiende)
+            {
+                return new ResultadoOperacion { Exito = false, Mensaje = $"{profesional.Nombre} no atiende en ese horario: el sobreturno tiene que caer dentro de su jornada." };
+            }
+
+            if (_turnos.Any(t => Ocupa(t) && t.AnimalId == animalId && t.Inicio < fin && t.Fin > inicio))
+            {
+                return new ResultadoOperacion { Exito = false, Mensaje = "Ese animal ya tiene un turno en ese horario." };
+            }
+        }
+
+        _ultimoId++;
+        turno = new Turno
+        {
+            Id = _ultimoId,
+            ClienteId = clienteId,
+            AnimalId = animalId,
+            PrestacionId = prestacionId,
+            ProfesionalId = profesionalId,
+            Inicio = inicio,
+            Fin = fin,
+            Estado = EstadoInicial(prestacion),
+            FechaCreacion = DateTime.Now,
+            EsSobreturno = sobreturno,
+            MotivoSobreturno = sobreturno ? motivo : "",
+            CreadoPor = persona.Nombre
+        };
+        _turnos.Add(turno);
+
+        // RN-09: el sobreturno queda en la bitácora (sin el motivo, que puede ser clínico).
+        if (sobreturno)
+        {
+            _auditoria?.Registrar(persona, BitacoraService.Agenda, "Sobreturno", $"turno n.º {turno.Id} con {profesional.Nombre}, {inicio:dd/MM/yyyy HH:mm}");
+        }
+
+        var texto = sobreturno ? "Sobreturno registrado." : "Turno registrado.";
+        if (turno.Estado == PendienteSena)
+        {
+            texto += " La cirugía se confirma al cobrar la seña.";
+        }
+
+        return new ResultadoOperacion { Exito = true, Mensaje = texto };
     }
 
     // Próximos turnos del cliente (RF-CLI-04).
@@ -250,13 +419,13 @@ public class AgendaService
     // RN-06: el cliente cancela o reprograma solo un turno Confirmado y con más de 24 h de anticipación.
     public bool PuedeGestionar(Turno turno)
     {
-        return turno.Estado == "Confirmado" && turno.Inicio - DateTime.Now > TimeSpan.FromHours(HorasParaCancelar);
+        return (turno.Estado == "Confirmado" || turno.Estado == PendienteSena) && turno.Inicio - DateTime.Now > TimeSpan.FromHours(HorasParaCancelar);
     }
 
     public ResultadoOperacion Cancelar(int turnoId, int clienteId, string motivo)
     {
         var turno = ObtenerDe(turnoId, clienteId);
-        if (turno is null || turno.Estado != "Confirmado")
+        if (turno is null || (turno.Estado != "Confirmado" && turno.Estado != PendienteSena))
         {
             return new ResultadoOperacion { Exito = false, Mensaje = "Ese turno ya no se puede cancelar." };
         }
@@ -333,7 +502,7 @@ public class AgendaService
     public ResultadoOperacion CancelarPorRecepcion(int turnoId, string motivo)
     {
         var turno = ObtenerPorId(turnoId);
-        if (turno is null || (turno.Estado != "Confirmado" && turno.Estado != "En espera"))
+        if (turno is null || (turno.Estado != "Confirmado" && turno.Estado != "En espera" && turno.Estado != PendienteSena))
         {
             return new ResultadoOperacion { Exito = false, Mensaje = "Este turno ya no se puede cancelar." };
         }

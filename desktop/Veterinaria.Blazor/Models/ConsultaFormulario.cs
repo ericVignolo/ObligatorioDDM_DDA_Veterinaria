@@ -41,4 +41,7 @@ public class ConsultaFormulario
 
     [StringLength(2000, ErrorMessage = "Las indicaciones pueden tener hasta 2000 caracteres.")]
     public string Indicaciones { get; set; } = "";
+
+    // RN-17: confirmación explícita para indicar un principio activo registrado como alergia del animal.
+    public bool ConfirmaAlergia { get; set; }
 }

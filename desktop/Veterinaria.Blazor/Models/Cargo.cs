@@ -17,4 +17,7 @@ public class Cargo
     public string Descripcion { get; set; } = "";
     public decimal Monto { get; set; }
     public DateTime Fecha { get; set; }
+
+    // RN-35: seña de una cirugía programada. Se cobra antes del turno y se descuenta del cargo final.
+    public bool EsSena { get; set; }
 }

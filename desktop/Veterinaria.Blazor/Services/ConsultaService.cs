@@ -89,6 +89,35 @@ public class ConsultaService
         return consulta;
     }
 
+    // RN-17: alergias registradas del animal (consultas firmadas) más las que se escriben en la consulta en curso.
+    public List<string> AlergiasDe(int animalId, string enCurso = "")
+    {
+        var textos = _consultas.Where(c => c.AnimalId == animalId && c.Estado == "Firmada").Select(c => c.Alergias).Append(enCurso ?? "");
+        return textos
+            .SelectMany(t => System.Text.RegularExpressions.Regex.Split(t ?? "", @"[,;/\n]| y ", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            .Select(a => a.Trim().TrimEnd('.'))
+            .Where(a => a.Length >= 3 && !SinAlergia.Contains(Normalizar(a)))
+            .DistinctBy(Normalizar)
+            .ToList();
+    }
+
+    private static readonly string[] SinAlergia = { "ninguna", "ninguno", "no", "sin alergias", "sin alergias conocidas", "no conocidas", "niega", "nada" };
+
+    // Alergias que aparecen como palabra completa en el tratamiento o las indicaciones, sin distinguir mayúsculas ni tildes.
+    public List<string> AlergiasEnTratamiento(int animalId, ConsultaFormulario datos)
+    {
+        var texto = Normalizar($"{datos.Tratamiento} {datos.Indicaciones}");
+        return AlergiasDe(animalId, datos.Alergias)
+            .Where(a => System.Text.RegularExpressions.Regex.IsMatch(texto, $@"\b{System.Text.RegularExpressions.Regex.Escape(Normalizar(a))}\b"))
+            .ToList();
+    }
+
+    private static string Normalizar(string texto)
+    {
+        var descompuesto = (texto ?? "").ToLowerInvariant().Normalize(System.Text.NormalizationForm.FormD);
+        return new string(descompuesto.Where(c => System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark).ToArray());
+    }
+
     public Consulta? ObtenerPorId(int id)
     {
         return _consultas.FirstOrDefault(c => c.Id == id);
@@ -247,6 +276,17 @@ public class ConsultaService
             return new ResultadoOperacion { Exito = false, Mensaje = "El turno de esta consulta ya no está En consulta." };
         }
 
+        // RN-17: indicar un principio activo registrado como alergia del animal exige confirmación explícita.
+        var choques = AlergiasEnTratamiento(consulta.AnimalId, datos);
+        if (choques.Count > 0 && !datos.ConfirmaAlergia)
+        {
+            return new ResultadoOperacion
+            {
+                Exito = false,
+                Mensaje = $"El tratamiento o las indicaciones incluyen {string.Join(", ", choques)}, registrado como alergia de este animal. Si lo indicás igual, marcá la confirmación (RN-17). La consulta sigue en borrador."
+            };
+        }
+
         // RN-26, RN-29: lo apartado del inventario tiene que seguir disponible.
         var errorStock = _inventario.ValidarConsumo(consulta.Id);
         if (errorStock is not null)
@@ -256,6 +296,7 @@ public class ConsultaService
 
         // Desde acá no puede fallar: se aplican todos los cambios juntos (historia y stock, RNF-CON-03).
         CopiarDatos(datos, consulta);
+        consulta.AlergiaConfirmada = string.Join(", ", choques);
         consulta.Version++;
         consulta.Estado = "Firmada";
         consulta.FechaFirma = DateTime.Now;
@@ -268,7 +309,8 @@ public class ConsultaService
         var resumen = _comunicaciones.EncolarResumenClinico(turno.ClienteId, consulta);
         var aviso = resumen is null ? "El cliente no recibe el resumen por su preferencia o por su estado de cuenta." : $"El resumen al cliente quedó {resumen.Estado.ToLowerInvariant()} por {resumen.Canal.ToLowerInvariant()}.";
 
-        return new ResultadoOperacion { Exito = true, Mensaje = $"Consulta firmada y turno finalizado. El cargo quedó pendiente de cobro en Recepción. {aviso}" };
+        var alergia = choques.Count > 0 ? $" Quedó asentado que se indicó {string.Join(", ", choques)} pese a la alergia registrada." : "";
+        return new ResultadoOperacion { Exito = true, Mensaje = $"Consulta firmada y turno finalizado. El cargo quedó pendiente de cobro en Recepción. {aviso}{alergia}" };
     }
 
     // P-RC-04: sin atención ni consumos, el autor cancela con motivo. El borrador se conserva como evidencia.

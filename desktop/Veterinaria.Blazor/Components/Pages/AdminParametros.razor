@@ -9,6 +9,8 @@
 @inject ConsentimientoService Consentimientos
 @inject PersonalService Equipo
 @inject SesionService Sesion
+@inject AgendaService Agenda
+@inject CobroService Cobros
 
 <PageTitle>Parámetros — VITALIA</PageTitle>
 
@@ -97,6 +99,18 @@
         </div>
     </section>
 
+    @* Reglas de agenda y cobro (RN-08, RN-35, RN-36) *@
+    <section class="mb-4 border rounded p-3" aria-labelledby="titulo-reglas-agenda">
+        <h2 class="h5" id="titulo-reglas-agenda">Ausencias, seña y deuda</h2>
+        <div class="row g-2">
+            <div class="col-md-4"><label class="form-label" for="limAus">Ausencias en 12 meses para reservar solo por Recepción</label><input id="limAus" type="number" class="form-control" @bind="limiteAusencias" /></div>
+            <div class="col-md-4"><label class="form-label" for="porSena">Seña de cirugía (% del precio)</label><input id="porSena" type="number" class="form-control" @bind="porcentajeSena" /></div>
+            <div class="col-md-4"><label class="form-label" for="limDeuda">Aviso por deuda vencida desde ($)</label><input id="limDeuda" type="number" class="form-control" @bind="limiteDeuda" /></div>
+        </div>
+        <p class="small text-muted mt-2 mb-0">Desde @AgendaService.AvisoAusencias ausencias se le avisa al cliente. La deuda vence a los @CobroService.DiasParaVencer días y nunca bloquea un turno ni una urgencia.</p>
+        <button type="button" class="btn btn-primary mt-2" @onclick="GuardarReglasAgenda">Guardar</button>
+    </section>
+
     @* Consentimiento (A-025, K-07) *@
     <section class="mb-4 border rounded p-3" aria-labelledby="titulo-consentimiento">
         <h2 class="h5" id="titulo-consentimiento">Consentimiento de castración</h2>
@@ -153,6 +167,9 @@
         porAnimal = (int)Asistencias.PorAnimalExtra;
         diasVencimiento = Inventario.DiasProximoAVencer;
         diasRefuerzo = Vacunas.DiasAvisoRefuerzo;
+        limiteAusencias = Agenda.LimiteAusencias;
+        porcentajeSena = Cobros.PorcentajeSena;
+        limiteDeuda = Cobros.LimiteDeuda;
         textoNuevo = Consentimientos.DocumentoVigente(8)?.Texto ?? "";
     }
 
@@ -170,6 +187,12 @@
             nombreBox = "";
         }
     }
+
+    private int limiteAusencias;
+    private int porcentajeSena;
+    private int limiteDeuda;
+
+    private void GuardarReglasAgenda() => Mostrar(Admin.CambiarParametrosAgenda(limiteAusencias, porcentajeSena, limiteDeuda, Sesion.PersonalActual));
 
     private void GuardarAvisos() => Mostrar(Admin.CambiarDiasAvisos(diasVencimiento, diasRefuerzo, Sesion.PersonalActual));
 

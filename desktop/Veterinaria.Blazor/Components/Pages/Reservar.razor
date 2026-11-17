@@ -6,6 +6,7 @@
 @inject PrestacionService PrestacionService
 @inject ProfesionalService ProfesionalService
 @inject SesionService Sesion
+@inject CobroService Cobros
 @inject NavigationManager Navegacion
 
 <PageTitle>@(reprogramando is null ? "Reservar turno" : "Reprogramar turno") — VITALIA</PageTitle>
@@ -22,6 +23,14 @@
     {
     <div>
     <PasosReserva Actual="paso" />
+
+    @* RN-08: aviso desde la 2.ª ausencia sin aviso; desde el límite, la reserva la hace Recepción. *@
+    @if (reprogramando is null && !string.IsNullOrEmpty(Agenda.MensajeAusencias(Sesion.CuentaActual!.Id)))
+    {
+        <div class="alert @(Agenda.BloqueadoPorAusencias(Sesion.CuentaActual.Id) ? "alert-danger" : "alert-warning")" role="status">
+            @Agenda.MensajeAusencias(Sesion.CuentaActual.Id)
+        </div>
+    }
 
     @if (!string.IsNullOrEmpty(aviso))
     {
@@ -168,6 +177,18 @@
         <div class="alert alert-secondary small">
             Podés cancelar sin costo hasta @AgendaService.HorasParaCancelar horas antes. Después, la cancelación se hace por Recepción.
         </div>
+
+        @if (reprogramando is null && elegida.RequiereConsentimiento)
+        {
+            <div class="alert alert-info small">
+                Esta cirugía pide una seña del @Cobros.PorcentajeSena % del precio, que se paga en Recepción. Hasta pagarla, el horario queda reservado pero el turno no está confirmado (RN-35).
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Cobros.AvisoDeuda(Sesion.CuentaActual!.Id)))
+        {
+            <div class="alert alert-warning small" role="status">@Cobros.AvisoDeuda(Sesion.CuentaActual.Id)</div>
+        }
 
         <button class="btn btn-outline-secondary me-2" @onclick="() => IrAPaso(3)">Volver</button>
         <button class="btn btn-primary" disabled="@confirmando" @onclick="Confirmar">@(reprogramando is null ? "Confirmar turno" : "Confirmar cambio")</button>
@@ -387,6 +408,7 @@
             return;
         }
 
+        Cobros.GenerarSena(turno);
         Navegacion.NavigateTo($"turnos?confirmado={turno.Id}");
     }
 
