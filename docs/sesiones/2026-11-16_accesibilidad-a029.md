@@ -7,6 +7,8 @@ Rama: `eric/sesion-2026-11-16-accesibilidad-a029`.
 - Aprobaciones de Eric sobre A-028: avisos opcionales apagados por defecto (solo lo necesario viene marcado), plazos de conservación «a confirmar» y eliminación de cuenta bloqueada por deuda, turno próximo o internación.
 - A-029: salto al contenido, puntos de referencia, nombres accesibles, foco visible, contraste de texto atenuado, tablas con título y desplazables, `role="status"` en resultados, `rel` en enlaces externos, textos de reconexión y error en español, movimiento reducido, objetivos táctiles de 44 px en pantallas angostas y ancho máximo en pantallas grandes.
 - Prueba estática `AccesibilidadTests` y `docs/analisis/ESPECIFICACION_ACCESIBILIDAD.md`.
+- Corrección de dos pruebas que dependían de la fecha: elegían hoy+45 y hoy+50 días como feriado nuevo, y desde el 17/11 caen en el 1 y el 6 de enero, ya cargados en la semilla (`AgendaService`). Ahora buscan un día libre. Se revisaron las demás pruebas con fechas relativas: solo 38, 45 y 50 días caen hoy sobre los feriados de la semilla (25/12, 1/1, 6/1) y únicamente esas dos dependían de ello.
+- `MENSAJE_PARA_DIEGO.md` y la bitácora del 2026-11-09 conservan la fecha anterior (4 de diciembre) como registro histórico.
 
 ## Archivos tocados
 `MainLayout.razor(.css)`, `NavMenu.razor`, `ReconnectModal.razor`, `Registro`, `AnimalDetalle`, `FirmarConsentimiento`, `Cookies`, `Turnos`, `Comprobante`, `Urgencias`, `AgendaRecepcion`, `AdminIndicadores`, `wwwroot/app.css`, `tests/Veterinaria.Tests/AccesibilidadTests.cs`, documentación.
