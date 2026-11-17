@@ -84,7 +84,7 @@
         {
             <div class="col-md-3">
                 <label class="form-label" for="mostradorHora">Hora</label>
-                <input id="mostradorHora" type="time" class="form-control" @bind="hora" />
+                <input id="mostradorHora" type="time" class="form-control" @bind="horaSobreturno" />
             </div>
             <div class="col-md-9">
                 <label class="form-label" for="mostradorMotivo">Motivo del sobreturno</label>
@@ -100,7 +100,7 @@
                     <option value="">@(libres.Count == 0 ? "Sin horarios libres" : "Elegí…")</option>
                     @foreach (var libre in libres)
                     {
-                        <option value="@libre.ToString("HH:mm")">@libre.ToString("HH:mm")</option>
+                        <option value="@(libre.ToString("HH:mm"))">@(libre.ToString("HH:mm"))</option>
                     }
                 </select>
             </div>
@@ -126,6 +126,7 @@
     private DateOnly fecha = DateOnly.FromDateTime(DateTime.Today);
     private bool sobreturno;
     private string hora = "";
+    private TimeOnly horaSobreturno = new(9, 0);
     private string motivo = "";
     private string mensaje = "";
     private bool exito;
@@ -164,7 +165,8 @@
     private async Task Registrar()
     {
         exito = false;
-        if (!TimeOnly.TryParse(hora, out var horaElegida))
+        var horaElegida = horaSobreturno;
+        if (!sobreturno && !TimeOnly.TryParse(hora, out horaElegida))
         {
             mensaje = "Elegí la hora del turno.";
             return;
