@@ -34,6 +34,15 @@ public class CuentaService
         _cuentas.Add(new Cuenta { Id = 101, Nombre = "Pedro", Apellido = "Gómez", Correo = "pedro.demo@vitalia.uy", Telefono = "+59899333444", Verificada = true, HashContrasena = HashDemo.Value, FechaCreacion = new DateTime(2026, 10, 1) });
     }
 
+    // G-009: agrega un cliente del conjunto grande de demostración. Entra con la contraseña de demostración del personal.
+    public Cuenta AgregarClienteDemo(Cuenta cuenta)
+    {
+        cuenta.Verificada = true;
+        cuenta.HashContrasena = HashDemo.Value;
+        _cuentas.Add(cuenta);
+        return cuenta;
+    }
+
     public Cuenta? ObtenerPorId(int id)
     {
         return _cuentas.FirstOrDefault(c => c.Id == id);

@@ -19,6 +19,7 @@ public class Fabrica
     public ConsentimientoService Consentimientos { get; }
     public ComunicacionesService Comunicaciones { get; }
     public ConsultaService Consultas { get; }
+    public ConjuntoDemoService ConjuntoDemo { get; }
     public VacunaService Vacunas { get; }
     public AvisosRefuerzoService AvisosRefuerzo { get; }
     public DerechosService Derechos { get; }
@@ -39,6 +40,7 @@ public class Fabrica
         Consentimientos = new ConsentimientoService(Agenda, Prestaciones);
         Comunicaciones = new ComunicacionesService(Cuentas, Animales, Auditoria);
         Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario, Cobros, Consentimientos, Comunicaciones);
+        ConjuntoDemo = new ConjuntoDemoService(Cuentas, Animales, Consultas);
         Vacunas = new VacunaService(Consultas, Animales, Inventario);
         AvisosRefuerzo = new AvisosRefuerzoService(Comunicaciones, Vacunas, Cuentas);
         Internaciones = new InternacionService(Animales);
