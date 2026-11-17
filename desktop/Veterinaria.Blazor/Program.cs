@@ -28,8 +28,11 @@ builder.Services.AddScoped<AuditoriaService>();
 builder.Services.AddScoped<AdministracionService>();
 builder.Services.AddScoped<BitacoraService>();
 builder.Services.AddScoped<IndicadoresService>();
+builder.Services.AddScoped<ComunicacionesService>();
 builder.Services.AddScoped<ConsultaService>();
 builder.Services.AddScoped<VacunaService>();
+builder.Services.AddScoped<AvisosRefuerzoService>();
+builder.Services.AddScoped<DerechosService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

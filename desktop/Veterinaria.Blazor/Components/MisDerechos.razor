@@ -1,0 +1,152 @@
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject DerechosService Servicio
+
+@* A-028, RF-CLI-19, RNF-LEG-01, RNF-LEG-02, RNF-LEG-06: exportar y eliminar los datos personales, y qué se conserva. *@
+<section class="mb-4" aria-labelledby="titulo-derechos">
+    <h2 class="h4" id="titulo-derechos">Mis datos personales</h2>
+    <p>Tenés derecho a acceder a tus datos, a pedir que se eliminen y a saber qué guardamos y por cuánto tiempo (Ley 18.331).</p>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h3 class="h6 card-title">Descargar mis datos</h3>
+            <p class="card-text small">Un archivo en formato abierto (JSON) con tus datos, tus animales, turnos, cargos, consentimientos y comunicaciones. No incluye el texto de las consultas: la historia clínica la ves en esta misma página.</p>
+            <button type="button" class="btn btn-primary btn-sm" @onclick="Exportar">Preparar mis datos</button>
+            @if (!string.IsNullOrEmpty(enlace))
+            {
+                <a class="btn btn-outline-primary btn-sm ms-2" href="@enlace" download="vitalia-mis-datos.json">Descargar archivo</a>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h3 class="h6 card-title">Eliminar mi cuenta</h3>
+            <p class="card-text small">Reemplazamos tus datos personales por valores neutros y borramos tus mensajes. Tus animales y su historia clínica se conservan, sin identificarte, porque la normativa lo exige. No se puede deshacer.</p>
+            @if (obstaculos.Count > 0)
+            {
+                <div class="alert alert-info small" role="status">
+                    Antes de pedirlo:
+                    <ul class="mb-0">
+                        @foreach (var obstaculo in obstaculos)
+                        {
+                            <li>@obstaculo</li>
+                        }
+                    </ul>
+                </div>
+            }
+            <div class="form-check mb-2">
+                <input id="confirmaEliminar" type="checkbox" class="form-check-input" @bind="confirmo" />
+                <label class="form-check-label" for="confirmaEliminar">Entiendo que la eliminación no se puede deshacer.</label>
+            </div>
+            <button type="button" class="btn btn-outline-danger btn-sm" disabled="@(!confirmo)" @onclick="PedirEliminacion">Pedir la eliminación de mi cuenta</button>
+        </div>
+    </div>
+
+    @if (solicitudes.Count > 0)
+    {
+        <h3 class="h6">Mis pedidos</h3>
+        <ul class="list-group mb-3">
+            @foreach (var solicitud in solicitudes)
+            {
+                var id = solicitud.Id;
+                <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <span>
+                        <strong>@solicitud.Tipo</strong> · @solicitud.Estado
+                        <span class="d-block small text-muted">@solicitud.Fecha.ToString("dd/MM/yyyy HH:mm")@(string.IsNullOrEmpty(solicitud.Detalle) ? "" : " · " + solicitud.Detalle)</span>
+                    </span>
+                    @if (solicitud.Estado == DerechosService.Recibida)
+                    {
+                        <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="() => CancelarPedido(id)">Cancelar pedido</button>
+                    }
+                </li>
+            }
+        </ul>
+    }
+
+    <details>
+        <summary>Qué guardamos, para qué y por cuánto tiempo</summary>
+        <div class="table-responsive mt-2">
+            <table class="table table-sm">
+                <caption class="visually-hidden">Datos que guarda la clínica, con su finalidad, acceso y conservación</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Dato</th>
+                        <th scope="col">Para qué</th>
+                        <th scope="col">Quién accede</th>
+                        <th scope="col">Cuánto se conserva</th>
+                        <th scope="col">Si eliminás tu cuenta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var politica in politicas)
+                    {
+                        <tr>
+                            <th scope="row">@politica.Categoria</th>
+                            <td>@politica.Finalidad</td>
+                            <td>@politica.Acceso</td>
+                            <td>@politica.Conservacion</td>
+                            <td>@politica.AlEliminar</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </details>
+</section>
+
+@code {
+    [Parameter]
+    public Cuenta Cuenta { get; set; } = new();
+
+    private List<SolicitudDerecho> solicitudes = new();
+    private List<PoliticaConservacion> politicas = new();
+    private List<string> obstaculos = new();
+    private string enlace = "";
+    private string mensaje = "";
+    private bool exito;
+    private bool confirmo;
+
+    protected override void OnParametersSet()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        solicitudes = Servicio.DeCuenta(Cuenta.Id);
+        politicas = Servicio.Politicas();
+        obstaculos = Servicio.ObstaculosEliminacion(Cuenta.Id);
+    }
+
+    private void Exportar()
+    {
+        var resultado = Servicio.SolicitarExportacion(Cuenta);
+        mensaje = resultado.Mensaje;
+        exito = resultado.Exito;
+        enlace = resultado.Exito ? "data:application/json;charset=utf-8," + Uri.EscapeDataString(Servicio.Exportar(Cuenta)) : "";
+        Cargar();
+    }
+
+    private void PedirEliminacion()
+    {
+        var resultado = Servicio.SolicitarEliminacion(Cuenta, confirmo);
+        mensaje = resultado.Mensaje;
+        exito = resultado.Exito;
+        confirmo = false;
+        Cargar();
+    }
+
+    private void CancelarPedido(int id)
+    {
+        var resultado = Servicio.Cancelar(id, Cuenta.Id);
+        mensaje = resultado.Mensaje;
+        exito = resultado.Exito;
+        Cargar();
+    }
+}

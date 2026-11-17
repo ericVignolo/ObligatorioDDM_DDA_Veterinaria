@@ -264,7 +264,7 @@
                         </li>
                     }
                 </ul>
-                <p class="small text-muted mt-1">Te avisamos @Vacunas.DiasAvisoRefuerzo días antes. El aviso por correo llega con la API.</p>
+                <p class="small text-muted mt-1">Te avisamos @Vacunas.DiasAvisoRefuerzo días antes, por el canal que elijas en «Mis comunicaciones».</p>
             </section>
         }
 
@@ -359,6 +359,9 @@
             <p class="small text-muted mt-2">Los pagos se hacen en la clínica (efectivo, débito, crédito o transferencia). No hay pago en línea.</p>
         </section>
 
+        @* Comunicaciones y preferencias (A-028) *@
+        <MisComunicaciones Cuenta="cuenta" />
+
         @* Servicios usados *@
         <section class="mb-4">
             <h2 class="h4">Servicios que usaste</h2>
@@ -387,6 +390,9 @@
                 </ul>
             }
         </section>
+
+        @* Derechos sobre los datos personales (A-028) *@
+        <MisDerechos Cuenta="cuenta" />
     }
 </RequiereSesion>
 

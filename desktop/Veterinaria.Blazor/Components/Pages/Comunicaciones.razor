@@ -1,0 +1,284 @@
+@page "/panel/comunicaciones"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject ComunicacionesService Servicio
+@inject AvisosRefuerzoService Avisos
+@inject CuentaService Cuentas
+@inject AnimalService Animales
+@inject SesionService Sesion
+
+<PageTitle>Comunicaciones — VITALIA</PageTitle>
+
+@* A-028, RF-REC-07, RF-CLI-07, RF-CLI-10: bandeja de salida, reenvío bajo pedido, avisos de refuerzo, alertas y avisos de la clínica. *@
+<RequierePersonal Roles="@(new[] { PersonalService.Recepcion, PersonalService.Administrador })">
+    <h1>Comunicaciones</h1>
+    <p class="text-muted">Mensajes a los clientes: resúmenes de consulta, avisos de refuerzo, comprobantes, alertas y avisos de la clínica.</p>
+    <div class="alert alert-secondary small">
+        Demostración: no se envía ningún correo real. Cada mensaje queda en esta bandeja con su estado; la API lo enviará por correo con reintentos.
+    </div>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    <section class="border rounded p-3 mb-4" aria-labelledby="titulo-acciones">
+        <h2 class="h5" id="titulo-acciones">Cola de envío</h2>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <button type="button" class="btn btn-primary btn-sm" @onclick="Procesar">Procesar cola (@pendientes pendientes)</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" @onclick="GenerarRefuerzos">Generar avisos de refuerzo</button>
+            <div class="form-check ms-2">
+                <input id="simularFalla" type="checkbox" class="form-check-input" @bind="Servicio.SimularFalla" />
+                <label class="form-check-label" for="simularFalla">Simular falla del servidor de correo (prueba de reintentos)</label>
+            </div>
+        </div>
+        <p class="small text-muted mt-2 mb-0">Cada mensaje se intenta @ComunicacionesService.MaxIntentos veces; después queda Fallido y se reintenta a mano.</p>
+    </section>
+
+    <div class="row g-2 mb-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label" for="estadoF">Estado</label>
+            <select id="estadoF" class="form-select" @bind="estado">
+                <option value="">Todos</option>
+                <option value="@ComunicacionesService.Pendiente">@ComunicacionesService.Pendiente</option>
+                <option value="@ComunicacionesService.Enviado">@ComunicacionesService.Enviado</option>
+                <option value="@ComunicacionesService.Fallido">@ComunicacionesService.Fallido</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="tipoF">Tipo</label>
+            <select id="tipoF" class="form-select" @bind="tipo">
+                <option value="">Todos</option>
+                @foreach (var t in Servicio.Tipos)
+                {
+                    <option value="@t.Nombre">@t.Nombre</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="textoF">Cliente, correo o asunto</label>
+            <input id="textoF" class="form-control" @bind="texto" />
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary w-100" @onclick="Cargar">Filtrar</button>
+        </div>
+    </div>
+
+    <p class="small text-muted">@mensajes.Count mensajes. @(mensajes.Count > 100 ? "Se muestran los 100 más recientes." : "")</p>
+
+    @if (mensajes.Count == 0)
+    {
+        <p>No hay mensajes con esos filtros.</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-sm align-middle">
+                <caption class="visually-hidden">Bandeja de salida de comunicaciones</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Tipo y asunto</th>
+                        <th scope="col">Canal</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var comunicacion in mensajes.Take(100))
+                    {
+                        var id = comunicacion.Id;
+                        <tr>
+                            <td>@comunicacion.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@NombreCliente(comunicacion.CuentaId)</td>
+                            <td>
+                                @comunicacion.Tipo
+                                <span class="d-block small text-muted">@comunicacion.Asunto@(comunicacion.ReenvioDeId > 0 ? $" · reenvío del n.º {comunicacion.ReenvioDeId}" : "")</span>
+                            </td>
+                            <td>@comunicacion.Canal<span class="d-block small text-muted">@comunicacion.Destino</span></td>
+                            <td>
+                                <span class="badge @ClaseEstado(comunicacion.Estado)">@comunicacion.Estado</span>
+                                @if (comunicacion.Intentos > 0)
+                                {
+                                    <span class="d-block small text-muted">@comunicacion.Intentos intento(s)</span>
+                                }
+                                @if (!string.IsNullOrEmpty(comunicacion.UltimoError) && comunicacion.Estado != ComunicacionesService.Enviado)
+                                {
+                                    <span class="d-block small text-danger">@comunicacion.UltimoError</span>
+                                }
+                            </td>
+                            <td class="text-nowrap">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" aria-expanded="@(abiertos.Contains(id) ? "true" : "false")" @onclick="() => Alternar(id)">@(abiertos.Contains(id) ? "Ocultar" : "Ver")</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" @onclick="() => Reenviar(id)">Reenviar</button>
+                                @if (comunicacion.Estado == ComunicacionesService.Fallido)
+                                {
+                                    <button type="button" class="btn btn-warning btn-sm" @onclick="() => Reintentar(id)">Reintentar</button>
+                                }
+                            </td>
+                        </tr>
+                        if (abiertos.Contains(id))
+                        {
+                            <tr>
+                                <td colspan="6" class="bg-light" style="white-space: pre-line;">@comunicacion.Cuerpo</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <section class="border rounded p-3 mb-4" aria-labelledby="titulo-aviso">
+        <h2 class="h5" id="titulo-aviso">Aviso de la clínica</h2>
+        <p class="small text-muted">Para todos los clientes verificados: cierres, cambios de horario o feriados. Es parte del servicio, así que llega siempre.</p>
+        <div class="row g-2">
+            <div class="col-md-4">
+                <label class="form-label" for="tituloAviso">Título</label>
+                <input id="tituloAviso" class="form-control" maxlength="120" @bind="tituloAviso" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="textoAviso">Mensaje</label>
+                <input id="textoAviso" class="form-control" maxlength="1000" @bind="textoAviso" />
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="button" class="btn btn-primary w-100" @onclick="EmitirAviso">Enviar aviso</button>
+            </div>
+        </div>
+    </section>
+
+    @if (Sesion.TieneRol(PersonalService.Administrador))
+    {
+        <section class="border rounded p-3 mb-4" aria-labelledby="titulo-alerta">
+            <h2 class="h5" id="titulo-alerta">Alerta sanitaria</h2>
+            <p class="small text-muted">Para clientes con animales de una especie. La reciben solo quienes la activaron en sus preferencias.</p>
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <label class="form-label" for="tituloAlerta">Título</label>
+                    <input id="tituloAlerta" class="form-control" maxlength="120" @bind="tituloAlerta" />
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label" for="textoAlerta">Mensaje</label>
+                    <input id="textoAlerta" class="form-control" maxlength="1000" @bind="textoAlerta" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label" for="especieAlerta">Especie</label>
+                    <select id="especieAlerta" class="form-select" @bind="especieAlerta">
+                        <option value="">Todas</option>
+                        @foreach (var especie in Animales.Especies)
+                        {
+                            <option value="@especie">@especie</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-primary w-100" @onclick="EmitirAlerta">Emitir alerta</button>
+                </div>
+            </div>
+        </section>
+    }
+</RequierePersonal>
+
+@code {
+    private List<Comunicacion> mensajes = new();
+    private HashSet<int> abiertos = new();
+    private int pendientes;
+    private string estado = "";
+    private string tipo = "";
+    private string texto = "";
+    private string mensaje = "";
+    private bool exito;
+    private string tituloAviso = "";
+    private string textoAviso = "";
+    private string tituloAlerta = "";
+    private string textoAlerta = "";
+    private string especieAlerta = "";
+
+    protected override void OnInitialized()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        mensajes = Servicio.Buscar(estado, tipo, texto);
+        pendientes = Servicio.Todas().Count(c => c.Estado == ComunicacionesService.Pendiente);
+    }
+
+    private void Mostrar(ResultadoOperacion resultado)
+    {
+        mensaje = resultado.Mensaje;
+        exito = resultado.Exito;
+        Cargar();
+    }
+
+    private void Procesar()
+    {
+        var intentados = Servicio.ProcesarCola();
+        Mostrar(new ResultadoOperacion { Exito = true, Mensaje = intentados == 0 ? "No había envíos pendientes." : $"Se intentó enviar {intentados} mensajes." });
+    }
+
+    private void GenerarRefuerzos()
+    {
+        var generados = Avisos.Generar();
+        Mostrar(new ResultadoOperacion { Exito = true, Mensaje = generados == 0 ? "No hay avisos de refuerzo nuevos para generar." : $"Se generaron {generados} avisos de refuerzo." });
+    }
+
+    private void Reenviar(int id)
+    {
+        Mostrar(Servicio.Reenviar(id, Sesion.PersonalActual));
+    }
+
+    private void Reintentar(int id)
+    {
+        Mostrar(Servicio.Reintentar(id, Sesion.PersonalActual));
+    }
+
+    private void EmitirAviso()
+    {
+        var resultado = Servicio.EnviarAvisoOperativo(Sesion.PersonalActual, tituloAviso, textoAviso);
+        if (resultado.Exito)
+        {
+            tituloAviso = "";
+            textoAviso = "";
+        }
+
+        Mostrar(resultado);
+    }
+
+    private void EmitirAlerta()
+    {
+        var resultado = Servicio.EnviarAlertaSanitaria(Sesion.PersonalActual, tituloAlerta, textoAlerta, especieAlerta);
+        if (resultado.Exito)
+        {
+            tituloAlerta = "";
+            textoAlerta = "";
+        }
+
+        Mostrar(resultado);
+    }
+
+    private void Alternar(int id)
+    {
+        if (!abiertos.Remove(id))
+        {
+            abiertos.Add(id);
+        }
+    }
+
+    private string NombreCliente(int cuentaId)
+    {
+        var cuenta = Cuentas.ObtenerPorId(cuentaId);
+        return cuenta is null ? "Cliente" : $"{cuenta.Nombre} {cuenta.Apellido}";
+    }
+
+    private static string ClaseEstado(string estado)
+    {
+        return estado switch
+        {
+            ComunicacionesService.Enviado => "bg-success",
+            ComunicacionesService.Fallido => "bg-danger",
+            _ => "bg-warning text-dark"
+        };
+    }
+}

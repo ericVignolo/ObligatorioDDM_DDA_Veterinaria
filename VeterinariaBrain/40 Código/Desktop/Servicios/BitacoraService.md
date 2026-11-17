@@ -11,7 +11,7 @@ generado: true
 
 Bitácora de auditoría unificada (A-027 parte 2, RF-ADM-08, RN-40). Junta, sin copiar texto clínico:
 
-**Tareas:** A-027
+**Tareas:** A-027, A-028
 
 **Requisitos y decisiones:** RF-ADM-08, RN-40
 

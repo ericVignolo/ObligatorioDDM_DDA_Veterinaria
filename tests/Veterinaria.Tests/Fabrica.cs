@@ -17,8 +17,11 @@ public class Fabrica
     public InventarioService Inventario { get; } = new();
     public CobroService Cobros { get; }
     public ConsentimientoService Consentimientos { get; }
+    public ComunicacionesService Comunicaciones { get; }
     public ConsultaService Consultas { get; }
     public VacunaService Vacunas { get; }
+    public AvisosRefuerzoService AvisosRefuerzo { get; }
+    public DerechosService Derechos { get; }
     public InternacionService Internaciones { get; }
     public AsistenciaService Asistencias { get; }
     public AuditoriaService Auditoria { get; } = new();
@@ -33,9 +36,12 @@ public class Fabrica
         Agenda = new AgendaService(Profesionales, Prestaciones, Animales);
         Cobros = new CobroService(Agenda, Prestaciones);
         Consentimientos = new ConsentimientoService(Agenda, Prestaciones);
-        Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario, Cobros, Consentimientos);
+        Comunicaciones = new ComunicacionesService(Cuentas, Animales, Auditoria);
+        Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario, Cobros, Consentimientos, Comunicaciones);
         Vacunas = new VacunaService(Consultas, Animales, Inventario);
+        AvisosRefuerzo = new AvisosRefuerzoService(Comunicaciones, Vacunas, Cuentas);
         Internaciones = new InternacionService(Animales);
+        Derechos = new DerechosService(Cuentas, Animales, Agenda, Cobros, Consentimientos, Internaciones, Comunicaciones, Auditoria);
         Asistencias = new AsistenciaService(Personal, Profesionales, Animales, Cobros);
         Administracion = new AdministracionService(Prestaciones, Personal, Profesionales, Agenda, Internaciones, Asistencias, Inventario, Vacunas, Consentimientos, Auditoria);
         Bitacora = new BitacoraService(Auditoria, Consultas, Inventario, Cobros, Consentimientos, Internaciones, Asistencias, Personal, Cuentas);
