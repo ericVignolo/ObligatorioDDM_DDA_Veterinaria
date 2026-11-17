@@ -95,7 +95,7 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 
 - [x] **A-029 — Aplicar accesibilidad y adaptación de escritorio.** Teclado, foco, contraste, etiquetas, mensajes y puntos de corte aplicables; documentar limitaciones del prototipo.
 - [x] **A-030 — Integrar recorridos demostrativos de escritorio.** Preparar datos sintéticos y recorridos de Visitante, Cliente, Recepción, Veterinario y Administrador con resultados repetibles y marca de simulación.
-- [ ] **A-031 — Revisar sección A y preparar integración.** Revisar requisitos asignados, estados, navegación, errores, requisitos de privacidad y evidencia; no marcar backend/seguridad como completos.
+- [x] **A-031 — Revisar sección A y preparar integración.** Revisar requisitos asignados, estados, navegación, errores, requisitos de privacidad y evidencia; no marcar backend/seguridad como completos.
 
 ## 6. Sección B — Aplicación móvil
 

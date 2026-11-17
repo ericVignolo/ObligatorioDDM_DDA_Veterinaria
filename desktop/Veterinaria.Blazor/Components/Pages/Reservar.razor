@@ -349,7 +349,7 @@
         var ausencia = profesionalElegido?.Ausencias.FirstOrDefault(a => fecha >= a.Desde && fecha <= a.Hasta);
         if (ausencia is not null)
         {
-            return $"{profesionalElegido!.Nombre} no atiende ese día ({ausencia.Motivo.ToLower()}). Elegí otro día.";
+            return $"{profesionalElegido!.Nombre} no está disponible ese día. Elegí otro día.";
         }
 
         if (profesionalElegido is not null && !profesionalElegido.Jornada.Any(f => f.Dia == fecha.DayOfWeek))
