@@ -37,7 +37,7 @@ public class RecorridosService
                 new() { Accion = "Ingresá con la cuenta de Ana.", Ruta = "/ingresar", Resultado = "Entrás sin registrarte; la barra superior muestra tu nombre." },
                 new() { Accion = "Mirá tus animales.", Ruta = "/animales", Resultado = "Aparecen Toby (perro) y Mishi (gata)." },
                 new() { Accion = "Reservá un turno para Toby.", Ruta = "/reservar", Resultado = "Se ofrecen horarios orientativos; el horario se vuelve a verificar al confirmar y el turno queda en «Mis turnos»." },
-                new() { Accion = "Reservá la castración de Toby (cirugía).", Ruta = "/reservar?servicio=8", Resultado = "Si el primer día no tiene lugar para 90 min, se salta solo al primer día con horarios. El turno queda «Pendiente de seña» hasta que Recepción cobre el 30 % (RN-35)." },
+                new() { Accion = "Reservá la castración de Toby (cirugía).", Ruta = "/reservar", Resultado = "Si el primer día no tiene lugar para 90 min, se salta solo al primer día con horarios. El turno queda «Pendiente de seña» hasta que Recepción cobre el 30 % (RN-35)." },
                 new() { Accion = "Revisá tus turnos, cancelá o reprogramá uno.", Ruta = "/turnos", Resultado = "Se muestran las consecuencias de la política antes de confirmar." },
                 new() { Accion = "Abrí un animal y entrá a su historia clínica.", Ruta = "/animales", Resultado = "Lectura de las consultas firmadas; las nuevas aparecen después del recorrido del Veterinario." },
                 new() { Accion = "Mirá tus comunicaciones y tus derechos sobre los datos.", Ruta = "/cuenta", Resultado = "Preferencias por tipo de aviso (lo opcional viene apagado), exportación y pedido de eliminación." }

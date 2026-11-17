@@ -4,7 +4,7 @@ using Veterinaria.Blazor.Services;
 namespace Veterinaria.Tests;
 
 // Recorrido de demostración completo: Ana reserva una cirugía con los datos de partida reales y nunca queda
-// frente a una pantalla sin horarios (ver ESPECIFICACION_RECORRIDOS_DEMO.md, RD-11 y RD-12).
+// frente a una pantalla sin horarios (ver ESPECIFICACION_RECORRIDOS_DEMO.md, RD-13 y RD-14).
 public class DemostracionCompletaTests
 {
     private const int Ana = 100;
@@ -13,7 +13,7 @@ public class DemostracionCompletaTests
     private const int Ferreira = 1;
 
     [Fact]
-    public void RD11_ProximoDiaConHorarios_devuelve_el_primer_dia_con_lugar_para_la_castracion()
+    public void RD13_ProximoDiaConHorarios_devuelve_el_primer_dia_con_lugar_para_la_castracion()
     {
         var f = new Fabrica();
 
@@ -28,7 +28,7 @@ public class DemostracionCompletaTests
     }
 
     [Fact]
-    public void RD11_ProximoDiaConHorarios_no_devuelve_nada_si_el_profesional_no_hace_el_servicio_o_no_hay_dias()
+    public void RD13_ProximoDiaConHorarios_no_devuelve_nada_si_el_profesional_no_hace_el_servicio_o_no_hay_dias()
     {
         var f = new Fabrica();
 
@@ -37,7 +37,7 @@ public class DemostracionCompletaTests
     }
 
     [Fact]
-    public void RD12_Ana_reserva_la_castracion_de_Toby_queda_pendiente_de_sena_y_Recepcion_la_confirma()
+    public void RD14_Ana_reserva_la_castracion_de_Toby_queda_pendiente_de_sena_y_Recepcion_la_confirma()
     {
         var f = new Fabrica();
         var dia = f.Agenda.ProximoDiaConHorarios(Ferreira, Castracion, Toby, f.Agenda.PrimerDia)!.Value;
@@ -56,7 +56,7 @@ public class DemostracionCompletaTests
     }
 
     [Fact]
-    public void RD12_El_recorrido_se_puede_repetir_varias_veces_sin_agotar_los_horarios_de_la_castracion()
+    public void RD14_El_recorrido_se_puede_repetir_varias_veces_sin_agotar_los_horarios_de_la_castracion()
     {
         var f = new Fabrica();
 
