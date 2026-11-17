@@ -11,9 +11,11 @@ generado: true
 
 **Ruta:** `/reservar`
 
-Paso 1 — Animal
+RN-08: aviso desde la 2.ª ausencia sin aviso; desde el límite, la reserva la hace Recepción.
 
 **Tareas:** A-016
+
+**Requisitos y decisiones:** RN-08, RN-35
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -21,6 +23,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AgendaService]]
 - [[Animal]]
 - [[AnimalService]]
+- [[CobroService]]
 - [[PasosReserva]]
 - [[Prestacion]]
 - [[PrestacionService]]

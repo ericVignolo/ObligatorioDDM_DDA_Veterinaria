@@ -13,7 +13,7 @@ Acciones de configuración del Administrador (A-027): servicios y tarifas (RF-AD
 
 **Tareas:** A-027
 
-**Requisitos y decisiones:** RF-ADM-01, RF-ADM-02, RF-ADM-03, RF-ADM-04, RF-ADM-08, RF-ADM-10, RF-ADM-13, RN-33
+**Requisitos y decisiones:** RF-ADM-01, RF-ADM-02, RF-ADM-03, RF-ADM-04, RF-ADM-08, RF-ADM-10, RF-ADM-13, RN-08, RN-33, RN-35, RN-36
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -24,6 +24,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Ausencia]]
 - [[AusenciaFormulario]]
 - [[Box]]
+- [[CobroService]]
 - [[Consentimiento]]
 - [[ConsentimientoService]]
 - [[Cuenta]]

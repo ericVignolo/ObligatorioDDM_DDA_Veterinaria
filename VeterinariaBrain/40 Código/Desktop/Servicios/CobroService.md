@@ -13,7 +13,7 @@ Cargos, cobros presenciales y comprobantes de demostración en memoria (A-023, R
 
 **Tareas:** A-023
 
-**Requisitos y decisiones:** RF-REC-05, RN-18, RN-32, RN-33, RN-34, RN-58, RNF-CON-03
+**Requisitos y decisiones:** RF-REC-05, RN-18, RN-32, RN-33, RN-34, RN-35, RN-36, RN-58, RNF-CON-03
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -29,8 +29,11 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[PrestacionService]]
 - [[ResultadoOperacion]]
 - [[SolicitudAsistencia]]
+- [[Turno]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminParametros]]
+- [[AdministracionService]]
 - [[AsistenciaService]]
 - [[BitacoraService]]
 - [[Cobros]]
@@ -39,3 +42,5 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[DerechosService]]
 - [[IndicadoresService]]
 - [[MiCuenta]]
+- [[Reservar]]
+- [[TurnoMostrador]]

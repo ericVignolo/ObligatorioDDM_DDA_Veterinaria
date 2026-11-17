@@ -15,7 +15,7 @@ A-023: el cobro es presencial. Recepción registra los cobros y emite el comprob
 
 **Tareas:** A-023
 
-**Requisitos y decisiones:** RF-REC-05, RN-32, RN-34
+**Requisitos y decisiones:** RF-REC-05, RN-32, RN-34, RN-35
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
