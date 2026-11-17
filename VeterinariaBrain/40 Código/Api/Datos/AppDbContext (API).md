@@ -24,3 +24,6 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[Profesional (API)]]
 - [[Rol (API)]]
 - [[Turno (API)]]
+
+## Usado por (si cambia, revisar estos)
+- [[PrestacionRepository (API)]]

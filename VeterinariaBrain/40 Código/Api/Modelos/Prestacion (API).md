@@ -19,7 +19,11 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[IPrestacionRepository (API)]]
+- [[PrestacionRepository (API)]]
+- [[PrestacionService (API)]]
 - [[Profesional (API)]]
+- [[ReglasCatalogo (API)]]
 - [[Turno (API)]]
 
 ## En las otras aplicaciones

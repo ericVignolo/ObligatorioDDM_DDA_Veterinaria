@@ -16,7 +16,16 @@ api/Veterinaria.Api/
 └── appsettings.Development.example.json
 ```
 
-`Controllers/`, `Services/`, `Repositories/` y `DTOs/` se crean cuando se haga el primer endpoint.
+Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → `Repositories/` (`IXxxRepository`) → `AppDbContext`; `DTOs/` con mapeo explícito en el Service.
+
+## Endpoints
+
+| Método y ruta | Acceso | Respuesta |
+|---|---|---|
+| `GET /api/v1/servicios?page=1&pageSize=20` | Público | `200` con `items`, `page`, `pageSize` y `totalItems`; `400` (Problem Details, `PAGINACION_INVALIDA`) si `page` < 1 o `pageSize` no está entre 1 y 50 |
+| `GET /api/v1/servicios/{id}` | Público | `200` con el servicio; `404` (Problem Details, `SERVICIO_NO_ENCONTRADO`) si no existe o no es público |
+
+Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`). Pruebas: `tests/Veterinaria.Tests/ApiCatalogoTests.cs`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
 
 ## Tablas de la primera versión
 
