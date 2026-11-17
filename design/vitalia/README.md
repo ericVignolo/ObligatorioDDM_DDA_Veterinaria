@@ -70,7 +70,7 @@ Para la B, lo mismo cambiando `opcion-a` por `opcion-b`. Las dos opciones usan l
 - El botón «进入专业画布» (lienzo profesional) del programa pide iniciar sesión con una cuenta Zseven. No hace falta para trabajar con `op`.
 - `op import:html` omite la hoja `fuentes.css` (Nunito y Plus Jakarta Sans no se asignan solas), importa los iconos SVG como imágenes de relleno y aproxima grillas y filas con salto de línea. Es una referencia visual, no la fuente de verdad: los valores son los de `web/tokens-opcion-*.css`.
 - El eje de temas claro/oscuro quedó sin crear (`op themes`); las variantes oscuras son variables sueltas. Pendiente hasta que Diego elija la opción.
-- `op design:lint` sobre la previsualización importada avisó de radios mezclados (artefacto de la importación) y de dos campos de texto sin etiqueta, que se corrigen en `previsualizacion.html` y en las pantallas al aplicar el diseño.
+- `op design:lint` sobre la previsualización importada avisó de radios mezclados (artefacto de la importación) y de dos campos «sin etiqueta» que es un falso positivo: en `previsualizacion.html` tienen `<label for>`, pero la importación no conserva esa asociación.
 
 ## Cómo se aplica después (cuando Diego elija)
 

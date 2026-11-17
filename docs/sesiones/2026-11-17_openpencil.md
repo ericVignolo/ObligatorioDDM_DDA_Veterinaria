@@ -12,6 +12,12 @@
 - `design/vitalia/README.md`, esta bitácora.
 - Se suben desde la PC de Eric (binarios): los dos `.op` y los `preview-*.png`.
 
+## Revisión
+- Variables de ambos `.op` = tokens de `web/tokens-opcion-*.css` (46 de 46 en cada una).
+- Nada del proyecto (desktop, tests, CI) referencia `design/`.
+- El aviso de campos sin etiqueta de `op design:lint` es falso positivo (los `<input>` tienen `<label for>`).
+- Se quita un `.pyc` que se había subido y se ignora `__pycache__/`.
+
 ## Decisiones
 - Un `.op` por opción: comparten los nombres de variable y se pisarían en un solo archivo.
 - Sin sesión Zseven: no hace falta para trabajar con `op`.
@@ -22,5 +28,4 @@
 ## Qué falta
 - Eje de temas claro/oscuro (`op themes`), hoy son variables sueltas con sufijo `-oscuro`.
 - Fuentes Nunito / Plus Jakarta Sans: `import:html` omitió `fuentes.css`.
-- Dos campos sin etiqueta en `previsualizacion.html` (aviso de `op design:lint`).
 - Diego elige A o B; luego A-032.
