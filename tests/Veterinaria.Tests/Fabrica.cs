@@ -34,7 +34,7 @@ public class Fabrica
     {
         Cuentas = new CuentaService(Legales);
         Sesion = new SesionService(Cuentas, Personal);
-        Agenda = new AgendaService(Profesionales, Prestaciones, Animales);
+        Agenda = new AgendaService(Profesionales, Prestaciones, Animales, Auditoria);
         Cobros = new CobroService(Agenda, Prestaciones);
         Consentimientos = new ConsentimientoService(Agenda, Prestaciones);
         Comunicaciones = new ComunicacionesService(Cuentas, Animales, Auditoria);
@@ -44,7 +44,7 @@ public class Fabrica
         Internaciones = new InternacionService(Animales);
         Derechos = new DerechosService(Cuentas, Animales, Agenda, Cobros, Consentimientos, Internaciones, Comunicaciones, Auditoria);
         Asistencias = new AsistenciaService(Personal, Profesionales, Animales, Cobros);
-        Administracion = new AdministracionService(Prestaciones, Personal, Profesionales, Agenda, Internaciones, Asistencias, Inventario, Vacunas, Consentimientos, Auditoria);
+        Administracion = new AdministracionService(Prestaciones, Personal, Profesionales, Agenda, Internaciones, Asistencias, Inventario, Vacunas, Consentimientos, Auditoria, Cobros);
         Bitacora = new BitacoraService(Auditoria, Consultas, Inventario, Cobros, Consentimientos, Internaciones, Asistencias, Personal, Cuentas);
         Indicadores = new IndicadoresService(Agenda, Profesionales, Cobros, Inventario);
     }

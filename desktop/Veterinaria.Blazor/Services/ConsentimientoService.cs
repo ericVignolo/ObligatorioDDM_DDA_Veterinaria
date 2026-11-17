@@ -120,7 +120,7 @@ public class ConsentimientoService
     // Se puede responder mientras el turno no empezó.
     private static bool Abierto(Turno turno)
     {
-        return turno.Estado == "Confirmado" || turno.Estado == "En espera";
+        return turno.Estado == "Confirmado" || turno.Estado == "En espera" || turno.Estado == AgendaService.PendienteSena;
     }
 
     // CU-CLI-10, paso 1: turnos próximos del cliente que necesitan su consentimiento.

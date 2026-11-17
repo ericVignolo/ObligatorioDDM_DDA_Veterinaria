@@ -33,6 +33,78 @@ public class CobroService
 
     public List<string> Medios { get; } = new() { Efectivo, Debito, Credito, Transferencia };
 
+    // RN-35: porcentaje del precio de la cirugía que se paga como seña (decisión de Eric, 2026-11-17: 30 %).
+    public int PorcentajeSena { get; set; } = 30;
+
+    // RN-36: deuda vencida = saldo de cargos con más de DiasParaVencer días. Por encima del límite se avisa al agendar.
+    public const int DiasParaVencer = 30;
+    public int LimiteDeuda { get; set; } = 3000;
+
+    // RN-35: cargo de seña del turno de cirugía. Idempotente: si ya existe lo devuelve.
+    public Cargo? GenerarSena(Turno? turno)
+    {
+        if (turno is null || turno.Estado != AgendaService.PendienteSena)
+        {
+            return _cargos.FirstOrDefault(c => c.EsSena && c.TurnoId == turno?.Id);
+        }
+
+        var existente = _cargos.FirstOrDefault(c => c.EsSena && c.TurnoId == turno.Id);
+        if (existente is not null)
+        {
+            return existente;
+        }
+
+        var prestacion = _prestaciones.ObtenerFicha(turno.PrestacionId);
+        if (prestacion is null)
+        {
+            return null;
+        }
+
+        var precio = _prestaciones.PrecioVigente(prestacion.Id, DateOnly.FromDateTime(turno.Inicio));
+        var cargo = new Cargo
+        {
+            Id = ++_ultimoCargo,
+            TurnoId = turno.Id,
+            ClienteId = turno.ClienteId,
+            AnimalId = turno.AnimalId,
+            PrestacionId = prestacion.Id,
+            Descripcion = $"Seña de {prestacion.Nombre.ToLowerInvariant()} ({PorcentajeSena} %)",
+            Monto = Math.Round(precio * PorcentajeSena / 100m, 0, MidpointRounding.AwayFromZero),
+            Fecha = DateTime.Now,
+            EsSena = true
+        };
+        _cargos.Add(cargo);
+        return cargo;
+    }
+
+    // Genera las señas que falten (por ejemplo, de reservas hechas por el cliente en línea).
+    public void GenerarSenasPendientes()
+    {
+        foreach (var turno in _agenda.TurnosEntre(DateOnly.FromDateTime(DateTime.Today.AddDays(-1)), _agenda.UltimoDia.AddDays(1))
+                     .Where(t => t.Estado == AgendaService.PendienteSena))
+        {
+            GenerarSena(turno);
+        }
+    }
+
+    public Cargo? SenaDe(int turnoId) => _cargos.FirstOrDefault(c => c.EsSena && c.TurnoId == turnoId);
+
+    // RN-36: deuda vencida del cliente, sin contar señas (que todavía no son deuda: el turno no se confirmó).
+    public decimal DeudaVencida(int clienteId)
+    {
+        var limite = DateTime.Now.AddDays(-DiasParaVencer);
+        return _cargos.Where(c => c.ClienteId == clienteId && !c.EsSena && c.Fecha <= limite).Sum(Saldo);
+    }
+
+    // Aviso al agendar: vacío si no supera el límite. Nunca bloquea (y una urgencia no pasa por acá).
+    public string AvisoDeuda(int clienteId)
+    {
+        var deuda = DeudaVencida(clienteId);
+        return deuda > LimiteDeuda
+            ? $"Hay $ {deuda:N0} de saldo vencido (más de {DiasParaVencer} días). Se puede agendar igual; conviene regularizarlo en Recepción."
+            : "";
+    }
+
     // RN-32: solo una consulta firmada genera cargo. Se llama al firmar; si ya existe el cargo de esa consulta
     // lo devuelve (idempotente: un reintento no duplica el cargo). Una consulta sin turno (historia anterior) no cobra.
     public Cargo? GenerarCargo(Consulta consulta)
@@ -68,6 +140,16 @@ public class CobroService
             Monto = _prestaciones.PrecioVigente(prestacion.Id, DateOnly.FromDateTime(turno.Inicio)),
             Fecha = DateTime.Now
         };
+
+        // RN-35: lo pagado de seña se descuenta del cargo final.
+        var sena = SenaDe(turno.Id);
+        var senaPagada = sena is null ? 0 : Pagado(sena.Id);
+        if (senaPagada > 0)
+        {
+            cargo.Monto = Math.Max(0, cargo.Monto - senaPagada);
+            cargo.Descripcion += $" (descontada la seña de $ {senaPagada:N0})";
+        }
+
         _cargos.Add(cargo);
         return cargo;
     }
@@ -245,6 +327,10 @@ public class CobroService
 
         var queda = Saldo(cargo);
         var detalle = queda <= 0 ? "El cargo quedó pagado." : $"Queda un saldo de $ {queda:N0}.";
+        if (cargo.EsSena && queda <= 0 && _agenda.ConfirmarSena(cargo.TurnoId))
+        {
+            detalle += " La cirugía quedó confirmada.";
+        }
         return new ResultadoOperacion { Exito = true, Mensaje = $"Cobro registrado: comprobante {pago.Numero} por $ {pago.Monto:N0}. {detalle}" };
     }
 
@@ -286,6 +372,12 @@ public class CobroService
         };
         _notas.Add(nota);
 
-        return new ResultadoOperacion { Exito = true, Mensaje = $"Comprobante {pago.Numero} anulado con la nota de crédito {nota.Numero}." };
+        // RN-35: si se anula la seña, la cirugía vuelve a esperar el pago.
+        var cargo = ObtenerCargo(pago.CargoId);
+        var extra = cargo is not null && cargo.EsSena && Saldo(cargo) > 0 && _agenda.VolverAPendienteSena(cargo.TurnoId)
+            ? " La cirugía vuelve a quedar pendiente de seña."
+            : "";
+
+        return new ResultadoOperacion { Exito = true, Mensaje = $"Comprobante {pago.Numero} anulado con la nota de crédito {nota.Numero}.{extra}" };
     }
 }

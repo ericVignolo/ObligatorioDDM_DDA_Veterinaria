@@ -19,11 +19,13 @@ public class AdministracionService
     private readonly VacunaService _vacunas;
     private readonly ConsentimientoService _consentimientos;
     private readonly AuditoriaService _auditoria;
+    private readonly CobroService _cobros;
 
     public AdministracionService(PrestacionService prestaciones, PersonalService personal, ProfesionalService profesionales,
         AgendaService agenda, InternacionService internaciones, AsistenciaService asistencias, InventarioService inventario,
-        VacunaService vacunas, ConsentimientoService consentimientos, AuditoriaService auditoria)
+        VacunaService vacunas, ConsentimientoService consentimientos, AuditoriaService auditoria, CobroService cobros)
     {
+        _cobros = cobros;
         _prestaciones = prestaciones;
         _personal = personal;
         _profesionales = profesionales;
@@ -502,6 +504,25 @@ public class AdministracionService
         _inventario.DiasProximoAVencer = diasVencimiento;
         _vacunas.DiasAvisoRefuerzo = diasRefuerzo;
         return Hecho(admin!, "Parámetro", "Avisos actualizados", $"próximo a vencer {diasVencimiento} días, refuerzo {diasRefuerzo} días antes");
+    }
+
+    // RN-08, RN-35 y RN-36: límite de ausencias para reservar en línea, porcentaje de seña y límite de deuda vencida.
+    public ResultadoOperacion CambiarParametrosAgenda(int limiteAusencias, int porcentajeSena, int limiteDeuda, Personal? admin)
+    {
+        if (!EsAdministrador(admin))
+        {
+            return SinPermiso();
+        }
+
+        if (limiteAusencias is < 2 or > 10 || porcentajeSena is < 10 or > 100 || limiteDeuda is < 0 or > 1_000_000)
+        {
+            return Error("Ausencias entre 2 y 10, seña entre 10 % y 100 %, límite de deuda entre $ 0 y $ 1.000.000.");
+        }
+
+        _agenda.LimiteAusencias = limiteAusencias;
+        _cobros.PorcentajeSena = porcentajeSena;
+        _cobros.LimiteDeuda = limiteDeuda;
+        return Hecho(admin!, "Parámetro", "Reglas de agenda actualizadas", $"ausencias {limiteAusencias}, seña {porcentajeSena} %, deuda $ {limiteDeuda:N0}");
     }
 
     // RF-ADM-10: umbral de stock mínimo por artículo.

@@ -57,7 +57,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-### Componentes (21)
+### Componentes (22)
 - [[AnimalCard]]
 - [[AnimalForm]]
 - [[Atajo]]
@@ -79,6 +79,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RegistroClinico]]
 - [[RequierePersonal]]
 - [[RequiereSesion]]
+- [[TurnoMostrador]]
 
 ### Servicios (25)
 - [[AdministracionService]]

@@ -53,7 +53,7 @@ public class VacunaTests
     {
         var (f, vet, consulta) = ConsultaAbierta();
 
-        f.Vacunas.Registrar(consulta.Id, Con(1), vet);
+        f.Vacunas.Registrar(consulta.Id, new AplicacionFormulario { ProductoId = 1, Justificacion = "Toby ya tiene la polivalente de hace 60 días" }, vet);
 
         // L1-VENC venció (RN-15) y L1-A vence antes que L1-B (FEFO, RN-27).
         Assert.Equal("L1-A", f.Vacunas.DeConsulta(consulta.Id).Single().Lote);
@@ -69,7 +69,7 @@ public class VacunaTests
             f.Inventario.DarDeBaja(new AjusteFormulario { LoteId = lote.Id, Cantidad = lote.Cantidad, Motivo = "Rotura" }, admin);
         }
 
-        var resultado = f.Vacunas.Registrar(consulta.Id, Con(1), vet);
+        var resultado = f.Vacunas.Registrar(consulta.Id, new AplicacionFormulario { ProductoId = 1, Justificacion = "Toby ya tiene la polivalente de hace 60 días" }, vet);
 
         Assert.False(resultado.Exito);
         Assert.Contains("RN-15", resultado.Mensaje);

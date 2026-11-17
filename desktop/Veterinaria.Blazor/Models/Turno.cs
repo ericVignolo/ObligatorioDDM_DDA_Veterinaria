@@ -28,4 +28,11 @@ public class Turno
 
     // Reprogramación (A-016): el turno conserva su número y se guarda el horario anterior.
     public DateTime? InicioAnterior { get; set; }
+
+    // RN-09: sobreturno dado por Recepción o el Administrador fuera de los horarios libres, con su motivo.
+    public bool EsSobreturno { get; set; }
+    public string MotivoSobreturno { get; set; } = "";
+
+    // Quién lo dio en el mostrador; vacío si lo reservó el cliente.
+    public string CreadoPor { get; set; } = "";
 }

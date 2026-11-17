@@ -18,6 +18,9 @@ Esta tarea no agrega requisitos de la matriz: ordena la demostración de lo ya c
 | RD-09 | La demostración muestra una marca de simulación en todas las pantallas (franja con enlace a `/demo`) y la guía `/demo` indica que todo es simulado, que no se envían correos ni se cobra y que recargar la pestaña reinicia los datos. |
 | RD-10 | Ana tiene dos animales (Toby y Mishi) y Pedro dos (el rodeo y Canela); un cliente no ve los animales del otro. |
 | RD-11 | Aclaraciones del probador: `DeRol` distingue mayúsculas y tildes y con rol nulo devuelve nulo sin error. El correo al ingresar se normaliza (sin espacios en los extremos y sin distinguir mayúsculas). Las cuentas de cliente de demostración son exactamente dos: `ana.demo@vitalia.uy` (Mishi y Toby) y `pedro.demo@vitalia.uy` (Canela y «Rodeo La Esperanza»). Las rutas de paso empiezan con «/», no llevan parámetros, consulta ni ancla, y el inicio es «/». `SesionService.Iniciada` es verdadera solo para un Cliente; `HaySesion` lo es para cualquier persona con sesión (Cliente o personal). |
+| RD-12 | Los recorridos de Cliente, Recepción y Veterinario incluyen los pasos de las reglas RN-08, 09, 16, 17 y 35 (castración con seña, sobreturno, adelanto de vacuna y alergia). |
+| RD-13 | `AgendaService.ProximoDiaConHorarios(profesional, servicio, animal, desde)` devuelve el primer día, desde `desde` y hasta el último día reservable, con al menos un horario libre; si no hay ninguno devuelve nulo. Al entrar al paso «Fecha y hora» de Reservar, si el primer día no tiene lugar se pasa solo a ese día y se avisa; si el día elegido a mano no tiene lugar, aparece el botón «Ir al próximo día con horarios». |
+| RD-14 | Con los datos de partida reales, Ana puede reservar la castración de Toby (queda «Pendiente de seña»), Recepción cobra la seña y el turno pasa a Confirmado; el recorrido se puede repetir sin agotar los horarios. |
 
 ## Decisiones
 
@@ -27,5 +30,5 @@ Esta tarea no agrega requisitos de la matriz: ordena la demostración de lo ya c
 
 ## Verificación
 
-- Automática: `RecorridosTests` (RD-01 a RD-08, RD-10) y la prueba de caja negra del probador.
+- Automática: `RecorridosTests` (RD-01 a RD-08, RD-10) y `DemostracionCompletaTests` (RD-13, RD-14) y la prueba de caja negra del probador.
 - Manual (Eric, con F5): abrir `/demo`, seguir cada recorrido, reiniciar con el botón y comprobar que se vuelve al punto de partida.

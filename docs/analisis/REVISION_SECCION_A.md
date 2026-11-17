@@ -16,10 +16,10 @@ Método: revisor independiente (lectura del código contra la matriz, sin compil
 
 Quedan como pruebas permanentes (`RevisionSeccionATests`): enlaces internos literales a pantallas existentes, páginas de error en español, motivo de ausencia no expuesto y resumen clínico oculto en la bandeja.
 
-## Decisiones abiertas (Eric y Diego)
+## Decisiones (resueltas por Eric el 2026-11-17)
 
-1. **Aviso de refuerzo por defecto (D-COM-03).** Hoy arranca por correo y la alerta sanitaria apagada. RN-43 (bloqueante) pide que lo facultativo no aparezca premarcado; Eric respondió «solo dejamos marcado por defecto lo que es necesario». Falta confirmar si el recordatorio de vacunas cuenta como necesario (RF-CLI-07 es Must) o debe arrancar apagado. Cambiarlo toca varias pruebas.
-2. **Reglas sin construir en la sección A y sin nota previa:** RN-08 (límite de ausencias para autoagendar), RN-09 (sobreturno solo Recepción/Administración), RN-16 (intervalo mínimo entre dosis con justificación), RN-17 (receta de un principio activo registrado como alergia), RN-35 (seña previa en cirugía) y RN-36 (deuda vencida y aviso al agendar). Decidir si se construyen antes de la entrega o se declaran como límites en la defensa.
+1. **Aviso de refuerzo por defecto (D-COM-03).** Hoy arranca por correo y la alerta sanitaria apagada. RN-43 (bloqueante) pide que lo facultativo no aparezca premarcado; Eric respondió «solo dejamos marcado por defecto lo que es necesario». **Resuelto:** cuenta como necesario y queda por correo por defecto.
+2. **Reglas sin construir en la sección A y sin nota previa:** RN-08 (límite de ausencias para autoagendar), RN-09 (sobreturno solo Recepción/Administración), RN-16 (intervalo mínimo entre dosis con justificación), RN-17 (receta de un principio activo registrado como alergia), RN-35 (seña previa en cirugía) y RN-36 (deuda vencida y aviso al agendar). **Resuelto:** se construyeron (ver `ESPECIFICACION_REGLAS_PENDIENTES.md`): 3 ausencias, seña del 30 %, aviso de deuda desde $ 3.000, configurables.
 
 ## Cobertura y límites
 

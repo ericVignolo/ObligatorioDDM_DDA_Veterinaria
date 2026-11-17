@@ -13,7 +13,7 @@ Lo que el veterinario completa en la consulta (A-019). El borrador se puede guar
 
 **Tareas:** A-019
 
-**Requisitos y decisiones:** RN-20
+**Requisitos y decisiones:** RN-17, RN-20
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 

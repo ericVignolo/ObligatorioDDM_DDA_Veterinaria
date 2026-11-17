@@ -42,6 +42,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[MiCuenta]]
 - [[PasosReserva]]
 - [[Reservar]]
+- [[TurnoMostrador]]
 - [[VacunaService]]
 
 ## En las otras aplicaciones

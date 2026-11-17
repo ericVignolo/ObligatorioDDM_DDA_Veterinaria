@@ -21,4 +21,8 @@ public class ProductoSanitario
 
     // Días entre una aplicación y su refuerzo.
     public int IntervaloRefuerzoDias { get; set; }
+
+    // RN-16: días mínimos desde la aplicación anterior del mismo producto. Antes de eso, adelantar exige justificación.
+    // 0 = sin mínimo. Valores de demostración, a validar por un veterinario.
+    public int IntervaloMinimoDias { get; set; }
 }

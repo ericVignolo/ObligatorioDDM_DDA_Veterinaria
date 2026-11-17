@@ -20,6 +20,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usado por (si cambia, revisar estos)
 - [[Acceso]]
 - [[AdminServicios]]
+- [[AgendaService]]
 - [[Home]]
 - [[PrestacionCard]]
 - [[PrestacionDetalle]]

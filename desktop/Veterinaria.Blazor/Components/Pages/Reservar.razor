@@ -6,6 +6,7 @@
 @inject PrestacionService PrestacionService
 @inject ProfesionalService ProfesionalService
 @inject SesionService Sesion
+@inject CobroService Cobros
 @inject NavigationManager Navegacion
 
 <PageTitle>@(reprogramando is null ? "Reservar turno" : "Reprogramar turno") — VITALIA</PageTitle>
@@ -22,6 +23,14 @@
     {
     <div>
     <PasosReserva Actual="paso" />
+
+    @* RN-08: aviso desde la 2.ª ausencia sin aviso; desde el límite, la reserva la hace Recepción. *@
+    @if (reprogramando is null && !string.IsNullOrEmpty(Agenda.MensajeAusencias(Sesion.CuentaActual!.Id)))
+    {
+        <div class="alert @(Agenda.BloqueadoPorAusencias(Sesion.CuentaActual.Id) ? "alert-danger" : "alert-warning")" role="status">
+            @Agenda.MensajeAusencias(Sesion.CuentaActual.Id)
+        </div>
+    }
 
     @if (!string.IsNullOrEmpty(aviso))
     {
@@ -114,9 +123,20 @@
             <div class="form-text">@fecha.ToString("dddd d 'de' MMMM")</div>
         </div>
 
+        @if (avisoSalto != "")
+        {
+            <div class="alert alert-info" role="status">@avisoSalto</div>
+        }
+
         @if (horarios.Count == 0)
         {
             <div class="alert alert-info">@MotivoSinHorarios()</div>
+            @if (proximoDia is not null)
+            {
+                <button type="button" class="btn btn-outline-primary mb-3" @onclick="IrAlProximoDia">
+                    Ir al próximo día con horarios (@proximoDia.Value.ToString("dddd d 'de' MMMM"))
+                </button>
+            }
         }
         else
         {
@@ -169,6 +189,18 @@
             Podés cancelar sin costo hasta @AgendaService.HorasParaCancelar horas antes. Después, la cancelación se hace por Recepción.
         </div>
 
+        @if (reprogramando is null && elegida.RequiereConsentimiento)
+        {
+            <div class="alert alert-info small">
+                Esta cirugía pide una seña del @Cobros.PorcentajeSena % del precio, que se paga en Recepción. Hasta pagarla, el horario queda reservado pero el turno no está confirmado (RN-35).
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Cobros.AvisoDeuda(Sesion.CuentaActual!.Id)))
+        {
+            <div class="alert alert-warning small" role="status">@Cobros.AvisoDeuda(Sesion.CuentaActual.Id)</div>
+        }
+
         <button class="btn btn-outline-secondary me-2" @onclick="() => IrAPaso(3)">Volver</button>
         <button class="btn btn-primary" disabled="@confirmando" @onclick="Confirmar">@(reprogramando is null ? "Confirmar turno" : "Confirmar cambio")</button>
 
@@ -195,6 +227,8 @@
 
     private int paso = 1;
     private string aviso = "";
+    private string avisoSalto = "";
+    private DateOnly? proximoDia;
     private bool confirmando;
 
     private List<Animal> animales = new();
@@ -263,7 +297,7 @@
             fecha = Agenda.PrimerDia;
         }
 
-        CargarHorarios();
+        CargarHorarios(saltarSiNoHay: true);
         paso = 3;
     }
 
@@ -288,7 +322,7 @@
 
         if (numero == 3)
         {
-            CargarHorarios();
+            CargarHorarios(saltarSiNoHay: true);
         }
 
         paso = numero;
@@ -324,14 +358,45 @@
         }
     }
 
-    private void CargarHorarios()
+    private void CargarHorarios(bool saltarSiNoHay = false)
     {
-        horarios = Agenda.HorariosLibres(profesionalId, prestacionId, animalId, fecha, reprogramando?.Id ?? 0);
+        var excluir = reprogramando?.Id ?? 0;
+        horarios = Agenda.HorariosLibres(profesionalId, prestacionId, animalId, fecha, excluir);
+        avisoSalto = "";
+
+        // Al entrar al paso 3, si el primer día no tiene lugar (por ejemplo, una cirugía de 90 min), se pasa al
+        // primer día con horarios y se avisa, así nadie se queda mirando una pantalla vacía.
+        if (horarios.Count == 0 && saltarSiNoHay)
+        {
+            var siguiente = Agenda.ProximoDiaConHorarios(profesionalId, prestacionId, animalId, fecha, excluir);
+            if (siguiente is not null)
+            {
+                var anterior = fecha;
+                fecha = siguiente.Value;
+                horarios = Agenda.HorariosLibres(profesionalId, prestacionId, animalId, fecha, excluir);
+                avisoSalto = $"El {anterior.ToString("dddd d 'de' MMMM")} no queda lugar para este servicio. Te mostramos el primer día con horarios libres.";
+            }
+        }
+
+        proximoDia = horarios.Count == 0
+            ? Agenda.ProximoDiaConHorarios(profesionalId, prestacionId, animalId, fecha.AddDays(1), excluir)
+            : null;
 
         if (inicio is not null && !horarios.Contains(inicio.Value))
         {
             inicio = null;
         }
+    }
+
+    private void IrAlProximoDia()
+    {
+        if (proximoDia is null)
+        {
+            return;
+        }
+
+        fecha = proximoDia.Value;
+        CargarHorarios();
     }
 
     private string MotivoSinHorarios()
@@ -387,6 +452,7 @@
             return;
         }
 
+        Cobros.GenerarSena(turno);
         Navegacion.NavigateTo($"turnos?confirmado={turno.Id}");
     }
 

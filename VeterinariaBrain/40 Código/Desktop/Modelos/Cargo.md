@@ -13,7 +13,7 @@ Cargo por una prestación atendida (A-023, RN-32, RN-33). Lo genera la firma de 
 
 **Tareas:** A-023, A-026, A-027
 
-**Requisitos y decisiones:** RN-32, RN-33, RN-58
+**Requisitos y decisiones:** RN-32, RN-33, RN-35, RN-58
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 

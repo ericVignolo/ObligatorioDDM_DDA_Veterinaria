@@ -26,6 +26,8 @@
         </div>
     }
 
+    <TurnoMostrador OnRegistrado="Cargar" />
+
     @* Filtros (A-017) *@
     <div class="row g-2 mb-3">
         <div class="col-md-3">
@@ -117,6 +119,10 @@
                             <td>@(ProfesionalService.ObtenerPorId(turno.ProfesionalId)?.Nombre)</td>
                             <td>
                                 <EstadoTurno Estado="@turno.Estado" />
+                                @if (turno.EsSobreturno)
+                                {
+                                    <span class="badge bg-dark ms-1" title="@turno.MotivoSobreturno">Sobreturno</span>
+                                }
                                 <EstadoConsentimiento Turno="turno" />
                                 @if (turno.HoraLlegada is not null)
                                 {
@@ -145,7 +151,7 @@
                                         <button class="btn btn-outline-primary btn-sm me-1 mb-1" @onclick="() => Llegada(turno.Id)">Llegó</button>
                                         <button class="btn btn-outline-secondary btn-sm me-1 mb-1" @onclick="() => Ausencia(turno.Id)">Ausente</button>
                                     }
-                                    @if (turno.Estado == "Confirmado" || turno.Estado == "En espera")
+                                    @if (turno.Estado == "Confirmado" || turno.Estado == "En espera" || turno.Estado == AgendaService.PendienteSena)
                                     {
                                         <button class="btn btn-outline-danger btn-sm mb-1" @onclick="() => EmpezarCancelacion(turno.Id)">@(turno.Estado == "En espera" ? "Se retiró" : "Cancelar")</button>
                                     }
@@ -160,7 +166,7 @@
 </RequierePersonal>
 
 @code {
-    private readonly string[] estados = { "Confirmado", "En espera", "En curso", "Finalizado", "Ausente", "Cancelado" };
+    private readonly string[] estados = { AgendaService.PendienteSena, "Confirmado", "En espera", "En curso", "Finalizado", "Ausente", "Cancelado" };
 
     private DateOnly fecha = DateOnly.FromDateTime(DateTime.Today);
     private int profesionalId;

@@ -13,6 +13,8 @@ Guía de recorridos demostrativos por rol (A-030). Los datos son ficticios y se 
 
 **Tareas:** A-011, A-030
 
+**Requisitos y decisiones:** RN-09, RN-16, RN-17, RN-35
+
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa

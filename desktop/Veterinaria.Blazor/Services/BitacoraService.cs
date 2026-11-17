@@ -18,8 +18,9 @@ public class BitacoraService
 
     public const string ComunicacionesEntidad = "Comunicaciones";
     public const string DatosPersonales = "Datos personales";
+    public const string Agenda = "Agenda";
 
-    public static readonly string[] Entidades = { Configuracion, Historia, Stock, Cobros, Consentimientos, Internaciones, Asistencias, ComunicacionesEntidad, DatosPersonales };
+    public static readonly string[] Entidades = { Configuracion, Historia, Stock, Cobros, Consentimientos, Internaciones, Asistencias, ComunicacionesEntidad, DatosPersonales, Agenda };
 
     private readonly AuditoriaService _auditoria;
     private readonly ConsultaService _consultas;
@@ -70,7 +71,7 @@ public class BitacoraService
         foreach (var r in _auditoria.Buscar())
         {
             // Comunicaciones y datos personales tienen su propia entidad (A-028); el resto es configuración.
-            var propia = r.Entidad == ComunicacionesEntidad || r.Entidad == DatosPersonales;
+            var propia = r.Entidad == ComunicacionesEntidad || r.Entidad == DatosPersonales || r.Entidad == Agenda;
             yield return Registro(r.Fecha, r.Usuario, r.Rol, propia ? r.Entidad : Configuracion, r.Accion, propia ? r.Detalle : $"{r.Entidad}: {r.Detalle}");
         }
 

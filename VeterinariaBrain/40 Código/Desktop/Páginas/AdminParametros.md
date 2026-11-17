@@ -15,14 +15,16 @@ A-027: boxes (RF-ADM-03), asistencia (RF-ADM-13), avisos y stock mínimo (RF-ADM
 
 **Tareas:** A-025, A-027
 
-**Requisitos y decisiones:** RF-ADM-03, RF-ADM-10, RF-ADM-13, RN-06
+**Requisitos y decisiones:** RF-ADM-03, RF-ADM-10, RF-ADM-13, RN-06, RN-08, RN-35, RN-36
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
 - [[AdministracionService]]
+- [[AgendaService]]
 - [[AsistenciaService]]
 - [[Box]]
+- [[CobroService]]
 - [[Consentimiento]]
 - [[ConsentimientoService]]
 - [[InternacionService]]

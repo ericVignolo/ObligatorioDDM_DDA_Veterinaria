@@ -9,4 +9,8 @@ public class AplicacionFormulario
 {
     [Range(1, int.MaxValue, ErrorMessage = "Elegí un producto.")]
     public int ProductoId { get; set; }
+
+    // RN-16: solo se pide si la dosis se adelanta al intervalo mínimo del producto.
+    [StringLength(300, ErrorMessage = "La justificación puede tener hasta 300 caracteres.")]
+    public string Justificacion { get; set; } = "";
 }

@@ -23,6 +23,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AdministracionService]]
+- [[AgendaService]]
 - [[BitacoraService]]
 - [[ComunicacionesService]]
 - [[DerechosService]]

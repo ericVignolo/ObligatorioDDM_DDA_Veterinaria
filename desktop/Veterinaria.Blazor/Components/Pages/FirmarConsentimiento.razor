@@ -127,7 +127,7 @@
         turno = cuenta is not null && encontrado is not null && encontrado.ClienteId == cuenta.Id && Consentimientos.Requiere(encontrado) ? encontrado : null;
         documento = turno is null ? null : Consentimientos.DocumentoVigente(turno.PrestacionId);
         historial = turno is null ? new() : Consentimientos.RespuestasDe(turno.Id);
-        puedeResponder = turno is not null && (turno.Estado == "Confirmado" || turno.Estado == "En espera");
+        puedeResponder = turno is not null && (turno.Estado == AgendaService.PendienteSena || turno.Estado == "Confirmado" || turno.Estado == "En espera");
     }
 
     private void Firmar()
