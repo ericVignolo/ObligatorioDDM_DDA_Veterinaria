@@ -12,7 +12,7 @@
 .vt-btn-acento { background: var(--vt-acento); color: var(--vt-sobre-acento); }
 .vt-btn-acento:hover { background: var(--vt-acento-hover); }
 .vt-btn-borde { background: transparent; color: var(--vt-primario); border-color: var(--vt-primario); }
-.vt-btn-borde:hover { background: var(--vt-primario-suave); }
+.vt-btn-borde:hover { background: var(--vt-primario-suave); color: var(--vt-primario-hover); }
 .vt-btn-peligro { background: var(--vt-peligro-suave); color: var(--vt-peligro); border-color: var(--vt-peligro); }
 .vt-btn:disabled { opacity: .5; cursor: not-allowed; }
 .vt-btn svg, .vt-ico { width: 1.25rem; height: 1.25rem; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }

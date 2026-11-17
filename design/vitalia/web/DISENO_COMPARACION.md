@@ -32,6 +32,7 @@ Medido con la fórmula de luminancia relativa.
 | Par | Relación |
 |---|---|
 | Blanco sobre verde A `#1B7F53` | 4,99 |
+| Verde de éxito `#187048` sobre su fondo suave `#E3F4EA` | 5,33 |
 | Blanco sobre naranja A `#B8530A` | 4,91 |
 | Texto suave A `#5A6B62` sobre fondo | 5,34 |
 | Blanco sobre verde azulado B `#0B7A75` | 5,18 |
@@ -40,9 +41,11 @@ Medido con la fórmula de luminancia relativa.
 | Verde claro `#4ADE9A` sobre fondo oscuro A | 9,79 |
 | Turquesa `#5EC9C2` sobre fondo oscuro B | 8,90 |
 
+Corrección del 2026-11-17: el verde de éxito original (`#1B7F53`) daba 4,37:1 sobre su fondo suave y se oscureció a `#187048`; en el botón de borde, el texto al pasar el mouse usa `primario-hover` (5,79:1 en A y 6,39:1 en B).
+
 Nota: el verde `#2E9E6B` y el naranja `#F28C28` «puros» no pasan AA con texto blanco; por eso los tonos de botón están oscurecidos. El naranja puro queda solo como color de foco.
 
-## Archivos
+## Archivos (las imágenes están en `../opcion-a/exports` y `../opcion-b/exports`; ver `../README.md`)
 - `tokens-opcion-a.css` y `tokens-opcion-b.css`: variables de color, forma, tipografía, espacio y movimiento (claro y oscuro).
 - `componentes.css`: botones, tarjetas, insignias, campos, esqueletos y avisos; solo usa `--vt-*`.
 - `previsualizacion.html`: demostración de ambas opciones.

@@ -6,7 +6,7 @@
   --vt-primario: #0B7A75;          --vt-primario-hover: #095F5B;   --vt-primario-suave: #DDF1EF;   --vt-sobre-primario: #FFFFFF;
   --vt-acento: #C4452E;            --vt-acento-hover: #A53824;     --vt-acento-suave: #FBE3DD;     --vt-sobre-acento: #FFFFFF;
   /* Estados */
-  --vt-exito: #1B7F53; --vt-exito-suave: #E3F4EA;
+  --vt-exito: #187048; --vt-exito-suave: #E3F4EA;
   --vt-aviso: #8A5A00; --vt-aviso-suave: #FFF1D6;
   --vt-peligro: #B42318; --vt-peligro-suave: #FDE8E6;
   --vt-info: #1D5FA8; --vt-info-suave: #E5EFFB;
