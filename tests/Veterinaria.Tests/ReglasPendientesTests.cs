@@ -198,7 +198,8 @@ public class ReglasPendientesTests
 
         Assert.True(f.Cobros.DeudaVencida(cliente.Id) > 0);
         Assert.Contains("Se puede agendar igual", f.Cobros.AvisoDeuda(cliente.Id));
-        Assert.True(f.Agenda.Reservar(cliente.Id, animal.Id, 1, 1, Fabrica.A(f.DiaQueAtiende(1), 14), out _).Exito);
+        var libre = f.Agenda.HorariosLibres(1, 1, animal.Id, f.DiaQueAtiende(1)).First();
+        Assert.True(f.Agenda.Reservar(cliente.Id, animal.Id, 1, 1, libre, out _).Exito);
     }
 
     // ---------- Parámetros ----------
