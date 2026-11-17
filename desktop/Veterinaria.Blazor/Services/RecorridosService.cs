@@ -19,10 +19,10 @@ public class RecorridosService
             Pasos =
             {
                 new() { Accion = "Abrí el inicio.", Ruta = "/", Resultado = "Se ve la clínica, sus especies atendidas y los accesos al catálogo." },
-                new() { Accion = "Mirá el catálogo de servicios y abrí uno.", Ruta = "/servicios", Resultado = "Lista con precios vigentes; el detalle muestra duración y requisitos." },
+                new() { Accion = "Mirá el catálogo de servicios y abrí uno.", Ruta = "/servicios", Resultado = "Lista con precios vigentes; el detalle muestra la información del servicio." },
                 new() { Accion = "Conocé a los profesionales.", Ruta = "/profesionales", Resultado = "Fichas con especialidad y especies que atienden." },
                 new() { Accion = "Revisá cómo se pide asistencia urgente.", Ruta = "/urgencias", Resultado = "Teléfono de la guardia 24 horas, señales de alarma y niveles de asistencia." },
-                new() { Accion = "Intentá reservar sin haber ingresado.", Ruta = "/reservar", Resultado = "Se pide ingresar o registrarse; al volver se retoma lo que estabas haciendo (A-011)." },
+                new() { Accion = "Intentá reservar sin haber ingresado.", Ruta = "/reservar", Resultado = "Se pide ingresar o registrarse; al volver se retoma el servicio que habías elegido (A-011)." },
                 new() { Accion = "Leé la política de privacidad.", Ruta = "/privacidad", Resultado = "Cada versión tiene número y fecha; se conserva el historial de versiones aceptadas." }
             }
         },

@@ -13,7 +13,7 @@ Comunicaciones al cliente de demostración en memoria (A-028, RF-CLI-07, RF-CLI-
 
 **Tareas:** A-028
 
-**Requisitos y decisiones:** RF-CLI-07, RF-CLI-10, RF-CLI-18, RF-CLI-20, RF-REC-07, RN-18, RN-43, RNF-CON-03, RNF-CON-04, RNF-CON-10, RNF-LEG-06
+**Requisitos y decisiones:** D-COM-03, RF-CLI-07, RF-CLI-10, RF-CLI-18, RF-CLI-20, RF-REC-07, RN-18, RN-43, RNF-CON-03, RNF-CON-04, RNF-CON-10, RNF-LEG-06
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 

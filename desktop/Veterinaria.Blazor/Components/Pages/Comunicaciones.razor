@@ -120,7 +120,16 @@
                         if (abiertos.Contains(id))
                         {
                             <tr>
-                                <td colspan="6" class="bg-light" style="white-space: pre-line;">@comunicacion.Cuerpo</td>
+                                <td colspan="6" class="bg-light" style="white-space: pre-line;">
+                                    @if (comunicacion.Tipo == ComunicacionesService.ResumenClinico)
+                                    {
+                                        <span class="text-muted">El contenido del resumen clínico no se muestra en esta bandeja: solo lo ve su destinatario y el equipo clínico en la historia.</span>
+                                    }
+                                    else
+                                    {
+                                        @comunicacion.Cuerpo
+                                    }
+                                </td>
                             </tr>
                         }
                     }

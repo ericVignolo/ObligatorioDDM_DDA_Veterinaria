@@ -46,7 +46,7 @@ public class ComunicacionesService
 
     public List<string> Canales { get; } = new() { Correo, SoloApp, Ninguno };
 
-    // Catálogo con finalidad (RNF-LEG-06). Los esenciales no se pueden apagar; los opcionales arrancan apagados (RN-43).
+    // Catálogo con finalidad (RNF-LEG-06). Los esenciales no se pueden apagar; el aviso de refuerzo opcional arranca por correo (D-COM-03, pendiente de confirmar frente a RN-43) y la alerta sanitaria arranca apagada.
     public List<TipoComunicacion> Tipos { get; } = new()
     {
         new() { Nombre = ResumenClinico, Descripcion = "Resumen de la consulta cuando el veterinario la firma (RF-CLI-10).", Esencial = true, CanalPorDefecto = Correo },
