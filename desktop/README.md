@@ -185,6 +185,7 @@ flowchart LR
 | `/panel/admin/derechos` | `Pages/AdminDerechos.razor` | A-028 | DerechosService, CuentaService, SesionService · Administrador |
 | Mi cuenta → comunicaciones y datos | `Components/MisComunicaciones.razor`, `Components/MisDerechos.razor` | A-028 | ComunicacionesService, DerechosService · Cliente |
 | Accesibilidad y adaptación (transversal) | `Components/Layout/*`, `wwwroot/app.css` | A-029 | Sin servicios · ver `docs/analisis/ESPECIFICACION_ACCESIBILIDAD.md` |
+| `/demo` | `Pages/Demostracion.razor` | A-030 | RecorridosService · público; franja de simulación en `MainLayout` |
 | `/panel/historia/{AnimalId}` | `Pages/HistoriaClinica.razor` | A-020, A-021 | AnimalService, CuentaService, ConsultaService, SesionService · `RegistroClinico`, `CarnetSanitario` |
 | `/animales/{Id}/historia` | `Pages/HistoriaAnimal.razor` | A-020 | AnimalService, ConsultaService, SesionService · `RegistroClinico`, `RequiereSesion` |
 | `/turnos` | `Pages/Turnos.razor` | A-015, A-016 | AgendaService, AnimalService, PrestacionService, ProfesionalService, ClinicaService, SesionService |

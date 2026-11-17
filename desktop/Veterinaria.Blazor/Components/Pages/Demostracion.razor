@@ -1,0 +1,77 @@
+@page "/demo"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject RecorridosService Recorridos
+@inject NavigationManager Navegacion
+
+<PageTitle>Guía de demostración — VITALIA</PageTitle>
+
+<h1>Guía de demostración</h1>
+
+<div class="alert alert-warning" role="note">
+    <strong>Todo es simulado.</strong> Los clientes, animales, turnos, precios y stock son ficticios; no se envía ningún correo,
+    mensaje ni cobro real. Los datos viven solo en esta pestaña: al recargarla, la demostración vuelve a su punto de partida.
+    La autorización y la persistencia reales las hará la API (sección C).
+</div>
+
+<p>
+    Hay un recorrido por rol. Para repetir uno desde cero, reiniciá la demostración.
+    Los turnos de ejemplo se cargan para hoy y mañana en los días en que cada profesional trabaja.
+</p>
+<button type="button" class="btn btn-outline-secondary mb-4" @onclick="Reiniciar">Reiniciar la demostración</button>
+
+<section class="mb-4">
+    <h2 class="h5">Cuentas de demostración</h2>
+    <p class="small mb-1">Contraseña para todas: <code>@PersonalService.ContrasenaDemo</code></p>
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <caption class="visually-hidden">Cuentas de demostración por rol</caption>
+            <thead>
+                <tr><th scope="col">Rol</th><th scope="col">Correo</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Visitante</td><td>No necesita cuenta</td></tr>
+                @foreach (var recorrido in Recorridos.Todos().Where(r => r.Correo != ""))
+                {
+                    <tr><td>@recorrido.Rol</td><td><code>@recorrido.Correo</code></td></tr>
+                }
+                <tr><td>Cliente (segundo)</td><td><code>pedro.demo@vitalia.uy</code> — rodeo y caballo</td></tr>
+                <tr><td>Veterinario/a (otros)</td><td><code>silveira@vitalia.uy</code>, <code>acosta@vitalia.uy</code></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+@foreach (var recorrido in Recorridos.Todos())
+{
+    <section class="mb-4" aria-labelledby="@IdDe(recorrido)">
+        <h2 class="h4" id="@IdDe(recorrido)">@recorrido.Rol: @recorrido.Titulo</h2>
+        <p class="text-muted">@recorrido.Resumen</p>
+        @if (recorrido.Correo != "")
+        {
+            <p class="small">Ingresá con <code>@recorrido.Correo</code>.</p>
+        }
+        <ol>
+            @foreach (var paso in recorrido.Pasos)
+            {
+                <li class="mb-2">
+                    <a href="@paso.Ruta">@paso.Accion</a>
+                    <div class="small text-muted">Resultado esperado: @paso.Resultado</div>
+                </li>
+            }
+        </ol>
+    </section>
+}
+
+@code {
+    private static string IdDe(Recorrido recorrido)
+    {
+        return "recorrido-" + recorrido.Rol.ToLowerInvariant().Replace("ó", "o").Replace("é", "e");
+    }
+
+    private void Reiniciar()
+    {
+        // Una recarga completa crea una sesión nueva: todos los servicios vuelven a sus datos de partida.
+        Navegacion.NavigateTo("demo", forceLoad: true);
+    }
+}

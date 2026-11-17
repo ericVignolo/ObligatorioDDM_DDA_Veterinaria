@@ -9,7 +9,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (45)
+### Páginas (46)
 - [[Acceso]] · `/acceso`
 - [[AdminAuditoria]] · `/panel/admin/auditoria`
 - [[AdminDerechos]] · `/panel/admin/derechos`
@@ -31,6 +31,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Comprobante]] · `/panel/comprobantes/{Id:int}`
 - [[Comunicaciones]] · `/panel/comunicaciones`
 - [[Cookies]] · `/cookies`
+- [[Demostracion]] · `/demo`
 - [[FirmarConsentimiento]] · `/consentimiento/{TurnoId:int}`
 - [[HistoriaAnimal]] · `/animales/{Id:int}/historia`
 - [[HistoriaClinica]] · `/panel/historia/{AnimalId:int}`
@@ -79,7 +80,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequierePersonal]]
 - [[RequiereSesion]]
 
-### Servicios (24)
+### Servicios (25)
 - [[AdministracionService]]
 - [[AgendaService]]
 - [[AnimalService]]
@@ -102,10 +103,11 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[PersonalService]]
 - [[PrestacionService]]
 - [[ProfesionalService]]
+- [[RecorridosService]]
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (73)
+### Modelos (74)
 - [[AdmisionFormulario]]
 - [[AjusteFormulario]]
 - [[AlertaStock]]
@@ -166,6 +168,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[PrestacionFormulario]]
 - [[ProductoSanitario]]
 - [[Profesional]]
+- [[Recorrido]]
 - [[RegistroAuditoria]]
 - [[RegistroCliente]]
 - [[ReservaStock]]
