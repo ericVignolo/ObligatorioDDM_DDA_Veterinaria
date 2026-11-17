@@ -37,6 +37,7 @@ public class RecorridosService
                 new() { Accion = "Ingresá con la cuenta de Ana.", Ruta = "/ingresar", Resultado = "Entrás sin registrarte; la barra superior muestra tu nombre." },
                 new() { Accion = "Mirá tus animales.", Ruta = "/animales", Resultado = "Aparecen Toby (perro) y Mishi (gata)." },
                 new() { Accion = "Reservá un turno para Toby.", Ruta = "/reservar", Resultado = "Se ofrecen horarios orientativos; el horario se vuelve a verificar al confirmar y el turno queda en «Mis turnos»." },
+                new() { Accion = "Reservá la castración de Toby (cirugía).", Ruta = "/reservar?servicio=8", Resultado = "Si el primer día no tiene lugar para 90 min, se salta solo al primer día con horarios. El turno queda «Pendiente de seña» hasta que Recepción cobre el 30 % (RN-35)." },
                 new() { Accion = "Revisá tus turnos, cancelá o reprogramá uno.", Ruta = "/turnos", Resultado = "Se muestran las consecuencias de la política antes de confirmar." },
                 new() { Accion = "Abrí un animal y entrá a su historia clínica.", Ruta = "/animales", Resultado = "Lectura de las consultas firmadas; las nuevas aparecen después del recorrido del Veterinario." },
                 new() { Accion = "Mirá tus comunicaciones y tus derechos sobre los datos.", Ruta = "/cuenta", Resultado = "Preferencias por tipo de aviso (lo opcional viene apagado), exportación y pedido de eliminación." }
@@ -52,6 +53,8 @@ public class RecorridosService
             {
                 new() { Accion = "Ingresá como Recepción.", Ruta = "/ingresar", Resultado = "Vas directo al panel con los atajos de Recepción." },
                 new() { Accion = "Abrí la agenda del día.", Ruta = "/panel/agenda", Resultado = "Turnos de todos los profesionales; podés marcar «Llegó» o «Ausente»." },
+                new() { Accion = "Cobrá la seña de la castración que reservó Ana.", Ruta = "/panel/cobros", Resultado = "Al pagar el 30 % el turno pasa a Confirmado; la seña se descuenta del cobro final (RN-35)." },
+                new() { Accion = "Dá un sobreturno en un horario ocupado.", Ruta = "/panel/agenda", Resultado = "Pide motivo, queda marcado como sobreturno y en la bitácora (RN-09)." },
                 new() { Accion = "Cobrá una prestación finalizada.", Ruta = "/panel/cobros", Resultado = "Se registra el pago en persona y se emite el comprobante." },
                 new() { Accion = "Admití un animal en internación.", Ruta = "/panel/internacion", Resultado = "El animal ocupa un box libre; el box ocupado no se puede reasignar." },
                 new() { Accion = "Gestioná las solicitudes de asistencia a domicilio.", Ruta = "/panel/asistencia", Resultado = "Cola ordenada por prioridad con su estado." },
@@ -69,6 +72,7 @@ public class RecorridosService
                 new() { Accion = "Ingresá como Veterinario.", Ruta = "/ingresar", Resultado = "Vas al panel con los atajos de Veterinario." },
                 new() { Accion = "Abrí tu agenda e iniciá la atención de un turno.", Ruta = "/panel/mi-agenda", Resultado = "Tus turnos del día; «Iniciar atención» abre la consulta." },
                 new() { Accion = "Registrá la consulta y firmala desde «Continuar consulta».", Ruta = "/panel/mi-agenda", Resultado = "Al firmar queda inmutable y se encola el resumen para el Cliente." },
+                new() { Accion = "Adelantá una vacuna a Toby (polivalente aplicada hace 60 días) y firmá un tratamiento con una alergia registrada.", Ruta = "/panel/mi-agenda", Resultado = "Pide justificación del adelanto (RN-16) y confirmación del choque con la alergia (RN-17); ambas quedan en la historia." },
                 new() { Accion = "Revisá las internaciones a tu cargo.", Ruta = "/panel/internacion", Resultado = "Evolución, novedades y alta." },
                 new() { Accion = "Aceptá o rechazá una asistencia.", Ruta = "/panel/asistencia", Resultado = "El estado cambia y queda en el seguimiento." },
                 new() { Accion = "Mirá el stock en solo lectura.", Ruta = "/panel/inventario", Resultado = "Lotes y vencimientos, sin botones de compra ni ajuste." }

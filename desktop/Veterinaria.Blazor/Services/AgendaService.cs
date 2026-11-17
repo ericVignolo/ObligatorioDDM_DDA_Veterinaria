@@ -141,6 +141,23 @@ public class AgendaService
 
     public DateOnly UltimoDia => DateOnly.FromDateTime(DateTime.Today.AddDays(DiasHaciaAdelante));
 
+    // Primer día, desde `desde`, con al menos un horario libre para ese profesional, servicio y animal.
+    // Evita que una cirugía larga (90 min) muestre «sin horarios» en un día ya cargado (RF-CLI-04).
+    public DateOnly? ProximoDiaConHorarios(int profesionalId, int prestacionId, int animalId, DateOnly desde, int excluirTurnoId = 0)
+    {
+        var dia = desde < PrimerDia ? PrimerDia : desde;
+
+        for (; dia <= UltimoDia; dia = dia.AddDays(1))
+        {
+            if (HorariosLibres(profesionalId, prestacionId, animalId, dia, excluirTurnoId).Count > 0)
+            {
+                return dia;
+            }
+        }
+
+        return null;
+    }
+
     // Horarios de inicio libres cada 15 minutos. Un turno ocupa toda su duración:
     // una consulta de 30 min a las 09:00 bloquea también las 09:15 (RN-01, RN-02, RN-07).
     // excluirTurnoId: al reprogramar, el turno que se mueve no se cuenta como ocupado.

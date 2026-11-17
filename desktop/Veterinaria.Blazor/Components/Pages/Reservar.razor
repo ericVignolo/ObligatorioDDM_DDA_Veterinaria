@@ -123,9 +123,20 @@
             <div class="form-text">@fecha.ToString("dddd d 'de' MMMM")</div>
         </div>
 
+        @if (avisoSalto != "")
+        {
+            <div class="alert alert-info" role="status">@avisoSalto</div>
+        }
+
         @if (horarios.Count == 0)
         {
             <div class="alert alert-info">@MotivoSinHorarios()</div>
+            @if (proximoDia is not null)
+            {
+                <button type="button" class="btn btn-outline-primary mb-3" @onclick="IrAlProximoDia">
+                    Ir al próximo día con horarios (@proximoDia.Value.ToString("dddd d 'de' MMMM"))
+                </button>
+            }
         }
         else
         {
@@ -216,6 +227,8 @@
 
     private int paso = 1;
     private string aviso = "";
+    private string avisoSalto = "";
+    private DateOnly? proximoDia;
     private bool confirmando;
 
     private List<Animal> animales = new();
@@ -284,7 +297,7 @@
             fecha = Agenda.PrimerDia;
         }
 
-        CargarHorarios();
+        CargarHorarios(saltarSiNoHay: true);
         paso = 3;
     }
 
@@ -309,7 +322,7 @@
 
         if (numero == 3)
         {
-            CargarHorarios();
+            CargarHorarios(saltarSiNoHay: true);
         }
 
         paso = numero;
@@ -345,14 +358,45 @@
         }
     }
 
-    private void CargarHorarios()
+    private void CargarHorarios(bool saltarSiNoHay = false)
     {
-        horarios = Agenda.HorariosLibres(profesionalId, prestacionId, animalId, fecha, reprogramando?.Id ?? 0);
+        var excluir = reprogramando?.Id ?? 0;
+        horarios = Agenda.HorariosLibres(profesionalId, prestacionId, animalId, fecha, excluir);
+        avisoSalto = "";
+
+        // Al entrar al paso 3, si el primer día no tiene lugar (por ejemplo, una cirugía de 90 min), se pasa al
+        // primer día con horarios y se avisa, así nadie se queda mirando una pantalla vacía.
+        if (horarios.Count == 0 && saltarSiNoHay)
+        {
+            var siguiente = Agenda.ProximoDiaConHorarios(profesionalId, prestacionId, animalId, fecha, excluir);
+            if (siguiente is not null)
+            {
+                var anterior = fecha;
+                fecha = siguiente.Value;
+                horarios = Agenda.HorariosLibres(profesionalId, prestacionId, animalId, fecha, excluir);
+                avisoSalto = $"El {anterior.ToString("dddd d 'de' MMMM")} no queda lugar para este servicio. Te mostramos el primer día con horarios libres.";
+            }
+        }
+
+        proximoDia = horarios.Count == 0
+            ? Agenda.ProximoDiaConHorarios(profesionalId, prestacionId, animalId, fecha.AddDays(1), excluir)
+            : null;
 
         if (inicio is not null && !horarios.Contains(inicio.Value))
         {
             inicio = null;
         }
+    }
+
+    private void IrAlProximoDia()
+    {
+        if (proximoDia is null)
+        {
+            return;
+        }
+
+        fecha = proximoDia.Value;
+        CargarHorarios();
     }
 
     private string MotivoSinHorarios()
