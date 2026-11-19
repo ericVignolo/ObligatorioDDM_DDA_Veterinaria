@@ -19,3 +19,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[CuentaService]]
 - [[PerfilFormulario]]
 - [[RegistroCliente]]
+
+## En las otras aplicaciones
+- [[ValidacionDatos (API)]]

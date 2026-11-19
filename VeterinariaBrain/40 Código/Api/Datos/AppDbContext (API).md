@@ -28,9 +28,11 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[Prestacion (API)]]
 - [[Profesional (API)]]
 - [[Rol (API)]]
+- [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
 ## Usado por (si cambia, revisar estos)
 - [[ClinicaRepository (API)]]
+- [[CuentaRepository (API)]]
 - [[PrestacionRepository (API)]]
 - [[ProfesionalRepository (API)]]

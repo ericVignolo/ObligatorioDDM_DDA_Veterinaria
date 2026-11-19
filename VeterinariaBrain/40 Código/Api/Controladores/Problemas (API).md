@@ -11,6 +11,6 @@ generado: true
 
 Errores de toda la API en formato Problem Details, con un código propio estable (D-CAT-03).
 
-**Requisitos y decisiones:** D-CAT-03
+**Requisitos y decisiones:** D-CAT-03, RNF-SEG-09
 
 Parte de [[Mapa Código]] · [[Carpeta api]]

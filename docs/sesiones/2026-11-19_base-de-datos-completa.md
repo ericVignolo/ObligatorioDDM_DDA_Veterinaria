@@ -105,3 +105,53 @@ F5 en la API (rama `diego/sesion-2026-11-19-profesionales`). No hace falta migra
 - [ ] Diego: probar con F5.
 - [ ] Siguiente endpoint: registro, verificación e inicio de sesión (hash de contraseña, JWT y permisos por rol).
 - [ ] Al final: mezclar los PR #39, #40 y #41 y ordenar las ramas.
+
+---
+
+## Tercera parte: cuentas y sesiones
+
+Rama: `diego/sesion-2026-11-19-cuentas`, creada desde `diego/sesion-2026-11-19-profesionales`. PR #42.
+
+- Diego probó los profesionales y la clínica con F5: todo anduvo.
+- Decisiones de Diego:
+  1. Se instala `Microsoft.AspNetCore.Authentication.JwtBearer` 10.0.0.
+  2. Correo con la opción A: sin envío por ahora; en Development el código vuelve en la respuesta. Ajuste de Claude: el código no se guarda en `Comunicaciones`, porque D-REG-02 prohíbe guardarlo en claro; sale directo por `IEnvioCorreo`.
+  3. El segundo factor del Administrador queda para después.
+- Registrado como DT-SEG-01 en `CONTEXTO_BASE.md`.
+- **Base:** migración `Sesiones` (tabla `SesionesRefresco`, más `IntentosFallidos` y `BloqueadaHasta` en `Cuentas`).
+- **Endpoints:**
+  - `POST /api/v1/cuentas`, `/cuentas/verificacion`, `/cuentas/verificacion/reenvio`, `/cuentas/recuperacion` y `/cuentas/recuperacion/confirmar`;
+  - `GET /api/v1/cuentas/yo`, que necesita token;
+  - `POST /api/v1/sesiones`, `/sesiones/refresco` y `DELETE /api/v1/sesiones`.
+- **Archivos:**
+  - `Controllers/CuentasController.cs` y `SesionesController.cs`; `Problemas.cs` ahora también convierte un `Resultado` en la respuesta;
+  - `Services/`: `CuentaService`, `SesionService`, `TokenService`, sus interfaces, `Seguridad`, `ValidacionDatos` (copia de la de Blazor), `Opciones`, `EnvioCorreo` y `Resultado`;
+  - `Repositories/ICuentaRepository.cs` y `CuentaRepository.cs`;
+  - `DTOs/CuentaDtos.cs`;
+  - `Models/SesionRefresco.cs` y `Cuenta.cs`;
+  - `Program.cs`, con autenticación, límite de pedidos y opciones;
+  - `appsettings.json`, con las secciones `Jwt` y `Cuentas` (clave solo de desarrollo);
+  - `Veterinaria.Api.http`, con los pedidos de prueba.
+- **Pruebas:** `ApiCuentasTests`, 26 nuevas. CI en verde con 1032 pruebas.
+
+### Cómo probarlo
+
+1. GitHub Desktop → *Fetch origin* → rama `diego/sesion-2026-11-19-cuentas`. Compilar, porque se descarga el paquete nuevo.
+2. Consola del Administrador de paquetes: `Add-Migration Sesiones` y `Update-Database`.
+3. F5 en la API. Abrir `Veterinaria.Api.http` y tocar «Enviar solicitud» en orden:
+   1. Registro → `201` con `codigoDesarrollo`.
+   2. Verificación, con ese código → `200`.
+   3. Ingreso → `200` con los tokens.
+   4. `cuentas/yo` → `200` con tus datos. Sin token → `401`.
+   5. Refresco y cierre de sesión.
+   6. Recuperación y confirmación, con el código nuevo.
+   7. Ingreso del personal: `admin@vitalia.uy` / `Vitalia2026!` → `roles: ["Administrador"]`.
+4. Subir la carpeta `Migrations/` con la migración `Sesiones`.
+
+### Qué falta
+
+- [ ] Diego: migración `Sesiones`, probar con el `.http` y subir `Migrations/`.
+- [ ] Segundo factor del Administrador (RNF-SEG-04).
+- [ ] Envío real de correos (reemplazar `EnvioCorreoDesarrollo`).
+- [ ] Borrado automático de las cuentas sin verificar de más de 7 días (hoy se borran al registrarse alguien con el mismo correo).
+- [ ] Siguiente: animales del cliente (alta, lista, detalle; solo los propios, RN-18; microchip único, RN-41).

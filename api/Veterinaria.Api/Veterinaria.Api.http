@@ -1,0 +1,126 @@
+# Pedidos de prueba de la API. En Visual Studio: abrir este archivo y tocar «Enviar solicitud»
+# sobre cada pedido, con la API corriendo (F5, perfil https). Las respuestas salen a la derecha.
+
+@api = https://localhost:7191/api/v1
+
+### ---------- Públicos ----------
+
+GET {{api}}/servicios
+
+###
+GET {{api}}/profesionales/1
+
+###
+GET {{api}}/clinica
+
+### ---------- 1. Registrarse ----------
+# En Development la respuesta trae "codigoDesarrollo" (todavía no se envían correos).
+
+POST {{api}}/cuentas
+Content-Type: application/json
+
+{
+  "nombre": "Ana",
+  "apellido": "Pérez",
+  "correo": "ana@correo.uy",
+  "telefono": "099 123 456",
+  "tipoDocumento": "CI",
+  "numeroDocumento": "1.234.567-2",
+  "calle": "Rambla",
+  "numeroPuerta": "100",
+  "apartamento": "",
+  "localidad": "Nueva Palmira",
+  "departamento": "Colonia",
+  "referencias": "",
+  "contrasena": "Secreta123",
+  "aceptaTerminos": true,
+  "aceptaPrivacidad": true
+}
+
+### ---------- 2. Verificar (poner el código que devolvió el registro) ----------
+
+POST {{api}}/cuentas/verificacion
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy",
+  "codigo": "000000"
+}
+
+### Pedir otro código
+
+POST {{api}}/cuentas/verificacion/reenvio
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy"
+}
+
+### ---------- 3. Ingresar ----------
+# Guarda los tokens de la respuesta para los pedidos de abajo.
+
+# @name ingreso
+POST {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy",
+  "contrasena": "Secreta123"
+}
+
+### Personal de la semilla (contraseña Vitalia2026!): recepcion@, ferreira@, silveira@, acosta@ o admin@vitalia.uy
+
+# @name ingresoPersonal
+POST {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "correo": "admin@vitalia.uy",
+  "contrasena": "Vitalia2026!"
+}
+
+### ---------- 4. Mis datos (necesita el token) ----------
+
+GET {{api}}/cuentas/yo
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Sin token → 401
+
+GET {{api}}/cuentas/yo
+
+### ---------- 5. Renovar y cerrar la sesión ----------
+
+POST {{api}}/sesiones/refresco
+Content-Type: application/json
+
+{
+  "tokenRefresco": "{{ingreso.response.body.$.tokenRefresco}}"
+}
+
+###
+DELETE {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "tokenRefresco": "{{ingreso.response.body.$.tokenRefresco}}"
+}
+
+### ---------- 6. Recuperar la contraseña ----------
+
+POST {{api}}/cuentas/recuperacion
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy"
+}
+
+### Poner el código que devolvió el pedido anterior
+
+POST {{api}}/cuentas/recuperacion/confirmar
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy",
+  "codigo": "000000",
+  "contrasena": "NuevaClave456"
+}
