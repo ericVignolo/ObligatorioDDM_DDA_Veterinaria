@@ -69,3 +69,39 @@ Diferencias con los modelos de Blazor:
 - [ ] Diego: correr `Add-Migration ModulosClinicos` y `Update-Database`, y subir `Migrations/`.
 - [ ] Endpoints, en el orden del recorrido: profesionales → registro e inicio de sesión → animales → turnos → consulta → vacunas → stock → cobro → internación → asistencia → comunicaciones.
 - [ ] Al final: mezclar los PR #39 y #40 y ordenar las ramas.
+
+---
+
+## Segunda parte: profesionales y datos de la clínica
+
+Rama: `diego/sesion-2026-11-19-profesionales`, creada desde `diego/sesion-2026-11-19`. PR #41.
+
+- Diego (2026-11-19): migración `ModulosClinicos` aplicada y subida (29 tablas nuevas, snapshot actualizado). CI en verde.
+- Decisión de Diego: el horario del profesional se devuelve **como lista por día**.
+- Endpoints nuevos:
+  - `GET /api/v1/profesionales`, paginado;
+  - `GET /api/v1/profesionales/{id}`, con el horario por día;
+  - `GET /api/v1/clinica`.
+
+  Son públicos. Se muestran solo los profesionales publicados y activos, y de cada uno solo sus servicios públicos. No se exponen la matrícula, la cuenta ni las ausencias.
+- Archivos:
+  - `Controllers/ProfesionalesController.cs`, `ClinicaController.cs` y `Problemas.cs` (los errores compartidos salen de `ServiciosController`);
+  - `Services/IProfesionalService.cs`, `ProfesionalService.cs`, `IClinicaService.cs` y `ClinicaService.cs`, más `ReglasProfesionales` en `ReglasCatalogo.cs`;
+  - `Repositories/IProfesionalRepository.cs`, `ProfesionalRepository.cs`, `IClinicaRepository.cs` y `ClinicaRepository.cs`;
+  - `DTOs/ProfesionalReadDto.cs` y `ClinicaReadDto.cs`;
+  - `Program.cs`.
+- Pruebas: `ApiProfesionalesTests`, 10 nuevas. CI en verde con 1006 pruebas.
+
+### Cómo probarlo
+
+F5 en la API (rama `diego/sesion-2026-11-19-profesionales`). No hace falta migrar.
+- `https://localhost:7191/api/v1/profesionales` → 4 profesionales (Ferreira, Silveira, Acosta y Méndez). Pereira no aparece porque no está publicado.
+- `https://localhost:7191/api/v1/profesionales/1` → Ferreira, con `horario` de lunes a viernes de 09:00 a 14:00 y descanso de 11:30 a 12:00, y con la castración entre sus servicios.
+- `https://localhost:7191/api/v1/profesionales/4` → 404.
+- `https://localhost:7191/api/v1/clinica` → los datos de VITALIA.
+
+### Qué falta
+
+- [ ] Diego: probar con F5.
+- [ ] Siguiente endpoint: registro, verificación e inicio de sesión (hash de contraseña, JWT y permisos por rol).
+- [ ] Al final: mezclar los PR #39, #40 y #41 y ordenar las ramas.

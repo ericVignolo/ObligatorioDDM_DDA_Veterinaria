@@ -25,6 +25,8 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[PrestacionRepository (API)]]
 - [[PrestacionService (API)]]
 - [[Profesional (API)]]
+- [[ProfesionalRepository (API)]]
+- [[ProfesionalService (API)]]
 - [[ReglasCatalogo (API)]]
 - [[Turno (API)]]
 

@@ -24,8 +24,11 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 |---|---|---|
 | `GET /api/v1/servicios?page=1&pageSize=20` | Público | `200` con `items`, `page`, `pageSize` y `totalItems`; `400` (Problem Details, `PAGINACION_INVALIDA`) si `page` < 1 o `pageSize` no está entre 1 y 50 |
 | `GET /api/v1/servicios/{id}` | Público | `200` con el servicio; `404` (Problem Details, `SERVICIO_NO_ENCONTRADO`) si no existe o no es público |
+| `GET /api/v1/profesionales?page=1&pageSize=20` | Público | `200` paginado: nombre, especialidad, descripción, especies y servicios públicos; `400` si la paginación es inválida |
+| `GET /api/v1/profesionales/{id}` | Público | `200` con lo anterior más `horario` por día (lunes a domingo, `jornadas` y `descansos` en `HH:mm`); `404` (`PROFESIONAL_NO_ENCONTRADO`) si no existe o no está publicado y activo |
+| `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
-Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`). Pruebas: `tests/Veterinaria.Tests/ApiCatalogoTests.cs`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
+Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
 
 ## Tablas (51)
 

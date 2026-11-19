@@ -186,9 +186,13 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (3)
+### Servicios (7)
+- [[ClinicaService (API)]]
+- [[IClinicaService (API)]]
 - [[IPrestacionService (API)]]
+- [[IProfesionalService (API)]]
 - [[PrestacionService (API)]]
+- [[ProfesionalService (API)]]
 - [[ReglasCatalogo (API)]]
 
 ### Modelos (15)
@@ -208,15 +212,24 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Rol (API)]]
 - [[Turno (API)]]
 
-### Controladores (1)
+### Controladores (4)
+- [[ClinicaController (API)]] · `api/v1/clinica`
+- [[Problemas (API)]]
+- [[ProfesionalesController (API)]] · `api/v1/profesionales`
 - [[ServiciosController (API)]] · `api/v1/servicios`
 
-### Repositorios (2)
+### Repositorios (6)
+- [[ClinicaRepository (API)]]
+- [[IClinicaRepository (API)]]
 - [[IPrestacionRepository (API)]]
+- [[IProfesionalRepository (API)]]
 - [[PrestacionRepository (API)]]
+- [[ProfesionalRepository (API)]]
 
-### DTOs (2)
+### DTOs (4)
+- [[ClinicaReadDto (API)]]
 - [[PaginaDto (API)]]
+- [[ProfesionalReadDto (API)]]
 - [[ServicioReadDto (API)]]
 
 ### Datos (2)

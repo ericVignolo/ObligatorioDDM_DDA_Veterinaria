@@ -17,5 +17,8 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[IPrestacionService (API)]]
+- [[IProfesionalService (API)]]
 - [[PrestacionService (API)]]
+- [[ProfesionalService (API)]]
+- [[ProfesionalesController (API)]]
 - [[ServiciosController (API)]]

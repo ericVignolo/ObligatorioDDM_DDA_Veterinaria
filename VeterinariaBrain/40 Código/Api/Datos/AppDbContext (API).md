@@ -31,4 +31,6 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[Turno (API)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[ClinicaRepository (API)]]
 - [[PrestacionRepository (API)]]
+- [[ProfesionalRepository (API)]]

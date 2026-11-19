@@ -13,8 +13,6 @@ generado: true
 
 Catálogo público: lectura anónima (ESPECIFICACION_CATALOGO_SERVICIOS_API.md).
 
-**Requisitos y decisiones:** D-CAT-03
-
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usa

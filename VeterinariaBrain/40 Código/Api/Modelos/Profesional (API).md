@@ -22,6 +22,12 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
 - [[Consulta (API)]]
+- [[IProfesionalRepository (API)]]
+- [[ProfesionalReadDto (API)]]
+- [[ProfesionalRepository (API)]]
+- [[ProfesionalService (API)]]
+- [[ProfesionalesController (API)]]
+- [[ReglasCatalogo (API)]]
 - [[Turno (API)]]
 
 ## En las otras aplicaciones
