@@ -16,6 +16,10 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(conexion
 // Repositories y Services (Controller → Service → Repository → AppDbContext).
 builder.Services.AddScoped<IPrestacionRepository, PrestacionRepository>();
 builder.Services.AddScoped<IPrestacionService, PrestacionService>();
+builder.Services.AddScoped<IProfesionalRepository, ProfesionalRepository>();
+builder.Services.AddScoped<IProfesionalService, ProfesionalService>();
+builder.Services.AddScoped<IClinicaRepository, ClinicaRepository>();
+builder.Services.AddScoped<IClinicaService, ClinicaService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

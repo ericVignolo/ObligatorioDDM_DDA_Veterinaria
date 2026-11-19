@@ -14,6 +14,13 @@ public static class ReglasCatalogo
         p => p.Publicado && p.PrecioDesde > 0;
 }
 
+// Regla del área pública: se muestra si está publicado y activo (RF-VIS-02).
+public static class ReglasProfesionales
+{
+    public static readonly Expression<Func<Profesional, bool>> EsPublico =
+        p => p.Publicado && p.Activo;
+}
+
 // Paginación común de la API (D-CAT-03).
 public static class Paginacion
 {
