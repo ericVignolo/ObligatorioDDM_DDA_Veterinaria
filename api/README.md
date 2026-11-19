@@ -16,23 +16,44 @@ api/Veterinaria.Api/
 └── appsettings.Development.example.json
 ```
 
-`Controllers/`, `Services/`, `Repositories/` y `DTOs/` se crean cuando se haga el primer endpoint.
+Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → `Repositories/` (`IXxxRepository`) → `AppDbContext`; `DTOs/` con mapeo explícito en el Service.
 
-## Tablas de la primera versión
+## Endpoints
+
+| Método y ruta | Acceso | Respuesta |
+|---|---|---|
+| `GET /api/v1/servicios?page=1&pageSize=20` | Público | `200` con `items`, `page`, `pageSize` y `totalItems`; `400` (Problem Details, `PAGINACION_INVALIDA`) si `page` < 1 o `pageSize` no está entre 1 y 50 |
+| `GET /api/v1/servicios/{id}` | Público | `200` con el servicio; `404` (Problem Details, `SERVICIO_NO_ENCONTRADO`) si no existe o no es público |
+
+Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`). Pruebas: `tests/Veterinaria.Tests/ApiCatalogoTests.cs`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
+
+## Tablas (51)
+
+Migración `Inicial` (2026-11-10, 22 tablas) y `ModulosClinicos` (2026-11-19, 29 tablas). La configuración de la segunda está en `Data/ConfiguracionModulos.cs`.
 
 | Grupo | Tablas |
 |---|---|
-| Identidad | `Cuentas`, `Roles`, `CuentaRoles`, `CodigosCuenta`, `DocumentosLegales`, `AceptacionesLegales` |
+| Identidad | `Cuentas` (cliente y personal), `Roles`, `CuentaRoles`, `CodigosCuenta`, `DocumentosLegales`, `AceptacionesLegales` |
 | Animales | `Especies`, `Animales`, `Responsabilidades` (cliente ↔ animal con vigencia) |
 | Catálogo y agenda | `Prestaciones`, `Profesionales`, `ProfesionalEspecies`, `ProfesionalPrestaciones`, `FranjasHorarias`, `Ausencias`, `Recursos`, `Turnos`, `TurnoRecursos` |
+| Consulta e historia | `Consultas`, `Enmiendas`, `LecturasHistoria`, `DocumentosConsentimiento`, `Consentimientos` |
+| Vacunas e inventario | `Articulos`, `Lotes`, `MovimientosStock`, `ReservasStock`, `AlertasStock`, `ProductosSanitarios`, `ProductoSanitarioEspecies`, `AplicacionesSanitarias` |
+| Cobro | `TarifasPrestacion`, `Cargos`, `Pagos` (comprobantes), `NotasCredito`, `Numeradores` |
+| Internación | `Boxes`, `Internaciones`, `NovedadesInternacion` |
+| Asistencia | `SolicitudesAsistencia`, `OfertasAsistencia`, `EventosAsistencia` |
+| Comunicaciones y derechos | `TiposComunicacion`, `PreferenciasComunicacion`, `Comunicaciones` (cola de envío), `SolicitudesDerecho`, `PoliticasConservacion` |
 | Configuración | `Clinicas`, `Parametros`, `DiasNoLaborables`, `Auditorias` |
 
-La semilla tiene los mismos datos ficticios que Blazor: roles, documentos legales 1.0, 11 especies, 7 prestaciones, 5 profesionales con jornadas, descansos y ausencias, 4 recursos, los datos de VITALIA, los parámetros por defecto y los feriados. No trae cuentas, porque la contraseña necesita un hash y las cuentas se crean desde la API.
+El personal no tiene tabla propia: es una `Cuenta` con rol Recepcionista, Veterinario o Administrador, y el Veterinario se enlaza con su `Profesional`. Los autores (quién firmó, cobró, admitió, etc.) son claves a `Cuentas`.
 
-Consulta, historia clínica, stock, cargos, internación, vacunas, asistencia y notificaciones se agregan después, cada una con su migración.
+Semilla (mismos datos de demostración que Blazor): roles, documentos legales 1.0, 11 especies, 8 prestaciones (con castración y su consentimiento), 5 profesionales con horarios, 4 recursos, VITALIA, parámetros y feriados; **personal**: `recepcion@`, `ferreira@`, `silveira@`, `acosta@` y `admin@vitalia.uy`, todos con la contraseña `Vitalia2026!`; 4 boxes; 12 artículos con 20 lotes y su movimiento de compra; 7 productos sanitarios; tarifas iniciales; tipos de comunicación y política de conservación. No trae clientes, animales ni turnos: se crean desde la API.
 
 Decisiones del esquema:
 - No hay borrado en cascada: las bajas son lógicas (`Activa`/`Activo`) y la historia se conserva.
+- Restricciones `CHECK`: el stock de un lote no queda negativo (RN-26) y un pago es mayor que cero. Índices únicos: un cargo por consulta (RN-32), número de comprobante y de nota de crédito, una nota de crédito por comprobante (RN-34), un turno con una sola consulta.
+- Lo que MySQL no puede expresar con un índice (una internación abierta por animal, RN-21; un paciente por box, RN-22) lo controla la API dentro de la transacción.
+- Los textos clínicos largos son `LONGTEXT`, sin `MaxLength`, para no pasar el límite de tamaño de fila de MySQL. Los límites de largo se validan en los DTO.
+- `Consultas`, `Turnos`, `Internaciones` y `SolicitudesAsistencia` tienen `Version` como control de concurrencia.
 - `Microchip` es único y puede quedar vacío (`NULL`) (RN-41).
 - Los índices `(ProfesionalId, Inicio, Fin)`, `(AnimalId, Inicio, Fin)` y `(RecursoId, Inicio, Fin)` sirven para controlar los solapamientos con `SELECT … FOR UPDATE` (DT-BD-02).
 - Las fechas sin hora se guardan como `DATETIME` en C# con columna `DATE`, y las horas como `TimeSpan` (`TIME`). En Blazor son `DateOnly` y `TimeOnly`, y la conversión se hace en el Service. Así no dependemos de cómo trate el proveedor de Oracle a `DateOnly`/`TimeOnly`.
@@ -51,4 +72,4 @@ Decisiones del esquema:
 
 5. En MySQL Workbench aparece la base `vitalia`, con las tablas y los datos de la semilla.
 
-Para cambiar el esquema más adelante: modificar `Models/` o `AppDbContext`, y después `Add-Migration <Nombre>` y `Update-Database`.
+Para cambiar el esquema más adelante: modificar `Models/`, `AppDbContext` o `ConfiguracionModulos`, y después `Add-Migration <Nombre>` y `Update-Database`. `ApiBaseDeDatosTests` verifica el modelo en el CI antes de migrar.

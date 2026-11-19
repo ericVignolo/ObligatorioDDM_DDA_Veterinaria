@@ -44,6 +44,41 @@ namespace Veterinaria.Api.Migrations
                     b.ToTable("AceptacionesLegales");
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.AlertaStock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArticuloId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Atendida")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Origen")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
+
+                    b.Property<int>("StockMinimo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StockQueQuedo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticuloId");
+
+                    b.HasIndex("Atendida", "Fecha");
+
+                    b.ToTable("AlertasStock");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Animal", b =>
                 {
                     b.Property<int>("Id")
@@ -112,6 +147,223 @@ namespace Veterinaria.Api.Migrations
                     b.ToTable("Animales");
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.AplicacionSanitaria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AnimalId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AplicadaPorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ConsultaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaAplicacion")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime>("FechaRefuerzo")
+                        .HasColumnType("date");
+
+                    b.Property<string>("JustificacionAdelanto")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Laboratorio")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("varchar(120)");
+
+                    b.Property<int?>("LoteId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LoteVence")
+                        .HasColumnType("date");
+
+                    b.Property<string>("NumeroLote")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)");
+
+                    b.Property<string>("Producto")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("varchar(120)");
+
+                    b.Property<int>("ProductoSanitarioId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AplicadaPorId");
+
+                    b.HasIndex("ConsultaId");
+
+                    b.HasIndex("FechaRefuerzo");
+
+                    b.HasIndex("LoteId");
+
+                    b.HasIndex("ProductoSanitarioId");
+
+                    b.HasIndex("AnimalId", "ProductoSanitarioId", "FechaAplicacion");
+
+                    b.ToTable("AplicacionesSanitarias");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Articulo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("varchar(120)");
+
+                    b.Property<int>("StockMinimo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Unidad")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Nombre")
+                        .IsUnique();
+
+                    b.ToTable("Articulos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Activo = true,
+                            Nombre = "Vacuna polivalente canina",
+                            StockMinimo = 5,
+                            Tipo = "Vacuna",
+                            Unidad = "dosis"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Activo = true,
+                            Nombre = "Vacuna antirrábica",
+                            StockMinimo = 5,
+                            Tipo = "Vacuna",
+                            Unidad = "dosis"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Activo = true,
+                            Nombre = "Vacuna triple felina",
+                            StockMinimo = 4,
+                            Tipo = "Vacuna",
+                            Unidad = "dosis"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Activo = true,
+                            Nombre = "Vacuna antitetánica equina",
+                            StockMinimo = 3,
+                            Tipo = "Vacuna",
+                            Unidad = "dosis"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Activo = true,
+                            Nombre = "Vacuna clostridial",
+                            StockMinimo = 20,
+                            Tipo = "Vacuna",
+                            Unidad = "dosis"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Activo = true,
+                            Nombre = "Antiparasitario interno",
+                            StockMinimo = 5,
+                            Tipo = "Antiparasitario",
+                            Unidad = "dosis"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Activo = true,
+                            Nombre = "Antiparasitario externo",
+                            StockMinimo = 5,
+                            Tipo = "Antiparasitario",
+                            Unidad = "dosis"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Activo = true,
+                            Nombre = "Jeringa descartable 3 ml",
+                            StockMinimo = 20,
+                            Tipo = "Insumo",
+                            Unidad = "unidad"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Activo = true,
+                            Nombre = "Guantes de examen",
+                            StockMinimo = 10,
+                            Tipo = "Insumo",
+                            Unidad = "par"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Activo = true,
+                            Nombre = "Gasa estéril",
+                            StockMinimo = 10,
+                            Tipo = "Insumo",
+                            Unidad = "sobre"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Activo = true,
+                            Nombre = "Suero fisiológico 500 ml",
+                            StockMinimo = 4,
+                            Tipo = "Insumo",
+                            Unidad = "unidad"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Activo = true,
+                            Nombre = "Venda elástica",
+                            StockMinimo = 5,
+                            Tipo = "Insumo",
+                            Unidad = "unidad"
+                        });
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Auditoria", b =>
                 {
                     b.Property<long>("Id")
@@ -148,6 +400,11 @@ namespace Veterinaria.Api.Migrations
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("varchar(60)");
+
+                    b.Property<string>("Rol")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
 
                     b.HasKey("Id");
 
@@ -201,6 +458,121 @@ namespace Veterinaria.Api.Migrations
                             Motivo = "Licencia",
                             ProfesionalId = 2
                         });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Box", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("varchar(60)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Nombre")
+                        .IsUnique();
+
+                    b.ToTable("Boxes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Activo = true,
+                            Nombre = "Box 1",
+                            Tipo = "Pequeños animales"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Activo = true,
+                            Nombre = "Box 2",
+                            Tipo = "Pequeños animales"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Activo = true,
+                            Nombre = "Box 3",
+                            Tipo = "Pequeños animales"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Activo = true,
+                            Nombre = "Box equino",
+                            Tipo = "Grandes animales"
+                        });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Cargo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AnimalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ConsultaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<bool>("EsSena")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("Monto")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<int?>("PrestacionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SolicitudAsistenciaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TurnoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnimalId");
+
+                    b.HasIndex("ConsultaId")
+                        .IsUnique();
+
+                    b.HasIndex("PrestacionId");
+
+                    b.HasIndex("SolicitudAsistenciaId")
+                        .IsUnique();
+
+                    b.HasIndex("TurnoId");
+
+                    b.HasIndex("ClienteId", "Fecha");
+
+                    b.ToTable("Cargos");
                 });
 
             modelBuilder.Entity("Veterinaria.Api.Models.Clinica", b =>
@@ -324,6 +696,255 @@ namespace Veterinaria.Api.Migrations
                     b.ToTable("CodigosCuenta");
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.Comunicacion", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Asunto")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Canal")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Clave")
+                        .HasMaxLength(120)
+                        .HasColumnType("varchar(120)");
+
+                    b.Property<int>("CuentaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Cuerpo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Destino")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FechaEnvio")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("GeneradaPorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Intentos")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Leida")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<long?>("ReenvioDeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TipoComunicacionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UltimoError")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GeneradaPorId");
+
+                    b.HasIndex("ReenvioDeId");
+
+                    b.HasIndex("TipoComunicacionId");
+
+                    b.HasIndex("Estado", "FechaCreacion");
+
+                    b.HasIndex("CuentaId", "TipoComunicacionId", "Clave")
+                        .IsUnique();
+
+                    b.ToTable("Comunicaciones");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Consentimiento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AnimalId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Canal")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DocumentoConsentimientoId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Hash")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("NombreEscrito")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("varchar(160)");
+
+                    b.Property<int>("PrestacionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Respuesta")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<int>("TurnoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnimalId");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("DocumentoConsentimientoId");
+
+                    b.HasIndex("PrestacionId");
+
+                    b.HasIndex("TurnoId", "Fecha");
+
+                    b.ToTable("Consentimientos");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Consulta", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("AlergiaConfirmada")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Alergias")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Anamnesis")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("AnimalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AutorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Diagnostico")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("ExamenFisico")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("FechaFirma")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("FrecuenciaCardiaca")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FrecuenciaRespiratoria")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HashContenido")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Indicaciones")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<decimal?>("PesoKg")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<int>("ProfesionalId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("TemperaturaC")
+                        .HasPrecision(4, 1)
+                        .HasColumnType("decimal(4,1)");
+
+                    b.Property<string>("TipoDiagnostico")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Tratamiento")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("TurnoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AutorId");
+
+                    b.HasIndex("ProfesionalId");
+
+                    b.HasIndex("TurnoId")
+                        .IsUnique();
+
+                    b.HasIndex("AnimalId", "FechaInicio");
+
+                    b.ToTable("Consultas");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Cuenta", b =>
                 {
                     b.Property<int>("Id")
@@ -353,15 +974,26 @@ namespace Veterinaria.Api.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)");
 
+                    b.Property<string>("CorreoNuevoPendiente")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
                     b.Property<string>("Departamento")
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("varchar(80)");
 
+                    b.Property<bool>("Eliminada")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime?>("FechaBaja")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FechaEliminacion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("HashContrasena")
@@ -415,6 +1047,118 @@ namespace Veterinaria.Api.Migrations
                     b.HasIndex("TipoDocumento", "NumeroDocumento");
 
                     b.ToTable("Cuentas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Activa = true,
+                            Apartamento = "",
+                            Apellido = "Benítez",
+                            Calle = "",
+                            Correo = "recepcion@vitalia.uy",
+                            CorreoNuevoPendiente = "",
+                            Departamento = "",
+                            Eliminada = false,
+                            FechaCreacion = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HashContrasena = "Vml0YWxpYVNlbWlsbGEwMQ==.rmvKwlUzU6PwWHiDTL50BHoRzzzOXikAepJ8q13h22k=",
+                            Localidad = "",
+                            Nombre = "Laura",
+                            NumeroDocumento = "",
+                            NumeroPuerta = "",
+                            Referencias = "",
+                            Telefono = "",
+                            TipoDocumento = "",
+                            Verificada = true
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Activa = true,
+                            Apartamento = "",
+                            Apellido = "Ferreira",
+                            Calle = "",
+                            Correo = "ferreira@vitalia.uy",
+                            CorreoNuevoPendiente = "",
+                            Departamento = "",
+                            Eliminada = false,
+                            FechaCreacion = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HashContrasena = "Vml0YWxpYVNlbWlsbGEwMQ==.rmvKwlUzU6PwWHiDTL50BHoRzzzOXikAepJ8q13h22k=",
+                            Localidad = "",
+                            Nombre = "Lucía",
+                            NumeroDocumento = "",
+                            NumeroPuerta = "",
+                            Referencias = "",
+                            Telefono = "",
+                            TipoDocumento = "",
+                            Verificada = true
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Activa = true,
+                            Apartamento = "",
+                            Apellido = "Silveira",
+                            Calle = "",
+                            Correo = "silveira@vitalia.uy",
+                            CorreoNuevoPendiente = "",
+                            Departamento = "",
+                            Eliminada = false,
+                            FechaCreacion = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HashContrasena = "Vml0YWxpYVNlbWlsbGEwMQ==.rmvKwlUzU6PwWHiDTL50BHoRzzzOXikAepJ8q13h22k=",
+                            Localidad = "",
+                            Nombre = "Martín",
+                            NumeroDocumento = "",
+                            NumeroPuerta = "",
+                            Referencias = "",
+                            Telefono = "",
+                            TipoDocumento = "",
+                            Verificada = true
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Activa = true,
+                            Apartamento = "",
+                            Apellido = "Acosta",
+                            Calle = "",
+                            Correo = "acosta@vitalia.uy",
+                            CorreoNuevoPendiente = "",
+                            Departamento = "",
+                            Eliminada = false,
+                            FechaCreacion = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HashContrasena = "Vml0YWxpYVNlbWlsbGEwMQ==.rmvKwlUzU6PwWHiDTL50BHoRzzzOXikAepJ8q13h22k=",
+                            Localidad = "",
+                            Nombre = "Valentina",
+                            NumeroDocumento = "",
+                            NumeroPuerta = "",
+                            Referencias = "",
+                            Telefono = "",
+                            TipoDocumento = "",
+                            Verificada = true
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Activa = true,
+                            Apartamento = "",
+                            Apellido = "Rivas",
+                            Calle = "",
+                            Correo = "admin@vitalia.uy",
+                            CorreoNuevoPendiente = "",
+                            Departamento = "",
+                            Eliminada = false,
+                            FechaCreacion = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HashContrasena = "Vml0YWxpYVNlbWlsbGEwMQ==.rmvKwlUzU6PwWHiDTL50BHoRzzzOXikAepJ8q13h22k=",
+                            Localidad = "",
+                            Nombre = "Gonzalo",
+                            NumeroDocumento = "",
+                            NumeroPuerta = "",
+                            Referencias = "",
+                            Telefono = "",
+                            TipoDocumento = "",
+                            Verificada = true
+                        });
                 });
 
             modelBuilder.Entity("Veterinaria.Api.Models.CuentaRol", b =>
@@ -430,6 +1174,33 @@ namespace Veterinaria.Api.Migrations
                     b.HasIndex("RolId");
 
                     b.ToTable("CuentaRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            CuentaId = 1,
+                            RolId = 2
+                        },
+                        new
+                        {
+                            CuentaId = 2,
+                            RolId = 3
+                        },
+                        new
+                        {
+                            CuentaId = 3,
+                            RolId = 3
+                        },
+                        new
+                        {
+                            CuentaId = 4,
+                            RolId = 3
+                        },
+                        new
+                        {
+                            CuentaId = 5,
+                            RolId = 4
+                        });
                 });
 
             modelBuilder.Entity("Veterinaria.Api.Models.DiaNoLaborable", b =>
@@ -471,6 +1242,55 @@ namespace Veterinaria.Api.Migrations
                             Id = 3,
                             Fecha = new DateTime(2027, 1, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Motivo = "Día de Reyes"
+                        });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.DocumentoConsentimiento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaVigencia")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PrestacionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Texto")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<bool>("Vigente")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PrestacionId", "Version")
+                        .IsUnique();
+
+                    b.ToTable("DocumentosConsentimiento");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FechaVigencia = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PrestacionId = 8,
+                            Texto = "Autorizo al equipo veterinario de VITALIA a realizar la castración del animal indicado, bajo anestesia general. Me explicaron en qué consiste el procedimiento, los cuidados previos (ayuno de 8 horas de comida y 2 de agua) y los posteriores. Entiendo que toda anestesia y cirugía tienen riesgos, poco frecuentes pero posibles: reacciones a los fármacos, sangrado, infección de la herida y, excepcionalmente, complicaciones graves o la muerte. Autorizo al veterinario a tomar las medidas necesarias si surge una complicación durante la cirugía y me comprometo a informar cualquier enfermedad, medicación o alergia del animal. Puedo hacer preguntas antes de firmar y retirar este consentimiento avisando a la clínica antes del procedimiento.",
+                            Titulo = "Consentimiento informado para castración con anestesia general",
+                            Version = "1.0",
+                            Vigente = true
                         });
                 });
 
@@ -538,6 +1358,44 @@ namespace Veterinaria.Api.Migrations
                             Version = "1.0",
                             VigenteDesde = new DateTime(2026, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Enmienda", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AutorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ConsultaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("HashContenido")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Texto")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AutorId");
+
+                    b.HasIndex("ConsultaId");
+
+                    b.ToTable("Enmiendas");
                 });
 
             modelBuilder.Entity("Veterinaria.Api.Models.Especie", b =>
@@ -614,6 +1472,50 @@ namespace Veterinaria.Api.Migrations
                             Id = 11,
                             Nombre = "Caballo"
                         });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.EventoAsistencia", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("AutorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("NivelAnterior")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("NivelNuevo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<int>("SolicitudAsistenciaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Texto")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AutorId");
+
+                    b.HasIndex("SolicitudAsistenciaId");
+
+                    b.ToTable("EventosAsistencia");
                 });
 
             modelBuilder.Entity("Veterinaria.Api.Models.FranjaHoraria", b =>
@@ -972,6 +1874,816 @@ namespace Veterinaria.Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.Internacion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AdmitidoPorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AnimalId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BoxId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("EvolucionFinal")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("FechaAdmision")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FechaAlta")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FechaIngreso")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("IndicacionesDomicilio")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("MotivoAnulacion")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("Observaciones")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PlanTerapeutico")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("TelefonoContacto")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("VeterinarioAltaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("VeterinarioIngresoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdmitidoPorId");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("VeterinarioAltaId");
+
+                    b.HasIndex("VeterinarioIngresoId");
+
+                    b.HasIndex("AnimalId", "Estado");
+
+                    b.HasIndex("BoxId", "Estado");
+
+                    b.ToTable("Internaciones");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.LecturaHistoria", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("AnimalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CuentaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CuentaId");
+
+                    b.HasIndex("AnimalId", "Fecha");
+
+                    b.ToTable("LecturasHistoria");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.LoteProducto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArticuloId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaIngreso")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Inhabilitado")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)");
+
+                    b.Property<DateTime>("Vencimiento")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticuloId", "Numero")
+                        .IsUnique();
+
+                    b.HasIndex("ArticuloId", "Inhabilitado", "Vencimiento");
+
+                    b.ToTable("Lotes", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Lotes_CantidadNoNegativa", "`Cantidad` >= 0");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ArticuloId = 1,
+                            Cantidad = 3,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L1-A",
+                            Vencimiento = new DateTime(2026, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ArticuloId = 1,
+                            Cantidad = 10,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L1-B",
+                            Vencimiento = new DateTime(2027, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ArticuloId = 2,
+                            Cantidad = 3,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L2-A",
+                            Vencimiento = new DateTime(2026, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ArticuloId = 2,
+                            Cantidad = 1,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L2-B",
+                            Vencimiento = new DateTime(2027, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ArticuloId = 3,
+                            Cantidad = 3,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L3-A",
+                            Vencimiento = new DateTime(2026, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ArticuloId = 3,
+                            Cantidad = 10,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L3-B",
+                            Vencimiento = new DateTime(2027, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ArticuloId = 4,
+                            Cantidad = 3,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L4-A",
+                            Vencimiento = new DateTime(2026, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ArticuloId = 4,
+                            Cantidad = 10,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L4-B",
+                            Vencimiento = new DateTime(2027, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ArticuloId = 5,
+                            Cantidad = 3,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L5-A",
+                            Vencimiento = new DateTime(2026, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ArticuloId = 5,
+                            Cantidad = 10,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L5-B",
+                            Vencimiento = new DateTime(2027, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 11,
+                            ArticuloId = 6,
+                            Cantidad = 3,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L6-A",
+                            Vencimiento = new DateTime(2026, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ArticuloId = 6,
+                            Cantidad = 10,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L6-B",
+                            Vencimiento = new DateTime(2027, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 13,
+                            ArticuloId = 7,
+                            Cantidad = 3,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L7-A",
+                            Vencimiento = new DateTime(2026, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 14,
+                            ArticuloId = 7,
+                            Cantidad = 3,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "L7-B",
+                            Vencimiento = new DateTime(2027, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 15,
+                            ArticuloId = 8,
+                            Cantidad = 120,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "JER-2611",
+                            Vencimiento = new DateTime(2029, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 16,
+                            ArticuloId = 9,
+                            Cantidad = 40,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "GUA-2610",
+                            Vencimiento = new DateTime(2028, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 17,
+                            ArticuloId = 10,
+                            Cantidad = 8,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "GAS-2609",
+                            Vencimiento = new DateTime(2026, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 18,
+                            ArticuloId = 10,
+                            Cantidad = 30,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "GAS-2611",
+                            Vencimiento = new DateTime(2027, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 19,
+                            ArticuloId = 11,
+                            Cantidad = 6,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "SUE-2608",
+                            Vencimiento = new DateTime(2027, 7, 31, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 20,
+                            ArticuloId = 12,
+                            Cantidad = 15,
+                            FechaIngreso = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Inhabilitado = false,
+                            Numero = "VEN-2605",
+                            Vencimiento = new DateTime(2028, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.MovimientoStock", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ArticuloId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("LoteId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("Origen")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
+
+                    b.Property<int?>("PersonaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LoteId");
+
+                    b.HasIndex("PersonaId");
+
+                    b.HasIndex("ArticuloId", "Fecha");
+
+                    b.ToTable("MovimientosStock");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            ArticuloId = 1,
+                            Cantidad = 3,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 1,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            ArticuloId = 1,
+                            Cantidad = 10,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 2,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            ArticuloId = 2,
+                            Cantidad = 3,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 3,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            ArticuloId = 2,
+                            Cantidad = 1,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 4,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            ArticuloId = 3,
+                            Cantidad = 3,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 5,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            ArticuloId = 3,
+                            Cantidad = 10,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 6,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            ArticuloId = 4,
+                            Cantidad = 3,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 7,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            ArticuloId = 4,
+                            Cantidad = 10,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 8,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            ArticuloId = 5,
+                            Cantidad = 3,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 9,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            ArticuloId = 5,
+                            Cantidad = 10,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 10,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            ArticuloId = 6,
+                            Cantidad = 3,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 11,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            ArticuloId = 6,
+                            Cantidad = 10,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 12,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            ArticuloId = 7,
+                            Cantidad = 3,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 13,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            ArticuloId = 7,
+                            Cantidad = 3,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 14,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            ArticuloId = 8,
+                            Cantidad = 120,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 15,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            ArticuloId = 9,
+                            Cantidad = 40,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 16,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            ArticuloId = 10,
+                            Cantidad = 8,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 17,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            ArticuloId = 10,
+                            Cantidad = 30,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 18,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 19L,
+                            ArticuloId = 11,
+                            Cantidad = 6,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 19,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        },
+                        new
+                        {
+                            Id = 20L,
+                            ArticuloId = 12,
+                            Cantidad = 15,
+                            Fecha = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoteId = 20,
+                            Motivo = "Carga inicial de demostración",
+                            Origen = "Carga inicial",
+                            Tipo = "Compra"
+                        });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.NotaCredito", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmitidaPorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("Monto")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<int>("PagoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmitidaPorId");
+
+                    b.HasIndex("Numero")
+                        .IsUnique();
+
+                    b.HasIndex("PagoId")
+                        .IsUnique();
+
+                    b.ToTable("NotasCredito");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.NovedadInternacion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AutorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("InternacionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RectificaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Texto")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<bool>("Visible")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AutorId");
+
+                    b.HasIndex("InternacionId");
+
+                    b.HasIndex("RectificaId");
+
+                    b.ToTable("NovedadesInternacion");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Numerador", b =>
+                {
+                    b.Property<string>("Clave")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<int>("Ultimo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Clave");
+
+                    b.ToTable("Numeradores");
+
+                    b.HasData(
+                        new
+                        {
+                            Clave = "Comprobante",
+                            Ultimo = 0
+                        },
+                        new
+                        {
+                            Clave = "NotaCredito",
+                            Ultimo = 0
+                        });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.OfertaAsistencia", b =>
+                {
+                    b.Property<int>("SolicitudAsistenciaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VeterinarioId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Respuesta")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("SolicitudAsistenciaId", "VeterinarioId");
+
+                    b.HasIndex("VeterinarioId");
+
+                    b.ToTable("OfertasAsistencia");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Pago", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("CargoId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CobradoPorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Medio")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<decimal>("Monto")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Referencia")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("varchar(60)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CargoId");
+
+                    b.HasIndex("CobradoPorId");
+
+                    b.HasIndex("Numero")
+                        .IsUnique();
+
+                    b.ToTable("Pagos", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Pagos_MontoPositivo", "`Monto` > 0");
+                        });
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Parametro", b =>
                 {
                     b.Property<string>("Clave")
@@ -1061,6 +2773,130 @@ namespace Veterinaria.Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.PoliticaConservacion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Acceso")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("AlEliminar")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("Categoria")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("varchar(120)");
+
+                    b.Property<string>("Conservacion")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("Finalidad")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PoliticasConservacion");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Acceso = "Vos, Recepción y el Administrador.",
+                            AlEliminar = "Se reemplazan por valores neutros.",
+                            Categoria = "Datos de la cuenta (nombre, contacto, documento, domicilio)",
+                            Conservacion = "Mientras la cuenta esté activa.",
+                            Finalidad = "Identificarte, contactarte y atender tus animales."
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Acceso = "Vos (solo lectura), el personal clínico y el Administrador; toda lectura queda auditada.",
+                            AlEliminar = "Se conserva, sin identificar al titular.",
+                            Categoria = "Animales e historia clínica",
+                            Conservacion = "El plazo que fije la normativa veterinaria aplicable (a confirmar en la revisión legal previa a producción).",
+                            Finalidad = "Continuidad de la atención veterinaria y obligaciones sanitarias."
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Acceso = "Vos, el personal clínico y el Administrador.",
+                            AlEliminar = "Se conservan, sin identificar al titular.",
+                            Categoria = "Consentimientos informados",
+                            Conservacion = "Junto con la historia clínica.",
+                            Finalidad = "Constancia de tu decisión antes de un procedimiento."
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Acceso = "Vos, Recepción y el Administrador.",
+                            AlEliminar = "Se conservan, sin identificar al titular.",
+                            Categoria = "Cargos, pagos y comprobantes",
+                            Conservacion = "El plazo que fijen las obligaciones contables y tributarias aplicables (a confirmar).",
+                            Finalidad = "Registro de lo cobrado en la clínica."
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Acceso = "Vos, Recepción y el Administrador.",
+                            AlEliminar = "Se borran.",
+                            Categoria = "Comunicaciones enviadas y preferencias",
+                            Conservacion = "Mientras la cuenta esté activa.",
+                            Finalidad = "Entregarte resúmenes, avisos y comprobantes por el canal que elegiste."
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Acceso = "El personal asignado.",
+                            AlEliminar = "No aplica: no se conserva el seguimiento.",
+                            Categoria = "Ubicación en una asistencia a domicilio",
+                            Conservacion = "Se deja de usar al terminar la asistencia.",
+                            Finalidad = "Despachar al profesional durante la asistencia (RNF-LEG-09)."
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Acceso = "El Administrador.",
+                            AlEliminar = "Se reemplazan junto con la cuenta.",
+                            Categoria = "Aceptaciones de términos y privacidad",
+                            Conservacion = "Mientras la cuenta esté activa.",
+                            Finalidad = "Probar qué versión aceptaste y cuándo (RN-43)."
+                        });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.PreferenciaComunicacion", b =>
+                {
+                    b.Property<int>("CuentaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TipoComunicacionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Canal")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("CuentaId", "TipoComunicacionId");
+
+                    b.HasIndex("TipoComunicacionId");
+
+                    b.ToTable("PreferenciasComunicacion");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Prestacion", b =>
                 {
                     b.Property<int>("Id")
@@ -1087,6 +2923,9 @@ namespace Veterinaria.Api.Migrations
                     b.Property<bool>("Publicado")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("RequiereConsentimiento")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool>("ReservableEnLinea")
                         .HasColumnType("tinyint(1)");
 
@@ -1103,6 +2942,7 @@ namespace Veterinaria.Api.Migrations
                             Nombre = "Consulta clínica general",
                             PrecioDesde = 1200m,
                             Publicado = true,
+                            RequiereConsentimiento = false,
                             ReservableEnLinea = true
                         },
                         new
@@ -1113,6 +2953,7 @@ namespace Veterinaria.Api.Migrations
                             Nombre = "Vacunación",
                             PrecioDesde = 600m,
                             Publicado = true,
+                            RequiereConsentimiento = false,
                             ReservableEnLinea = true
                         },
                         new
@@ -1123,6 +2964,7 @@ namespace Veterinaria.Api.Migrations
                             Nombre = "Desparasitación",
                             PrecioDesde = 450m,
                             Publicado = true,
+                            RequiereConsentimiento = false,
                             ReservableEnLinea = true
                         },
                         new
@@ -1133,6 +2975,7 @@ namespace Veterinaria.Api.Migrations
                             Nombre = "Revisión de ovinos y bovinos",
                             PrecioDesde = 1500m,
                             Publicado = true,
+                            RequiereConsentimiento = false,
                             ReservableEnLinea = false
                         },
                         new
@@ -1143,6 +2986,7 @@ namespace Veterinaria.Api.Migrations
                             Nombre = "Rehabilitación equina",
                             PrecioDesde = 2500m,
                             Publicado = true,
+                            RequiereConsentimiento = false,
                             ReservableEnLinea = false
                         },
                         new
@@ -1153,6 +2997,7 @@ namespace Veterinaria.Api.Migrations
                             Nombre = "Baño y estética",
                             PrecioDesde = 900m,
                             Publicado = true,
+                            RequiereConsentimiento = false,
                             ReservableEnLinea = true
                         },
                         new
@@ -1163,7 +3008,206 @@ namespace Veterinaria.Api.Migrations
                             Nombre = "Guardería",
                             PrecioDesde = 700m,
                             Publicado = false,
+                            RequiereConsentimiento = false,
                             ReservableEnLinea = false
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Descripcion = "Cirugía programada con anestesia general. Requiere firmar el consentimiento informado antes del día del turno.",
+                            DuracionMinutos = 90,
+                            Nombre = "Castración",
+                            PrecioDesde = 4500m,
+                            Publicado = true,
+                            RequiereConsentimiento = true,
+                            ReservableEnLinea = true
+                        });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.ProductoSanitario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArticuloId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IntervaloMinimoDias")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IntervaloRefuerzoDias")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Laboratorio")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("varchar(120)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("varchar(120)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticuloId")
+                        .IsUnique();
+
+                    b.ToTable("ProductosSanitarios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ArticuloId = 1,
+                            IntervaloMinimoDias = 330,
+                            IntervaloRefuerzoDias = 365,
+                            Laboratorio = "Laboratorio Demo Norte",
+                            Nombre = "Vacuna polivalente canina",
+                            Tipo = "Vacuna"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ArticuloId = 2,
+                            IntervaloMinimoDias = 330,
+                            IntervaloRefuerzoDias = 365,
+                            Laboratorio = "Laboratorio Demo Sur",
+                            Nombre = "Vacuna antirrábica",
+                            Tipo = "Vacuna"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ArticuloId = 3,
+                            IntervaloMinimoDias = 330,
+                            IntervaloRefuerzoDias = 365,
+                            Laboratorio = "Laboratorio Demo Norte",
+                            Nombre = "Vacuna triple felina",
+                            Tipo = "Vacuna"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ArticuloId = 4,
+                            IntervaloMinimoDias = 330,
+                            IntervaloRefuerzoDias = 365,
+                            Laboratorio = "Laboratorio Demo Campo",
+                            Nombre = "Vacuna antitetánica equina",
+                            Tipo = "Vacuna"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ArticuloId = 5,
+                            IntervaloMinimoDias = 150,
+                            IntervaloRefuerzoDias = 180,
+                            Laboratorio = "Laboratorio Demo Campo",
+                            Nombre = "Vacuna clostridial",
+                            Tipo = "Vacuna"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ArticuloId = 6,
+                            IntervaloMinimoDias = 75,
+                            IntervaloRefuerzoDias = 90,
+                            Laboratorio = "Laboratorio Demo Sur",
+                            Nombre = "Antiparasitario interno",
+                            Tipo = "Antiparasitario"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ArticuloId = 7,
+                            IntervaloMinimoDias = 25,
+                            IntervaloRefuerzoDias = 30,
+                            Laboratorio = "Laboratorio Demo Sur",
+                            Nombre = "Antiparasitario externo",
+                            Tipo = "Antiparasitario"
+                        });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.ProductoSanitarioEspecie", b =>
+                {
+                    b.Property<int>("ProductoSanitarioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EspecieId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductoSanitarioId", "EspecieId");
+
+                    b.HasIndex("EspecieId");
+
+                    b.ToTable("ProductoSanitarioEspecies");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductoSanitarioId = 1,
+                            EspecieId = 1
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 2,
+                            EspecieId = 1
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 2,
+                            EspecieId = 2
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 3,
+                            EspecieId = 2
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 4,
+                            EspecieId = 11
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 5,
+                            EspecieId = 7
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 5,
+                            EspecieId = 8
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 5,
+                            EspecieId = 9
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 6,
+                            EspecieId = 1
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 6,
+                            EspecieId = 2
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 7,
+                            EspecieId = 1
+                        },
+                        new
+                        {
+                            ProductoSanitarioId = 7,
+                            EspecieId = 2
                         });
                 });
 
@@ -1194,6 +3238,9 @@ namespace Veterinaria.Api.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("varchar(30)");
 
+                    b.Property<DateTime?>("MatriculaVigenteHasta")
+                        .HasColumnType("date");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(120)
@@ -1214,9 +3261,11 @@ namespace Veterinaria.Api.Migrations
                         {
                             Id = 1,
                             Activo = true,
+                            CuentaId = 2,
                             Descripcion = "Consultas generales, vacunación y controles de perros, gatos y otros animales de compañía.",
                             Especialidad = "Clínica de pequeños animales",
-                            Matricula = "",
+                            Matricula = "VET-4521",
+                            MatriculaVigenteHasta = new DateTime(2027, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Nombre = "Dra. Lucía Ferreira",
                             Publicado = true
                         },
@@ -1224,9 +3273,11 @@ namespace Veterinaria.Api.Migrations
                         {
                             Id = 2,
                             Activo = true,
+                            CuentaId = 3,
                             Descripcion = "Atención de bovinos, ovinos, caprinos y porcinos, revisiones de rodeo y visitas a campo.",
                             Especialidad = "Grandes animales",
-                            Matricula = "",
+                            Matricula = "VET-3378",
+                            MatriculaVigenteHasta = new DateTime(2027, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Nombre = "Dr. Martín Silveira",
                             Publicado = true
                         },
@@ -1234,9 +3285,11 @@ namespace Veterinaria.Api.Migrations
                         {
                             Id = 3,
                             Activo = true,
+                            CuentaId = 4,
                             Descripcion = "Clínica y rehabilitación de caballos. La rehabilitación requiere evaluación previa.",
                             Especialidad = "Equinos",
-                            Matricula = "",
+                            Matricula = "VET-5102",
+                            MatriculaVigenteHasta = new DateTime(2027, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Nombre = "Dra. Valentina Acosta",
                             Publicado = true
                         },
@@ -1376,6 +3429,11 @@ namespace Veterinaria.Api.Migrations
                         },
                         new
                         {
+                            ProfesionalId = 1,
+                            PrestacionId = 8
+                        },
+                        new
+                        {
                             ProfesionalId = 2,
                             PrestacionId = 1
                         },
@@ -1455,6 +3513,43 @@ namespace Veterinaria.Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.ReservaStock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AplicacionSanitariaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArticuloId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Confirmada")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("ConsultaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LoteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AplicacionSanitariaId");
+
+                    b.HasIndex("ArticuloId");
+
+                    b.HasIndex("ConsultaId");
+
+                    b.HasIndex("LoteId", "Confirmada");
+
+                    b.ToTable("ReservasStock");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Responsabilidad", b =>
                 {
                     b.Property<int>("Id")
@@ -1523,6 +3618,345 @@ namespace Veterinaria.Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.SolicitudAsistencia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AnimalId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Canal")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClaveIdempotencia")
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Costo")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<int>("DistanciaKm")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Especie")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<int?>("EtaMinutos")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("FechaAceptacion")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FechaOferta")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal?>("Latitud")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("decimal(9,6)");
+
+                    b.Property<decimal?>("Longitud")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("decimal(9,6)");
+
+                    b.Property<string>("Modalidad")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<string>("MotivoCierre")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("MotivoCoordinacion")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Nivel")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("NivelCliente")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<bool>("ReevaluacionPedida")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Referencias")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("Resultado")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sintomas")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("TelefonoContacto")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<bool>("UbicacionGps")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("VeterinarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnimalId");
+
+                    b.HasIndex("VeterinarioId");
+
+                    b.HasIndex("ClienteId", "ClaveIdempotencia")
+                        .IsUnique();
+
+                    b.HasIndex("Estado", "Nivel", "FechaCreacion");
+
+                    b.ToTable("SolicitudesAsistencia");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.SolicitudDerecho", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("CuentaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Detalle")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FechaResolucion")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("ResueltaPorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ResueltaPorId");
+
+                    b.HasIndex("CuentaId", "Estado");
+
+                    b.ToTable("SolicitudesDerecho");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.TarifaPrestacion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Precio")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<int>("PrestacionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RegistradoPorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("VigenteDesde")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RegistradoPorId");
+
+                    b.HasIndex("PrestacionId", "VigenteDesde")
+                        .IsUnique();
+
+                    b.ToTable("TarifasPrestacion");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Precio = 1200m,
+                            PrestacionId = 1,
+                            VigenteDesde = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Precio = 600m,
+                            PrestacionId = 2,
+                            VigenteDesde = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Precio = 450m,
+                            PrestacionId = 3,
+                            VigenteDesde = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Precio = 1500m,
+                            PrestacionId = 4,
+                            VigenteDesde = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Precio = 2500m,
+                            PrestacionId = 5,
+                            VigenteDesde = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Precio = 900m,
+                            PrestacionId = 6,
+                            VigenteDesde = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Precio = 700m,
+                            PrestacionId = 7,
+                            VigenteDesde = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Precio = 4500m,
+                            PrestacionId = 8,
+                            VigenteDesde = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.TipoComunicacion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CanalPorDefecto")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<bool>("Esencial")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("varchar(60)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Nombre")
+                        .IsUnique();
+
+                    b.ToTable("TiposComunicacion");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CanalPorDefecto = "Correo",
+                            Descripcion = "Resumen de la consulta cuando el veterinario la firma (RF-CLI-10).",
+                            Esencial = true,
+                            Nombre = "Resumen clínico"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CanalPorDefecto = "Correo",
+                            Descripcion = "Comprobante de un cobro, cuando Recepción lo envía.",
+                            Esencial = true,
+                            Nombre = "Comprobante de cobro"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CanalPorDefecto = "Correo",
+                            Descripcion = "Cambios que afectan tu atención: cierres, horarios, feriados.",
+                            Esencial = true,
+                            Nombre = "Aviso de la clínica"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CanalPorDefecto = "Correo",
+                            Descripcion = "Vacunas y desparasitaciones próximas a vencer de tus animales (RF-CLI-07).",
+                            Esencial = false,
+                            Nombre = "Aviso de refuerzo"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CanalPorDefecto = "No recibir",
+                            Descripcion = "Alertas de la clínica para animales de tu misma especie, como un brote en la zona.",
+                            Esencial = false,
+                            Nombre = "Alerta sanitaria"
+                        });
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Turno", b =>
                 {
                     b.Property<int>("Id")
@@ -1532,8 +3966,19 @@ namespace Veterinaria.Api.Migrations
                     b.Property<int>("AnimalId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CanceladoPor")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
+
+                    b.Property<int?>("CreadoPorId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("EsSobreturno")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Estado")
                         .IsRequired()
@@ -1549,6 +3994,9 @@ namespace Veterinaria.Api.Migrations
                     b.Property<DateTime>("Fin")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("HoraLlegada")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime>("Inicio")
                         .HasColumnType("datetime(6)");
 
@@ -1556,6 +4004,11 @@ namespace Veterinaria.Api.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("MotivoCancelacion")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("MotivoSobreturno")
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("varchar(250)");
@@ -1571,6 +4024,8 @@ namespace Veterinaria.Api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreadoPorId");
 
                     b.HasIndex("PrestacionId");
 
@@ -1623,6 +4078,17 @@ namespace Veterinaria.Api.Migrations
                     b.Navigation("DocumentoLegal");
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.AlertaStock", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Articulo", "Articulo")
+                        .WithMany()
+                        .HasForeignKey("ArticuloId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Articulo");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Animal", b =>
                 {
                     b.HasOne("Veterinaria.Api.Models.Especie", "Especie")
@@ -1632,6 +4098,46 @@ namespace Veterinaria.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Especie");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.AplicacionSanitaria", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Animal", "Animal")
+                        .WithMany()
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "AplicadaPor")
+                        .WithMany()
+                        .HasForeignKey("AplicadaPorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.Consulta", "Consulta")
+                        .WithMany()
+                        .HasForeignKey("ConsultaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.LoteProducto", "Lote")
+                        .WithMany()
+                        .HasForeignKey("LoteId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.ProductoSanitario", "ProductoSanitario")
+                        .WithMany()
+                        .HasForeignKey("ProductoSanitarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("AplicadaPor");
+
+                    b.Navigation("Consulta");
+
+                    b.Navigation("Lote");
+
+                    b.Navigation("ProductoSanitario");
                 });
 
             modelBuilder.Entity("Veterinaria.Api.Models.Ausencia", b =>
@@ -1645,6 +4151,52 @@ namespace Veterinaria.Api.Migrations
                     b.Navigation("Profesional");
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.Cargo", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Animal", "Animal")
+                        .WithMany()
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Consulta", "Consulta")
+                        .WithMany()
+                        .HasForeignKey("ConsultaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.Prestacion", "Prestacion")
+                        .WithMany()
+                        .HasForeignKey("PrestacionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.SolicitudAsistencia", "SolicitudAsistencia")
+                        .WithMany()
+                        .HasForeignKey("SolicitudAsistenciaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.Turno", "Turno")
+                        .WithMany()
+                        .HasForeignKey("TurnoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Consulta");
+
+                    b.Navigation("Prestacion");
+
+                    b.Navigation("SolicitudAsistencia");
+
+                    b.Navigation("Turno");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.CodigoCuenta", b =>
                 {
                     b.HasOne("Veterinaria.Api.Models.Cuenta", "Cuenta")
@@ -1654,6 +4206,116 @@ namespace Veterinaria.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Cuenta");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Comunicacion", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Cuenta")
+                        .WithMany()
+                        .HasForeignKey("CuentaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "GeneradaPor")
+                        .WithMany()
+                        .HasForeignKey("GeneradaPorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.Comunicacion", "ReenvioDe")
+                        .WithMany()
+                        .HasForeignKey("ReenvioDeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.TipoComunicacion", "TipoComunicacion")
+                        .WithMany()
+                        .HasForeignKey("TipoComunicacionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cuenta");
+
+                    b.Navigation("GeneradaPor");
+
+                    b.Navigation("ReenvioDe");
+
+                    b.Navigation("TipoComunicacion");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Consentimiento", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Animal", "Animal")
+                        .WithMany()
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.DocumentoConsentimiento", "DocumentoConsentimiento")
+                        .WithMany()
+                        .HasForeignKey("DocumentoConsentimientoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Prestacion", "Prestacion")
+                        .WithMany()
+                        .HasForeignKey("PrestacionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Turno", "Turno")
+                        .WithMany()
+                        .HasForeignKey("TurnoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("DocumentoConsentimiento");
+
+                    b.Navigation("Prestacion");
+
+                    b.Navigation("Turno");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Consulta", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Animal", "Animal")
+                        .WithMany()
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Autor")
+                        .WithMany()
+                        .HasForeignKey("AutorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Profesional", "Profesional")
+                        .WithMany()
+                        .HasForeignKey("ProfesionalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Turno", "Turno")
+                        .WithMany()
+                        .HasForeignKey("TurnoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("Autor");
+
+                    b.Navigation("Profesional");
+
+                    b.Navigation("Turno");
                 });
 
             modelBuilder.Entity("Veterinaria.Api.Models.CuentaRol", b =>
@@ -1675,6 +4337,54 @@ namespace Veterinaria.Api.Migrations
                     b.Navigation("Rol");
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.DocumentoConsentimiento", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Prestacion", "Prestacion")
+                        .WithMany()
+                        .HasForeignKey("PrestacionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Prestacion");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Enmienda", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Autor")
+                        .WithMany()
+                        .HasForeignKey("AutorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Consulta", "Consulta")
+                        .WithMany("Enmiendas")
+                        .HasForeignKey("ConsultaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Autor");
+
+                    b.Navigation("Consulta");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.EventoAsistencia", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Autor")
+                        .WithMany()
+                        .HasForeignKey("AutorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.SolicitudAsistencia", "SolicitudAsistencia")
+                        .WithMany("Eventos")
+                        .HasForeignKey("SolicitudAsistenciaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Autor");
+
+                    b.Navigation("SolicitudAsistencia");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.FranjaHoraria", b =>
                 {
                     b.HasOne("Veterinaria.Api.Models.Profesional", "Profesional")
@@ -1684,6 +4394,240 @@ namespace Veterinaria.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Profesional");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Internacion", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "AdmitidoPor")
+                        .WithMany()
+                        .HasForeignKey("AdmitidoPorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.Animal", "Animal")
+                        .WithMany()
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Box", "Box")
+                        .WithMany()
+                        .HasForeignKey("BoxId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "VeterinarioAlta")
+                        .WithMany()
+                        .HasForeignKey("VeterinarioAltaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "VeterinarioIngreso")
+                        .WithMany()
+                        .HasForeignKey("VeterinarioIngresoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AdmitidoPor");
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("Box");
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("VeterinarioAlta");
+
+                    b.Navigation("VeterinarioIngreso");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.LecturaHistoria", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Animal", "Animal")
+                        .WithMany()
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Cuenta")
+                        .WithMany()
+                        .HasForeignKey("CuentaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("Cuenta");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.LoteProducto", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Articulo", "Articulo")
+                        .WithMany()
+                        .HasForeignKey("ArticuloId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Articulo");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.MovimientoStock", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Articulo", "Articulo")
+                        .WithMany()
+                        .HasForeignKey("ArticuloId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.LoteProducto", "Lote")
+                        .WithMany()
+                        .HasForeignKey("LoteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Persona")
+                        .WithMany()
+                        .HasForeignKey("PersonaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Articulo");
+
+                    b.Navigation("Lote");
+
+                    b.Navigation("Persona");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.NotaCredito", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "EmitidaPor")
+                        .WithMany()
+                        .HasForeignKey("EmitidaPorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Pago", "Pago")
+                        .WithMany()
+                        .HasForeignKey("PagoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("EmitidaPor");
+
+                    b.Navigation("Pago");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.NovedadInternacion", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Autor")
+                        .WithMany()
+                        .HasForeignKey("AutorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Internacion", "Internacion")
+                        .WithMany("Novedades")
+                        .HasForeignKey("InternacionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.NovedadInternacion", "Rectifica")
+                        .WithMany()
+                        .HasForeignKey("RectificaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Autor");
+
+                    b.Navigation("Internacion");
+
+                    b.Navigation("Rectifica");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.OfertaAsistencia", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.SolicitudAsistencia", "SolicitudAsistencia")
+                        .WithMany("Ofertas")
+                        .HasForeignKey("SolicitudAsistenciaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Veterinario")
+                        .WithMany()
+                        .HasForeignKey("VeterinarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SolicitudAsistencia");
+
+                    b.Navigation("Veterinario");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Pago", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Cargo", "Cargo")
+                        .WithMany()
+                        .HasForeignKey("CargoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "CobradoPor")
+                        .WithMany()
+                        .HasForeignKey("CobradoPorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Cargo");
+
+                    b.Navigation("CobradoPor");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.PreferenciaComunicacion", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Cuenta")
+                        .WithMany()
+                        .HasForeignKey("CuentaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.TipoComunicacion", "TipoComunicacion")
+                        .WithMany()
+                        .HasForeignKey("TipoComunicacionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cuenta");
+
+                    b.Navigation("TipoComunicacion");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.ProductoSanitario", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Articulo", "Articulo")
+                        .WithMany()
+                        .HasForeignKey("ArticuloId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Articulo");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.ProductoSanitarioEspecie", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Especie", "Especie")
+                        .WithMany()
+                        .HasForeignKey("EspecieId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.ProductoSanitario", "ProductoSanitario")
+                        .WithMany("Especies")
+                        .HasForeignKey("ProductoSanitarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Especie");
+
+                    b.Navigation("ProductoSanitario");
                 });
 
             modelBuilder.Entity("Veterinaria.Api.Models.Profesional", b =>
@@ -1734,6 +4678,40 @@ namespace Veterinaria.Api.Migrations
                     b.Navigation("Profesional");
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.ReservaStock", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.AplicacionSanitaria", "AplicacionSanitaria")
+                        .WithMany()
+                        .HasForeignKey("AplicacionSanitariaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.Articulo", "Articulo")
+                        .WithMany()
+                        .HasForeignKey("ArticuloId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Consulta", "Consulta")
+                        .WithMany()
+                        .HasForeignKey("ConsultaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.LoteProducto", "Lote")
+                        .WithMany()
+                        .HasForeignKey("LoteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AplicacionSanitaria");
+
+                    b.Navigation("Articulo");
+
+                    b.Navigation("Consulta");
+
+                    b.Navigation("Lote");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Responsabilidad", b =>
                 {
                     b.HasOne("Veterinaria.Api.Models.Animal", "Animal")
@@ -1753,6 +4731,67 @@ namespace Veterinaria.Api.Migrations
                     b.Navigation("Cuenta");
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.SolicitudAsistencia", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Animal", "Animal")
+                        .WithMany()
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Veterinario")
+                        .WithMany()
+                        .HasForeignKey("VeterinarioId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Veterinario");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.SolicitudDerecho", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Cuenta")
+                        .WithMany()
+                        .HasForeignKey("CuentaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "ResueltaPor")
+                        .WithMany()
+                        .HasForeignKey("ResueltaPorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Cuenta");
+
+                    b.Navigation("ResueltaPor");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.TarifaPrestacion", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Prestacion", "Prestacion")
+                        .WithMany()
+                        .HasForeignKey("PrestacionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "RegistradoPor")
+                        .WithMany()
+                        .HasForeignKey("RegistradoPorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Prestacion");
+
+                    b.Navigation("RegistradoPor");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Turno", b =>
                 {
                     b.HasOne("Veterinaria.Api.Models.Animal", "Animal")
@@ -1766,6 +4805,11 @@ namespace Veterinaria.Api.Migrations
                         .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "CreadoPor")
+                        .WithMany()
+                        .HasForeignKey("CreadoPorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Veterinaria.Api.Models.Prestacion", "Prestacion")
                         .WithMany()
@@ -1782,6 +4826,8 @@ namespace Veterinaria.Api.Migrations
                     b.Navigation("Animal");
 
                     b.Navigation("Cliente");
+
+                    b.Navigation("CreadoPor");
 
                     b.Navigation("Prestacion");
 
@@ -1812,6 +4858,11 @@ namespace Veterinaria.Api.Migrations
                     b.Navigation("Responsables");
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.Consulta", b =>
+                {
+                    b.Navigation("Enmiendas");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.Cuenta", b =>
                 {
                     b.Navigation("Aceptaciones");
@@ -1819,6 +4870,16 @@ namespace Veterinaria.Api.Migrations
                     b.Navigation("Responsabilidades");
 
                     b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.Internacion", b =>
+                {
+                    b.Navigation("Novedades");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.ProductoSanitario", b =>
+                {
+                    b.Navigation("Especies");
                 });
 
             modelBuilder.Entity("Veterinaria.Api.Models.Profesional", b =>
@@ -1830,6 +4891,13 @@ namespace Veterinaria.Api.Migrations
                     b.Navigation("Franjas");
 
                     b.Navigation("Prestaciones");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.SolicitudAsistencia", b =>
+                {
+                    b.Navigation("Eventos");
+
+                    b.Navigation("Ofertas");
                 });
 
             modelBuilder.Entity("Veterinaria.Api.Models.Turno", b =>

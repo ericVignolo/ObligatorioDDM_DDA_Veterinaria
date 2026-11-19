@@ -186,19 +186,42 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Modelos (9)
+### Servicios (3)
+- [[IPrestacionService (API)]]
+- [[PrestacionService (API)]]
+- [[ReglasCatalogo (API)]]
+
+### Modelos (15)
 - [[Animal (API)]]
+- [[Asistencia (API)]]
+- [[Cobro (API)]]
 - [[CodigoCuenta (API)]]
+- [[Comunicaciones (API)]]
 - [[Configuracion (API)]]
+- [[Consulta (API)]]
 - [[Cuenta (API)]]
 - [[DocumentoLegal (API)]]
+- [[Internacion (API)]]
+- [[Inventario (API)]]
 - [[Prestacion (API)]]
 - [[Profesional (API)]]
 - [[Rol (API)]]
 - [[Turno (API)]]
 
-### Datos (1)
+### Controladores (1)
+- [[ServiciosController (API)]] · `api/v1/servicios`
+
+### Repositorios (2)
+- [[IPrestacionRepository (API)]]
+- [[PrestacionRepository (API)]]
+
+### DTOs (2)
+- [[PaginaDto (API)]]
+- [[ServicioReadDto (API)]]
+
+### Datos (2)
 - [[AppDbContext (API)]]
+- [[ConfiguracionModulos (API)]]
 
 ## Mobile — [[Carpeta mobile]]
 
