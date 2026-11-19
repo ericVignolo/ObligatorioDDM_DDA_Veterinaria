@@ -29,6 +29,10 @@ public class Cuenta
 
     public bool Verificada { get; set; }
 
+    // Bloqueo temporal progresivo por intentos fallidos de ingreso (RNF-SEG-09).
+    public int IntentosFallidos { get; set; }
+    public DateTime? BloqueadaHasta { get; set; }
+
     // Baja lógica: no se borran cuentas con historia.
     public bool Activa { get; set; } = true;
 

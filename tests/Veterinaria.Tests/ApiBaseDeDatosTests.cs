@@ -18,14 +18,14 @@ public class ApiBaseDeDatosTests
     }
 
     [Fact]
-    public void El_modelo_tiene_las_51_tablas()
+    public void El_modelo_tiene_las_52_tablas()
     {
         using var db = Contexto();
 
         var tablas = db.Model.GetEntityTypes().Select(e => e.GetTableName()).Distinct().ToList();
 
-        Assert.Equal(51, tablas.Count);
-        foreach (var tabla in new[] { "Consultas", "Enmiendas", "Lotes", "MovimientosStock", "AplicacionesSanitarias", "Cargos", "Pagos", "NotasCredito", "Internaciones", "SolicitudesAsistencia", "Comunicaciones", "Numeradores" })
+        Assert.Equal(52, tablas.Count);
+        foreach (var tabla in new[] { "Consultas", "Enmiendas", "Lotes", "MovimientosStock", "AplicacionesSanitarias", "Cargos", "Pagos", "NotasCredito", "Internaciones", "SolicitudesAsistencia", "Comunicaciones", "Numeradores", "SesionesRefresco" })
         {
             Assert.Contains(tabla, tablas);
         }

@@ -18,6 +18,7 @@ public class AppDbContext : DbContext
     public DbSet<Rol> Roles { get; set; }
     public DbSet<CuentaRol> CuentaRoles { get; set; }
     public DbSet<CodigoCuenta> CodigosCuenta { get; set; }
+    public DbSet<SesionRefresco> SesionesRefresco { get; set; }
     public DbSet<DocumentoLegal> DocumentosLegales { get; set; }
     public DbSet<AceptacionLegal> AceptacionesLegales { get; set; }
 
@@ -113,6 +114,10 @@ public class AppDbContext : DbContext
             .HasOne(cr => cr.Cuenta).WithMany(c => c.Roles).HasForeignKey(cr => cr.CuentaId);
 
         modelBuilder.Entity<CodigoCuenta>().HasIndex(c => new { c.CuentaId, c.Tipo, c.FechaCreacion });
+
+        // Migración Sesiones (2026-11-19).
+        modelBuilder.Entity<SesionRefresco>().HasIndex(s => s.HashToken).IsUnique();
+        modelBuilder.Entity<SesionRefresco>().HasIndex(s => new { s.CuentaId, s.RevocadaEn });
 
         modelBuilder.Entity<DocumentoLegal>().HasIndex(d => new { d.Codigo, d.Version }).IsUnique();
         modelBuilder.Entity<DocumentoLegal>().Property(d => d.VigenteDesde).HasColumnType("date");
