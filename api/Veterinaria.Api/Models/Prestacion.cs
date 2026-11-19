@@ -18,4 +18,7 @@ public class Prestacion
     public int DuracionMinutos { get; set; }
 
     public bool Publicado { get; set; } = true;
+
+    // Cirugía o procedimiento con anestesia: exige consentimiento informado firmado (RF-CLI-11, RN-10).
+    public bool RequiereConsentimiento { get; set; }
 }
