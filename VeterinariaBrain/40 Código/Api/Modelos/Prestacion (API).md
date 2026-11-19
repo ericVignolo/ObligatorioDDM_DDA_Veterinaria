@@ -13,12 +13,14 @@ Servicio del catálogo (RF-VIS-01). Se llama Prestacion para no confundir con la
 
 **Tareas:** A-014
 
-**Requisitos y decisiones:** RF-VIS-01
+**Requisitos y decisiones:** RF-CLI-11, RF-VIS-01, RN-10
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[Cobro (API)]]
+- [[Consulta (API)]]
 - [[IPrestacionRepository (API)]]
 - [[PrestacionRepository (API)]]
 - [[PrestacionService (API)]]

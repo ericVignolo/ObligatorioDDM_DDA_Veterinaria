@@ -11,7 +11,7 @@ generado: true
 
 Profesional y su agenda (RF-VIS-02, RF-ADM-04).
 
-**Requisitos y decisiones:** RF-ADM-04, RF-VIS-02
+**Requisitos y decisiones:** RF-ADM-04, RF-VIS-02, RN-13
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
@@ -21,6 +21,7 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[Consulta (API)]]
 - [[Turno (API)]]
 
 ## En las otras aplicaciones

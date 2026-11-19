@@ -191,12 +191,18 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[PrestacionService (API)]]
 - [[ReglasCatalogo (API)]]
 
-### Modelos (9)
+### Modelos (15)
 - [[Animal (API)]]
+- [[Asistencia (API)]]
+- [[Cobro (API)]]
 - [[CodigoCuenta (API)]]
+- [[Comunicaciones (API)]]
 - [[Configuracion (API)]]
+- [[Consulta (API)]]
 - [[Cuenta (API)]]
 - [[DocumentoLegal (API)]]
+- [[Internacion (API)]]
+- [[Inventario (API)]]
 - [[Prestacion (API)]]
 - [[Profesional (API)]]
 - [[Rol (API)]]
@@ -213,8 +219,9 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[PaginaDto (API)]]
 - [[ServicioReadDto (API)]]
 
-### Datos (1)
+### Datos (2)
 - [[AppDbContext (API)]]
+- [[ConfiguracionModulos (API)]]
 
 ## Mobile — [[Carpeta mobile]]
 

@@ -11,15 +11,24 @@ generado: true
 
 Cuenta de una persona: Cliente o personal (RF-VIS-07, D-REG-01). Los roles van en CuentaRol.
 
-**Requisitos y decisiones:** D-REG-01, RF-VIS-07, RNF-SEG-01
+**Tareas:** A-028
+
+**Requisitos y decisiones:** D-PER-04, D-REG-01, RF-VIS-07, RNF-LEG-02, RNF-SEG-01
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Animal (API)]]
 - [[AppDbContext (API)]]
+- [[Asistencia (API)]]
+- [[Cobro (API)]]
 - [[CodigoCuenta (API)]]
+- [[Comunicaciones (API)]]
+- [[ConfiguracionModulos (API)]]
+- [[Consulta (API)]]
 - [[DocumentoLegal (API)]]
+- [[Internacion (API)]]
+- [[Inventario (API)]]
 - [[Profesional (API)]]
 - [[Rol (API)]]
 - [[Turno (API)]]
