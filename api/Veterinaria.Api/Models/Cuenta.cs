@@ -35,6 +35,14 @@ public class Cuenta
     public DateTime FechaCreacion { get; set; }
     public DateTime? FechaBaja { get; set; }
 
+    // Derecho de supresión (A-028, RNF-LEG-02): los datos personales se reemplazan por valores neutros;
+    // los animales y la historia clínica se conservan sin identificar al titular.
+    public bool Eliminada { get; set; }
+    public DateTime? FechaEliminacion { get; set; }
+
+    // Cambio de correo (D-PER-04): el nuevo queda aparte hasta verificarlo con un código (CodigosCuenta, tipo "CambioCorreo").
+    [MaxLength(150)] public string CorreoNuevoPendiente { get; set; } = "";
+
     public List<CuentaRol> Roles { get; set; } = new();
     public List<AceptacionLegal> Aceptaciones { get; set; } = new();
     public List<Responsabilidad> Responsabilidades { get; set; } = new();
