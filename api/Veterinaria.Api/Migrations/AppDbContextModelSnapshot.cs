@@ -964,6 +964,9 @@ namespace Veterinaria.Api.Migrations
                         .HasMaxLength(80)
                         .HasColumnType("varchar(80)");
 
+                    b.Property<DateTime?>("BloqueadaHasta")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Calle")
                         .IsRequired()
                         .HasMaxLength(120)
@@ -1000,6 +1003,9 @@ namespace Veterinaria.Api.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.Property<int>("IntentosFallidos")
+                        .HasColumnType("int");
 
                     b.Property<string>("Localidad")
                         .IsRequired()
@@ -1062,6 +1068,7 @@ namespace Veterinaria.Api.Migrations
                             Eliminada = false,
                             FechaCreacion = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashContrasena = "Vml0YWxpYVNlbWlsbGEwMQ==.rmvKwlUzU6PwWHiDTL50BHoRzzzOXikAepJ8q13h22k=",
+                            IntentosFallidos = 0,
                             Localidad = "",
                             Nombre = "Laura",
                             NumeroDocumento = "",
@@ -1084,6 +1091,7 @@ namespace Veterinaria.Api.Migrations
                             Eliminada = false,
                             FechaCreacion = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashContrasena = "Vml0YWxpYVNlbWlsbGEwMQ==.rmvKwlUzU6PwWHiDTL50BHoRzzzOXikAepJ8q13h22k=",
+                            IntentosFallidos = 0,
                             Localidad = "",
                             Nombre = "Lucía",
                             NumeroDocumento = "",
@@ -1106,6 +1114,7 @@ namespace Veterinaria.Api.Migrations
                             Eliminada = false,
                             FechaCreacion = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashContrasena = "Vml0YWxpYVNlbWlsbGEwMQ==.rmvKwlUzU6PwWHiDTL50BHoRzzzOXikAepJ8q13h22k=",
+                            IntentosFallidos = 0,
                             Localidad = "",
                             Nombre = "Martín",
                             NumeroDocumento = "",
@@ -1128,6 +1137,7 @@ namespace Veterinaria.Api.Migrations
                             Eliminada = false,
                             FechaCreacion = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashContrasena = "Vml0YWxpYVNlbWlsbGEwMQ==.rmvKwlUzU6PwWHiDTL50BHoRzzzOXikAepJ8q13h22k=",
+                            IntentosFallidos = 0,
                             Localidad = "",
                             Nombre = "Valentina",
                             NumeroDocumento = "",
@@ -1150,6 +1160,7 @@ namespace Veterinaria.Api.Migrations
                             Eliminada = false,
                             FechaCreacion = new DateTime(2026, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             HashContrasena = "Vml0YWxpYVNlbWlsbGEwMQ==.rmvKwlUzU6PwWHiDTL50BHoRzzzOXikAepJ8q13h22k=",
+                            IntentosFallidos = 0,
                             Localidad = "",
                             Nombre = "Gonzalo",
                             NumeroDocumento = "",
@@ -3618,6 +3629,44 @@ namespace Veterinaria.Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Veterinaria.Api.Models.SesionRefresco", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("CuentaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("HashToken")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Origen")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("varchar(60)");
+
+                    b.Property<DateTime?>("RevocadaEn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("Vence")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HashToken")
+                        .IsUnique();
+
+                    b.HasIndex("CuentaId", "RevocadaEn");
+
+                    b.ToTable("SesionesRefresco");
+                });
+
             modelBuilder.Entity("Veterinaria.Api.Models.SolicitudAsistencia", b =>
                 {
                     b.Property<int>("Id")
@@ -4727,6 +4776,17 @@ namespace Veterinaria.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Animal");
+
+                    b.Navigation("Cuenta");
+                });
+
+            modelBuilder.Entity("Veterinaria.Api.Models.SesionRefresco", b =>
+                {
+                    b.HasOne("Veterinaria.Api.Models.Cuenta", "Cuenta")
+                        .WithMany()
+                        .HasForeignKey("CuentaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Cuenta");
                 });
