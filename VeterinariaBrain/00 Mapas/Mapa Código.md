@@ -186,19 +186,72 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Modelos (9)
+### Servicios (18)
+- [[ClinicaService (API)]]
+- [[CuentaService (API)]]
+- [[EnvioCorreo (API)]]
+- [[IClinicaService (API)]]
+- [[ICuentaService (API)]]
+- [[IPrestacionService (API)]]
+- [[IProfesionalService (API)]]
+- [[ISesionService (API)]]
+- [[ITokenService (API)]]
+- [[Opciones (API)]]
+- [[PrestacionService (API)]]
+- [[ProfesionalService (API)]]
+- [[ReglasCatalogo (API)]]
+- [[Resultado (API)]]
+- [[Seguridad (API)]]
+- [[SesionService (API)]]
+- [[TokenService (API)]]
+- [[ValidacionDatos (API)]]
+
+### Modelos (16)
 - [[Animal (API)]]
+- [[Asistencia (API)]]
+- [[Cobro (API)]]
 - [[CodigoCuenta (API)]]
+- [[Comunicaciones (API)]]
 - [[Configuracion (API)]]
+- [[Consulta (API)]]
 - [[Cuenta (API)]]
 - [[DocumentoLegal (API)]]
+- [[Internacion (API)]]
+- [[Inventario (API)]]
 - [[Prestacion (API)]]
 - [[Profesional (API)]]
 - [[Rol (API)]]
+- [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Datos (1)
+### Controladores (6)
+- [[ClinicaController (API)]] · `api/v1/clinica`
+- [[CuentasController (API)]] · `api/v1/cuentas`
+- [[Problemas (API)]]
+- [[ProfesionalesController (API)]] · `api/v1/profesionales`
+- [[ServiciosController (API)]] · `api/v1/servicios`
+- [[SesionesController (API)]] · `api/v1/sesiones`
+
+### Repositorios (8)
+- [[ClinicaRepository (API)]]
+- [[CuentaRepository (API)]]
+- [[IClinicaRepository (API)]]
+- [[ICuentaRepository (API)]]
+- [[IPrestacionRepository (API)]]
+- [[IProfesionalRepository (API)]]
+- [[PrestacionRepository (API)]]
+- [[ProfesionalRepository (API)]]
+
+### DTOs (5)
+- [[ClinicaReadDto (API)]]
+- [[CuentaDtos (API)]]
+- [[PaginaDto (API)]]
+- [[ProfesionalReadDto (API)]]
+- [[ServicioReadDto (API)]]
+
+### Datos (2)
 - [[AppDbContext (API)]]
+- [[ConfiguracionModulos (API)]]
 
 ## Mobile — [[Carpeta mobile]]
 

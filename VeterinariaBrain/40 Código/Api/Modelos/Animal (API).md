@@ -20,6 +20,11 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[Asistencia (API)]]
+- [[Cobro (API)]]
+- [[Consulta (API)]]
+- [[Internacion (API)]]
+- [[Inventario (API)]]
 - [[Turno (API)]]
 
 ## En las otras aplicaciones

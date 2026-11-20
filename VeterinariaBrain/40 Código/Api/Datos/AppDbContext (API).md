@@ -17,10 +17,22 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usa
 - [[Animal (API)]]
+- [[Asistencia (API)]]
+- [[Cobro (API)]]
 - [[CodigoCuenta (API)]]
+- [[Comunicaciones (API)]]
+- [[Consulta (API)]]
 - [[Cuenta (API)]]
 - [[DocumentoLegal (API)]]
+- [[Internacion (API)]]
 - [[Prestacion (API)]]
 - [[Profesional (API)]]
 - [[Rol (API)]]
+- [[SesionRefresco (API)]]
 - [[Turno (API)]]
+
+## Usado por (si cambia, revisar estos)
+- [[ClinicaRepository (API)]]
+- [[CuentaRepository (API)]]
+- [[PrestacionRepository (API)]]
+- [[ProfesionalRepository (API)]]

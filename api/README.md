@@ -16,26 +16,70 @@ api/Veterinaria.Api/
 └── appsettings.Development.example.json
 ```
 
-`Controllers/`, `Services/`, `Repositories/` y `DTOs/` se crean cuando se haga el primer endpoint.
+Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → `Repositories/` (`IXxxRepository`) → `AppDbContext`; `DTOs/` con mapeo explícito en el Service.
 
-## Tablas de la primera versión
+## Endpoints
+
+| Método y ruta | Acceso | Respuesta |
+|---|---|---|
+| `GET /api/v1/servicios?page=1&pageSize=20` | Público | `200` con `items`, `page`, `pageSize` y `totalItems`; `400` (Problem Details, `PAGINACION_INVALIDA`) si `page` < 1 o `pageSize` no está entre 1 y 50 |
+| `GET /api/v1/servicios/{id}` | Público | `200` con el servicio; `404` (Problem Details, `SERVICIO_NO_ENCONTRADO`) si no existe o no es público |
+| `GET /api/v1/profesionales?page=1&pageSize=20` | Público | `200` paginado: nombre, especialidad, descripción, especies y servicios públicos; `400` si la paginación es inválida |
+| `GET /api/v1/profesionales/{id}` | Público | `200` con lo anterior más `horario` por día (lunes a domingo, `jornadas` y `descansos` en `HH:mm`); `404` (`PROFESIONAL_NO_ENCONTRADO`) si no existe o no está publicado y activo |
+| `POST /api/v1/cuentas` | Público | Registro de cliente: `201` (crea la cuenta sin verificar y manda el código); `400` con los errores de cada campo; `409` (`CUENTA_NO_DISPONIBLE`) si el correo o el documento ya tienen cuenta |
+| `POST /api/v1/cuentas/verificacion` | Público | `200`; `400` (`CODIGO_INCORRECTO`, `CODIGO_VENCIDO`, `CODIGO_INVALIDADO`, `SIN_CODIGO`); `404` si no hay cuenta pendiente |
+| `POST /api/v1/cuentas/verificacion/reenvio` | Público | `200` con un código nuevo; `429` (`DEMASIADOS_CODIGOS`) después de 3 reenvíos en una hora |
+| `POST /api/v1/sesiones` | Público | Ingreso de clientes y personal: `200` con `tokenAcceso` (15 min), `tokenRefresco` (7 días) y `roles`; `401` (`CREDENCIALES_INVALIDAS`); `403` (`CUENTA_NO_VERIFICADA`); `423` (`CUENTA_BLOQUEADA`) |
+| `POST /api/v1/sesiones/refresco` | Público | `200` con tokens nuevos (el de refresco usado deja de servir); `401` (`SESION_INVALIDA`) |
+| `DELETE /api/v1/sesiones` | Público | Cierra la sesión del token de refresco: `204` |
+| `POST /api/v1/cuentas/recuperacion` | Público | Siempre `200` con el mismo mensaje, exista o no el correo (D-REG-03) |
+| `POST /api/v1/cuentas/recuperacion/confirmar` | Público | `200` (cambia la contraseña y cierra todas las sesiones); `400` (`CODIGO_INVALIDO`, `CODIGO_INCORRECTO`) |
+| `GET /api/v1/cuentas/yo` | Con token | `200` con los datos de la cuenta; `401` sin token o con token vencido |
+| `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
+
+Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
+
+## Tablas (52)
+
+Migraciones `Inicial` (2026-11-10, 22 tablas), `ModulosClinicos` (2026-11-19, 29 tablas) y `Sesiones` (2026-11-19: tabla `SesionesRefresco` y bloqueo por intentos en `Cuentas`). La configuración de la segunda está en `Data/ConfiguracionModulos.cs`.
 
 | Grupo | Tablas |
 |---|---|
-| Identidad | `Cuentas`, `Roles`, `CuentaRoles`, `CodigosCuenta`, `DocumentosLegales`, `AceptacionesLegales` |
+| Identidad | `Cuentas` (cliente y personal), `Roles`, `CuentaRoles`, `CodigosCuenta`, `SesionesRefresco`, `DocumentosLegales`, `AceptacionesLegales` |
 | Animales | `Especies`, `Animales`, `Responsabilidades` (cliente ↔ animal con vigencia) |
 | Catálogo y agenda | `Prestaciones`, `Profesionales`, `ProfesionalEspecies`, `ProfesionalPrestaciones`, `FranjasHorarias`, `Ausencias`, `Recursos`, `Turnos`, `TurnoRecursos` |
+| Consulta e historia | `Consultas`, `Enmiendas`, `LecturasHistoria`, `DocumentosConsentimiento`, `Consentimientos` |
+| Vacunas e inventario | `Articulos`, `Lotes`, `MovimientosStock`, `ReservasStock`, `AlertasStock`, `ProductosSanitarios`, `ProductoSanitarioEspecies`, `AplicacionesSanitarias` |
+| Cobro | `TarifasPrestacion`, `Cargos`, `Pagos` (comprobantes), `NotasCredito`, `Numeradores` |
+| Internación | `Boxes`, `Internaciones`, `NovedadesInternacion` |
+| Asistencia | `SolicitudesAsistencia`, `OfertasAsistencia`, `EventosAsistencia` |
+| Comunicaciones y derechos | `TiposComunicacion`, `PreferenciasComunicacion`, `Comunicaciones` (cola de envío), `SolicitudesDerecho`, `PoliticasConservacion` |
 | Configuración | `Clinicas`, `Parametros`, `DiasNoLaborables`, `Auditorias` |
 
-La semilla tiene los mismos datos ficticios que Blazor: roles, documentos legales 1.0, 11 especies, 7 prestaciones, 5 profesionales con jornadas, descansos y ausencias, 4 recursos, los datos de VITALIA, los parámetros por defecto y los feriados. No trae cuentas, porque la contraseña necesita un hash y las cuentas se crean desde la API.
+El personal no tiene tabla propia: es una `Cuenta` con rol Recepcionista, Veterinario o Administrador, y el Veterinario se enlaza con su `Profesional`. Los autores (quién firmó, cobró, admitió, etc.) son claves a `Cuentas`.
 
-Consulta, historia clínica, stock, cargos, internación, vacunas, asistencia y notificaciones se agregan después, cada una con su migración.
+Semilla (mismos datos de demostración que Blazor): roles, documentos legales 1.0, 11 especies, 8 prestaciones (con castración y su consentimiento), 5 profesionales con horarios, 4 recursos, VITALIA, parámetros y feriados; **personal**: `recepcion@`, `ferreira@`, `silveira@`, `acosta@` y `admin@vitalia.uy`, todos con la contraseña `Vitalia2026!`; 4 boxes; 12 artículos con 20 lotes y su movimiento de compra; 7 productos sanitarios; tarifas iniciales; tipos de comunicación y política de conservación. No trae clientes, animales ni turnos: se crean desde la API.
 
 Decisiones del esquema:
 - No hay borrado en cascada: las bajas son lógicas (`Activa`/`Activo`) y la historia se conserva.
+- Restricciones `CHECK`: el stock de un lote no queda negativo (RN-26) y un pago es mayor que cero. Índices únicos: un cargo por consulta (RN-32), número de comprobante y de nota de crédito, una nota de crédito por comprobante (RN-34), un turno con una sola consulta.
+- Lo que MySQL no puede expresar con un índice (una internación abierta por animal, RN-21; un paciente por box, RN-22) lo controla la API dentro de la transacción.
+- Los textos clínicos largos son `LONGTEXT`, sin `MaxLength`, para no pasar el límite de tamaño de fila de MySQL. Los límites de largo se validan en los DTO.
+- `Consultas`, `Turnos`, `Internaciones` y `SolicitudesAsistencia` tienen `Version` como control de concurrencia.
 - `Microchip` es único y puede quedar vacío (`NULL`) (RN-41).
 - Los índices `(ProfesionalId, Inicio, Fin)`, `(AnimalId, Inicio, Fin)` y `(RecursoId, Inicio, Fin)` sirven para controlar los solapamientos con `SELECT … FOR UPDATE` (DT-BD-02).
 - Las fechas sin hora se guardan como `DATETIME` en C# con columna `DATE`, y las horas como `TimeSpan` (`TIME`). En Blazor son `DateOnly` y `TimeOnly`, y la conversión se hace en el Service. Así no dependemos de cómo trate el proveedor de Oracle a `DateOnly`/`TimeOnly`.
+
+## Cuentas y sesiones
+
+- **Token de acceso** (JWT, 15 minutos) en el encabezado `Authorization: Bearer …`. Lleva `sub` (id de la cuenta), `name`, `email` y un `role` por cada rol. **Token de refresco** (7 días), guardado solo como hash en `SesionesRefresco`; cada uno sirve una vez, y si un token ya usado vuelve a aparecer se cierran todas las sesiones de la cuenta.
+- Contraseñas con PBKDF2-SHA256 (el mismo formato que Blazor). Códigos de 6 dígitos: valen 15 minutos, admiten 5 intentos y se pueden reenviar hasta 3 veces por hora. Se guarda solo el hash, con sal.
+- Bloqueo progresivo: desde el quinto ingreso fallido, 1, 2, 4… minutos, hasta 30 (RNF-SEG-09). Además, hay un límite de 20 pedidos por minuto por dirección de origen en `cuentas` y `sesiones`; pasado ese límite responde `429`.
+- Una cuenta sin verificar no puede ingresar. Una cuenta sin verificar de más de 7 días se borra cuando alguien se registra con el mismo correo.
+- **Correo:** todavía no se envían correos (`EnvioCorreoDesarrollo`). En **Development** el código vuelve en `codigoDesarrollo`; fuera de Development no aparece. Para el envío real se reemplaza `IEnvioCorreo` en `Program.cs`.
+- La clave `Jwt:Clave` de `appsettings.json` es **solo de desarrollo**. En producción se reemplaza por una secreta.
+- Pendiente: segundo factor del Administrador (RNF-SEG-04) y borrado automático de las cuentas sin verificar.
+- Para probar: `Veterinaria.Api.http`, que se abre en Visual Studio y tiene un botón «Enviar solicitud» en cada pedido.
 
 ## Crear la base en tu computadora
 
@@ -51,4 +95,4 @@ Decisiones del esquema:
 
 5. En MySQL Workbench aparece la base `vitalia`, con las tablas y los datos de la semilla.
 
-Para cambiar el esquema más adelante: modificar `Models/` o `AppDbContext`, y después `Add-Migration <Nombre>` y `Update-Database`.
+Para cambiar el esquema más adelante: modificar `Models/`, `AppDbContext` o `ConfiguracionModulos`, y después `Add-Migration <Nombre>` y `Update-Database`. `ApiBaseDeDatosTests` verifica el modelo en el CI antes de migrar.
