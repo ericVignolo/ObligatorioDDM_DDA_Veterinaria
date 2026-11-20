@@ -186,10 +186,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (18)
+### Servicios (20)
+- [[AnimalService (API)]]
 - [[ClinicaService (API)]]
 - [[CuentaService (API)]]
 - [[EnvioCorreo (API)]]
+- [[IAnimalService (API)]]
 - [[IClinicaService (API)]]
 - [[ICuentaService (API)]]
 - [[IPrestacionService (API)]]
@@ -224,17 +226,21 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Controladores (6)
+### Controladores (8)
+- [[AnimalesController (API)]] · `api/v1/animales`
 - [[ClinicaController (API)]] · `api/v1/clinica`
 - [[CuentasController (API)]] · `api/v1/cuentas`
+- [[EspeciesController (API)]] · `api/v1/especies`
 - [[Problemas (API)]]
 - [[ProfesionalesController (API)]] · `api/v1/profesionales`
 - [[ServiciosController (API)]] · `api/v1/servicios`
 - [[SesionesController (API)]] · `api/v1/sesiones`
 
-### Repositorios (8)
+### Repositorios (10)
+- [[AnimalRepository (API)]]
 - [[ClinicaRepository (API)]]
 - [[CuentaRepository (API)]]
+- [[IAnimalRepository (API)]]
 - [[IClinicaRepository (API)]]
 - [[ICuentaRepository (API)]]
 - [[IPrestacionRepository (API)]]
@@ -242,7 +248,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[PrestacionRepository (API)]]
 - [[ProfesionalRepository (API)]]
 
-### DTOs (5)
+### DTOs (6)
+- [[AnimalDtos (API)]]
 - [[ClinicaReadDto (API)]]
 - [[CuentaDtos (API)]]
 - [[PaginaDto (API)]]

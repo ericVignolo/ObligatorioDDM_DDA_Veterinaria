@@ -155,3 +155,47 @@ Rama: `diego/sesion-2026-11-19-cuentas`, creada desde `diego/sesion-2026-11-19-p
 - [ ] Envío real de correos (reemplazar `EnvioCorreoDesarrollo`).
 - [ ] Borrado automático de las cuentas sin verificar de más de 7 días (hoy se borran al registrarse alguien con el mismo correo).
 - [ ] Siguiente: animales del cliente (alta, lista, detalle; solo los propios, RN-18; microchip único, RN-41).
+
+---
+
+## Cuarta parte: animales del cliente
+
+Rama: `diego/sesion-2026-11-19-animales`, creada desde `diego/sesion-2026-11-19-cuentas`. PR #43.
+
+- Diego probó las cuentas y las sesiones con `Veterinaria.Api.http`: registro, verificación, ingreso del cliente y del Administrador, `cuentas/yo` con token y `401` sin token. Todo anduvo.
+- Decisiones de Diego:
+  1. El acceso del personal a animales de cualquier cliente queda para turnos y consulta.
+  2. Se incluye la baja lógica.
+- Endpoints:
+  - `GET /api/v1/especies`, público;
+  - `GET/POST /api/v1/animales` y `GET/PUT/DELETE /api/v1/animales/{id}`, con `[Authorize(Roles = "Cliente")]`. La cuenta sale siempre del token (RN-18).
+- Reglas:
+  - el microchip tiene 15 dígitos y es único (RN-41); vacío se guarda como `NULL`;
+  - en un animal individual no se guarda cantidad de grupo;
+  - la baja es lógica y se rechaza si el animal tiene turnos pendientes;
+  - un animal ajeno o inexistente da el mismo `404`.
+- Archivos:
+  - `Controllers/AnimalesController.cs` y `EspeciesController.cs`;
+  - `Services/IAnimalService.cs` y `AnimalService.cs`;
+  - `Repositories/IAnimalRepository.cs` y `AnimalRepository.cs`;
+  - `DTOs/AnimalDtos.cs`;
+  - `Program.cs`;
+  - pedidos nuevos en `Veterinaria.Api.http`.
+- **No cambia la base.**
+- Pruebas: `ApiAnimalesTests`, 12 nuevas. CI en verde con 1044 pruebas.
+
+### Cómo probarlo
+
+1. Rama `diego/sesion-2026-11-19-animales`, F5. Si no corriste la migración `Sesiones` en la rama de cuentas, corrérla ahora.
+2. En `Veterinaria.Api.http`, mandar primero el «ingreso» de Ana y después los pedidos de la sección 7:
+   1. Alta de Luna → `201`.
+   2. Alta de la majada → `201`.
+   3. Mis animales → los dos.
+   4. Editar → `Luna Blanca`.
+   5. Con el token del Administrador → `403`.
+   6. Baja → `200`. Después Mis animales muestra solo la majada.
+
+### Qué falta
+
+- [ ] Diego: probar con el `.http`. Subir `Migrations/` de `Sesiones` si todavía no está.
+- [ ] Siguiente: disponibilidad y reserva de turnos (horarios libres, `SELECT … FOR UPDATE` de DT-BD-02, cancelar y reprogramar). Ahí entra el acceso del personal.

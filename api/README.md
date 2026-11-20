@@ -35,6 +35,12 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `POST /api/v1/cuentas/recuperacion` | Público | Siempre `200` con el mismo mensaje, exista o no el correo (D-REG-03) |
 | `POST /api/v1/cuentas/recuperacion/confirmar` | Público | `200` (cambia la contraseña y cierra todas las sesiones); `400` (`CODIGO_INVALIDO`, `CODIGO_INCORRECTO`) |
 | `GET /api/v1/cuentas/yo` | Con token | `200` con los datos de la cuenta; `401` sin token o con token vencido |
+| `GET /api/v1/especies` | Público | `200` con las especies (id y nombre) para los formularios |
+| `GET /api/v1/animales?page=1&pageSize=20` | Cliente | `200` paginado, solo los animales activos del cliente del token (RN-18) |
+| `GET /api/v1/animales/{id}` | Cliente | `200`; `404` (`ANIMAL_NO_ENCONTRADO`) si no existe, está de baja o es de otro cliente |
+| `POST /api/v1/animales` | Cliente | `201`, con el cliente como responsable; `400` con los errores de cada campo o `ESPECIE_INVALIDA`; `409` (`MICROCHIP_REPETIDO`, RN-41) |
+| `PUT /api/v1/animales/{id}` | Cliente | `200`; `404` si es ajeno; `409` si el microchip es de otro animal |
+| `DELETE /api/v1/animales/{id}` | Cliente | Baja lógica: `200` (la historia se conserva); `409` (`ANIMAL_CON_TURNOS`) si tiene turnos pendientes |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.

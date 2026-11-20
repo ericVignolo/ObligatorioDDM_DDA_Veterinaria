@@ -124,3 +124,75 @@ Content-Type: application/json
   "codigo": "000000",
   "contrasena": "NuevaClave456"
 }
+
+### ---------- 7. Animales (necesitan el token de un cliente: mandá antes el «ingreso» de Ana) ----------
+
+GET {{api}}/especies
+
+###
+# @name altaAnimal
+POST {{api}}/animales
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "nombre": "Luna",
+  "especieId": 1,
+  "raza": "Mestiza",
+  "sexo": "Hembra",
+  "fechaNacimiento": "2021-03-10",
+  "microchip": "858000012345678",
+  "caravana": "",
+  "esGrupo": false,
+  "cantidadGrupo": null,
+  "senasParticulares": "Mancha blanca en el pecho",
+  "antecedentes": ""
+}
+
+### Un grupo de animales de campo (especie 8 = Oveja)
+
+POST {{api}}/animales
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "nombre": "Majada del fondo",
+  "especieId": 8,
+  "sexo": "Sin determinar",
+  "esGrupo": true,
+  "cantidadGrupo": 40
+}
+
+### Mis animales
+
+GET {{api}}/animales
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Detalle
+
+GET {{api}}/animales/{{altaAnimal.response.body.$.id}}
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Editar
+
+PUT {{api}}/animales/{{altaAnimal.response.body.$.id}}
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "nombre": "Luna Blanca",
+  "especieId": 1,
+  "raza": "Mestiza",
+  "sexo": "Hembra",
+  "microchip": "858000012345678"
+}
+
+### Con el token del Administrador → 403 (animales es solo para clientes)
+
+GET {{api}}/animales
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Dar de baja (baja lógica: la historia se conserva)
+
+DELETE {{api}}/animales/{{altaAnimal.response.body.$.id}}
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}

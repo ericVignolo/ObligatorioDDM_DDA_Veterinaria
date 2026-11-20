@@ -16,6 +16,9 @@ Respuesta paginada de toda la API (D-CAT-03): items, page, pageSize y totalItems
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AnimalService (API)]]
+- [[AnimalesController (API)]]
+- [[IAnimalService (API)]]
 - [[IPrestacionService (API)]]
 - [[IProfesionalService (API)]]
 - [[PrestacionService (API)]]
