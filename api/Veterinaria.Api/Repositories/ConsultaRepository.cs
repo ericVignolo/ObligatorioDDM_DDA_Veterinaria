@@ -64,12 +64,23 @@ public class ConsultaRepository : IConsultaRepository
 
     public async Task<bool> TieneConsentimientoAceptadoAsync(int turnoId)
     {
+        // Vale solo la última respuesta, y solo si es de la versión vigente del documento (RN-10).
         var ultima = await _context.Consentimientos
             .Where(c => c.TurnoId == turnoId)
             .OrderByDescending(c => c.Fecha).ThenByDescending(c => c.Id)
-            .Select(c => c.Respuesta)
+            .Select(c => new { c.Respuesta, c.DocumentoConsentimientoId, c.PrestacionId })
             .FirstOrDefaultAsync();
-        return ultima == "Aceptado";
+        if (ultima == null || ultima.Respuesta != "Aceptado")
+        {
+            return false;
+        }
+
+        var vigente = await _context.DocumentosConsentimiento
+            .Where(d => d.PrestacionId == ultima.PrestacionId && d.Vigente)
+            .OrderByDescending(d => d.FechaVigencia).ThenByDescending(d => d.Id)
+            .Select(d => (int?)d.Id)
+            .FirstOrDefaultAsync();
+        return vigente == null || vigente == ultima.DocumentoConsentimientoId;
     }
 
     public async Task<List<string>> AlergiasRegistradasAsync(int animalId)
