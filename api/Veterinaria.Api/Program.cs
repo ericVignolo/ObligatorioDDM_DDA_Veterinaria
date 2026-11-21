@@ -45,6 +45,8 @@ builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
 builder.Services.AddScoped<ITurnoRepository, TurnoRepository>();
 builder.Services.AddScoped<ITurnoService, TurnoService>();
+builder.Services.AddScoped<IConsultaRepository, ConsultaRepository>();
+builder.Services.AddScoped<IConsultaService, ConsultaService>();
 
 // Autenticación con token de acceso corto (RNF-SEG-03). La autorización se verifica en cada pedido (RNF-SEG-05).
 var jwt = builder.Configuration.GetSection("Jwt").Get<OpcionesJwt>() ?? new OpcionesJwt();

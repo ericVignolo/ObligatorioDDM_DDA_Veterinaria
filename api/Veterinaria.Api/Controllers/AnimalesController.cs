@@ -15,10 +15,12 @@ namespace Veterinaria.Api.Controllers;
 public class AnimalesController : ControllerBase
 {
     private readonly IAnimalService _service;
+    private readonly IConsultaService _consultas;
 
-    public AnimalesController(IAnimalService service)
+    public AnimalesController(IAnimalService service, IConsultaService consultas)
     {
         _service = service;
+        _consultas = consultas;
     }
 
     private int CuentaId => int.TryParse(User.FindFirst(TokenService.ClaimId)?.Value, out var id) ? id : 0;
@@ -76,5 +78,14 @@ public class AnimalesController : ControllerBase
     public async Task<ActionResult> DarDeBaja(int id)
     {
         return Problemas.Desde(await _service.DarDeBajaAsync(id, CuentaId));
+    }
+
+    // GET /api/v1/animales/5/historia → consultas firmadas con sus enmiendas y vacunas (solo lectura)
+    [HttpGet("{id:int}/historia")]
+    [ProducesResponseType(typeof(HistoriaDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Historia(int id)
+    {
+        return Problemas.Desde(await _consultas.HistoriaParaClienteAsync(CuentaId, id));
     }
 }

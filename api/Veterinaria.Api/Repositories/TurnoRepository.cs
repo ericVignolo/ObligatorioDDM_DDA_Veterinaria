@@ -1,6 +1,4 @@
-using System.Data;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
 using Veterinaria.Api.Data;
 using Veterinaria.Api.Models;
 using Veterinaria.Api.Services;
@@ -9,7 +7,6 @@ namespace Veterinaria.Api.Repositories;
 
 public class TurnoRepository : ITurnoRepository
 {
-    private static readonly int[] EsperasMs = { 50, 100, 200 };
     private static readonly string[] EstadosTerminados = { "Cancelado", "Finalizado", "Ausente" };
 
     private readonly AppDbContext _context;
@@ -169,41 +166,9 @@ public class TurnoRepository : ITurnoRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<T> EnTransaccionConBloqueoAsync<T>(int profesionalId, int animalId, Func<Task<T>> accion)
+    // Orden fijo: primero el profesional, después el animal (evita interbloqueos entre dos reservas).
+    public Task<T> EnTransaccionConBloqueoAsync<T>(int profesionalId, int animalId, Func<Task<T>> accion)
     {
-        for (var intento = 0; ; intento++)
-        {
-            await using var transaccion = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
-            try
-            {
-                // Orden fijo: primero el profesional, después el animal (evita interbloqueos entre dos reservas).
-                await _context.Database.ExecuteSqlInterpolatedAsync($"SELECT `Id` FROM `Profesionales` WHERE `Id` = {profesionalId} FOR UPDATE");
-                await _context.Database.ExecuteSqlInterpolatedAsync($"SELECT `Id` FROM `Animales` WHERE `Id` = {animalId} FOR UPDATE");
-
-                var resultado = await accion();
-                await transaccion.CommitAsync();
-                return resultado;
-            }
-            catch (Exception ex) when (intento < EsperasMs.Length && EsInterbloqueo(ex))
-            {
-                await transaccion.RollbackAsync();
-                _context.ChangeTracker.Clear();
-                await Task.Delay(EsperasMs[intento]);
-            }
-        }
-    }
-
-    // 1213: interbloqueo; 1205: tiempo de espera del bloqueo agotado.
-    private static bool EsInterbloqueo(Exception ex)
-    {
-        for (Exception? e = ex; e != null; e = e.InnerException)
-        {
-            if (e is MySqlException mysql && (mysql.Number == 1213 || mysql.Number == 1205))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return Transacciones.EjecutarAsync(_context, new[] { (Transacciones.Profesionales, profesionalId), (Transacciones.Animales, animalId) }, accion);
     }
 }
