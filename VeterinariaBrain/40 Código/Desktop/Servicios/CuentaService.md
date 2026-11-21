@@ -50,3 +50,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[SesionService]]
 - [[TurnoMostrador]]
 - [[Verificar]]
+
+## En las otras aplicaciones
+- [[CuentaService (API)]]

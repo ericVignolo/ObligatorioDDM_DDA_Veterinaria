@@ -51,3 +51,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[TurnoMostrador]]
 - [[Turnos]]
 - [[VacunaService]]
+
+## En las otras aplicaciones
+- [[AnimalService (API)]]

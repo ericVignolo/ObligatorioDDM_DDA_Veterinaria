@@ -22,3 +22,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[InternacionDetalle]]
 - [[InternacionService]]
 - [[Internaciones]]
+
+## En las otras aplicaciones
+- [[Internacion (API)]]

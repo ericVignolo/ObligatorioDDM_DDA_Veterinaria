@@ -29,11 +29,23 @@ public class Cuenta
 
     public bool Verificada { get; set; }
 
+    // Bloqueo temporal progresivo por intentos fallidos de ingreso (RNF-SEG-09).
+    public int IntentosFallidos { get; set; }
+    public DateTime? BloqueadaHasta { get; set; }
+
     // Baja lógica: no se borran cuentas con historia.
     public bool Activa { get; set; } = true;
 
     public DateTime FechaCreacion { get; set; }
     public DateTime? FechaBaja { get; set; }
+
+    // Derecho de supresión (A-028, RNF-LEG-02): los datos personales se reemplazan por valores neutros;
+    // los animales y la historia clínica se conservan sin identificar al titular.
+    public bool Eliminada { get; set; }
+    public DateTime? FechaEliminacion { get; set; }
+
+    // Cambio de correo (D-PER-04): el nuevo queda aparte hasta verificarlo con un código (CodigosCuenta, tipo "CambioCorreo").
+    [MaxLength(150)] public string CorreoNuevoPendiente { get; set; } = "";
 
     public List<CuentaRol> Roles { get; set; } = new();
     public List<AceptacionLegal> Aceptaciones { get; set; } = new();
