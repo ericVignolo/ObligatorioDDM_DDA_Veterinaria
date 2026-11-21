@@ -78,7 +78,7 @@ public class TurnoService : ITurnoService
             var turno = NuevoTurno(cuentaId, animal, prestacion!, profesional, inicio);
             _repository.Agregar(turno);
             await _repository.GuardarAsync();
-            return new Resultado<TurnoReadDto> { Exito = true, Estado = 201, Valor = ADto(ConDatos(turno, animal, prestacion!, profesional), reglas, Ahora) };
+            return new Resultado<TurnoReadDto> { Exito = true, Estado = 201, Valor = ADto(ConDatos(await _repository.ObtenerAsync(turno.Id) ?? turno, animal, prestacion!, profesional), reglas, Ahora) };
         });
     }
 
@@ -308,7 +308,7 @@ public class TurnoService : ITurnoService
             }
 
             await _repository.GuardarAsync();
-            return new Resultado<TurnoReadDto> { Exito = true, Estado = 201, Valor = ADto(ConDatos(turno, animal, prestacion, profesional), reglas, Ahora) };
+            return new Resultado<TurnoReadDto> { Exito = true, Estado = 201, Valor = ADto(ConDatos(await _repository.ObtenerAsync(turno.Id) ?? turno, animal, prestacion, profesional), reglas, Ahora) };
         });
     }
 
@@ -510,7 +510,7 @@ public class TurnoService : ITurnoService
         };
     }
 
-    // Completa los datos de la respuesta después de guardar.
+    // Completa los datos de la respuesta después de guardar (el turno se vuelve a leer para traer el nombre del cliente).
     private static Turno ConDatos(Turno turno, Animal animal, Prestacion prestacion, Profesional profesional)
     {
         turno.Animal ??= animal;

@@ -53,6 +53,8 @@ builder.Services.AddScoped<IInventarioService, InventarioService>();
 builder.Services.AddScoped<IConsentimientoService, ConsentimientoService>();
 builder.Services.AddScoped<ICobroRepository, CobroRepository>();
 builder.Services.AddScoped<ICobroService, CobroService>();
+builder.Services.AddScoped<IAdministracionRepository, AdministracionRepository>();
+builder.Services.AddScoped<IAdministracionService, AdministracionService>();
 
 // Autenticación con token de acceso corto (RNF-SEG-03). La autorización se verifica en cada pedido (RNF-SEG-05).
 var jwt = builder.Configuration.GetSection("Jwt").Get<OpcionesJwt>() ?? new OpcionesJwt();
