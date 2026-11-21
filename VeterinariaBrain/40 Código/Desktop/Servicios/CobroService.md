@@ -44,3 +44,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[MiCuenta]]
 - [[Reservar]]
 - [[TurnoMostrador]]
+
+## En las otras aplicaciones
+- [[CobroService (API)]]

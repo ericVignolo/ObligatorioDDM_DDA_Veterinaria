@@ -36,3 +36,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[MovimientoStock]]
 - [[PrestacionService]]
 - [[RegistroClinico]]
+
+## En las otras aplicaciones
+- [[Consulta (API)]]

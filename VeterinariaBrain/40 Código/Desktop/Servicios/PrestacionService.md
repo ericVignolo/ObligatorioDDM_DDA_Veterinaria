@@ -41,3 +41,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Servicios]]
 - [[TurnoMostrador]]
 - [[Turnos]]
+
+## En las otras aplicaciones
+- [[PrestacionService (API)]]

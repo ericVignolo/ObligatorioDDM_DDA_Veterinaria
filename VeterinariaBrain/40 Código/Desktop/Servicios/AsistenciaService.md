@@ -40,3 +40,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AsistenciaDetalle]]
 - [[Asistencias]]
 - [[BitacoraService]]
+
+## En las otras aplicaciones
+- [[AsistenciaService (API)]]
