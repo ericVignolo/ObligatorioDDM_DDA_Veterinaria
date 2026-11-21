@@ -648,3 +648,43 @@ Content-Type: application/json
   "evolucionFinal": "Recuperada, sin vómitos en 24 h",
   "indicacionesDomicilio": "Dieta blanda 3 días y control en una semana"
 }
+
+### ---------- 16. Comunicaciones ----------
+### Bandeja de Ana
+
+GET {{api}}/comunicaciones
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/comunicaciones/preferencias
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Recibir las alertas sanitarias solo en la app (tipo 5)
+
+PUT {{api}}/comunicaciones/preferencias/5
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "canal": "Solo en la app"
+}
+
+### Procesar la cola (token de Recepción)
+
+POST {{api}}/recepcion/comunicaciones/cola
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/recepcion/comunicaciones?page=1
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Aviso de la clínica
+
+POST {{api}}/recepcion/comunicaciones/avisos
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "titulo": "Cerramos el 8 de diciembre",
+  "mensaje": "La clínica no atiende ese día. La guardia sigue disponible por teléfono."
+}

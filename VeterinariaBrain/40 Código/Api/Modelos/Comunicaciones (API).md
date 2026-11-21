@@ -22,8 +22,13 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[ComunicacionDtos (API)]]
+- [[ComunicacionRepository (API)]]
+- [[ComunicacionService (API)]]
 - [[ConfiguracionModulos (API)]]
+- [[EnvioCorreo (API)]]
 - [[ICarnetService (API)]]
+- [[IComunicacionService (API)]]
 - [[SaludRepository (API)]]
 
 ## En las otras aplicaciones

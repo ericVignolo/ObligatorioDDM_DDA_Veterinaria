@@ -205,8 +205,38 @@ Rama `diego/sesion-2026-11-21-internacion`, que sale de la de administración. P
   - van a box de grandes animales solo caballos y vacas;
   - las novedades se ven al consultar: el tiempo real (RF-CLI-09) llega con comunicaciones.
 
+## Módulo 7: Comunicaciones
+
+Rama `diego/sesion-2026-11-21-comunicaciones`, que sale de la de internación. PR #50. No cambia la base.
+
+- **Cliente:**
+  - bandeja con no leídas y marcar un mensaje como leído;
+  - preferencias por tipo (los tipos esenciales no se apagan).
+- **Recepción y Administración:**
+  - bandeja de salida con filtros;
+  - cola con 3 intentos por correo y después *Fallido*;
+  - reintento de un fallido y reenvío como copia nueva;
+  - envío de un comprobante, una sola vez;
+  - aviso de la clínica a todos los clientes.
+- **Administrador y Veterinario:** alerta sanitaria por especie.
+- **Envío:** `IEnvioComunicacion` con una versión de desarrollo que no manda nada. La cola también entrega lo que dejan pendiente el carnet y la consulta.
+- **Archivos:**
+  - `Services/IComunicacionService.cs` y `ComunicacionService.cs`;
+  - `Services/EnvioCorreo.cs` (`IEnvioComunicacion`);
+  - `Repositories/IComunicacionRepository.cs` y `ComunicacionRepository.cs`;
+  - `Controllers/ComunicacionesController.cs`, con tres controladores;
+  - `DTOs/ComunicacionDtos.cs`;
+  - `Program.cs`;
+  - sección 16 del `.http`.
+- **Pruebas:** `ApiComunicacionesTests`, 8 nuevas. CI en verde.
+- **Falta:**
+  - el correo real (SMTP o un proveedor);
+  - una tarea que procese la cola sola;
+  - el aviso en tiempo real (RF-CLI-09).
+
 ### Pendientes
 
-- [ ] Al final: mezclar los PR #39 a #49 en orden y ordenar las ramas.
-- [ ] Siguientes módulos: comunicaciones → asistencia; después, 2FA.
+- [ ] Al final: mezclar los PR #39 a #50 en orden y ordenar las ramas.
+- [ ] Siguiente módulo: asistencia; después, 2FA y el correo real.
+- [ ] Definir con Eric si la internación cobra (tarifa por día) y qué especies van a box de grandes animales.
 - [ ] Definir con Eric si la internación cobra (tarifa por día) y qué especies van a box de grandes animales.

@@ -11,6 +11,9 @@ generado: true
 
 Envío de los códigos de verificación y de recuperación (D-REG-02, D-REG-03).
 
-**Requisitos y decisiones:** D-REG-02, D-REG-03
+**Requisitos y decisiones:** D-REG-02, D-REG-03, RNF-CON-04, RNF-SEG-11
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
+
+## Usa
+- [[Comunicaciones (API)]]

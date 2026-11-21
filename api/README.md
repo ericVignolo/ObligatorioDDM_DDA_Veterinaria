@@ -103,6 +103,13 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `POST /api/v1/internaciones/{id}/alta` | Veterinario | Con evolución final e indicaciones (RN-25); libera el box |
 | `GET /api/v1/mis-internaciones` y `/{id}` | Cliente | Las de sus animales, con lo visible y el alta, sin el plan ni las notas internas |
 | `POST /api/v1/admin/boxes` y `PUT /{id}/servicio` | Administrador | Agregar un box; sacarlo de servicio si no está ocupado |
+| `GET /api/v1/comunicaciones` y `POST /{id}/leida` | Cliente | Bandeja propia, con la cantidad de no leídas |
+| `GET /api/v1/comunicaciones/preferencias` y `PUT /preferencias/{tipoId}` | Cliente | Canal por tipo (Correo, Solo en la app, No recibir); los esenciales no se apagan |
+| `GET /api/v1/recepcion/comunicaciones?estado=&tipoId=&texto=` | Recepción, Administrador | Bandeja de salida |
+| `POST /api/v1/recepcion/comunicaciones/cola` | Recepción, Administrador | Procesa los pendientes: hasta 3 intentos por correo y después Fallido |
+| `POST /api/v1/recepcion/comunicaciones/{id}/reintento` y `/{id}/reenvio` | Recepción, Administrador | Reintentar un Fallido; reenviar como copia nueva por correo |
+| `POST /api/v1/recepcion/comunicaciones/comprobantes/{pagoId}` y `/avisos` | Recepción, Administrador | Comprobante de un pago (una vez) y aviso de la clínica a todos los clientes |
+| `POST /api/v1/difusion/alerta-sanitaria` | Administrador, Veterinario | Alerta para los clientes con animales de una especie que la activaron |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
@@ -179,6 +186,12 @@ Decisiones del esquema:
 - Cobrar y anular bloquean la fila del cargo y el numerador (`Numeradores`, claves `Comprobante` y `NotaCredito`): dos cobros a la vez no pasan el saldo y los números no se repiten ni saltean.
 - **Seña (RN-35):** el cargo de seña se genera la primera vez que se listan los cargos del cliente o de Recepción, una sola vez por turno. Es el 30 % de la tarifa vigente en la fecha del turno (o del precio desde). Los parámetros `cobro.porcentaje_sena` y `cobro.limite_deuda` (3000 por defecto) los cambia el Administrador desde `PUT /api/v1/admin/parametros/{clave}`, sin migración.
 - Un turno *Pendiente de seña* conserva el horario. Todavía no se cancela solo si no se paga.
+
+## Comunicaciones
+
+- Mismas reglas y mensajes que `ComunicacionesService` de Blazor.
+- **Envío:** `IEnvioComunicacion`. La versión de desarrollo (`EnvioComunicacionDesarrollo`) no manda nada y da el envío por hecho, para probar la cola. Para el correo real se cambia esa clase en `Program.cs`.
+- **Cola:** lo que va solo a la app queda entregado en la bandeja. `POST recepcion/comunicaciones/cola` también entrega los avisos de refuerzo y los resúmenes clínicos que dejan pendientes los otros módulos. Todavía no hay una tarea que procese la cola sola.
 
 ## Crear la base en tu computadora
 

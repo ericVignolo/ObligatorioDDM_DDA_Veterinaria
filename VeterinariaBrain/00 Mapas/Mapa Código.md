@@ -186,13 +186,14 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (39)
+### Servicios (41)
 - [[AdministracionService (API)]]
 - [[AnimalService (API)]]
 - [[CalculoAgenda (API)]]
 - [[CarnetService (API)]]
 - [[ClinicaService (API)]]
 - [[CobroService (API)]]
+- [[ComunicacionService (API)]]
 - [[ConsentimientoService (API)]]
 - [[ConsultaService (API)]]
 - [[CuentaService (API)]]
@@ -202,6 +203,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ICarnetService (API)]]
 - [[IClinicaService (API)]]
 - [[ICobroService (API)]]
+- [[IComunicacionService (API)]]
 - [[IConsentimientoService (API)]]
 - [[IConsultaService (API)]]
 - [[ICuentaService (API)]]
@@ -245,12 +247,13 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Controladores (20)
+### Controladores (21)
 - [[AdminSaludController (API)]] · `api/v1/admin`
 - [[AdministracionController (API)]] · `api/v1/admin`
 - [[AnimalesController (API)]] · `api/v1/animales`
 - [[ClinicaController (API)]] · `api/v1/clinica`
 - [[CobrosController (API)]] · `api/v1/cobros`
+- [[ComunicacionesController (API)]] · `api/v1/comunicaciones`
 - [[CuentasController (API)]] · `api/v1/cuentas`
 - [[EspeciesController (API)]] · `api/v1/especies`
 - [[InternacionesController (API)]] · `api/v1/internaciones`
@@ -267,17 +270,19 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[UsuarioActual (API)]]
 - [[VeterinarioController (API)]] · `api/v1/veterinario`
 
-### Repositorios (22)
+### Repositorios (24)
 - [[AdministracionRepository (API)]]
 - [[AnimalRepository (API)]]
 - [[ClinicaRepository (API)]]
 - [[CobroRepository (API)]]
+- [[ComunicacionRepository (API)]]
 - [[ConsultaRepository (API)]]
 - [[CuentaRepository (API)]]
 - [[IAdministracionRepository (API)]]
 - [[IAnimalRepository (API)]]
 - [[IClinicaRepository (API)]]
 - [[ICobroRepository (API)]]
+- [[IComunicacionRepository (API)]]
 - [[IConsultaRepository (API)]]
 - [[ICuentaRepository (API)]]
 - [[IInternacionRepository (API)]]
@@ -291,11 +296,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SaludRepository (API)]]
 - [[TurnoRepository (API)]]
 
-### DTOs (12)
+### DTOs (13)
 - [[AdminDtos (API)]]
 - [[AnimalDtos (API)]]
 - [[ClinicaReadDto (API)]]
 - [[CobroDtos (API)]]
+- [[ComunicacionDtos (API)]]
 - [[ConsultaDtos (API)]]
 - [[CuentaDtos (API)]]
 - [[InternacionDtos (API)]]
