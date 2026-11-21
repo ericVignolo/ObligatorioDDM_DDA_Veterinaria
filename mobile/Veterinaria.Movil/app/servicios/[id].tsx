@@ -1,38 +1,81 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ScrollView, Text } from 'react-native';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { View } from 'react-native';
 import { Boton } from '../../components/Boton';
+import { Fila } from '../../components/Fila';
+import { Insignia } from '../../components/Insignia';
+import { Pantalla } from '../../components/Pantalla';
+import { Tarjeta } from '../../components/Tarjeta';
+import { Nota, Parrafo, Subtitulo, Titulo } from '../../components/Textos';
+import { Vacio } from '../../components/Vacio';
+import { useAviso } from '../../context/AvisoContext';
+import { useSesion } from '../../context/SesionContext';
+import { llamar, obtenerClinica } from '../../services/clinicaService';
 import { formatearPrecio, obtenerPorId } from '../../services/prestacionService';
+import { obtenerPublicos } from '../../services/profesionalService';
 
 export default function DetalleServicio() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const avisar = useAviso();
+  const { usuario } = useSesion();
   const prestacion = obtenerPorId(Number(id));
 
   if (!prestacion) {
     return (
-      <ScrollView className="flex-1 bg-fondo dark:bg-fondo-oscuro" contentContainerClassName="gap-4 p-5">
-        <Text className="font-nunito-negrita text-xl text-texto dark:text-texto-oscuro">Servicio no disponible</Text>
-        <Boton texto="Volver a servicios" variante="secundario" onPress={() => router.replace('/servicios')} />
-      </ScrollView>
+      <Pantalla>
+        <Vacio icono="help-circle-outline" titulo="Servicio no disponible" accion={{ texto: 'Volver a servicios', onPress: () => router.replace('/servicios') }} />
+      </Pantalla>
     );
   }
 
+  const quienes = obtenerPublicos().filter((p) => p.prestacionIds.includes(prestacion.id));
+
+  const reservar = () => {
+    if (!usuario) {
+      router.push({ pathname: '/ingresar', params: { servicio: String(prestacion.id) } });
+      return;
+    }
+    avisar('La reserva en 4 pasos se construye en B-008.', 'info');
+  };
+
   return (
-    <ScrollView className="flex-1 bg-fondo dark:bg-fondo-oscuro" contentContainerClassName="gap-3 p-5">
-      <Text className="font-nunito-negrita text-2xl text-texto dark:text-texto-oscuro">{prestacion.nombre}</Text>
-      <Text className="font-nunito text-base text-texto-suave dark:text-texto-suave-oscuro">{prestacion.descripcion}</Text>
-      <Text className="font-nunito-semi text-lg text-primario dark:text-primario-oscuro">Desde {formatearPrecio(prestacion.precioDesde)}</Text>
-      {prestacion.duracionMinutos ? (
-        <Text className="font-nunito text-sm text-texto-suave dark:text-texto-suave-oscuro">Duración: {prestacion.duracionMinutos} min</Text>
-      ) : null}
+    <Pantalla>
+      <Stack.Screen options={{ title: prestacion.nombre }} />
+      <Titulo>{prestacion.nombre}</Titulo>
+      <Parrafo suave>{prestacion.descripcion}</Parrafo>
+      <View className="flex-row flex-wrap gap-2">
+        <Insignia texto={`Desde ${formatearPrecio(prestacion.precioDesde)}`} tipo="exito" />
+        {prestacion.duracionMinutos ? <Insignia texto={`${prestacion.duracionMinutos} min`} /> : null}
+        <Insignia texto={prestacion.reservableEnLinea ? 'Reserva en línea' : 'Se coordina con la clínica'} tipo="info" />
+      </View>
+
       {prestacion.requiereConsentimiento ? (
-        <Text className="rounded-boton bg-aviso-suave p-3 font-nunito text-sm text-aviso dark:bg-aviso-suave-oscuro dark:text-aviso-oscuro">
-          Requiere firmar el consentimiento informado antes del día del turno.
-        </Text>
+        <View className="rounded-boton bg-aviso-suave p-3 dark:bg-aviso-suave-oscuro">
+          <Parrafo>Requiere firmar el consentimiento informado antes del día del turno.</Parrafo>
+        </View>
       ) : null}
+
       {prestacion.reservableEnLinea ? (
-        <Boton texto="Reservar turno" onPress={() => router.push({ pathname: '/acceso', params: { servicio: String(prestacion.id) } })} />
+        <Boton texto="Reservar turno" icono="calendar-outline" onPress={reservar} />
+      ) : (
+        <Boton texto="Consultar o llamar" icono="call-outline" variante="acento" onPress={() => llamar(obtenerClinica().telefono)} />
+      )}
+
+      {quienes.length > 0 ? (
+        <Tarjeta>
+          <Subtitulo>Quiénes lo realizan</Subtitulo>
+          {quienes.map((p) => (
+            <Fila
+              key={p.id}
+              icono="person-outline"
+              texto={p.nombre}
+              detalle={p.especialidad}
+              onPress={() => router.push({ pathname: '/profesionales/[id]', params: { id: String(p.id) } })}
+            />
+          ))}
+        </Tarjeta>
       ) : null}
-    </ScrollView>
+      <Nota>El precio es «desde»: el valor final depende de lo que se haga en la atención.</Nota>
+    </Pantalla>
   );
 }

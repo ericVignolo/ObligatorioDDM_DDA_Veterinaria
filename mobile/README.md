@@ -19,22 +19,53 @@ npm install          # solo la primera vez o cuando cambie package.json
 npx expo start       # abrir con Expo Go (escanear el QR) o tocar «a» para el emulador de Android
 ```
 
-Si Expo Go no conecta desde el celular: `npx expo start --tunnel`. Para revisar los tipos: `npm run typecheck`.
+Si Expo Go no conecta desde el celular: `npx expo start --tunnel`. Para revisar los tipos: `npm run typecheck`. Para verla en el navegador: `npm run web`.
 
 ## Estructura (estilo del curso)
 
 ```text
 mobile/Veterinaria.Movil/
-├── app/                 pantallas (Expo Router): _layout.tsx, index.tsx, servicios/, acceso.tsx
-├── components/          piezas reutilizables (Boton, TarjetaPrestacion)
-├── data/                datos ficticios (los mismos que los Services de Blazor)
-├── services/            funciones que leen los datos; en la sección C pasan a llamar a la API
-├── types/               tipos de TypeScript (mismos nombres que Models/ de Blazor)
-├── hooks/  context/     hooks propios y contexto (sesión, tema), por ahora vacías
-├── tema/                paleta de VITALIA (paleta.js) y useColor() para colores en código
-├── global.css  tailwind.config.js  babel.config.js  metro.config.js   configuración de NativeWind
-└── app.json             nombre VITALIA, esquema vitalia://, modo claro y oscuro automático
+├── app/                       pantallas (Expo Router)
+│   ├── _layout.tsx            proveedores (sesión, avisos), fuentes, tema y pila de pantallas
+│   ├── (tabs)/                pestañas por rol: index, servicios, urgencias, ingresar,
+│   │                          animales, turnos, agenda, asistencias, avisos, perfil
+│   ├── servicios/[id].tsx     detalle de servicio
+│   ├── profesionales/         lista y detalle con horarios
+│   ├── clinica.tsx            datos de la clínica
+│   └── legales/[codigo].tsx   Privacidad y Términos
+├── components/                Boton, Campo, Insignia, Tarjeta, Fila, Textos, Icono, Esqueleto, Vacio,
+│                              Pantalla, Proximamente, TarjetaPrestacion
+├── context/                   SesionContext (sesión simulada) y AvisoContext (avisos flotantes)
+├── data/                      datos ficticios (los mismos que los Services de Blazor)
+├── services/                  funciones que leen los datos; en la sección C pasan a llamar a la API
+├── types/                     tipos de TypeScript (mismos nombres que Models/ de Blazor)
+├── hooks/                     hooks propios (por ahora vacía)
+└── tema/                      paleta de VITALIA (paleta.js) y useColor() para colores en código
 ```
+
+## Navegación por rol
+
+El mapa completo está en [`docs/analisis/MAPA_MOVIL.md`](../docs/analisis/MAPA_MOVIL.md).
+
+| Rol | Pestañas |
+|---|---|
+| Visitante | Inicio · Servicios · Urgencias · Ingresar |
+| Cliente | Inicio · Animales · Turnos · Avisos · Perfil |
+| Veterinario | Agenda · Asistencias · Avisos · Perfil |
+
+Recepción y Administrador trabajan en escritorio. Mientras no esté el formulario de ingreso (B-006), la pestaña **Ingresar** tiene botones de demostración: Ana Rodríguez (Cliente), Dra. Lucía Ferreira (Veterinario) y Laura Benítez (Recepción, que muestra el aviso de escritorio). La sesión vive en memoria: al recargar la app se pierde.
+
+## Componentes compartidos
+
+| Componente | Para qué |
+|---|---|
+| `Boton` | Variantes primario, secundario, acento y peligro; con icono, deshabilitado y cargando (alto mínimo 48) |
+| `Campo` | Campo de formulario con etiqueta, ayuda, error y «(opcional)» |
+| `Insignia` | Estado con texto: éxito, aviso, peligro, info, acento y neutro |
+| `Tarjeta`, `Fila` | Superficie con borde; fila tocable con icono y flecha |
+| `Titulo`, `Subtitulo`, `Parrafo`, `Nota` | Escala tipográfica con Nunito |
+| `Esqueleto`, `Vacio`, `Proximamente` | Carga, sin datos y pantallas de tareas posteriores |
+| `useAviso()` | Aviso flotante de 4 segundos: `avisar('Guardado', 'exito')` |
 
 ## Colores y tema
 

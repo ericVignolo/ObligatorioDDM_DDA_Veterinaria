@@ -2,7 +2,7 @@ const { colores } = require('./tema/paleta');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './context/**/*.{ts,tsx}'],
   presets: [require('nativewind/preset')],
   // 'class' permite seguir al sistema y también cambiar el tema a mano (useColorScheme de nativewind).
   darkMode: 'class',

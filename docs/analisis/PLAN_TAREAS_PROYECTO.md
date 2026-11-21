@@ -102,11 +102,11 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 
 **Rama de destino:** `desktop-mobile`, acumulada desde la entrega aprobada de A. React Native con TypeScript y Expo según compatibilidad confirmada. Figma precede la implementación visual definitiva. Sin API, usar adaptadores y datos sintéticos; no incorporar modo offline si no se aprueba como alcance.
 
-- [ ] **B-001 — Cerrar mapa móvil por rol.** Definir navegación Cliente y Veterinario, acceso público y reanudación de acciones; determinar qué flujos de Recepción siguen en escritorio.
+- [x] **B-001 — Cerrar mapa móvil por rol.** Definir navegación Cliente y Veterinario, acceso público y reanudación de acciones; determinar qué flujos de Recepción siguen en escritorio.
 - [ ] **B-002 — Completar flujos y wireframes en Figma.** Cubrir estados normales, protegidos, errores, alertas, carga/vacío y consentimiento antes de alta fidelidad.
 - [ ] **B-003 — Construir sistema visual móvil.** Aplicar dirección acordada, tipografía, componentes, accesibilidad, estados y responsive táctil; revisar en Figma con el equipo.
-- [ ] **B-004 — Preparar base React Native/Expo.** Navegación, ambientes, componentes compartidos, manejo de errores y configuración de adaptadores demostrativos.
-- [ ] **B-005 — Implementar área pública y servicios móviles.** Inicio, catálogo, información de clínica/profesionales, políticas y contacto.
+- [x] **B-004 — Preparar base React Native/Expo.** Navegación, ambientes, componentes compartidos, manejo de errores y configuración de adaptadores demostrativos.
+- [x] **B-005 — Implementar área pública y servicios móviles.** Inicio, catálogo, información de clínica/profesionales, políticas y contacto.
 - [ ] **B-006 — Implementar registro, sesión y perfil móvil.** Formularios y estados de verificación/recuperación según H0; tokens y autorización reales quedan para C.
 - [ ] **B-007 — Implementar animales del Cliente.** Listado, fichas, altas, edición, identificadores permitidos e historia autorizada en modo de presentación.
 - [ ] **B-008 — Implementar reserva y turnos.** Consulta de horarios ficticios, flujo de cuatro pasos, próximos turnos, historial, cancelación/reprogramación y estados.
