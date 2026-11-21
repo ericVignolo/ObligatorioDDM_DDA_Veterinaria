@@ -43,6 +43,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEnvioCorreo, EnvioCorreoDesarrollo>();
 builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
+builder.Services.AddScoped<ITurnoRepository, TurnoRepository>();
+builder.Services.AddScoped<ITurnoService, TurnoService>();
 
 // Autenticación con token de acceso corto (RNF-SEG-03). La autorización se verifica en cada pedido (RNF-SEG-05).
 var jwt = builder.Configuration.GetSection("Jwt").Get<OpcionesJwt>() ?? new OpcionesJwt();
@@ -83,6 +85,7 @@ builder.Services.AddOpenApi();
 
 // Errores no controlados en formato Problem Details, sin detalles internos (D-CAT-03).
 builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ManejadorConcurrencia>();
 
 var app = builder.Build();
 
