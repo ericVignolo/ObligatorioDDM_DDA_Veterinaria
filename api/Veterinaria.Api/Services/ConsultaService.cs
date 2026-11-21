@@ -395,6 +395,15 @@ public class ConsultaService : IConsultaService
                     Monto = ReglasClinicas.RedondearPesos(tarifa.Precio),
                     Fecha = ahora
                 };
+
+                // RN-35: lo pagado de seña se descuenta del cargo final.
+                var sena = await _repository.SenaPagadaAsync(turno.Id);
+                if (sena > 0)
+                {
+                    cargo.Monto = Math.Max(0, cargo.Monto - sena);
+                    cargo.Descripcion += $" (descontada la seña de $ {sena:N0})";
+                }
+
                 _repository.Agregar(cargo);
             }
 

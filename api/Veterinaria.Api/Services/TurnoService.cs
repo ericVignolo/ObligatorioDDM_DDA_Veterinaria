@@ -504,8 +504,8 @@ public class TurnoService : ITurnoService
             ProfesionalId = profesional.Id,
             Inicio = inicio,
             Fin = inicio.AddMinutes(prestacion.DuracionMinutos),
-            // La seña de las cirugías (RN-35) llega con el módulo de cobro (Diego, 2026-11-21): hasta entonces, Confirmado.
-            Estado = "Confirmado",
+            // RN-35: las cirugías (los servicios que piden consentimiento) esperan la seña, que se cobra en Recepción.
+            Estado = prestacion.RequiereConsentimiento ? CalculoAgenda.PendienteSena : "Confirmado",
             FechaCreacion = Ahora
         };
     }

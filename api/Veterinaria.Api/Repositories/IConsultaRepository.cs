@@ -44,6 +44,9 @@ public interface IConsultaRepository
     Task<TarifaPrestacion?> ObtenerTarifaVigenteAsync(int prestacionId, DateTime fecha);
     Task<bool> ExisteCargoDeConsultaAsync(int consultaId);
 
+    // RN-35: lo pagado de la seña del turno (sin comprobantes anulados), para descontarlo del cargo final.
+    Task<decimal> SenaPagadaAsync(int turnoId);
+
     // P-RC-07: el cliente que reservó si sigue siendo responsable; si no, el titular vigente.
     Task<int?> ObtenerResponsableEconomicoAsync(int animalId, int clientePreferido);
 

@@ -72,6 +72,8 @@ public class ApiConsultaTests
         public Task<TarifaPrestacion?> ObtenerTarifaVigenteAsync(int prestacionId, DateTime fecha)
             => Task.FromResult(Tarifas.Where(t => t.PrestacionId == prestacionId && t.VigenteDesde <= fecha.Date).OrderByDescending(t => t.VigenteDesde).FirstOrDefault());
         public Task<bool> ExisteCargoDeConsultaAsync(int consultaId) => Task.FromResult(Cargos.Any(c => c.ConsultaId == consultaId || c.Consulta?.Id == consultaId));
+        public decimal SenaPagada { get; set; }
+        public Task<decimal> SenaPagadaAsync(int turnoId) => Task.FromResult(SenaPagada);
         public Task<int?> ObtenerResponsableEconomicoAsync(int animalId, int clientePreferido)
         {
             var vigentes = Animales.First(a => a.Id == animalId).Responsables.Where(r => r.Hasta == null).Select(r => r.CuentaId).ToList();
@@ -389,6 +391,21 @@ public class ApiConsultaTests
         Assert.Equal("Pendiente", resumen.Estado);
         Assert.Equal("ana@correo.uy", resumen.Destino);
         Assert.Equal($"consulta-{c.Id}", resumen.Clave);
+    }
+
+    [Fact]
+    public async Task Firma_descuenta_la_sena_pagada_del_cargo()
+    {
+        var e = new Escenario();
+        e.Repo.SenaPagada = 360;
+        var c = await e.IniciarAsync();
+
+        var r = await e.Servicio.FirmarAsync(Ferreira, c.Id, Escenario.Firma(c.Version));
+
+        Assert.True(r.Exito);
+        var cargo = Assert.Single(e.Repo.Cargos);
+        Assert.Equal(840m, cargo.Monto);
+        Assert.Contains("descontada la seña", cargo.Descripcion);
     }
 
     [Fact]

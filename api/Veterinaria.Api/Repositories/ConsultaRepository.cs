@@ -152,6 +152,13 @@ public class ConsultaRepository : IConsultaRepository
         return await _context.Cargos.AnyAsync(c => c.ConsultaId == consultaId);
     }
 
+    public async Task<decimal> SenaPagadaAsync(int turnoId)
+    {
+        return await _context.Pagos
+            .Where(p => p.Cargo!.EsSena && p.Cargo.TurnoId == turnoId && !_context.NotasCredito.Any(n => n.PagoId == p.Id))
+            .SumAsync(p => (decimal?)p.Monto) ?? 0;
+    }
+
     public async Task<int?> ObtenerResponsableEconomicoAsync(int animalId, int clientePreferido)
     {
         var vigentes = await _context.Responsabilidades
