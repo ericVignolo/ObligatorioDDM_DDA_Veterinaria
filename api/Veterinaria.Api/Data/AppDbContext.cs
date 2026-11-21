@@ -4,8 +4,9 @@ using Veterinaria.Api.Models;
 namespace Veterinaria.Api.Data;
 
 // Base de datos "vitalia" en MySQL 8.4 (DT-BD-01, DT-BD-02).
-// Primera versión: identidad, animales, catálogo, profesionales con agenda, recursos y turnos.
-// Consulta, historia clínica, stock, cargos, internación y asistencia se agregan con nuevas migraciones.
+// Migración Inicial (2026-11-10): identidad, animales, catálogo, profesionales con agenda, recursos y turnos.
+// Migración ModulosClinicos (2026-11-19): consulta, vacunas, inventario, cobro, internación, asistencia y
+// comunicaciones, configurados en ConfiguracionModulos.cs.
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -17,6 +18,7 @@ public class AppDbContext : DbContext
     public DbSet<Rol> Roles { get; set; }
     public DbSet<CuentaRol> CuentaRoles { get; set; }
     public DbSet<CodigoCuenta> CodigosCuenta { get; set; }
+    public DbSet<SesionRefresco> SesionesRefresco { get; set; }
     public DbSet<DocumentoLegal> DocumentosLegales { get; set; }
     public DbSet<AceptacionLegal> AceptacionesLegales { get; set; }
 
@@ -41,6 +43,47 @@ public class AppDbContext : DbContext
     public DbSet<Parametro> Parametros { get; set; }
     public DbSet<DiaNoLaborable> DiasNoLaborables { get; set; }
     public DbSet<Auditoria> Auditorias { get; set; }
+    public DbSet<Numerador> Numeradores { get; set; }
+
+    // Consulta e historia clínica
+    public DbSet<Consulta> Consultas { get; set; }
+    public DbSet<Enmienda> Enmiendas { get; set; }
+    public DbSet<LecturaHistoria> LecturasHistoria { get; set; }
+    public DbSet<DocumentoConsentimiento> DocumentosConsentimiento { get; set; }
+    public DbSet<Consentimiento> Consentimientos { get; set; }
+
+    // Vacunas e inventario
+    public DbSet<Articulo> Articulos { get; set; }
+    public DbSet<LoteProducto> Lotes { get; set; }
+    public DbSet<MovimientoStock> MovimientosStock { get; set; }
+    public DbSet<ReservaStock> ReservasStock { get; set; }
+    public DbSet<AlertaStock> AlertasStock { get; set; }
+    public DbSet<ProductoSanitario> ProductosSanitarios { get; set; }
+    public DbSet<ProductoSanitarioEspecie> ProductoSanitarioEspecies { get; set; }
+    public DbSet<AplicacionSanitaria> AplicacionesSanitarias { get; set; }
+
+    // Cobro
+    public DbSet<TarifaPrestacion> TarifasPrestacion { get; set; }
+    public DbSet<Cargo> Cargos { get; set; }
+    public DbSet<Pago> Pagos { get; set; }
+    public DbSet<NotaCredito> NotasCredito { get; set; }
+
+    // Internación
+    public DbSet<Box> Boxes { get; set; }
+    public DbSet<Internacion> Internaciones { get; set; }
+    public DbSet<NovedadInternacion> NovedadesInternacion { get; set; }
+
+    // Asistencia a domicilio
+    public DbSet<SolicitudAsistencia> SolicitudesAsistencia { get; set; }
+    public DbSet<OfertaAsistencia> OfertasAsistencia { get; set; }
+    public DbSet<EventoAsistencia> EventosAsistencia { get; set; }
+
+    // Comunicaciones y derechos del titular
+    public DbSet<TipoComunicacion> TiposComunicacion { get; set; }
+    public DbSet<PreferenciaComunicacion> PreferenciasComunicacion { get; set; }
+    public DbSet<Comunicacion> Comunicaciones { get; set; }
+    public DbSet<SolicitudDerecho> SolicitudesDerecho { get; set; }
+    public DbSet<PoliticaConservacion> PoliticasConservacion { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,6 +91,8 @@ public class AppDbContext : DbContext
 
         ConfigurarTablas(modelBuilder);
         CargarSemilla(modelBuilder);
+        ConfiguracionModulos.Configurar(modelBuilder);
+        ConfiguracionModulos.CargarSemilla(modelBuilder);
 
         // Nada se borra en cascada: las bajas son lógicas y la historia se conserva (RN-14).
         foreach (var relacion in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
@@ -69,6 +114,10 @@ public class AppDbContext : DbContext
             .HasOne(cr => cr.Cuenta).WithMany(c => c.Roles).HasForeignKey(cr => cr.CuentaId);
 
         modelBuilder.Entity<CodigoCuenta>().HasIndex(c => new { c.CuentaId, c.Tipo, c.FechaCreacion });
+
+        // Migración Sesiones (2026-11-19).
+        modelBuilder.Entity<SesionRefresco>().HasIndex(s => s.HashToken).IsUnique();
+        modelBuilder.Entity<SesionRefresco>().HasIndex(s => new { s.CuentaId, s.RevocadaEn });
 
         modelBuilder.Entity<DocumentoLegal>().HasIndex(d => new { d.Codigo, d.Version }).IsUnique();
         modelBuilder.Entity<DocumentoLegal>().Property(d => d.VigenteDesde).HasColumnType("date");
@@ -93,6 +142,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Prestacion>().Property(p => p.PrecioDesde).HasPrecision(12, 2);
 
         modelBuilder.Entity<Profesional>().HasIndex(p => p.CuentaId).IsUnique();
+        modelBuilder.Entity<Profesional>().Property(p => p.MatriculaVigenteHasta).HasColumnType("date");
 
         modelBuilder.Entity<ProfesionalEspecie>().HasKey(pe => new { pe.ProfesionalId, pe.EspecieId });
         modelBuilder.Entity<ProfesionalEspecie>()
@@ -134,7 +184,7 @@ public class AppDbContext : DbContext
     }
 
     // Semilla con HasData, igual que en el curso. Mismos datos ficticios que la sección A (Blazor).
-    // No se cargan cuentas: necesitan contraseña con hash y se crean desde la API.
+    // Las cuentas del personal de demostración se cargan en ConfiguracionModulos (con hash de contraseña).
     private static void CargarSemilla(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Rol>().HasData(
@@ -168,12 +218,13 @@ public class AppDbContext : DbContext
             new Prestacion { Id = 4, Nombre = "Revisión de ovinos y bovinos", Descripcion = "Revisión individual o por grupo. Se coordina con la clínica.", PrecioDesde = 1500, ReservableEnLinea = false, DuracionMinutos = 0, Publicado = true },
             new Prestacion { Id = 5, Nombre = "Rehabilitación equina", Descripcion = "Fisioterapia para caballos. Requiere evaluación previa.", PrecioDesde = 2500, ReservableEnLinea = false, DuracionMinutos = 0, Publicado = true },
             new Prestacion { Id = 6, Nombre = "Baño y estética", Descripcion = "Baño, secado, corte y cuidado estético de perros y gatos.", PrecioDesde = 900, ReservableEnLinea = true, DuracionMinutos = 60, Publicado = true },
-            new Prestacion { Id = 7, Nombre = "Guardería", Descripcion = "No publicado: no debe aparecer.", PrecioDesde = 700, ReservableEnLinea = false, DuracionMinutos = 0, Publicado = false });
+            new Prestacion { Id = 7, Nombre = "Guardería", Descripcion = "No publicado: no debe aparecer.", PrecioDesde = 700, ReservableEnLinea = false, DuracionMinutos = 0, Publicado = false },
+            new Prestacion { Id = 8, Nombre = "Castración", Descripcion = "Cirugía programada con anestesia general. Requiere firmar el consentimiento informado antes del día del turno.", PrecioDesde = 4500, ReservableEnLinea = true, DuracionMinutos = 90, Publicado = true, RequiereConsentimiento = true });
 
         modelBuilder.Entity<Profesional>().HasData(
-            new Profesional { Id = 1, Nombre = "Dra. Lucía Ferreira", Especialidad = "Clínica de pequeños animales", Descripcion = "Consultas generales, vacunación y controles de perros, gatos y otros animales de compañía.", Publicado = true, Activo = true },
-            new Profesional { Id = 2, Nombre = "Dr. Martín Silveira", Especialidad = "Grandes animales", Descripcion = "Atención de bovinos, ovinos, caprinos y porcinos, revisiones de rodeo y visitas a campo.", Publicado = true, Activo = true },
-            new Profesional { Id = 3, Nombre = "Dra. Valentina Acosta", Especialidad = "Equinos", Descripcion = "Clínica y rehabilitación de caballos. La rehabilitación requiere evaluación previa.", Publicado = true, Activo = true },
+            new Profesional { Id = 1, CuentaId = 2, Matricula = "VET-4521", MatriculaVigenteHasta = new DateTime(2027, 11, 1), Nombre = "Dra. Lucía Ferreira", Especialidad = "Clínica de pequeños animales", Descripcion = "Consultas generales, vacunación y controles de perros, gatos y otros animales de compañía.", Publicado = true, Activo = true },
+            new Profesional { Id = 2, CuentaId = 3, Matricula = "VET-3378", MatriculaVigenteHasta = new DateTime(2027, 11, 1), Nombre = "Dr. Martín Silveira", Especialidad = "Grandes animales", Descripcion = "Atención de bovinos, ovinos, caprinos y porcinos, revisiones de rodeo y visitas a campo.", Publicado = true, Activo = true },
+            new Profesional { Id = 3, CuentaId = 4, Matricula = "VET-5102", MatriculaVigenteHasta = new DateTime(2027, 11, 1), Nombre = "Dra. Valentina Acosta", Especialidad = "Equinos", Descripcion = "Clínica y rehabilitación de caballos. La rehabilitación requiere evaluación previa.", Publicado = true, Activo = true },
             new Profesional { Id = 4, Nombre = "Dr. Andrés Pereira", Especialidad = "Clínica general", Descripcion = "No publicado: no debe aparecer.", Publicado = false, Activo = true },
             new Profesional { Id = 5, Nombre = "Sofía Méndez", Especialidad = "Baño y estética", Descripcion = "Baño, corte y cuidado estético de perros y gatos. No realiza atención clínica.", Publicado = true, Activo = true });
 
@@ -188,7 +239,7 @@ public class AppDbContext : DbContext
             Esp(5, 1), Esp(5, 2));
 
         modelBuilder.Entity<ProfesionalPrestacion>().HasData(
-            Pre(1, 1), Pre(1, 2), Pre(1, 3),
+            Pre(1, 1), Pre(1, 2), Pre(1, 3), Pre(1, 8),
             Pre(2, 1), Pre(2, 2), Pre(2, 3),
             Pre(3, 1),
             Pre(5, 6));

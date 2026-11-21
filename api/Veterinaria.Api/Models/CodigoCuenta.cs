@@ -11,7 +11,7 @@ public class CodigoCuenta
     public int CuentaId { get; set; }
     public Cuenta? Cuenta { get; set; }
 
-    // "Verificacion" o "Recuperacion".
+    // "Verificacion", "Recuperacion" o "CambioCorreo".
     [MaxLength(20)] public string Tipo { get; set; } = "";
 
     // Solo el hash, nunca el código (D-REG-02).

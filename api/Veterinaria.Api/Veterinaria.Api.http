@@ -1,0 +1,650 @@
+# Pedidos de prueba de la API. En Visual Studio: abrir este archivo y tocar «Enviar solicitud»
+# sobre cada pedido, con la API corriendo (F5, perfil https). Las respuestas salen a la derecha.
+
+@api = https://localhost:7191/api/v1
+
+### ---------- Públicos ----------
+
+GET {{api}}/servicios
+
+###
+GET {{api}}/profesionales/1
+
+###
+GET {{api}}/clinica
+
+### ---------- 1. Registrarse ----------
+# En Development la respuesta trae "codigoDesarrollo" (todavía no se envían correos).
+
+POST {{api}}/cuentas
+Content-Type: application/json
+
+{
+  "nombre": "Ana",
+  "apellido": "Pérez",
+  "correo": "ana@correo.uy",
+  "telefono": "099 123 456",
+  "tipoDocumento": "CI",
+  "numeroDocumento": "1.234.567-2",
+  "calle": "Rambla",
+  "numeroPuerta": "100",
+  "apartamento": "",
+  "localidad": "Nueva Palmira",
+  "departamento": "Colonia",
+  "referencias": "",
+  "contrasena": "Secreta123",
+  "aceptaTerminos": true,
+  "aceptaPrivacidad": true
+}
+
+### ---------- 2. Verificar (poner el código que devolvió el registro) ----------
+
+POST {{api}}/cuentas/verificacion
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy",
+  "codigo": "473775"
+}
+
+### Pedir otro código
+
+POST {{api}}/cuentas/verificacion/reenvio
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy"
+}
+
+### ---------- 3. Ingresar ----------
+# Guarda los tokens de la respuesta para los pedidos de abajo.
+
+# @name ingreso
+POST {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy",
+  "contrasena": "Secreta123"
+}
+
+### Personal de la semilla (contraseña Vitalia2026!): recepcion@, ferreira@, silveira@, acosta@ o admin@vitalia.uy
+
+# @name ingresoPersonal
+POST {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "correo": "admin@vitalia.uy",
+  "contrasena": "Vitalia2026!"
+}
+
+### ---------- 4. Mis datos (necesita el token) ----------
+
+GET {{api}}/cuentas/yo
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Sin token → 401
+
+GET {{api}}/cuentas/yo
+
+### ---------- 5. Renovar y cerrar la sesión ----------
+
+POST {{api}}/sesiones/refresco
+Content-Type: application/json
+
+{
+  "tokenRefresco": "{{ingreso.response.body.$.tokenRefresco}}"
+}
+
+###
+DELETE {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "tokenRefresco": "{{ingreso.response.body.$.tokenRefresco}}"
+}
+
+### ---------- 6. Recuperar la contraseña ----------
+
+POST {{api}}/cuentas/recuperacion
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy"
+}
+
+### Poner el código que devolvió el pedido anterior
+
+POST {{api}}/cuentas/recuperacion/confirmar
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy",
+  "codigo": "000000",
+  "contrasena": "NuevaClave456"
+}
+
+### ---------- 7. Animales (necesitan el token de un cliente: mandá antes el «ingreso» de Ana) ----------
+
+GET {{api}}/especies
+
+###
+# @name altaAnimal
+POST {{api}}/animales
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "nombre": "Luna",
+  "especieId": 1,
+  "raza": "Mestiza",
+  "sexo": "Hembra",
+  "fechaNacimiento": "2021-03-10",
+  "microchip": "858000012345678",
+  "caravana": "",
+  "esGrupo": false,
+  "cantidadGrupo": null,
+  "senasParticulares": "Mancha blanca en el pecho",
+  "antecedentes": ""
+}
+
+### Un grupo de animales de campo (especie 8 = Oveja)
+
+POST {{api}}/animales
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "nombre": "Majada del fondo",
+  "especieId": 8,
+  "sexo": "Sin determinar",
+  "esGrupo": true,
+  "cantidadGrupo": 40
+}
+
+### Mis animales
+
+GET {{api}}/animales
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Detalle
+
+GET {{api}}/animales/{{altaAnimal.response.body.$.id}}
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Editar
+
+PUT {{api}}/animales/{{altaAnimal.response.body.$.id}}
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "nombre": "Luna Blanca",
+  "especieId": 1,
+  "raza": "Mestiza",
+  "sexo": "Hembra",
+  "microchip": "858000012345678"
+}
+
+### Con el token del Administrador → 403 (animales es solo para clientes)
+
+GET {{api}}/animales
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Dar de baja (baja lógica: la historia se conserva)
+
+DELETE {{api}}/animales/{{altaAnimal.response.body.$.id}}
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### ---------- 8. Turnos del cliente (con el token de Ana) ----------
+# Antes: «ingreso» de Ana y el alta de Luna (sección 7). Cambiá la fecha por un día hábil dentro de los próximos 60.
+
+GET {{api}}/turnos/disponibilidad?profesionalId=1&prestacionId=1&animalId={{altaAnimal.response.body.$.id}}&fecha=2026-11-25
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Reservar (usá un horario de la lista anterior)
+
+# @name reserva
+POST {{api}}/turnos
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "animalId": {{altaAnimal.response.body.$.id}},
+  "prestacionId": 1,
+  "profesionalId": 1,
+  "inicio": "2026-11-25T09:00:00"
+}
+
+### Mis próximos turnos
+
+GET {{api}}/turnos?vista=proximos
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Reprogramar
+
+PUT {{api}}/turnos/{{reserva.response.body.$.id}}/horario
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "inicio": "2026-11-25T10:00:00"
+}
+
+### Cancelar
+
+POST {{api}}/turnos/{{reserva.response.body.$.id}}/cancelacion
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "motivo": "No puedo ir"
+}
+
+### ---------- 9. Recepción (ingresá con recepcion@vitalia.uy / Vitalia2026!) ----------
+
+# @name ingresoRecepcion
+POST {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "correo": "recepcion@vitalia.uy",
+  "contrasena": "Vitalia2026!"
+}
+
+### Buscar clientes
+
+GET {{api}}/recepcion/clientes?buscar=pérez
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Agenda del día (cambiá la fecha)
+
+GET {{api}}/recepcion/turnos?fecha=2026-11-25
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Sobreturno en nombre de Ana (clienteId = el de Ana en cuentas/yo)
+
+POST {{api}}/recepcion/turnos
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "clienteId": 6,
+  "animalId": {{altaAnimal.response.body.$.id}},
+  "prestacionId": 1,
+  "profesionalId": 1,
+  "inicio": "2026-11-25T09:00:00",
+  "sobreturno": true,
+  "motivo": "Control urgente"
+}
+
+### Registrar llegada (solo el mismo día del turno)
+
+POST {{api}}/recepcion/turnos/{{reserva.response.body.$.id}}/llegada
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### ---------- 10. Agenda del veterinario (ferreira@vitalia.uy / Vitalia2026!) ----------
+
+# @name ingresoFerreira
+POST {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "correo": "ferreira@vitalia.uy",
+  "contrasena": "Vitalia2026!"
+}
+
+###
+GET {{api}}/veterinario/agenda?fecha=2026-11-25
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### ---------- 11. Consulta (con el token de Ferreira, sección 10) ----------
+# Antes: un turno de Luna con Ferreira para HOY, con la llegada registrada por Recepción (pasa a En espera).
+# Cambiá el 1 por el id de ese turno.
+
+# @name consulta
+POST {{api}}/veterinario/turnos/1/consulta
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### Guardar el borrador (version = la que devolvió el pedido anterior)
+
+PUT {{api}}/veterinario/consultas/{{consulta.response.body.$.id}}
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "version": {{consulta.response.body.$.version}},
+  "motivo": "Se rasca la oreja",
+  "temperaturaC": 38.5,
+  "pesoKg": 12.4,
+  "diagnostico": "Otitis externa",
+  "tipoDiagnostico": "Presuntivo"
+}
+
+### Insumo: 3 jeringas (artículo 8)
+
+POST {{api}}/veterinario/consultas/{{consulta.response.body.$.id}}/insumos
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "articuloId": 8,
+  "cantidad": 3
+}
+
+### Vacuna polivalente canina (producto 1)
+
+POST {{api}}/veterinario/consultas/{{consulta.response.body.$.id}}/vacunas
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "productoSanitarioId": 1
+}
+
+### Firmar (version = la última que devolvió la API; contraseña de Ferreira)
+
+POST {{api}}/veterinario/consultas/{{consulta.response.body.$.id}}/firma
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "version": 2,
+  "motivo": "Se rasca la oreja",
+  "diagnostico": "Otitis externa",
+  "tipoDiagnostico": "Presuntivo",
+  "tratamiento": "Limpieza ótica",
+  "indicaciones": "Control en 10 días",
+  "contrasena": "Vitalia2026!"
+}
+
+### Enmienda
+
+POST {{api}}/veterinario/consultas/{{consulta.response.body.$.id}}/enmiendas
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "motivo": "Faltó una indicación",
+  "texto": "Usar collar isabelino 5 días",
+  "contrasena": "Vitalia2026!"
+}
+
+### Historia clínica (personal; sin turno activo pide ?motivo=...)
+
+GET {{api}}/veterinario/animales/{{altaAnimal.response.body.$.id}}/historia
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### Historia vista por Ana
+
+GET {{api}}/animales/{{altaAnimal.response.body.$.id}}/historia
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### ---------- 12. Carnet, inventario y consentimiento ----------
+### Carnet de Luna y alertas de refuerzo de Ana (después de firmar una vacuna en la sección 11)
+
+GET {{api}}/animales/{{altaAnimal.response.body.$.id}}/carnet
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/alertas-sanitarias
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Consentimientos pendientes de Ana (reservar antes una castración, servicio 8, en la sección 8)
+
+GET {{api}}/turnos/consentimientos-pendientes
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Firmar el consentimiento de ese turno (cambiar el 1 por el id del turno y poner el nombre de la cuenta)
+
+POST {{api}}/turnos/1/consentimiento
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "acepta": true,
+  "nombreCompleto": "Ana Pérez"
+}
+
+### Lo que el veterinario puede usar en la consulta
+
+GET {{api}}/veterinario/insumos
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/veterinario/productos-sanitarios?animalId={{altaAnimal.response.body.$.id}}
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### Inventario (admin: enviar antes «ingresoPersonal», al principio del archivo, con admin@vitalia.uy)
+
+GET {{api}}/admin/inventario/articulos
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/admin/inventario/articulos/8/lotes
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Compra: lote nuevo (el vencimiento tiene que ser futuro y el número no repetido)
+
+POST {{api}}/admin/inventario/compras
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "articuloId": 8,
+  "numero": "JER-2027-A",
+  "vencimiento": "2027-06-30",
+  "cantidad": 50
+}
+
+### Baja de 2 unidades del lote (cambiar el loteId por uno de la lista de lotes)
+
+POST {{api}}/admin/inventario/bajas
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "loteId": 1,
+  "cantidad": 2,
+  "motivo": "Envase dañado"
+}
+
+###
+GET {{api}}/admin/inventario/movimientos?page=1
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/admin/inventario/alertas
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+###
+POST {{api}}/admin/inventario/vencidos
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Avisos de refuerzo (repetirlo no duplica)
+
+POST {{api}}/admin/avisos-refuerzo
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Versiones del consentimiento de la castración
+
+GET {{api}}/admin/consentimientos?prestacionId=8
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### ---------- 13. Cobro (Recepción cobra; el Administrador anula) ----------
+### Cargos con saldo (con el token de Recepción, sección 9)
+
+GET {{api}}/recepcion/cobros/cargos?pendientes=true
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Cobrar (cambiar el cargoId por uno de la lista; transferencia pide "referencia")
+
+POST {{api}}/recepcion/cobros/pagos
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "cargoId": 1,
+  "monto": 500,
+  "medio": "Efectivo",
+  "referencia": ""
+}
+
+### Comprobantes de hoy y resumen de caja
+
+GET {{api}}/recepcion/cobros/pagos
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/recepcion/cobros/resumen
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Cargos vistos por Ana
+
+GET {{api}}/cobros
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Anular un comprobante (admin, «ingresoPersonal»; cambiar el 1 por el id del pago)
+
+POST {{api}}/admin/cobros/pagos/1/anulacion
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "motivo": "Se cobró de más"
+}
+
+###
+GET {{api}}/admin/cobros/notas
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### ---------- 14. Administración (admin: enviar antes «ingresoPersonal» con admin@vitalia.uy) ----------
+
+GET {{api}}/admin/servicios
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Programar una tarifa (desde hoy o una fecha futura)
+
+POST {{api}}/admin/tarifas
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "prestacionId": 1,
+  "precio": 1350,
+  "vigenteDesde": "2026-12-01"
+}
+
+###
+GET {{api}}/admin/servicios/1/tarifas
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/admin/personal
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Nueva recepcionista
+
+POST {{api}}/admin/personal
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "nombre": "Carla",
+  "apellido": "Núñez",
+  "correo": "carla@vitalia.uy",
+  "rol": "Recepcionista",
+  "contrasena": "Vitalia2026!"
+}
+
+### Feriado (sin turnos activos ese día)
+
+POST {{api}}/admin/feriados
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "fecha": "2026-12-08",
+  "motivo": "Día de la clínica"
+}
+
+###
+GET {{api}}/admin/parametros
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Seña de las cirugías al 40 %
+
+PUT {{api}}/admin/parametros/cobro.porcentaje_sena
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "valor": "40"
+}
+
+###
+GET {{api}}/admin/auditoria?page=1
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### ---------- 15. Internación (Recepción admite; el veterinario ingresa, publica y da el alta) ----------
+### Admitir a Luna (token de Recepción, sección 9)
+
+POST {{api}}/internaciones
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "animalId": {{altaAnimal.response.body.$.id}},
+  "motivo": "Vómitos y decaimiento",
+  "telefonoContacto": "+59899123456",
+  "observaciones": ""
+}
+
+###
+GET {{api}}/internaciones
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Boxes libres para esa internación (cambiar el 1 por su id; token de Ferreira, sección 10)
+
+GET {{api}}/internaciones/1/boxes-libres
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### Ingreso clínico
+
+POST {{api}}/internaciones/1/ingreso
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "boxId": 1,
+  "planTerapeutico": "Fluidoterapia 24 h y control cada 6 h"
+}
+
+### Novedad visible para Ana
+
+POST {{api}}/internaciones/1/novedades
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "tipo": "Novedad",
+  "texto": "Luna está tranquila y comió un poco.",
+  "visible": true
+}
+
+### Lo que ve Ana
+
+GET {{api}}/mis-internaciones
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Alta
+
+POST {{api}}/internaciones/1/alta
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "evolucionFinal": "Recuperada, sin vómitos en 24 h",
+  "indicacionesDomicilio": "Dieta blanda 3 días y control en una semana"
+}

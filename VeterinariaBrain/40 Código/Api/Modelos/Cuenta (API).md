@@ -11,18 +11,47 @@ generado: true
 
 Cuenta de una persona: Cliente o personal (RF-VIS-07, D-REG-01). Los roles van en CuentaRol.
 
-**Requisitos y decisiones:** D-REG-01, RF-VIS-07, RNF-SEG-01
+**Tareas:** A-028
+
+**Requisitos y decisiones:** D-PER-04, D-REG-01, RF-VIS-07, RNF-LEG-02, RNF-SEG-01, RNF-SEG-09
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdministracionRepository (API)]]
+- [[AdministracionService (API)]]
 - [[Animal (API)]]
 - [[AppDbContext (API)]]
+- [[Asistencia (API)]]
+- [[Cobro (API)]]
+- [[CobroRepository (API)]]
+- [[CobroService (API)]]
 - [[CodigoCuenta (API)]]
+- [[Comunicaciones (API)]]
+- [[ConfiguracionModulos (API)]]
+- [[Consulta (API)]]
+- [[ConsultaRepository (API)]]
+- [[ConsultaService (API)]]
+- [[CuentaRepository (API)]]
+- [[CuentaService (API)]]
 - [[DocumentoLegal (API)]]
+- [[IAdministracionRepository (API)]]
+- [[ICobroRepository (API)]]
+- [[IConsultaRepository (API)]]
+- [[ICuentaRepository (API)]]
+- [[ISaludRepository (API)]]
+- [[ITokenService (API)]]
+- [[ITurnoRepository (API)]]
+- [[Internacion (API)]]
+- [[Inventario (API)]]
 - [[Profesional (API)]]
 - [[Rol (API)]]
+- [[SaludRepository (API)]]
+- [[SesionRefresco (API)]]
+- [[SesionService (API)]]
+- [[TokenService (API)]]
 - [[Turno (API)]]
+- [[TurnoRepository (API)]]
 
 ## En las otras aplicaciones
 - [[Cuenta]]

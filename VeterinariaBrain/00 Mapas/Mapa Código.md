@@ -186,19 +186,129 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Modelos (9)
+### Servicios (39)
+- [[AdministracionService (API)]]
+- [[AnimalService (API)]]
+- [[CalculoAgenda (API)]]
+- [[CarnetService (API)]]
+- [[ClinicaService (API)]]
+- [[CobroService (API)]]
+- [[ConsentimientoService (API)]]
+- [[ConsultaService (API)]]
+- [[CuentaService (API)]]
+- [[EnvioCorreo (API)]]
+- [[IAdministracionService (API)]]
+- [[IAnimalService (API)]]
+- [[ICarnetService (API)]]
+- [[IClinicaService (API)]]
+- [[ICobroService (API)]]
+- [[IConsentimientoService (API)]]
+- [[IConsultaService (API)]]
+- [[ICuentaService (API)]]
+- [[IInternacionService (API)]]
+- [[IInventarioService (API)]]
+- [[IPrestacionService (API)]]
+- [[IProfesionalService (API)]]
+- [[ISesionService (API)]]
+- [[ITokenService (API)]]
+- [[ITurnoService (API)]]
+- [[InternacionService (API)]]
+- [[InventarioService (API)]]
+- [[Opciones (API)]]
+- [[PrestacionService (API)]]
+- [[ProfesionalService (API)]]
+- [[ReglasCatalogo (API)]]
+- [[ReglasClinicas (API)]]
+- [[ReglasStock (API)]]
+- [[Resultado (API)]]
+- [[Seguridad (API)]]
+- [[SesionService (API)]]
+- [[TokenService (API)]]
+- [[TurnoService (API)]]
+- [[ValidacionDatos (API)]]
+
+### Modelos (16)
 - [[Animal (API)]]
+- [[Asistencia (API)]]
+- [[Cobro (API)]]
 - [[CodigoCuenta (API)]]
+- [[Comunicaciones (API)]]
 - [[Configuracion (API)]]
+- [[Consulta (API)]]
 - [[Cuenta (API)]]
 - [[DocumentoLegal (API)]]
+- [[Internacion (API)]]
+- [[Inventario (API)]]
 - [[Prestacion (API)]]
 - [[Profesional (API)]]
 - [[Rol (API)]]
+- [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Datos (1)
+### Controladores (20)
+- [[AdminSaludController (API)]] · `api/v1/admin`
+- [[AdministracionController (API)]] · `api/v1/admin`
+- [[AnimalesController (API)]] · `api/v1/animales`
+- [[ClinicaController (API)]] · `api/v1/clinica`
+- [[CobrosController (API)]] · `api/v1/cobros`
+- [[CuentasController (API)]] · `api/v1/cuentas`
+- [[EspeciesController (API)]] · `api/v1/especies`
+- [[InternacionesController (API)]] · `api/v1/internaciones`
+- [[InventarioController (API)]] · `api/v1/admin/inventario`
+- [[ManejadorConcurrencia (API)]]
+- [[Problemas (API)]]
+- [[ProfesionalesController (API)]] · `api/v1/profesionales`
+- [[RecepcionController (API)]] · `api/v1/recepcion`
+- [[SaludController (API)]] · `api/v1`
+- [[ServiciosController (API)]] · `api/v1/servicios`
+- [[SesionesController (API)]] · `api/v1/sesiones`
+- [[StockVeterinarioController (API)]] · `api/v1/veterinario`
+- [[TurnosController (API)]] · `api/v1/turnos`
+- [[UsuarioActual (API)]]
+- [[VeterinarioController (API)]] · `api/v1/veterinario`
+
+### Repositorios (22)
+- [[AdministracionRepository (API)]]
+- [[AnimalRepository (API)]]
+- [[ClinicaRepository (API)]]
+- [[CobroRepository (API)]]
+- [[ConsultaRepository (API)]]
+- [[CuentaRepository (API)]]
+- [[IAdministracionRepository (API)]]
+- [[IAnimalRepository (API)]]
+- [[IClinicaRepository (API)]]
+- [[ICobroRepository (API)]]
+- [[IConsultaRepository (API)]]
+- [[ICuentaRepository (API)]]
+- [[IInternacionRepository (API)]]
+- [[IPrestacionRepository (API)]]
+- [[IProfesionalRepository (API)]]
+- [[ISaludRepository (API)]]
+- [[ITurnoRepository (API)]]
+- [[InternacionRepository (API)]]
+- [[PrestacionRepository (API)]]
+- [[ProfesionalRepository (API)]]
+- [[SaludRepository (API)]]
+- [[TurnoRepository (API)]]
+
+### DTOs (12)
+- [[AdminDtos (API)]]
+- [[AnimalDtos (API)]]
+- [[ClinicaReadDto (API)]]
+- [[CobroDtos (API)]]
+- [[ConsultaDtos (API)]]
+- [[CuentaDtos (API)]]
+- [[InternacionDtos (API)]]
+- [[PaginaDto (API)]]
+- [[ProfesionalReadDto (API)]]
+- [[SaludDtos (API)]]
+- [[ServicioReadDto (API)]]
+- [[TurnoDtos (API)]]
+
+### Datos (3)
 - [[AppDbContext (API)]]
+- [[ConfiguracionModulos (API)]]
+- [[Transacciones (API)]]
 
 ## Mobile — [[Carpeta mobile]]
 

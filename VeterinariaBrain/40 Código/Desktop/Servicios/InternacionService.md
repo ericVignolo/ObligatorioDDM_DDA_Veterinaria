@@ -38,3 +38,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[DerechosService]]
 - [[InternacionDetalle]]
 - [[Internaciones]]
+
+## En las otras aplicaciones
+- [[InternacionService (API)]]
