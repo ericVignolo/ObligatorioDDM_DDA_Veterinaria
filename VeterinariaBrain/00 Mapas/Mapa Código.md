@@ -186,14 +186,16 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (23)
+### Servicios (27)
 - [[AnimalService (API)]]
 - [[CalculoAgenda (API)]]
 - [[ClinicaService (API)]]
+- [[ConsultaService (API)]]
 - [[CuentaService (API)]]
 - [[EnvioCorreo (API)]]
 - [[IAnimalService (API)]]
 - [[IClinicaService (API)]]
+- [[IConsultaService (API)]]
 - [[ICuentaService (API)]]
 - [[IPrestacionService (API)]]
 - [[IProfesionalService (API)]]
@@ -204,6 +206,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[PrestacionService (API)]]
 - [[ProfesionalService (API)]]
 - [[ReglasCatalogo (API)]]
+- [[ReglasClinicas (API)]]
+- [[ReglasStock (API)]]
 - [[Resultado (API)]]
 - [[Seguridad (API)]]
 - [[SesionService (API)]]
@@ -244,12 +248,14 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[UsuarioActual (API)]]
 - [[VeterinarioController (API)]] · `api/v1/veterinario`
 
-### Repositorios (12)
+### Repositorios (14)
 - [[AnimalRepository (API)]]
 - [[ClinicaRepository (API)]]
+- [[ConsultaRepository (API)]]
 - [[CuentaRepository (API)]]
 - [[IAnimalRepository (API)]]
 - [[IClinicaRepository (API)]]
+- [[IConsultaRepository (API)]]
 - [[ICuentaRepository (API)]]
 - [[IPrestacionRepository (API)]]
 - [[IProfesionalRepository (API)]]
@@ -258,18 +264,20 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ProfesionalRepository (API)]]
 - [[TurnoRepository (API)]]
 
-### DTOs (7)
+### DTOs (8)
 - [[AnimalDtos (API)]]
 - [[ClinicaReadDto (API)]]
+- [[ConsultaDtos (API)]]
 - [[CuentaDtos (API)]]
 - [[PaginaDto (API)]]
 - [[ProfesionalReadDto (API)]]
 - [[ServicioReadDto (API)]]
 - [[TurnoDtos (API)]]
 
-### Datos (2)
+### Datos (3)
 - [[AppDbContext (API)]]
 - [[ConfiguracionModulos (API)]]
+- [[Transacciones (API)]]
 
 ## Mobile — [[Carpeta mobile]]
 

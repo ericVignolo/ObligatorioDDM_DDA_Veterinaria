@@ -48,3 +48,39 @@ F5 en la rama `diego/sesion-2026-11-21-turnos`. En `Veterinaria.Api.http`:
 - [ ] Diego: probar con el `.http`.
 - [ ] Bloquear consultorios (falta definir qué consultorio usa cada servicio).
 - [ ] Seña RN-35 (módulo 4).
+
+## Módulo 2: Consulta clínica
+
+Rama `diego/sesion-2026-11-21-consulta`, que sale de la de turnos. PR #45. No cambia la base.
+
+- **Veterinario:**
+  - iniciar o retomar la consulta del turno En espera (con consentimiento para las cirugías, RN-10);
+  - guardar el borrador con versión;
+  - insumos y vacunas apartados por FEFO;
+  - firma con la contraseña en una sola transacción: descuenta stock, deja movimientos y alerta de mínimo, genera el cargo, finaliza el turno y encola el resumen;
+  - cancelar sin atención, enmiendas y consultas abiertas;
+  - historia con la lectura registrada (y motivo si no hay caso activo).
+- **Cliente:** historia de su animal.
+- **Archivos:**
+  - `Data/Transacciones.cs`: transacción con bloqueo y reintentos, ahora compartida con turnos;
+  - `Services/ReglasStock.cs`, `ReglasClinicas.cs`, `IConsultaService.cs` y `ConsultaService.cs`;
+  - `Repositories/IConsultaRepository.cs` y `ConsultaRepository.cs`;
+  - `DTOs/ConsultaDtos.cs`;
+  - endpoints en `VeterinarioController` y `AnimalesController`;
+  - `Program.cs`;
+  - pedidos en `Veterinaria.Api.http` (sección 11).
+- **Pruebas:** `ApiConsultaTests`, 22 nuevas. CI en verde con 1093 pruebas.
+- **Simplificaciones** (quedan anotadas):
+  - los insumos no se cobran aparte, porque los artículos no tienen precio;
+  - las cantidades de stock son enteras (P-RC-03 prevé decimales);
+  - las reservas de borradores abandonados no se liberan solas a las 24 h (necesita una tarea programada).
+
+### Cómo probar la consulta
+
+En la rama `diego/sesion-2026-11-21-consulta`, F5. Hace falta un turno de Luna con Ferreira **para hoy**: reservalo desde Recepción con sobreturno si ya pasaron los horarios. Después, en `Veterinaria.Api.http`:
+1. Registrar la llegada (sección 9).
+2. Sección 11: iniciar, guardar, insumo, vacuna, firmar (con la última `version`), enmienda e historia.
+3. En Workbench:
+   - `SELECT * FROM Cargos;` → un cargo de 1200;
+   - `SELECT * FROM MovimientosStock WHERE Tipo='Consumo';` → dos movimientos;
+   - `SELECT * FROM Comunicaciones;` → el resumen Pendiente.

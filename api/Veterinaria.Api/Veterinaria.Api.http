@@ -298,3 +298,85 @@ Content-Type: application/json
 ###
 GET {{api}}/veterinario/agenda?fecha=2026-11-25
 Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### ---------- 11. Consulta (con el token de Ferreira, sección 10) ----------
+# Antes: un turno de Luna con Ferreira para HOY, con la llegada registrada por Recepción (pasa a En espera).
+# Cambiá el 1 por el id de ese turno.
+
+# @name consulta
+POST {{api}}/veterinario/turnos/1/consulta
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### Guardar el borrador (version = la que devolvió el pedido anterior)
+
+PUT {{api}}/veterinario/consultas/{{consulta.response.body.$.id}}
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "version": {{consulta.response.body.$.version}},
+  "motivo": "Se rasca la oreja",
+  "temperaturaC": 38.5,
+  "pesoKg": 12.4,
+  "diagnostico": "Otitis externa",
+  "tipoDiagnostico": "Presuntivo"
+}
+
+### Insumo: 3 jeringas (artículo 8)
+
+POST {{api}}/veterinario/consultas/{{consulta.response.body.$.id}}/insumos
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "articuloId": 8,
+  "cantidad": 3
+}
+
+### Vacuna polivalente canina (producto 1)
+
+POST {{api}}/veterinario/consultas/{{consulta.response.body.$.id}}/vacunas
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "productoSanitarioId": 1
+}
+
+### Firmar (version = la última que devolvió la API; contraseña de Ferreira)
+
+POST {{api}}/veterinario/consultas/{{consulta.response.body.$.id}}/firma
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "version": 2,
+  "motivo": "Se rasca la oreja",
+  "diagnostico": "Otitis externa",
+  "tipoDiagnostico": "Presuntivo",
+  "tratamiento": "Limpieza ótica",
+  "indicaciones": "Control en 10 días",
+  "contrasena": "Vitalia2026!"
+}
+
+### Enmienda
+
+POST {{api}}/veterinario/consultas/{{consulta.response.body.$.id}}/enmiendas
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "motivo": "Faltó una indicación",
+  "texto": "Usar collar isabelino 5 días",
+  "contrasena": "Vitalia2026!"
+}
+
+### Historia clínica (personal; sin turno activo pide ?motivo=...)
+
+GET {{api}}/veterinario/animales/{{altaAnimal.response.body.$.id}}/historia
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### Historia vista por Ana
+
+GET {{api}}/animales/{{altaAnimal.response.body.$.id}}/historia
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}

@@ -28,7 +28,13 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[AppDbContext (API)]]
 - [[Cobro (API)]]
 - [[ConfiguracionModulos (API)]]
+- [[ConsultaDtos (API)]]
+- [[ConsultaRepository (API)]]
+- [[ConsultaService (API)]]
+- [[IConsultaRepository (API)]]
+- [[IConsultaService (API)]]
 - [[Inventario (API)]]
+- [[ReglasClinicas (API)]]
 
 ## En las otras aplicaciones
 - [[Consulta]]

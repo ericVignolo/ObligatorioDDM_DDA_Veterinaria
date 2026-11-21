@@ -55,6 +55,17 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `POST /api/v1/recepcion/turnos/{id}/ausencia` | Recepción | Confirmado → Ausente, 15 min después del inicio |
 | `POST /api/v1/recepcion/turnos/{id}/cancelacion` | Recepción | En cualquier momento, con motivo; también el retiro de alguien En espera |
 | `GET /api/v1/veterinario/agenda?fecha=` | Veterinario | Turnos del día del profesional de la cuenta |
+| `POST /api/v1/veterinario/turnos/{turnoId}/consulta` | Veterinario | Inicia (En espera → En curso) o retoma la consulta del turno: `201`/`200`; `403` si el turno es de otro; `409` si no está En espera o falta el consentimiento (RN-10) |
+| `GET /api/v1/veterinario/consultas/abiertas` | Veterinario | Borradores propios con el turno En curso (P-RC-04) |
+| `GET /api/v1/veterinario/consultas/{id}` | Veterinario | La consulta, con insumos, vacunas, enmiendas y alergias registradas (solo el autor) |
+| `PUT /api/v1/veterinario/consultas/{id}` | Veterinario | Guarda el borrador con `version`: `409` (`VERSION_DESACTUALIZADA`) si otro guardó antes |
+| `POST/DELETE /api/v1/veterinario/consultas/{id}/insumos` | Veterinario | Aparta o libera un insumo por FEFO (RN-26, RN-27); se descuenta al firmar |
+| `POST/DELETE /api/v1/veterinario/consultas/{id}/vacunas` | Veterinario | Vacuna o antiparasitario: especie, lote vigente (RN-15), dosis adelantada con justificación (RN-16), refuerzo calculado |
+| `POST /api/v1/veterinario/consultas/{id}/firma` | Veterinario | Con la contraseña (P-RC-06). En una transacción: motivo y diagnóstico (RN-20), matrícula (RN-13), alergias (RN-17), lotes usables, tarifa vigente; descuenta stock, movimientos y alerta de mínimo, cargo único (RN-32), turno Finalizado y resumen en la cola. Firmar dos veces no repite nada |
+| `POST /api/v1/veterinario/consultas/{id}/cancelacion` | Veterinario | Cancela el turno sin atención si no hay consumos (P-RC-04) |
+| `POST /api/v1/veterinario/consultas/{id}/enmiendas` | Veterinario | Solo el autor, con la contraseña; el original no cambia (RN-12) |
+| `GET /api/v1/veterinario/animales/{animalId}/historia?motivo=` | Veterinario | Historia completa; sin caso activo exige motivo. Cada lectura queda en `LecturasHistoria` (RN-40, P-RC-05) |
+| `GET /api/v1/animales/{id}/historia` | Cliente | Consultas firmadas, enmiendas y vacunas de su animal |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
@@ -109,6 +120,14 @@ Decisiones del esquema:
 - Cambio simultáneo de un mismo registro: el segundo responde `409` (`CONFLICTO_DE_VERSION`, `Controllers/ManejadorConcurrencia.cs`).
 - La seña de las cirugías (RN-35) llega con el módulo de cobro; hasta entonces la castración queda Confirmada.
 - Hora: la local del servidor, que es la de la clínica.
+
+## Consulta clínica
+
+- Mismas reglas y mensajes que `ConsultaService` y `VacunaService` de Blazor. Solo el autor edita y firma su borrador, y únicamente mientras el turno está En curso.
+- **Firma atómica (FLUJO §8.3):** una sola transacción, con la consulta y los artículos bloqueados en orden (`Data/Transacciones.cs`). Si algo falla antes de guardar, todo queda en borrador.
+- El cargo usa la tarifa vigente en la fecha del turno, se redondea a peso entero (P-RC-07) y queda a nombre del cliente que reservó, si sigue siendo responsable. Los insumos no se cobran aparte: los artículos todavía no tienen precio.
+- El resumen al cliente queda en `Comunicaciones` como Pendiente, una sola vez por consulta (`Clave = consulta-{id}`). El envío real llega con el servicio de correo.
+- Reglas puras, sin base: `ReglasStock` (FEFO, disponible, mínimo) y `ReglasClinicas` (alergias, matrícula, huella, redondeo).
 
 ## Crear la base en tu computadora
 
