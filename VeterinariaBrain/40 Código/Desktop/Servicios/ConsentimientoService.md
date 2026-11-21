@@ -38,3 +38,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[FirmarConsentimiento]]
 - [[MiCuenta]]
 - [[Turnos]]
+
+## En las otras aplicaciones
+- [[ConsentimientoService (API)]]

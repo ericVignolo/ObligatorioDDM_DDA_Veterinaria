@@ -1,0 +1,201 @@
+# Sesión 2026-11-19 — Base de datos completa (Diego)
+
+Rama: `diego/sesion-2026-11-19`, creada desde `diego/sesion-2026-11-16` (el catálogo, PR #39, todavía sin mezclar). PR #40 contra `desarrollo`.
+
+## Decisiones (Diego)
+
+| Tema | Decisión |
+|---|---|
+| Orden | Primero se termina la base; después, los endpoints módulo por módulo. |
+| Rama | Rama nueva a partir de la del catálogo, para no perder nada. Las ramas se mezclan y ordenan al final. |
+| Migración | Todo lo que faltaba va en una sola migración nueva, `ModulosClinicos`. |
+
+## Qué se hizo
+
+- **Tablas nuevas (29, en total 51):**
+  - consulta e historia: `Consultas`, `Enmiendas`, `LecturasHistoria`, `DocumentosConsentimiento`, `Consentimientos`;
+  - inventario y vacunas: `Articulos`, `Lotes`, `MovimientosStock`, `ReservasStock`, `AlertasStock`, `ProductosSanitarios`, `ProductoSanitarioEspecies`, `AplicacionesSanitarias`;
+  - cobro: `TarifasPrestacion`, `Cargos`, `Pagos`, `NotasCredito`, `Numeradores`;
+  - internación: `Boxes`, `Internaciones`, `NovedadesInternacion`;
+  - asistencia: `SolicitudesAsistencia`, `OfertasAsistencia`, `EventosAsistencia`;
+  - comunicaciones y derechos: `TiposComunicacion`, `PreferenciasComunicacion`, `Comunicaciones`, `SolicitudesDerecho`, `PoliticasConservacion`.
+- **Columnas nuevas:**
+  - `Cuentas`: eliminación por derecho de supresión y correo nuevo pendiente.
+  - `Turnos`: quién canceló, hora de llegada, sobreturno y quién lo dio.
+  - `Profesionales`: vencimiento de la matrícula.
+  - `Prestaciones`: si requiere consentimiento.
+  - `Auditorias`: rol.
+- **Restricciones:** `CHECK` de stock no negativo (RN-26) y de pago positivo; índices únicos de cargo por consulta (RN-32), número de comprobante y de nota de crédito, y una nota de crédito por comprobante (RN-34).
+- **Semilla nueva:**
+  - personal de demostración (5 cuentas con su rol, contraseña `Vitalia2026!`), enlazado con sus profesionales y con matrícula vigente hasta 2027;
+  - prestación 8, «Castración», con su consentimiento 1.0;
+  - 4 boxes;
+  - 12 artículos, 20 lotes con fechas fijas y su movimiento de compra;
+  - 7 productos sanitarios con sus especies;
+  - tarifas iniciales;
+  - 5 tipos de comunicación y la política de conservación.
+- Archivos: `Models/Consulta.cs`, `Inventario.cs`, `Cobro.cs`, `Internacion.cs`, `Asistencia.cs` y `Comunicaciones.cs` (nuevos); `Cuenta.cs`, `Turno.cs`, `Profesional.cs`, `Prestacion.cs`, `Configuracion.cs` y `CodigoCuenta.cs` (cambios); `Data/ConfiguracionModulos.cs` (nuevo); `Data/AppDbContext.cs`.
+- Prueba nueva: `tests/Veterinaria.Tests/ApiBaseDeDatosTests.cs`. Arma el modelo con el proveedor de MySQL y genera el script `CREATE` sin conectarse. CI en verde: 996 pruebas.
+- Documentación: `api/README.md`, `tests/README.md`, DT-BD-02 en `CONTEXTO_BASE.md` y esta bitácora.
+
+Diferencias con los modelos de Blazor:
+- `Personal` no es una tabla: es una `Cuenta` con rol. Los autores (`AutorId`, `CobradoPorId`, `AdmitidoPorId`…) apuntan a `Cuentas`.
+- `SolicitudAsistencia.OfrecidaA` (lista) pasa a la tabla `OfertasAsistencia`.
+- `ProductoSanitario.Especies` (lista de texto) pasa a `ProductoSanitarioEspecies`.
+- Los códigos de verificación de `Cuenta` siguen en `CodigosCuenta`, ahora también con el tipo `CambioCorreo`.
+- Los `0` que en Blazor significan «sin valor» (por ejemplo `TurnoId = 0`) son `NULL` en la base.
+
+## Cómo probarlo
+
+1. GitHub Desktop → *Fetch origin* → rama `diego/sesion-2026-11-19`.
+2. Si tenés un clon nuevo: copiar `appsettings.Development.example.json` como `appsettings.Development.json` y poner la contraseña.
+3. Abrir `api/Veterinaria.Api/Veterinaria.Api.slnx` y compilar.
+4. Consola del Administrador de paquetes:
+
+   ```powershell
+   Add-Migration ModulosClinicos
+   Update-Database
+   ```
+
+5. En MySQL Workbench, refrescar la base `vitalia`: 51 tablas más `__EFMigrationsHistory`. Por ejemplo:
+   - `SELECT COUNT(*) FROM Lotes;` → 20
+   - `SELECT Correo FROM Cuentas;` → los 5 del personal
+   - `SELECT Nombre, CuentaId, Matricula FROM Profesionales;` → Ferreira, Silveira y Acosta con cuenta
+6. F5 y `https://localhost:7191/api/v1/servicios` → ahora son **7** servicios, porque se sumó «Castración».
+7. Subir la carpeta `Migrations/` con la migración nueva.
+
+## Qué falta
+
+- [ ] Diego: correr `Add-Migration ModulosClinicos` y `Update-Database`, y subir `Migrations/`.
+- [ ] Endpoints, en el orden del recorrido: profesionales → registro e inicio de sesión → animales → turnos → consulta → vacunas → stock → cobro → internación → asistencia → comunicaciones.
+- [ ] Al final: mezclar los PR #39 y #40 y ordenar las ramas.
+
+---
+
+## Segunda parte: profesionales y datos de la clínica
+
+Rama: `diego/sesion-2026-11-19-profesionales`, creada desde `diego/sesion-2026-11-19`. PR #41.
+
+- Diego (2026-11-19): migración `ModulosClinicos` aplicada y subida (29 tablas nuevas, snapshot actualizado). CI en verde.
+- Decisión de Diego: el horario del profesional se devuelve **como lista por día**.
+- Endpoints nuevos:
+  - `GET /api/v1/profesionales`, paginado;
+  - `GET /api/v1/profesionales/{id}`, con el horario por día;
+  - `GET /api/v1/clinica`.
+
+  Son públicos. Se muestran solo los profesionales publicados y activos, y de cada uno solo sus servicios públicos. No se exponen la matrícula, la cuenta ni las ausencias.
+- Archivos:
+  - `Controllers/ProfesionalesController.cs`, `ClinicaController.cs` y `Problemas.cs` (los errores compartidos salen de `ServiciosController`);
+  - `Services/IProfesionalService.cs`, `ProfesionalService.cs`, `IClinicaService.cs` y `ClinicaService.cs`, más `ReglasProfesionales` en `ReglasCatalogo.cs`;
+  - `Repositories/IProfesionalRepository.cs`, `ProfesionalRepository.cs`, `IClinicaRepository.cs` y `ClinicaRepository.cs`;
+  - `DTOs/ProfesionalReadDto.cs` y `ClinicaReadDto.cs`;
+  - `Program.cs`.
+- Pruebas: `ApiProfesionalesTests`, 10 nuevas. CI en verde con 1006 pruebas.
+
+### Cómo probarlo
+
+F5 en la API (rama `diego/sesion-2026-11-19-profesionales`). No hace falta migrar.
+- `https://localhost:7191/api/v1/profesionales` → 4 profesionales (Ferreira, Silveira, Acosta y Méndez). Pereira no aparece porque no está publicado.
+- `https://localhost:7191/api/v1/profesionales/1` → Ferreira, con `horario` de lunes a viernes de 09:00 a 14:00 y descanso de 11:30 a 12:00, y con la castración entre sus servicios.
+- `https://localhost:7191/api/v1/profesionales/4` → 404.
+- `https://localhost:7191/api/v1/clinica` → los datos de VITALIA.
+
+### Qué falta
+
+- [ ] Diego: probar con F5.
+- [ ] Siguiente endpoint: registro, verificación e inicio de sesión (hash de contraseña, JWT y permisos por rol).
+- [ ] Al final: mezclar los PR #39, #40 y #41 y ordenar las ramas.
+
+---
+
+## Tercera parte: cuentas y sesiones
+
+Rama: `diego/sesion-2026-11-19-cuentas`, creada desde `diego/sesion-2026-11-19-profesionales`. PR #42.
+
+- Diego probó los profesionales y la clínica con F5: todo anduvo.
+- Decisiones de Diego:
+  1. Se instala `Microsoft.AspNetCore.Authentication.JwtBearer` 10.0.0.
+  2. Correo con la opción A: sin envío por ahora; en Development el código vuelve en la respuesta. Ajuste de Claude: el código no se guarda en `Comunicaciones`, porque D-REG-02 prohíbe guardarlo en claro; sale directo por `IEnvioCorreo`.
+  3. El segundo factor del Administrador queda para después.
+- Registrado como DT-SEG-01 en `CONTEXTO_BASE.md`.
+- **Base:** migración `Sesiones` (tabla `SesionesRefresco`, más `IntentosFallidos` y `BloqueadaHasta` en `Cuentas`).
+- **Endpoints:**
+  - `POST /api/v1/cuentas`, `/cuentas/verificacion`, `/cuentas/verificacion/reenvio`, `/cuentas/recuperacion` y `/cuentas/recuperacion/confirmar`;
+  - `GET /api/v1/cuentas/yo`, que necesita token;
+  - `POST /api/v1/sesiones`, `/sesiones/refresco` y `DELETE /api/v1/sesiones`.
+- **Archivos:**
+  - `Controllers/CuentasController.cs` y `SesionesController.cs`; `Problemas.cs` ahora también convierte un `Resultado` en la respuesta;
+  - `Services/`: `CuentaService`, `SesionService`, `TokenService`, sus interfaces, `Seguridad`, `ValidacionDatos` (copia de la de Blazor), `Opciones`, `EnvioCorreo` y `Resultado`;
+  - `Repositories/ICuentaRepository.cs` y `CuentaRepository.cs`;
+  - `DTOs/CuentaDtos.cs`;
+  - `Models/SesionRefresco.cs` y `Cuenta.cs`;
+  - `Program.cs`, con autenticación, límite de pedidos y opciones;
+  - `appsettings.json`, con las secciones `Jwt` y `Cuentas` (clave solo de desarrollo);
+  - `Veterinaria.Api.http`, con los pedidos de prueba.
+- **Pruebas:** `ApiCuentasTests`, 26 nuevas. CI en verde con 1032 pruebas.
+
+### Cómo probarlo
+
+1. GitHub Desktop → *Fetch origin* → rama `diego/sesion-2026-11-19-cuentas`. Compilar, porque se descarga el paquete nuevo.
+2. Consola del Administrador de paquetes: `Add-Migration Sesiones` y `Update-Database`.
+3. F5 en la API. Abrir `Veterinaria.Api.http` y tocar «Enviar solicitud» en orden:
+   1. Registro → `201` con `codigoDesarrollo`.
+   2. Verificación, con ese código → `200`.
+   3. Ingreso → `200` con los tokens.
+   4. `cuentas/yo` → `200` con tus datos. Sin token → `401`.
+   5. Refresco y cierre de sesión.
+   6. Recuperación y confirmación, con el código nuevo.
+   7. Ingreso del personal: `admin@vitalia.uy` / `Vitalia2026!` → `roles: ["Administrador"]`.
+4. Subir la carpeta `Migrations/` con la migración `Sesiones`.
+
+### Qué falta
+
+- [ ] Diego: migración `Sesiones`, probar con el `.http` y subir `Migrations/`.
+- [ ] Segundo factor del Administrador (RNF-SEG-04).
+- [ ] Envío real de correos (reemplazar `EnvioCorreoDesarrollo`).
+- [ ] Borrado automático de las cuentas sin verificar de más de 7 días (hoy se borran al registrarse alguien con el mismo correo).
+- [ ] Siguiente: animales del cliente (alta, lista, detalle; solo los propios, RN-18; microchip único, RN-41).
+
+---
+
+## Cuarta parte: animales del cliente
+
+Rama: `diego/sesion-2026-11-19-animales`, creada desde `diego/sesion-2026-11-19-cuentas`. PR #43.
+
+- Diego probó las cuentas y las sesiones con `Veterinaria.Api.http`: registro, verificación, ingreso del cliente y del Administrador, `cuentas/yo` con token y `401` sin token. Todo anduvo.
+- Decisiones de Diego:
+  1. El acceso del personal a animales de cualquier cliente queda para turnos y consulta.
+  2. Se incluye la baja lógica.
+- Endpoints:
+  - `GET /api/v1/especies`, público;
+  - `GET/POST /api/v1/animales` y `GET/PUT/DELETE /api/v1/animales/{id}`, con `[Authorize(Roles = "Cliente")]`. La cuenta sale siempre del token (RN-18).
+- Reglas:
+  - el microchip tiene 15 dígitos y es único (RN-41); vacío se guarda como `NULL`;
+  - en un animal individual no se guarda cantidad de grupo;
+  - la baja es lógica y se rechaza si el animal tiene turnos pendientes;
+  - un animal ajeno o inexistente da el mismo `404`.
+- Archivos:
+  - `Controllers/AnimalesController.cs` y `EspeciesController.cs`;
+  - `Services/IAnimalService.cs` y `AnimalService.cs`;
+  - `Repositories/IAnimalRepository.cs` y `AnimalRepository.cs`;
+  - `DTOs/AnimalDtos.cs`;
+  - `Program.cs`;
+  - pedidos nuevos en `Veterinaria.Api.http`.
+- **No cambia la base.**
+- Pruebas: `ApiAnimalesTests`, 12 nuevas. CI en verde con 1044 pruebas.
+
+### Cómo probarlo
+
+1. Rama `diego/sesion-2026-11-19-animales`, F5. Si no corriste la migración `Sesiones` en la rama de cuentas, corrérla ahora.
+2. En `Veterinaria.Api.http`, mandar primero el «ingreso» de Ana y después los pedidos de la sección 7:
+   1. Alta de Luna → `201`.
+   2. Alta de la majada → `201`.
+   3. Mis animales → los dos.
+   4. Editar → `Luna Blanca`.
+   5. Con el token del Administrador → `403`.
+   6. Baja → `200`. Después Mis animales muestra solo la majada.
+
+### Qué falta
+
+- [ ] Diego: probar con el `.http`. Subir `Migrations/` de `Sesiones` si todavía no está.
+- [ ] Siguiente: disponibilidad y reserva de turnos (horarios libres, `SELECT … FOR UPDATE` de DT-BD-02, cancelar y reprogramar). Ahí entra el acceso del personal.
