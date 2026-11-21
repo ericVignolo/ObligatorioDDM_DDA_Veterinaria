@@ -186,7 +186,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (35)
+### Servicios (37)
+- [[AdministracionService (API)]]
 - [[AnimalService (API)]]
 - [[CalculoAgenda (API)]]
 - [[CarnetService (API)]]
@@ -196,6 +197,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ConsultaService (API)]]
 - [[CuentaService (API)]]
 - [[EnvioCorreo (API)]]
+- [[IAdministracionService (API)]]
 - [[IAnimalService (API)]]
 - [[ICarnetService (API)]]
 - [[IClinicaService (API)]]
@@ -241,8 +243,9 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Controladores (18)
+### Controladores (19)
 - [[AdminSaludController (API)]] · `api/v1/admin`
+- [[AdministracionController (API)]] · `api/v1/admin`
 - [[AnimalesController (API)]] · `api/v1/animales`
 - [[ClinicaController (API)]] · `api/v1/clinica`
 - [[CobrosController (API)]] · `api/v1/cobros`
@@ -261,12 +264,14 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[UsuarioActual (API)]]
 - [[VeterinarioController (API)]] · `api/v1/veterinario`
 
-### Repositorios (18)
+### Repositorios (20)
+- [[AdministracionRepository (API)]]
 - [[AnimalRepository (API)]]
 - [[ClinicaRepository (API)]]
 - [[CobroRepository (API)]]
 - [[ConsultaRepository (API)]]
 - [[CuentaRepository (API)]]
+- [[IAdministracionRepository (API)]]
 - [[IAnimalRepository (API)]]
 - [[IClinicaRepository (API)]]
 - [[ICobroRepository (API)]]
@@ -281,7 +286,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SaludRepository (API)]]
 - [[TurnoRepository (API)]]
 
-### DTOs (10)
+### DTOs (11)
+- [[AdminDtos (API)]]
 - [[AnimalDtos (API)]]
 - [[ClinicaReadDto (API)]]
 - [[CobroDtos (API)]]

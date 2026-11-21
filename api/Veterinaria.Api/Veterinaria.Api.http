@@ -518,3 +518,71 @@ Content-Type: application/json
 ###
 GET {{api}}/admin/cobros/notas
 Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### ---------- 14. Administración (admin: enviar antes «ingresoPersonal» con admin@vitalia.uy) ----------
+
+GET {{api}}/admin/servicios
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Programar una tarifa (desde hoy o una fecha futura)
+
+POST {{api}}/admin/tarifas
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "prestacionId": 1,
+  "precio": 1350,
+  "vigenteDesde": "2026-12-01"
+}
+
+###
+GET {{api}}/admin/servicios/1/tarifas
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/admin/personal
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Nueva recepcionista
+
+POST {{api}}/admin/personal
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "nombre": "Carla",
+  "apellido": "Núñez",
+  "correo": "carla@vitalia.uy",
+  "rol": "Recepcionista",
+  "contrasena": "Vitalia2026!"
+}
+
+### Feriado (sin turnos activos ese día)
+
+POST {{api}}/admin/feriados
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "fecha": "2026-12-08",
+  "motivo": "Día de la clínica"
+}
+
+###
+GET {{api}}/admin/parametros
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Seña de las cirugías al 40 %
+
+PUT {{api}}/admin/parametros/cobro.porcentaje_sena
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "valor": "40"
+}
+
+###
+GET {{api}}/admin/auditoria?page=1
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}

@@ -24,6 +24,7 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[Profesional (API)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdministracionController (API)]]
 - [[AppDbContext (API)]]
 - [[CalculoAgenda (API)]]
 - [[Cobro (API)]]

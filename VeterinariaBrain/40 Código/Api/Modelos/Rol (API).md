@@ -17,9 +17,13 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[Cuenta (API)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminDtos (API)]]
+- [[AdministracionRepository (API)]]
+- [[AdministracionService (API)]]
 - [[AppDbContext (API)]]
 - [[CobroService (API)]]
 - [[Configuracion (API)]]
 - [[CuentaRepository (API)]]
 - [[CuentaService (API)]]
+- [[IAdministracionRepository (API)]]
 - [[TurnoService (API)]]

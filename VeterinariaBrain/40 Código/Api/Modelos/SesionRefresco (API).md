@@ -19,7 +19,9 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[Cuenta (API)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdministracionRepository (API)]]
 - [[AppDbContext (API)]]
 - [[CuentaRepository (API)]]
+- [[IAdministracionRepository (API)]]
 - [[ICuentaRepository (API)]]
 - [[SesionService (API)]]

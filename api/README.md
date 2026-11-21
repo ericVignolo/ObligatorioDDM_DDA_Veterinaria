@@ -88,6 +88,14 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `GET /api/v1/recepcion/cobros/deuda/{clienteId}` | Recepción, Administrador | Deuda vencida (más de 30 días) y aviso si pasa el límite (RN-36); nunca bloquea |
 | `POST /api/v1/admin/cobros/pagos/{id}/anulacion` | Administrador | Nota de crédito `NC-000001` con motivo y auditoría; el comprobante no cambia (RN-34) |
 | `GET /api/v1/admin/cobros/notas` | Administrador | Notas de crédito emitidas |
+| `GET/POST /api/v1/admin/servicios` y `PUT /servicios/{id}` | Administrador | Todos los servicios (también los no publicados); crear arma la tarifa inicial; editar no cambia el precio |
+| `GET /api/v1/admin/servicios/{id}/tarifas` y `POST /api/v1/admin/tarifas` | Administrador | Tarifas con fecha; una nueva rige desde hoy o después, sin repetir fecha (RN-33) |
+| `GET/POST /api/v1/admin/personal` | Administrador | Cuentas del personal; correo único, contraseña inicial; un veterinario necesita una ficha de profesional libre |
+| `PUT /api/v1/admin/personal/{id}/rol` y `/bloqueo` | Administrador | Cambia el rol o bloquea; cierra sus sesiones; nadie se cambia a sí mismo y siempre queda un Administrador activo |
+| `GET/POST/DELETE /api/v1/admin/ausencias` y `/feriados` | Administrador | Licencias y feriados de hoy en adelante; `409` si hay turnos activos esas fechas |
+| `GET /api/v1/admin/parametros` y `PUT /parametros/{clave}` | Administrador | Con rango; se crean si faltan (`cobro.porcentaje_sena`, `cobro.limite_deuda`) |
+| `PUT /api/v1/admin/inventario/articulos/{id}/minimo` | Administrador | Stock mínimo del artículo |
+| `GET /api/v1/admin/auditoria?entidad=&desde=&page=` | Administrador | Registro de cambios, del más reciente al más antiguo |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
@@ -162,7 +170,7 @@ Decisiones del esquema:
 
 - Mismas reglas y mensajes que `CobroService` de Blazor. No hay pago en línea: se cobra en Recepción (DT-ALC-02).
 - Cobrar y anular bloquean la fila del cargo y el numerador (`Numeradores`, claves `Comprobante` y `NotaCredito`): dos cobros a la vez no pasan el saldo y los números no se repiten ni saltean.
-- **Seña (RN-35):** el cargo de seña se genera la primera vez que se listan los cargos del cliente o de Recepción, una sola vez por turno. Es el 30 % de la tarifa vigente en la fecha del turno (o del precio desde). Los parámetros opcionales `cobro.porcentaje_sena` y `cobro.limite_deuda` (3000 por defecto) se pueden agregar a `Parametros` sin migración.
+- **Seña (RN-35):** el cargo de seña se genera la primera vez que se listan los cargos del cliente o de Recepción, una sola vez por turno. Es el 30 % de la tarifa vigente en la fecha del turno (o del precio desde). Los parámetros `cobro.porcentaje_sena` y `cobro.limite_deuda` (3000 por defecto) los cambia el Administrador desde `PUT /api/v1/admin/parametros/{clave}`, sin migración.
 - Un turno *Pendiente de seña* conserva el horario. Todavía no se cancela solo si no se paga.
 
 ## Crear la base en tu computadora

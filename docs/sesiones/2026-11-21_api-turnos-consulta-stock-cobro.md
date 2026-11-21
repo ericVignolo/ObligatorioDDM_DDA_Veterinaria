@@ -145,8 +145,40 @@ En la rama `diego/sesion-2026-11-21-cobro`, F5. Hace falta haber firmado una con
 2. Con el admin: anular un comprobante y ver que el cargo vuelve a tener saldo.
 3. Castración: reservarla como Ana (servicio 8) → queda *Pendiente de seña*. En los cargos aparece la seña: cobrarla confirma el turno.
 
+## Prueba de Diego (2026-11-21, mediodía)
+
+Diego probó en la rama de cobro: ingreso de Ana, alta de Luna, disponibilidad, reserva, el segundo intento en el mismo horario (rechazado), mis turnos, el ingreso de Recepción, la búsqueda de clientes y la agenda. Todo anduvo. Vio que la reserva nueva traía el cliente vacío: se corrigió en el módulo 5. La consulta queda para un día hábil, porque los sábados no atiende nadie que atienda perros. Diego decidió no probar todo y seguir en el orden Administración → Internación → Comunicaciones → Asistencia.
+
+## Módulo 5: Administración
+
+Rama `diego/sesion-2026-11-21-admin`, que sale de la de cobro. PR #48. No cambia la base.
+
+- **Servicios y tarifas:**
+  - crear un servicio, con su tarifa inicial;
+  - editarlo, sin cambiar el precio;
+  - programar tarifas desde hoy o una fecha futura (RN-33).
+- **Personal:**
+  - alta con contraseña inicial;
+  - cambio de rol y bloqueo, que cierran las sesiones de la cuenta;
+  - nadie se cambia ni se bloquea a sí mismo y siempre queda un Administrador activo;
+  - un veterinario necesita una ficha de profesional libre.
+- **Ausencias y feriados:** no se cargan sobre turnos activos.
+- **Parámetros:**
+  - cada uno tiene su rango;
+  - los de la seña y la deuda se crean al cambiarlos, sin migración;
+  - los que la API todavía no usa (registro y asistencia) se muestran, pero no se pueden cambiar.
+- **Otros:** stock mínimo y auditoría paginada.
+- **Archivos:**
+  - `Services/IAdministracionService.cs` y `AdministracionService.cs`;
+  - `Repositories/IAdministracionRepository.cs` y `AdministracionRepository.cs`;
+  - `Controllers/AdministracionController.cs`;
+  - `DTOs/AdminDtos.cs`;
+  - `TurnoService.cs` (nombre del cliente en la respuesta) y `Program.cs`;
+  - sección 14 del `.http`.
+- **Pruebas:** `ApiAdministracionTests`, 8 nuevas. CI en verde.
+- **Falta:** los boxes van con internación. La guardia del veterinario va con asistencia.
+
 ### Pendientes
 
-- [ ] Diego: probar los módulos 1 a 4 con el `.http`.
-- [ ] Al final: mezclar los PR #39 a #47 en orden y ordenar las ramas.
-- [ ] Siguientes módulos: internación, asistencia, comunicaciones (envío real), administración (tarifas, parámetros, personal), 2FA.
+- [ ] Al final: mezclar los PR #39 a #48 en orden y ordenar las ramas.
+- [ ] Siguientes módulos: internación → comunicaciones → asistencia; después, 2FA.

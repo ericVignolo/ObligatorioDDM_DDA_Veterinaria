@@ -18,6 +18,8 @@ Servicio del catálogo (RF-VIS-01). Se llama Prestacion para no confundir con la
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdministracionRepository (API)]]
+- [[AdministracionService (API)]]
 - [[AppDbContext (API)]]
 - [[Cobro (API)]]
 - [[CobroRepository (API)]]
@@ -27,6 +29,7 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[ConsultaDtos (API)]]
 - [[ConsultaRepository (API)]]
 - [[ConsultaService (API)]]
+- [[IAdministracionRepository (API)]]
 - [[IPrestacionRepository (API)]]
 - [[ISaludRepository (API)]]
 - [[ITurnoRepository (API)]]

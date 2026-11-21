@@ -32,6 +32,7 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[Turno (API)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdministracionRepository (API)]]
 - [[AnimalRepository (API)]]
 - [[ClinicaRepository (API)]]
 - [[CobroRepository (API)]]

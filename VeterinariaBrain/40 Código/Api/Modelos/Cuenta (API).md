@@ -18,6 +18,8 @@ Cuenta de una persona: Cliente o personal (RF-VIS-07, D-REG-01). Los roles van e
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdministracionRepository (API)]]
+- [[AdministracionService (API)]]
 - [[Animal (API)]]
 - [[AppDbContext (API)]]
 - [[Asistencia (API)]]
@@ -33,6 +35,7 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[CuentaRepository (API)]]
 - [[CuentaService (API)]]
 - [[DocumentoLegal (API)]]
+- [[IAdministracionRepository (API)]]
 - [[ICobroRepository (API)]]
 - [[IConsultaRepository (API)]]
 - [[ICuentaRepository (API)]]
