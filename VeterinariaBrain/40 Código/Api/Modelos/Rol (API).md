@@ -18,3 +18,7 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[Configuracion (API)]]
+- [[CuentaRepository (API)]]
+- [[CuentaService (API)]]
+- [[TurnoService (API)]]

@@ -36,3 +36,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Reservar]]
 - [[TurnoMostrador]]
 - [[Turnos]]
+
+## En las otras aplicaciones
+- [[ProfesionalService (API)]]

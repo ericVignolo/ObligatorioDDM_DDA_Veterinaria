@@ -11,9 +11,9 @@ generado: true
 
 Consultorio, box, corral u otro recurso físico que ocupa un turno (RN-07).
 
-**Tareas:** A-016
+**Tareas:** A-016, A-017
 
-**Requisitos y decisiones:** CU-CLI-02, RN-07
+**Requisitos y decisiones:** CU-CLI-02, RN-07, RN-09
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
@@ -25,6 +25,13 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[CalculoAgenda (API)]]
+- [[Cobro (API)]]
+- [[Consulta (API)]]
+- [[ITurnoRepository (API)]]
+- [[TurnoDtos (API)]]
+- [[TurnoRepository (API)]]
+- [[TurnoService (API)]]
 
 ## En las otras aplicaciones
 - [[Turno]]

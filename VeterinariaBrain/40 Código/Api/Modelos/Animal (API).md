@@ -19,8 +19,20 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[Cuenta (API)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AnimalRepository (API)]]
+- [[AnimalService (API)]]
 - [[AppDbContext (API)]]
+- [[Asistencia (API)]]
+- [[Cobro (API)]]
+- [[Consulta (API)]]
+- [[IAnimalRepository (API)]]
+- [[ITurnoRepository (API)]]
+- [[Internacion (API)]]
+- [[Inventario (API)]]
 - [[Turno (API)]]
+- [[TurnoDtos (API)]]
+- [[TurnoRepository (API)]]
+- [[TurnoService (API)]]
 
 ## En las otras aplicaciones
 - [[Animal]]
