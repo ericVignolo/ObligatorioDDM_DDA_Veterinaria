@@ -25,3 +25,28 @@ public class EnvioCorreoDesarrollo : IEnvioCorreo
         return Task.CompletedTask;
     }
 }
+
+// Envío de los mensajes de la cola de Comunicaciones (RNF-CON-04). Devuelve null si salió, o el motivo del error.
+public interface IEnvioComunicacion
+{
+    Task<string?> EnviarAsync(string destino, string asunto, string cuerpo);
+}
+
+// Versión de desarrollo: no hay servidor de correo todavía, así que no manda nada y da el envío por hecho.
+// Sirve para probar la cola y los estados. Para el envío real se reemplaza esta clase en Program.cs.
+public class EnvioComunicacionDesarrollo : IEnvioComunicacion
+{
+    private readonly ILogger<EnvioComunicacionDesarrollo> _logger;
+
+    public EnvioComunicacionDesarrollo(ILogger<EnvioComunicacionDesarrollo> logger)
+    {
+        _logger = logger;
+    }
+
+    public Task<string?> EnviarAsync(string destino, string asunto, string cuerpo)
+    {
+        // Sin el destino ni el contenido en el log (RNF-SEG-11).
+        _logger.LogInformation("Correo simulado: envío pendiente de configurar.");
+        return Task.FromResult<string?>(null);
+    }
+}
