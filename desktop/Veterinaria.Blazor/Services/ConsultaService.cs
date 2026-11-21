@@ -63,6 +63,13 @@ public class ConsultaService
             peso: 430m, alergias: "Penicilina");
     }
 
+    // G-009: agrega una consulta histórica ya firmada (sin turno de origen) del conjunto grande de demostración.
+    public Consulta AgregarHistoriaDemo(int animalId, int profesionalId, int autorId, string autor, int haceDias,
+        string motivo, string diagnostico, string tipo, string tratamiento, decimal peso, string alergias)
+    {
+        return AgregarFirmadaDemo(animalId, profesionalId, autorId, autor, haceDias, motivo, diagnostico, tipo, tratamiento, peso, alergias);
+    }
+
     private Consulta AgregarFirmadaDemo(int animalId, int profesionalId, int autorId, string autor, int haceDias,
         string motivo, string diagnostico, string tipo, string tratamiento, decimal peso, string alergias)
     {

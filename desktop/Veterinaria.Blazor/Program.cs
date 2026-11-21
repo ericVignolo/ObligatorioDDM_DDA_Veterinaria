@@ -30,6 +30,7 @@ builder.Services.AddScoped<BitacoraService>();
 builder.Services.AddScoped<IndicadoresService>();
 builder.Services.AddScoped<ComunicacionesService>();
 builder.Services.AddScoped<ConsultaService>();
+builder.Services.AddScoped<ConjuntoDemoService>();
 builder.Services.AddScoped<VacunaService>();
 builder.Services.AddScoped<AvisosRefuerzoService>();
 builder.Services.AddScoped<DerechosService>();
