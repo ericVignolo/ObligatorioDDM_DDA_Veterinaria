@@ -31,3 +31,7 @@ VeterinariaBrain/.trash/
 
 # API: cadena de conexión con la contraseña local de MySQL
 api/Veterinaria.Api/appsettings.Development.json
+
+# Python
+__pycache__/
+*.pyc
