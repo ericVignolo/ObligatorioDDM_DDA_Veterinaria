@@ -1,0 +1,3923 @@
+{
+  "version": "0.8.5",
+  "variables": {
+    "acento": {
+      "type": "color",
+      "value": "#B8530A"
+    },
+    "acento-hover": {
+      "type": "color",
+      "value": "#9A4408"
+    },
+    "acento-hover-oscuro": {
+      "type": "color",
+      "value": "#F8B77F"
+    },
+    "acento-oscuro": {
+      "type": "color",
+      "value": "#F5A25D"
+    },
+    "acento-suave": {
+      "type": "color",
+      "value": "#FDEBD9"
+    },
+    "acento-suave-oscuro": {
+      "type": "color",
+      "value": "#3A2512"
+    },
+    "aviso": {
+      "type": "color",
+      "value": "#8A5A00"
+    },
+    "aviso-oscuro": {
+      "type": "color",
+      "value": "#F5C467"
+    },
+    "aviso-suave": {
+      "type": "color",
+      "value": "#FFF1D6"
+    },
+    "aviso-suave-oscuro": {
+      "type": "color",
+      "value": "#3A2C0E"
+    },
+    "borde": {
+      "type": "color",
+      "value": "#D3E3D9"
+    },
+    "borde-oscuro": {
+      "type": "color",
+      "value": "#2C4236"
+    },
+    "exito": {
+      "type": "color",
+      "value": "#187048"
+    },
+    "exito-oscuro": {
+      "type": "color",
+      "value": "#5FD39A"
+    },
+    "exito-suave": {
+      "type": "color",
+      "value": "#E3F4EA"
+    },
+    "exito-suave-oscuro": {
+      "type": "color",
+      "value": "#153325"
+    },
+    "foco": {
+      "type": "color",
+      "value": "#F28C28"
+    },
+    "foco-oscuro": {
+      "type": "color",
+      "value": "#F5A25D"
+    },
+    "fondo": {
+      "type": "color",
+      "value": "#F4FAF6"
+    },
+    "fondo-oscuro": {
+      "type": "color",
+      "value": "#101A15"
+    },
+    "info": {
+      "type": "color",
+      "value": "#1D5FA8"
+    },
+    "info-oscuro": {
+      "type": "color",
+      "value": "#7DB6F2"
+    },
+    "info-suave": {
+      "type": "color",
+      "value": "#E5EFFB"
+    },
+    "info-suave-oscuro": {
+      "type": "color",
+      "value": "#14283F"
+    },
+    "peligro": {
+      "type": "color",
+      "value": "#B42318"
+    },
+    "peligro-oscuro": {
+      "type": "color",
+      "value": "#FF8A80"
+    },
+    "peligro-suave": {
+      "type": "color",
+      "value": "#FDE8E6"
+    },
+    "peligro-suave-oscuro": {
+      "type": "color",
+      "value": "#3C1815"
+    },
+    "primario": {
+      "type": "color",
+      "value": "#1B7F53"
+    },
+    "primario-hover": {
+      "type": "color",
+      "value": "#156A45"
+    },
+    "primario-hover-oscuro": {
+      "type": "color",
+      "value": "#7CE8B5"
+    },
+    "primario-oscuro": {
+      "type": "color",
+      "value": "#4ADE9A"
+    },
+    "primario-suave": {
+      "type": "color",
+      "value": "#E3F4EA"
+    },
+    "primario-suave-oscuro": {
+      "type": "color",
+      "value": "#173528"
+    },
+    "sobre-acento": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "sobre-acento-oscuro": {
+      "type": "color",
+      "value": "#1F1206"
+    },
+    "sobre-primario": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "sobre-primario-oscuro": {
+      "type": "color",
+      "value": "#0B1F16"
+    },
+    "superficie": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "superficie-2": {
+      "type": "color",
+      "value": "#ECF5EF"
+    },
+    "superficie-2-oscuro": {
+      "type": "color",
+      "value": "#1D2E25"
+    },
+    "superficie-oscuro": {
+      "type": "color",
+      "value": "#17241D"
+    },
+    "texto": {
+      "type": "color",
+      "value": "#1F2A24"
+    },
+    "texto-oscuro": {
+      "type": "color",
+      "value": "#E6F2EB"
+    },
+    "texto-suave": {
+      "type": "color",
+      "value": "#5A6B62"
+    },
+    "texto-suave-oscuro": {
+      "type": "color",
+      "value": "#9DB3A7"
+    }
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "n11",
+      "name": "VITALIA — Opción A y B",
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1440.0,
+      "height": "fit_content",
+      "layout": "vertical",
+      "fill": [
+        {
+          "type": "solid",
+          "color": "#888888"
+        }
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "n12",
+          "name": "div",
+          "width": "fill_container",
+          "height": "fit_content",
+          "layout": "vertical",
+          "gap": 0.0,
+          "children": [
+            {
+              "type": "frame",
+              "id": "n13",
+              "name": "Grid row",
+              "width": "fill_container",
+              "height": "fit_content",
+              "layout": "horizontal",
+              "alignItems": "stretch",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "n14",
+                  "name": "section",
+                  "width": 720.0,
+                  "height": 948.0,
+                  "minHeight": 948.0,
+                  "layout": "vertical",
+                  "padding": 24.0,
+                  "fill": [
+                    {
+                      "type": "solid",
+                      "color": "#f4faf6"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "n15",
+                      "name": "div",
+                      "x": 1424.0,
+                      "y": 884.0,
+                      "constraints": {
+                        "h": "right",
+                        "v": "bottom"
+                      },
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "gap": 8.0,
+                      "children": []
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n16",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        16.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n17",
+                          "name": "header",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "horizontal",
+                          "gap": 12.0,
+                          "justifyContent": "space_between",
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n18",
+                              "name": "div",
+                              "width": "fit_content",
+                              "height": "fit_content",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "n19",
+                                  "name": "Margin",
+                                  "width": "fit_content",
+                                  "height": "fit_content",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "n20",
+                                      "name": "h2",
+                                      "width": "fit_content",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "n21",
+                                          "name": "Text",
+                                          "content": "Opción A — Eric",
+                                          "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                          "fontSize": 24.0,
+                                          "fontWeight": 800,
+                                          "letterSpacing": -0.24,
+                                          "lineHeight": 1.5,
+                                          "textGrowth": "auto",
+                                          "fill": [
+                                            {
+                                              "type": "solid",
+                                              "color": "#1f2a24"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "n22",
+                                  "name": "Margin",
+                                  "width": "fit_content",
+                                  "height": "fit_content",
+                                  "layout": "vertical",
+                                  "padding": [
+                                    16.0,
+                                    0.0,
+                                    16.0,
+                                    0.0
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "n23",
+                                      "name": "p",
+                                      "width": "fit_content",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "n24",
+                                          "name": "Text",
+                                          "content": "Verde salud · naranja cálido · Nunito · redondeo suave · iconos de contorno fino",
+                                          "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                          "fontSize": 14.0,
+                                          "lineHeight": 1.5,
+                                          "textGrowth": "auto",
+                                          "fill": [
+                                            {
+                                              "type": "solid",
+                                              "color": "#5a6b62"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n25",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 10.0,
+                              "stroke": {
+                                "thickness": 2.0,
+                                "align": "inside",
+                                "fill": [
+                                  {
+                                    "type": "solid",
+                                    "color": "#1b7f53"
+                                  }
+                                ]
+                              },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n26",
+                                  "name": "Text",
+                                  "content": "🌙 Claro / oscuro",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#1b7f53"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n27",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        24.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n28",
+                          "name": "nav",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "horizontal",
+                          "gap": 20.0,
+                          "padding": [
+                            11.0,
+                            17.0,
+                            11.0,
+                            17.0
+                          ],
+                          "alignItems": "center",
+                          "cornerRadius": 16.0,
+                          "fill": [
+                            {
+                              "type": "solid",
+                              "color": "#ffffff"
+                            }
+                          ],
+                          "stroke": {
+                            "thickness": 1.0,
+                            "align": "inside",
+                            "fill": [
+                              {
+                                "type": "solid",
+                                "color": "#d3e3d9"
+                              }
+                            ]
+                          },
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n29",
+                              "name": "Auto margin",
+                              "width": "fill_container",
+                              "height": "fit_content",
+                              "layout": "horizontal",
+                              "justifyContent": "start",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "n30",
+                                  "name": "strong",
+                                  "width": "fit_content",
+                                  "height": "fit_content",
+                                  "layout": "horizontal",
+                                  "gap": 8.0,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "image",
+                                      "id": "n31",
+                                      "name": "svg",
+                                      "src": "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0idnQtaWNvIiB2aWV3Ym94PSIwIDAgMjQgMjQiPjxjaXJjbGUgY3g9IjUiIGN5PSIxMCIgcj0iMS42Ij48L2NpcmNsZT48Y2lyY2xlIGN4PSI5IiBjeT0iNS41IiByPSIxLjYiPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjE1IiBjeT0iNS41IiByPSIxLjYiPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjE5IiBjeT0iMTAiIHI9IjEuNiI+PC9jaXJjbGU+PHBhdGggZD0iTTEyIDEyYy0zIDAtNS41IDMtNS41IDUuMiAwIDEuNiAxLjQgMi4zIDMgMi4zIDEgMCAxLjYtLjQgMi41LS40czEuNS40IDIuNS40YzEuNiAwIDMtLjcgMy0yLjNDMTcuNSAxNSAxNSAxMiAxMiAxMnoiPjwvcGF0aD48L3N2Zz4=",
+                                      "width": 20.0,
+                                      "height": 20.0
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "n32",
+                                      "name": "Text",
+                                      "content": "VITALIA",
+                                      "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                      "fontSize": 16.0,
+                                      "fontWeight": 700,
+                                      "lineHeight": 1.5,
+                                      "textGrowth": "auto",
+                                      "fill": [
+                                        {
+                                          "type": "solid",
+                                          "color": "#1b7f53"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n33",
+                              "name": "span",
+                              "width": "fit_content",
+                              "height": "fit_content",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n34",
+                                  "name": "Text",
+                                  "content": "Servicios",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "lineHeight": 1.5,
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#1f2a24"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n35",
+                              "name": "span",
+                              "width": "fit_content",
+                              "height": "fit_content",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n36",
+                                  "name": "Text",
+                                  "content": "Profesionales",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "lineHeight": 1.5,
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#1f2a24"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n37",
+                              "name": "span",
+                              "width": "fit_content",
+                              "height": "fit_content",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n38",
+                                  "name": "Text",
+                                  "content": "Urgencias",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "lineHeight": 1.5,
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#1f2a24"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n39",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 10.0,
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#1b7f53"
+                                }
+                              ],
+                              "effects": [
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 1.0,
+                                  "blur": 3.0,
+                                  "spread": 0.0,
+                                  "color": "#1f2a241a"
+                                },
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 1.0,
+                                  "blur": 2.0,
+                                  "spread": 0.0,
+                                  "color": "#1f2a240f"
+                                }
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n40",
+                                  "name": "Text",
+                                  "content": "Ingresar",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n41",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n42",
+                          "name": "h3",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "n43",
+                              "name": "Text",
+                              "width": "fill_container",
+                              "content": "Reservá un turno",
+                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                              "fontSize": 19.0,
+                              "fontWeight": 800,
+                              "letterSpacing": -0.19,
+                              "lineHeight": 1.5,
+                              "textGrowth": "fixed-width",
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#1f2a24"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n44",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        16.0,
+                        0.0,
+                        16.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n45",
+                          "name": "p",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "n46",
+                              "name": "Text",
+                              "width": "fill_container",
+                              "content": "Elegí el servicio que necesita tu animal.",
+                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                              "fontSize": 14.0,
+                              "lineHeight": 1.5,
+                              "textGrowth": "fixed-width",
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#5a6b62"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n47",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        24.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n48",
+                          "name": "div",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "vertical",
+                          "gap": 16.0,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n49",
+                              "name": "Grid row",
+                              "width": "fill_container",
+                              "height": "fit_content",
+                              "layout": "horizontal",
+                              "gap": 16.0,
+                              "alignItems": "stretch",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "n50",
+                                  "name": "article",
+                                  "width": "fill_container",
+                                  "height": "fit_content",
+                                  "layout": "vertical",
+                                  "padding": 17.0,
+                                  "cornerRadius": 16.0,
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ],
+                                  "stroke": {
+                                    "thickness": 1.0,
+                                    "align": "inside",
+                                    "fill": [
+                                      {
+                                        "type": "solid",
+                                        "color": "#d3e3d9"
+                                      }
+                                    ]
+                                  },
+                                  "effects": [
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 1.0,
+                                      "blur": 3.0,
+                                      "spread": 0.0,
+                                      "color": "#1f2a241a"
+                                    },
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 1.0,
+                                      "blur": 2.0,
+                                      "spread": 0.0,
+                                      "color": "#1f2a240f"
+                                    }
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "n51",
+                                      "name": "div",
+                                      "width": 44.0,
+                                      "height": 44.0,
+                                      "layout": "vertical",
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "cornerRadius": 10.0,
+                                      "fill": [
+                                        {
+                                          "type": "solid",
+                                          "color": "#e3f4ea"
+                                        }
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "image",
+                                          "id": "n52",
+                                          "name": "svg",
+                                          "src": "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0idnQtaWNvIiB2aWV3Ym94PSIwIDAgMjQgMjQiPjxyZWN0IHg9IjMiIHk9IjUiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxNiIgcng9IjMiPjwvcmVjdD48cGF0aCBkPSJNOCAzdjRNMTYgM3Y0TTMgMTBoMTgiPjwvcGF0aD48L3N2Zz4=",
+                                          "width": 20.0,
+                                          "height": 20.0
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n53",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n54",
+                                          "name": "h3",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n55",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "Consulta general",
+                                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 19.0,
+                                              "fontWeight": 800,
+                                              "letterSpacing": -0.19,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#1f2a24"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n56",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "padding": [
+                                        16.0,
+                                        0.0,
+                                        16.0,
+                                        0.0
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n57",
+                                          "name": "p",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n58",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "30 min · desde $ 1.200",
+                                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 14.0,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#5a6b62"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n59",
+                                      "name": "inline-row",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "horizontal",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n60",
+                                          "name": "span",
+                                          "width": "fit_content",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "padding": [
+                                            2.0,
+                                            12.0,
+                                            2.0,
+                                            12.0
+                                          ],
+                                          "cornerRadius": 999.0,
+                                          "fill": [
+                                            {
+                                              "type": "solid",
+                                              "color": "#e3f4ea"
+                                            }
+                                          ],
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n61",
+                                              "name": "Text",
+                                              "content": "Hay horarios hoy",
+                                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 12.0,
+                                              "fontWeight": 600,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "auto",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#187048"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "n62",
+                                  "name": "article",
+                                  "width": "fill_container",
+                                  "height": "fit_content",
+                                  "layout": "vertical",
+                                  "padding": 17.0,
+                                  "cornerRadius": 16.0,
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ],
+                                  "stroke": {
+                                    "thickness": 1.0,
+                                    "align": "inside",
+                                    "fill": [
+                                      {
+                                        "type": "solid",
+                                        "color": "#d3e3d9"
+                                      }
+                                    ]
+                                  },
+                                  "effects": [
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 1.0,
+                                      "blur": 3.0,
+                                      "spread": 0.0,
+                                      "color": "#1f2a241a"
+                                    },
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 1.0,
+                                      "blur": 2.0,
+                                      "spread": 0.0,
+                                      "color": "#1f2a240f"
+                                    }
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "n63",
+                                      "name": "div",
+                                      "width": 44.0,
+                                      "height": 44.0,
+                                      "layout": "vertical",
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "cornerRadius": 10.0,
+                                      "fill": [
+                                        {
+                                          "type": "solid",
+                                          "color": "#e3f4ea"
+                                        }
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "image",
+                                          "id": "n64",
+                                          "name": "svg",
+                                          "src": "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0idnQtaWNvIiB2aWV3Ym94PSIwIDAgMjQgMjQiPjxwYXRoIGQ9Im0xOCAyIDQgNE0xNyA3bDMtM00xOSA5IDguNSAxOS41IDQgMTUgMTQuNSA0LjVsNC41IDQuNXpNNiAxN2wtMyAzTTExIDEybDIgMk04IDE1bDIgMiI+PC9wYXRoPjwvc3ZnPg==",
+                                          "width": 20.0,
+                                          "height": 20.0
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n65",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n66",
+                                          "name": "h3",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n67",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "Vacunación",
+                                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 19.0,
+                                              "fontWeight": 800,
+                                              "letterSpacing": -0.19,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#1f2a24"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n68",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "padding": [
+                                        16.0,
+                                        0.0,
+                                        16.0,
+                                        0.0
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n69",
+                                          "name": "p",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n70",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "20 min · desde $ 900",
+                                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 14.0,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#5a6b62"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n71",
+                                      "name": "inline-row",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "horizontal",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n72",
+                                          "name": "span",
+                                          "width": "fit_content",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "padding": [
+                                            2.0,
+                                            12.0,
+                                            2.0,
+                                            12.0
+                                          ],
+                                          "cornerRadius": 999.0,
+                                          "fill": [
+                                            {
+                                              "type": "solid",
+                                              "color": "#e5effb"
+                                            }
+                                          ],
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n73",
+                                              "name": "Text",
+                                              "content": "Refuerzo en 20 días",
+                                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 12.0,
+                                              "fontWeight": 600,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "auto",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#1d5fa8"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "n74",
+                                  "name": "article",
+                                  "width": "fill_container",
+                                  "height": "fit_content",
+                                  "layout": "vertical",
+                                  "padding": 17.0,
+                                  "cornerRadius": 16.0,
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ],
+                                  "stroke": {
+                                    "thickness": 1.0,
+                                    "align": "inside",
+                                    "fill": [
+                                      {
+                                        "type": "solid",
+                                        "color": "#d3e3d9"
+                                      }
+                                    ]
+                                  },
+                                  "effects": [
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 1.0,
+                                      "blur": 3.0,
+                                      "spread": 0.0,
+                                      "color": "#1f2a241a"
+                                    },
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 1.0,
+                                      "blur": 2.0,
+                                      "spread": 0.0,
+                                      "color": "#1f2a240f"
+                                    }
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "n75",
+                                      "name": "div",
+                                      "width": 44.0,
+                                      "height": 44.0,
+                                      "layout": "vertical",
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "cornerRadius": 10.0,
+                                      "fill": [
+                                        {
+                                          "type": "solid",
+                                          "color": "#e3f4ea"
+                                        }
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "image",
+                                          "id": "n76",
+                                          "name": "svg",
+                                          "src": "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0idnQtaWNvIiB2aWV3Ym94PSIwIDAgMjQgMjQiPjxwYXRoIGQ9Ik0xMiAyMXMtOC01LTgtMTFhNSA1IDAgMCAxIDgtMy41QTUgNSAwIDAgMSAyMCAxMGMwIDYtOCAxMS04IDExeiI+PC9wYXRoPjwvc3ZnPg==",
+                                          "width": 20.0,
+                                          "height": 20.0
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n77",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n78",
+                                          "name": "h3",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n79",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "Castración",
+                                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 19.0,
+                                              "fontWeight": 800,
+                                              "letterSpacing": -0.19,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#1f2a24"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n80",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "padding": [
+                                        16.0,
+                                        0.0,
+                                        16.0,
+                                        0.0
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n81",
+                                          "name": "p",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n82",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "90 min · desde $ 4.500",
+                                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 14.0,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#5a6b62"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n83",
+                                      "name": "inline-row",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "horizontal",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n84",
+                                          "name": "span",
+                                          "width": "fit_content",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "padding": [
+                                            2.0,
+                                            12.0,
+                                            2.0,
+                                            12.0
+                                          ],
+                                          "cornerRadius": 999.0,
+                                          "fill": [
+                                            {
+                                              "type": "solid",
+                                              "color": "#fff1d6"
+                                            }
+                                          ],
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n85",
+                                              "name": "Text",
+                                              "content": "Pendiente de seña",
+                                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 12.0,
+                                              "fontWeight": 600,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "auto",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#8a5a00"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n86",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        20.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n87",
+                          "name": "div",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n88",
+                              "name": "inline-row",
+                              "width": "fill_container",
+                              "height": "fit_content",
+                              "layout": "horizontal",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n89",
+                                  "name": "Text",
+                                  "content": [
+                                    {
+                                      "text": "Nombre del animal",
+                                      "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                      "fontSize": 14.0,
+                                      "fill": "#5a6b62"
+                                    }
+                                  ],
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 14.0,
+                                  "lineHeight": 1.5,
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#5a6b62"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text_input",
+                                  "id": "n90",
+                                  "name": "input",
+                                  "theme": {
+                                    "__op_html_margin": "0,0,0,0,0,0,1,0"
+                                  },
+                                  "width": "fill_container",
+                                  "height": 47.0,
+                                  "minHeight": 47.0,
+                                  "value": "Toby",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ],
+                                  "stroke": {
+                                    "thickness": 1.5,
+                                    "align": "inside",
+                                    "fill": [
+                                      {
+                                        "type": "solid",
+                                        "color": "#d3e3d9"
+                                      }
+                                    ]
+                                  },
+                                  "cornerRadius": 10.0
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n91",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        20.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n92",
+                          "name": "div",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "horizontal",
+                          "gap": 10.0,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n93",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 10.0,
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#1b7f53"
+                                }
+                              ],
+                              "effects": [
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 1.0,
+                                  "blur": 3.0,
+                                  "spread": 0.0,
+                                  "color": "#1f2a241a"
+                                },
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 1.0,
+                                  "blur": 2.0,
+                                  "spread": 0.0,
+                                  "color": "#1f2a240f"
+                                }
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n94",
+                                  "name": "Text",
+                                  "content": "Confirmar turno",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n95",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 10.0,
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#b8530a"
+                                }
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n96",
+                                  "name": "Text",
+                                  "content": "Pagar seña",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n97",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 10.0,
+                              "stroke": {
+                                "thickness": 2.0,
+                                "align": "inside",
+                                "fill": [
+                                  {
+                                    "type": "solid",
+                                    "color": "#1b7f53"
+                                  }
+                                ]
+                              },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n98",
+                                  "name": "Text",
+                                  "content": "Volver",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#1b7f53"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n99",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 10.0,
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#fde8e6"
+                                }
+                              ],
+                              "stroke": {
+                                "thickness": 2.0,
+                                "align": "inside",
+                                "fill": [
+                                  {
+                                    "type": "solid",
+                                    "color": "#b42318"
+                                  }
+                                ]
+                              },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n100",
+                                  "name": "Text",
+                                  "content": "Cancelar turno",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#b42318"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n101",
+                              "name": "button",
+                              "role": "button",
+                              "opacity": 0.5,
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 10.0,
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#1b7f53"
+                                }
+                              ],
+                              "effects": [
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 1.0,
+                                  "blur": 3.0,
+                                  "spread": 0.0,
+                                  "color": "#1f2a241a"
+                                },
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 1.0,
+                                  "blur": 2.0,
+                                  "spread": 0.0,
+                                  "color": "#1f2a240f"
+                                }
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n102",
+                                  "name": "Text",
+                                  "content": "Deshabilitado",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n103",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        20.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n104",
+                          "name": "div",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "n105",
+                              "name": "Text",
+                              "width": "fill_container",
+                              "content": [
+                                {
+                                  "text": "Cargando (esqueleto):",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 14.0,
+                                  "fill": "#5a6b62"
+                                }
+                              ],
+                              "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                              "fontSize": 14.0,
+                              "lineHeight": 1.5,
+                              "textGrowth": "fixed-width",
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#5a6b62"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n106",
+                              "name": "Margin",
+                              "width": 864.0,
+                              "height": 34.0,
+                              "layout": "vertical",
+                              "padding": [
+                                8.0,
+                                0.0,
+                                8.0,
+                                0.0
+                              ],
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "n107",
+                                  "name": "div",
+                                  "width": 864.0,
+                                  "height": 18.0,
+                                  "minHeight": 14.0,
+                                  "layout": "vertical",
+                                  "cornerRadius": 6.0,
+                                  "fill": [
+                                    {
+                                      "type": "linear_gradient",
+                                      "angle": 90.0,
+                                      "stops": [
+                                        {
+                                          "offset": 0.25,
+                                          "color": "#ecf5ef"
+                                        },
+                                        {
+                                          "offset": 0.5,
+                                          "color": "#d3e3d9"
+                                        },
+                                        {
+                                          "offset": 0.75,
+                                          "color": "#ecf5ef"
+                                        }
+                                      ]
+                                    }
+                                  ],
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n108",
+                              "name": "div",
+                              "width": "fill_container",
+                              "height": 60.0,
+                              "minHeight": 14.0,
+                              "layout": "vertical",
+                              "cornerRadius": 6.0,
+                              "fill": [
+                                {
+                                  "type": "linear_gradient",
+                                  "angle": 90.0,
+                                  "stops": [
+                                    {
+                                      "offset": 0.25,
+                                      "color": "#ecf5ef"
+                                    },
+                                    {
+                                      "offset": 0.5,
+                                      "color": "#d3e3d9"
+                                    },
+                                    {
+                                      "offset": 0.75,
+                                      "color": "#ecf5ef"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n109",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        20.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n110",
+                          "name": "div",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "horizontal",
+                          "gap": 10.0,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n111",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 10.0,
+                              "stroke": {
+                                "thickness": 2.0,
+                                "align": "inside",
+                                "fill": [
+                                  {
+                                    "type": "solid",
+                                    "color": "#1b7f53"
+                                  }
+                                ]
+                              },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n112",
+                                  "name": "Text",
+                                  "content": "Ver aviso de éxito",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#1b7f53"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n113",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 10.0,
+                              "stroke": {
+                                "thickness": 2.0,
+                                "align": "inside",
+                                "fill": [
+                                  {
+                                    "type": "solid",
+                                    "color": "#1b7f53"
+                                  }
+                                ]
+                              },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n114",
+                                  "name": "Text",
+                                  "content": "Ver aviso de error",
+                                  "fontFamily": "'Nunito', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#1b7f53"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "n115",
+                  "name": "section",
+                  "width": 720.0,
+                  "height": 948.0,
+                  "minHeight": 948.0,
+                  "layout": "vertical",
+                  "padding": 24.0,
+                  "fill": [
+                    {
+                      "type": "solid",
+                      "color": "#fbf8f3"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "n116",
+                      "name": "div",
+                      "x": 1424.0,
+                      "y": 884.0,
+                      "constraints": {
+                        "h": "right",
+                        "v": "bottom"
+                      },
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "gap": 8.0,
+                      "children": []
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n117",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        16.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n118",
+                          "name": "header",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "horizontal",
+                          "gap": 12.0,
+                          "justifyContent": "space_between",
+                          "alignItems": "start",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n119",
+                              "name": "div",
+                              "width": "fit_content",
+                              "height": "fit_content",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "n120",
+                                  "name": "Margin",
+                                  "width": "fit_content",
+                                  "height": "fit_content",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "n121",
+                                      "name": "h2",
+                                      "width": "fit_content",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "n122",
+                                          "name": "Text",
+                                          "content": "Opción B — Claude",
+                                          "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                          "fontSize": 24.0,
+                                          "fontWeight": 800,
+                                          "letterSpacing": -0.24,
+                                          "lineHeight": 1.5,
+                                          "textGrowth": "auto",
+                                          "fill": [
+                                            {
+                                              "type": "solid",
+                                              "color": "#1b2625"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "n123",
+                                  "name": "Margin",
+                                  "width": "fit_content",
+                                  "height": "fit_content",
+                                  "layout": "vertical",
+                                  "padding": [
+                                    16.0,
+                                    0.0,
+                                    16.0,
+                                    0.0
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "n124",
+                                      "name": "p",
+                                      "width": "fit_content",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "n125",
+                                          "name": "Text",
+                                          "content": "Verde azulado profundo · coral · fondo arena · Plus Jakarta Sans · formas amplias · iconos duotono",
+                                          "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                          "fontSize": 14.0,
+                                          "lineHeight": 1.5,
+                                          "textGrowth": "auto",
+                                          "fill": [
+                                            {
+                                              "type": "solid",
+                                              "color": "#5c6b6a"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n126",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 14.0,
+                              "stroke": {
+                                "thickness": 2.0,
+                                "align": "inside",
+                                "fill": [
+                                  {
+                                    "type": "solid",
+                                    "color": "#0b7a75"
+                                  }
+                                ]
+                              },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n127",
+                                  "name": "Text",
+                                  "content": "🌙 Claro / oscuro",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#0b7a75"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n128",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        24.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n129",
+                          "name": "nav",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "horizontal",
+                          "gap": 20.0,
+                          "padding": [
+                            11.0,
+                            17.0,
+                            11.0,
+                            17.0
+                          ],
+                          "alignItems": "center",
+                          "cornerRadius": 22.0,
+                          "fill": [
+                            {
+                              "type": "solid",
+                              "color": "#ffffff"
+                            }
+                          ],
+                          "stroke": {
+                            "thickness": 1.0,
+                            "align": "inside",
+                            "fill": [
+                              {
+                                "type": "solid",
+                                "color": "#e4ddd0"
+                              }
+                            ]
+                          },
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n130",
+                              "name": "Auto margin",
+                              "width": "fill_container",
+                              "height": "fit_content",
+                              "layout": "horizontal",
+                              "justifyContent": "start",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "n131",
+                                  "name": "strong",
+                                  "width": "fit_content",
+                                  "height": "fit_content",
+                                  "layout": "horizontal",
+                                  "gap": 8.0,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "image",
+                                      "id": "n132",
+                                      "name": "svg",
+                                      "src": "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0idnQtaWNvIiB2aWV3Ym94PSIwIDAgMjQgMjQiPjxjaXJjbGUgY3g9IjUiIGN5PSIxMCIgcj0iMS42Ij48L2NpcmNsZT48Y2lyY2xlIGN4PSI5IiBjeT0iNS41IiByPSIxLjYiPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjE1IiBjeT0iNS41IiByPSIxLjYiPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjE5IiBjeT0iMTAiIHI9IjEuNiI+PC9jaXJjbGU+PHBhdGggZD0iTTEyIDEyYy0zIDAtNS41IDMtNS41IDUuMiAwIDEuNiAxLjQgMi4zIDMgMi4zIDEgMCAxLjYtLjQgMi41LS40czEuNS40IDIuNS40YzEuNiAwIDMtLjcgMy0yLjNDMTcuNSAxNSAxNSAxMiAxMiAxMnoiPjwvcGF0aD48L3N2Zz4=",
+                                      "width": 20.0,
+                                      "height": 20.0
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "n133",
+                                      "name": "Text",
+                                      "content": "VITALIA",
+                                      "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                      "fontSize": 16.0,
+                                      "fontWeight": 700,
+                                      "lineHeight": 1.5,
+                                      "textGrowth": "auto",
+                                      "fill": [
+                                        {
+                                          "type": "solid",
+                                          "color": "#0b7a75"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n134",
+                              "name": "span",
+                              "width": "fit_content",
+                              "height": "fit_content",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n135",
+                                  "name": "Text",
+                                  "content": "Servicios",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "lineHeight": 1.5,
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#1b2625"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n136",
+                              "name": "span",
+                              "width": "fit_content",
+                              "height": "fit_content",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n137",
+                                  "name": "Text",
+                                  "content": "Profesionales",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "lineHeight": 1.5,
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#1b2625"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n138",
+                              "name": "span",
+                              "width": "fit_content",
+                              "height": "fit_content",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n139",
+                                  "name": "Text",
+                                  "content": "Urgencias",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "lineHeight": 1.5,
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#1b2625"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n140",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 14.0,
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#0b7a75"
+                                }
+                              ],
+                              "effects": [
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 1.0,
+                                  "blur": 2.0,
+                                  "spread": 0.0,
+                                  "color": "#1b262514"
+                                },
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 2.0,
+                                  "blur": 6.0,
+                                  "spread": 0.0,
+                                  "color": "#1b26250f"
+                                }
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n141",
+                                  "name": "Text",
+                                  "content": "Ingresar",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n142",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n143",
+                          "name": "h3",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "n144",
+                              "name": "Text",
+                              "width": "fill_container",
+                              "content": "Reservá un turno",
+                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                              "fontSize": 19.0,
+                              "fontWeight": 800,
+                              "letterSpacing": -0.19,
+                              "lineHeight": 1.5,
+                              "textGrowth": "fixed-width",
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#1b2625"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n145",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        16.0,
+                        0.0,
+                        16.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n146",
+                          "name": "p",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "n147",
+                              "name": "Text",
+                              "width": "fill_container",
+                              "content": "Elegí el servicio que necesita tu animal.",
+                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                              "fontSize": 14.0,
+                              "lineHeight": 1.5,
+                              "textGrowth": "fixed-width",
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#5c6b6a"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n148",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        24.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n149",
+                          "name": "div",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "vertical",
+                          "gap": 16.0,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n150",
+                              "name": "Grid row",
+                              "width": "fill_container",
+                              "height": "fit_content",
+                              "layout": "horizontal",
+                              "gap": 16.0,
+                              "alignItems": "stretch",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "n151",
+                                  "name": "article",
+                                  "width": "fill_container",
+                                  "height": "fit_content",
+                                  "layout": "vertical",
+                                  "padding": 17.0,
+                                  "cornerRadius": 22.0,
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ],
+                                  "stroke": {
+                                    "thickness": 1.0,
+                                    "align": "inside",
+                                    "fill": [
+                                      {
+                                        "type": "solid",
+                                        "color": "#e4ddd0"
+                                      }
+                                    ]
+                                  },
+                                  "effects": [
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 1.0,
+                                      "blur": 2.0,
+                                      "spread": 0.0,
+                                      "color": "#1b262514"
+                                    },
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 2.0,
+                                      "blur": 6.0,
+                                      "spread": 0.0,
+                                      "color": "#1b26250f"
+                                    }
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "n152",
+                                      "name": "div",
+                                      "width": 44.0,
+                                      "height": 44.0,
+                                      "layout": "vertical",
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "cornerRadius": 14.0,
+                                      "fill": [
+                                        {
+                                          "type": "solid",
+                                          "color": "#ddf1ef"
+                                        }
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "image",
+                                          "id": "n153",
+                                          "name": "svg",
+                                          "src": "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0idnQtaWNvIiB2aWV3Ym94PSIwIDAgMjQgMjQiPjxyZWN0IHg9IjMiIHk9IjUiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxNiIgcng9IjMiPjwvcmVjdD48cGF0aCBkPSJNOCAzdjRNMTYgM3Y0TTMgMTBoMTgiPjwvcGF0aD48L3N2Zz4=",
+                                          "width": 20.0,
+                                          "height": 20.0
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n154",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n155",
+                                          "name": "h3",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n156",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "Consulta general",
+                                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 19.0,
+                                              "fontWeight": 800,
+                                              "letterSpacing": -0.19,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#1b2625"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n157",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "padding": [
+                                        16.0,
+                                        0.0,
+                                        16.0,
+                                        0.0
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n158",
+                                          "name": "p",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n159",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "30 min · desde $ 1.200",
+                                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 14.0,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#5c6b6a"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n160",
+                                      "name": "inline-row",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "horizontal",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n161",
+                                          "name": "span",
+                                          "width": "fit_content",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "padding": [
+                                            2.0,
+                                            12.0,
+                                            2.0,
+                                            12.0
+                                          ],
+                                          "cornerRadius": 999.0,
+                                          "fill": [
+                                            {
+                                              "type": "solid",
+                                              "color": "#e3f4ea"
+                                            }
+                                          ],
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n162",
+                                              "name": "Text",
+                                              "content": "Hay horarios hoy",
+                                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 12.0,
+                                              "fontWeight": 600,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "auto",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#187048"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "n163",
+                                  "name": "article",
+                                  "width": "fill_container",
+                                  "height": "fit_content",
+                                  "layout": "vertical",
+                                  "padding": 17.0,
+                                  "cornerRadius": 22.0,
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ],
+                                  "stroke": {
+                                    "thickness": 1.0,
+                                    "align": "inside",
+                                    "fill": [
+                                      {
+                                        "type": "solid",
+                                        "color": "#e4ddd0"
+                                      }
+                                    ]
+                                  },
+                                  "effects": [
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 1.0,
+                                      "blur": 2.0,
+                                      "spread": 0.0,
+                                      "color": "#1b262514"
+                                    },
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 2.0,
+                                      "blur": 6.0,
+                                      "spread": 0.0,
+                                      "color": "#1b26250f"
+                                    }
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "n164",
+                                      "name": "div",
+                                      "width": 44.0,
+                                      "height": 44.0,
+                                      "layout": "vertical",
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "cornerRadius": 14.0,
+                                      "fill": [
+                                        {
+                                          "type": "solid",
+                                          "color": "#ddf1ef"
+                                        }
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "image",
+                                          "id": "n165",
+                                          "name": "svg",
+                                          "src": "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0idnQtaWNvIiB2aWV3Ym94PSIwIDAgMjQgMjQiPjxwYXRoIGQ9Im0xOCAyIDQgNE0xNyA3bDMtM00xOSA5IDguNSAxOS41IDQgMTUgMTQuNSA0LjVsNC41IDQuNXpNNiAxN2wtMyAzTTExIDEybDIgMk04IDE1bDIgMiI+PC9wYXRoPjwvc3ZnPg==",
+                                          "width": 20.0,
+                                          "height": 20.0
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n166",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n167",
+                                          "name": "h3",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n168",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "Vacunación",
+                                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 19.0,
+                                              "fontWeight": 800,
+                                              "letterSpacing": -0.19,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#1b2625"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n169",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "padding": [
+                                        16.0,
+                                        0.0,
+                                        16.0,
+                                        0.0
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n170",
+                                          "name": "p",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n171",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "20 min · desde $ 900",
+                                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 14.0,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#5c6b6a"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n172",
+                                      "name": "inline-row",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "horizontal",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n173",
+                                          "name": "span",
+                                          "width": "fit_content",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "padding": [
+                                            2.0,
+                                            12.0,
+                                            2.0,
+                                            12.0
+                                          ],
+                                          "cornerRadius": 999.0,
+                                          "fill": [
+                                            {
+                                              "type": "solid",
+                                              "color": "#e5effb"
+                                            }
+                                          ],
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n174",
+                                              "name": "Text",
+                                              "content": "Refuerzo en 20 días",
+                                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 12.0,
+                                              "fontWeight": 600,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "auto",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#1d5fa8"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "n175",
+                                  "name": "article",
+                                  "width": "fill_container",
+                                  "height": "fit_content",
+                                  "layout": "vertical",
+                                  "padding": 17.0,
+                                  "cornerRadius": 22.0,
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ],
+                                  "stroke": {
+                                    "thickness": 1.0,
+                                    "align": "inside",
+                                    "fill": [
+                                      {
+                                        "type": "solid",
+                                        "color": "#e4ddd0"
+                                      }
+                                    ]
+                                  },
+                                  "effects": [
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 1.0,
+                                      "blur": 2.0,
+                                      "spread": 0.0,
+                                      "color": "#1b262514"
+                                    },
+                                    {
+                                      "type": "shadow",
+                                      "offsetX": 0.0,
+                                      "offsetY": 2.0,
+                                      "blur": 6.0,
+                                      "spread": 0.0,
+                                      "color": "#1b26250f"
+                                    }
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "n176",
+                                      "name": "div",
+                                      "width": 44.0,
+                                      "height": 44.0,
+                                      "layout": "vertical",
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "cornerRadius": 14.0,
+                                      "fill": [
+                                        {
+                                          "type": "solid",
+                                          "color": "#ddf1ef"
+                                        }
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "image",
+                                          "id": "n177",
+                                          "name": "svg",
+                                          "src": "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0idnQtaWNvIiB2aWV3Ym94PSIwIDAgMjQgMjQiPjxwYXRoIGQ9Ik0xMiAyMXMtOC01LTgtMTFhNSA1IDAgMCAxIDgtMy41QTUgNSAwIDAgMSAyMCAxMGMwIDYtOCAxMS04IDExeiI+PC9wYXRoPjwvc3ZnPg==",
+                                          "width": 20.0,
+                                          "height": 20.0
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n178",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n179",
+                                          "name": "h3",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n180",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "Castración",
+                                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 19.0,
+                                              "fontWeight": 800,
+                                              "letterSpacing": -0.19,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#1b2625"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n181",
+                                      "name": "Margin",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "vertical",
+                                      "padding": [
+                                        16.0,
+                                        0.0,
+                                        16.0,
+                                        0.0
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n182",
+                                          "name": "p",
+                                          "width": "fill_container",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n183",
+                                              "name": "Text",
+                                              "width": "fill_container",
+                                              "content": "90 min · desde $ 4.500",
+                                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 14.0,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "fixed-width",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#5c6b6a"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "n184",
+                                      "name": "inline-row",
+                                      "width": "fill_container",
+                                      "height": "fit_content",
+                                      "layout": "horizontal",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "n185",
+                                          "name": "span",
+                                          "width": "fit_content",
+                                          "height": "fit_content",
+                                          "layout": "vertical",
+                                          "padding": [
+                                            2.0,
+                                            12.0,
+                                            2.0,
+                                            12.0
+                                          ],
+                                          "cornerRadius": 999.0,
+                                          "fill": [
+                                            {
+                                              "type": "solid",
+                                              "color": "#fff1d6"
+                                            }
+                                          ],
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "n186",
+                                              "name": "Text",
+                                              "content": "Pendiente de seña",
+                                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                              "fontSize": 12.0,
+                                              "fontWeight": 600,
+                                              "lineHeight": 1.5,
+                                              "textGrowth": "auto",
+                                              "fill": [
+                                                {
+                                                  "type": "solid",
+                                                  "color": "#8a5a00"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n187",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        20.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n188",
+                          "name": "div",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n189",
+                              "name": "inline-row",
+                              "width": "fill_container",
+                              "height": "fit_content",
+                              "layout": "horizontal",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n190",
+                                  "name": "Text",
+                                  "content": [
+                                    {
+                                      "text": "Nombre del animal",
+                                      "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                      "fontSize": 14.0,
+                                      "fill": "#5c6b6a"
+                                    }
+                                  ],
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 14.0,
+                                  "lineHeight": 1.5,
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#5c6b6a"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text_input",
+                                  "id": "n191",
+                                  "name": "input",
+                                  "theme": {
+                                    "__op_html_margin": "0,0,0,0,0,0,1,0"
+                                  },
+                                  "width": "fill_container",
+                                  "height": 47.0,
+                                  "minHeight": 47.0,
+                                  "value": "Toby",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ],
+                                  "stroke": {
+                                    "thickness": 1.5,
+                                    "align": "inside",
+                                    "fill": [
+                                      {
+                                        "type": "solid",
+                                        "color": "#e4ddd0"
+                                      }
+                                    ]
+                                  },
+                                  "cornerRadius": 14.0
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n192",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        20.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n193",
+                          "name": "div",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "horizontal",
+                          "gap": 10.0,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n194",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 14.0,
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#0b7a75"
+                                }
+                              ],
+                              "effects": [
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 1.0,
+                                  "blur": 2.0,
+                                  "spread": 0.0,
+                                  "color": "#1b262514"
+                                },
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 2.0,
+                                  "blur": 6.0,
+                                  "spread": 0.0,
+                                  "color": "#1b26250f"
+                                }
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n195",
+                                  "name": "Text",
+                                  "content": "Confirmar turno",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n196",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 14.0,
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#c4452e"
+                                }
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n197",
+                                  "name": "Text",
+                                  "content": "Pagar seña",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n198",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 14.0,
+                              "stroke": {
+                                "thickness": 2.0,
+                                "align": "inside",
+                                "fill": [
+                                  {
+                                    "type": "solid",
+                                    "color": "#0b7a75"
+                                  }
+                                ]
+                              },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n199",
+                                  "name": "Text",
+                                  "content": "Volver",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#0b7a75"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n200",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 14.0,
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#fde8e6"
+                                }
+                              ],
+                              "stroke": {
+                                "thickness": 2.0,
+                                "align": "inside",
+                                "fill": [
+                                  {
+                                    "type": "solid",
+                                    "color": "#b42318"
+                                  }
+                                ]
+                              },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n201",
+                                  "name": "Text",
+                                  "content": "Cancelar turno",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#b42318"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n202",
+                              "name": "button",
+                              "role": "button",
+                              "opacity": 0.5,
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 14.0,
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#0b7a75"
+                                }
+                              ],
+                              "effects": [
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 1.0,
+                                  "blur": 2.0,
+                                  "spread": 0.0,
+                                  "color": "#1b262514"
+                                },
+                                {
+                                  "type": "shadow",
+                                  "offsetX": 0.0,
+                                  "offsetY": 2.0,
+                                  "blur": 6.0,
+                                  "spread": 0.0,
+                                  "color": "#1b26250f"
+                                }
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n203",
+                                  "name": "Text",
+                                  "content": "Deshabilitado",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#ffffff"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n204",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        20.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n205",
+                          "name": "div",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "n206",
+                              "name": "Text",
+                              "width": "fill_container",
+                              "content": [
+                                {
+                                  "text": "Cargando (esqueleto):",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 14.0,
+                                  "fill": "#5c6b6a"
+                                }
+                              ],
+                              "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                              "fontSize": 14.0,
+                              "lineHeight": 1.5,
+                              "textGrowth": "fixed-width",
+                              "fill": [
+                                {
+                                  "type": "solid",
+                                  "color": "#5c6b6a"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n207",
+                              "name": "Margin",
+                              "width": 864.0,
+                              "height": 34.0,
+                              "layout": "vertical",
+                              "padding": [
+                                8.0,
+                                0.0,
+                                8.0,
+                                0.0
+                              ],
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "n208",
+                                  "name": "div",
+                                  "width": 864.0,
+                                  "height": 18.0,
+                                  "minHeight": 14.0,
+                                  "layout": "vertical",
+                                  "cornerRadius": 8.0,
+                                  "fill": [
+                                    {
+                                      "type": "linear_gradient",
+                                      "angle": 90.0,
+                                      "stops": [
+                                        {
+                                          "offset": 0.25,
+                                          "color": "#f3eee5"
+                                        },
+                                        {
+                                          "offset": 0.5,
+                                          "color": "#e4ddd0"
+                                        },
+                                        {
+                                          "offset": 0.75,
+                                          "color": "#f3eee5"
+                                        }
+                                      ]
+                                    }
+                                  ],
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n209",
+                              "name": "div",
+                              "width": "fill_container",
+                              "height": 60.0,
+                              "minHeight": 14.0,
+                              "layout": "vertical",
+                              "cornerRadius": 8.0,
+                              "fill": [
+                                {
+                                  "type": "linear_gradient",
+                                  "angle": 90.0,
+                                  "stops": [
+                                    {
+                                      "offset": 0.25,
+                                      "color": "#f3eee5"
+                                    },
+                                    {
+                                      "offset": 0.5,
+                                      "color": "#e4ddd0"
+                                    },
+                                    {
+                                      "offset": 0.75,
+                                      "color": "#f3eee5"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n210",
+                      "name": "Margin",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "layout": "vertical",
+                      "padding": [
+                        0.0,
+                        0.0,
+                        20.0,
+                        0.0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n211",
+                          "name": "div",
+                          "width": "fill_container",
+                          "height": "fit_content",
+                          "layout": "horizontal",
+                          "gap": 10.0,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "n212",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 14.0,
+                              "stroke": {
+                                "thickness": 2.0,
+                                "align": "inside",
+                                "fill": [
+                                  {
+                                    "type": "solid",
+                                    "color": "#0b7a75"
+                                  }
+                                ]
+                              },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n213",
+                                  "name": "Text",
+                                  "content": "Ver aviso de éxito",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#0b7a75"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "n214",
+                              "name": "button",
+                              "role": "button",
+                              "width": "fit_content",
+                              "height": 48.0,
+                              "minHeight": 48.0,
+                              "layout": "horizontal",
+                              "gap": 8.0,
+                              "padding": [
+                                2.0,
+                                18.0,
+                                2.0,
+                                18.0
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "cornerRadius": 14.0,
+                              "stroke": {
+                                "thickness": 2.0,
+                                "align": "inside",
+                                "fill": [
+                                  {
+                                    "type": "solid",
+                                    "color": "#0b7a75"
+                                  }
+                                ]
+                              },
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n215",
+                                  "name": "Text",
+                                  "content": "Ver aviso de error",
+                                  "fontFamily": "'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif",
+                                  "fontSize": 16.0,
+                                  "fontWeight": 600,
+                                  "fontStyle": "normal",
+                                  "lineHeight": 1.5,
+                                  "textAlign": "center",
+                                  "textGrowth": "auto",
+                                  "fill": [
+                                    {
+                                      "type": "solid",
+                                      "color": "#0b7a75"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "editorMeta": {
+    "activePageIndex": 0,
+    "preserveAuthoredGeometry": false
+  }
+}
