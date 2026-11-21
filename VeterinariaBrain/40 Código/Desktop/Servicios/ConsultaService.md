@@ -45,3 +45,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[HistoriaClinica]]
 - [[MiCuenta]]
 - [[VacunaService]]
+
+## En las otras aplicaciones
+- [[ConsultaService (API)]]

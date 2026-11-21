@@ -11,6 +11,9 @@ generado: true
 
 Datos públicos de la clínica ficticia VITALIA (RF-VIS-03, RF-VIS-06). Una sola fila.
 
-**Requisitos y decisiones:** RF-ADM-10, RF-VIS-03, RF-VIS-06
+**Requisitos y decisiones:** RF-ADM-10, RF-REC-05, RF-VIS-03, RF-VIS-06, RN-34
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
+
+## Usa
+- [[Rol (API)]]
