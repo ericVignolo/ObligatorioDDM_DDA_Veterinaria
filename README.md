@@ -10,64 +10,67 @@ Sistema integral para **VITALIA**, una clínica veterinaria **ficticia** que ati
 
 | Parte | Tecnología | Estado |
 |---|---|---|
-| Escritorio | **Blazor Web App** · **C#** · **.NET 10** · interactividad Server · Bootstrap | En construcción (sección A) |
-| Móvil | **React Native** · diseño en Figma | Sección B |
-| API | **ASP.NET Core** (C#) · EF Core · única autoridad de datos y reglas | Sección C |
-| Base de datos | **MySQL 8.4 LTS** | Sección C (proveedor de EF Core en revisión, DT-BD-02) |
+| Escritorio | **Blazor Web App** · **C#** · **.NET 10** · interactividad Server · Bootstrap | ✅ Sección A terminada (A-001 a A-031), con datos de demostración. Falta el diseño visual |
+| API | **ASP.NET Core** (.NET 10) · EF Core 10 · `MySql.EntityFrameworkCore` 10.0.7 · JWT | 🟡 Cerca del 90 %: 8 módulos y unos 100 endpoints |
+| Base de datos | **MySQL 8.4 LTS** | ✅ 52 tablas, 3 migraciones y semilla de demostración |
+| Móvil | **React Native** · **Expo SDK 58** · TypeScript · Expo Router · NativeWind 4 | 🟡 Sección B en curso |
 
-Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ningún cliente accede a la base de datos**. Detalle en los [principios vigentes](docs/contexto-base/CONTEXTO_BASE.md#31-principios-vigentes).
+Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ningún cliente accede a la base de datos**. Detalle en los [principios vigentes](docs/contexto-base/CONTEXTO_BASE.md#31-principios-vigentes). Entrega: **domingo 13/12/2026**.
 
 ## Estado actual
 
-**Sección A — escritorio**, con datos de demostración (todavía sin API ni base de datos).
-
-| Tarea | Qué incluye | Estado |
+| Sección | Qué incluye | Estado |
 |---|---|---|
-| A-001 | Proyecto Blazor, navegación y cultura `es-UY` | ✅ |
-| A-002 | Página de inicio de VITALIA | ✅ |
-| A-003 | Catálogo de servicios con detalle | ✅ |
-| A-004 | Profesionales con horarios y página de la clínica | ✅ |
-| A-005 | Urgencias y documentos legales (Privacidad, Términos, Cookies) | ✅ |
-| A-006 | Registro de cliente con validaciones y aceptaciones separadas | ✅ |
-| A-007 | Verificación del correo por código y recuperación de contraseña | ✅ |
-| A-008 | Inicio y cierre de sesión | ✅ |
-| A-011 | Retomar la reserva después de ingresar | ✅ |
-| A-012, A-013 | Mis animales: listado, ficha, alta y edición (incluye grupos de campo) | ✅ |
-| A-014, A-015 | Disponibilidad y reserva en cuatro pasos, con Mis turnos | ✅ |
-| A-016 | Cancelar y reprogramar turnos (24 h), historial de turnos | ✅ |
-| A-010, A-017, A-018 | Panel del personal por rol, agenda de Recepción y del Veterinario, estados unificados | ✅ |
-| A-009 | Perfil del Cliente («Mi cuenta»): datos con quién ve cada uno, animales con historia, turnos y «Reservar de nuevo», cambio de correo y de contraseña con verificación | ✅ |
-| A-019, A-020 | Consulta veterinaria (borrador, firma con contraseña), enmiendas e historia clínica para veterinario y cliente | ✅ |
-| A-021 | Vacunas y antiparasitarios: se registran dentro de la consulta, lote que no vence (RN-15), refuerzo calculado (RN-19), carnet con estados y alertas sanitarias | ✅ |
-| A-022 | Inventario: lotes con vencimiento, FEFO, stock mínimo y alertas, compras, ajustes y bajas del Administrador, insumos y dosis que se descuentan al firmar la consulta | 🧪 En prueba |
-| A-023 en adelante | Cobro, internación y demás módulos | Pendiente |
+| **A — Escritorio** | Visitante, Cliente, Recepción, Veterinario y Administrador: catálogo, registro e ingreso, animales, turnos, consulta e historia clínica, vacunas y carnet, inventario FEFO, cobro presencial, internación, consentimiento, asistencia a domicilio, administración, comunicaciones y accesibilidad. Ver [`desktop/README.md`](desktop/README.md) | ✅ Funcional (falta el CSS de diseño) |
+| **Base de datos + API** | Catálogo, profesionales, clínica, cuentas y sesiones, animales, turnos con bloqueo de agenda, consulta con firma atómica, carnet, inventario, consentimiento, cobro, administración, internación, comunicaciones y asistencia. 950 métodos de prueba y CI. Ver [`api/README.md`](api/README.md) | 🟡 Falta: 2FA del Administrador, correo real, tareas programadas, tiempo real, derechos del titular y borrado de cuentas sin verificar |
+| **B — Móvil** | Proyecto Expo con la paleta de VITALIA (claro y oscuro) y el primer recorrido del Visitante (inicio, servicios, detalle). Ver [`mobile/README.md`](mobile/README.md) | 🟡 En curso |
+| **C — Integración** | Conectar Blazor y la app móvil a la API | ⏳ Pendiente |
+| **Diseño** | Opciones A y B en [`design/vitalia/`](design/vitalia/README.md) | ⏳ Falta elegir una |
 
-El mapa de páginas, servicios y modelos (con diagrama) está en [`desktop/README.md`](desktop/README.md).
-
-Avance completo en el [plan de tareas](docs/analisis/PLAN_TAREAS_PROYECTO.md) y en la [última bitácora de trabajo](docs/sesiones/).
+Avance completo en el [plan de tareas](docs/analisis/PLAN_TAREAS_PROYECTO.md) y en las [bitácoras de trabajo](docs/sesiones/).
 
 ## Cómo ejecutarlo
 
-Requisitos: **Visual Studio 2026** (o el SDK de **.NET 10**).
+Clonar el repositorio y cambiar a la rama `desarrollo`.
 
-1. Clonar el repositorio y cambiar a la rama `desarrollo`.
-2. Abrir `desktop/Veterinaria.Blazor/Veterinaria.Blazor.slnx`.
-3. Ejecutar con **F5** y aceptar el certificado HTTPS de desarrollo si lo pide.
+### Escritorio (Blazor)
 
-Desde la terminal:
+Requisitos: **Visual Studio 2026** o el SDK de **.NET 10**. Abrir `desktop/Veterinaria.Blazor/Veterinaria.Blazor.slnx` y ejecutar con **F5**, o desde la terminal:
 
 ```
 cd desktop/Veterinaria.Blazor
 dotnet run
 ```
 
+### API y base de datos
+
+1. Tener **MySQL 8.4** corriendo.
+2. Copiar `api/Veterinaria.Api/appsettings.Development.example.json` como `appsettings.Development.json` y poner la contraseña de MySQL (ese archivo no se sube).
+3. Abrir `api/Veterinaria.Api/Veterinaria.Api.slnx`; en la *Consola del Administrador de paquetes* correr `Update-Database`.
+4. Ejecutar con **F5** (`http://localhost:5191`). Para probarla, usar `Veterinaria.Api.http`. Personal de demostración: `recepcion@`, `ferreira@`, `silveira@`, `acosta@` y `admin@vitalia.uy`, contraseña `Vitalia2026!`.
+
+Detalle en [`api/README.md`](api/README.md#crear-la-base-en-tu-computadora). Pruebas: [`tests/README.md`](tests/README.md).
+
+### Móvil (Expo)
+
+Requisitos: **Node.js** (LTS) y **Expo Go** en el celular o un emulador de Android.
+
+```
+cd mobile/Veterinaria.Movil
+npm install
+npx expo start
+```
+
+Escanear el QR con Expo Go. Detalle en [`mobile/README.md`](mobile/README.md).
+
 ## Estructura
 
 | Carpeta | Contenido |
 |---|---|
 | [`desktop/Veterinaria.Blazor/`](desktop/README.md) | Aplicación Blazor: `Models/`, `Services/`, `Components/` y `Components/Pages/`. |
-| [`api/`](api/README.md) | API ASP.NET Core (sección C). |
-| [`mobile/`](mobile/README.md) | Aplicación React Native (sección B). |
+| [`api/`](api/README.md) | API ASP.NET Core: `Controllers/`, `Services/`, `Repositories/`, `DTOs/`, `Models/`, `Data/` y migraciones. |
+| [`mobile/`](mobile/README.md) | Aplicación React Native con Expo (`mobile/Veterinaria.Movil/`). |
+| [`design/vitalia/`](design/vitalia/README.md) | Sistema de diseño: paletas, tipografía, componentes e iconos (opciones A y B). |
 | [`tests/`](tests/README.md) | Pruebas del dominio, API, base de datos e integración. |
 | [`docs/`](docs/contexto-base/CONTEXTO_BASE.md) | Contexto, requisitos, casos de uso, decisiones, diagramas y bitácoras. |
 | [`VeterinariaBrain/`](VeterinariaBrain/00%20Mapas/Inicio.md) | Cerebro de Obsidian: notas enlazadas de documentos y código, con sus dependencias. |
