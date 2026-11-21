@@ -21,14 +21,19 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[CalculoAgenda (API)]]
 - [[Consulta (API)]]
 - [[IProfesionalRepository (API)]]
+- [[ITurnoRepository (API)]]
 - [[ProfesionalReadDto (API)]]
 - [[ProfesionalRepository (API)]]
 - [[ProfesionalService (API)]]
 - [[ProfesionalesController (API)]]
 - [[ReglasCatalogo (API)]]
 - [[Turno (API)]]
+- [[TurnoDtos (API)]]
+- [[TurnoRepository (API)]]
+- [[TurnoService (API)]]
 
 ## En las otras aplicaciones
 - [[Profesional]]

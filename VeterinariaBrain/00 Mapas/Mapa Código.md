@@ -186,8 +186,9 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (20)
+### Servicios (23)
 - [[AnimalService (API)]]
+- [[CalculoAgenda (API)]]
 - [[ClinicaService (API)]]
 - [[CuentaService (API)]]
 - [[EnvioCorreo (API)]]
@@ -198,6 +199,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[IProfesionalService (API)]]
 - [[ISesionService (API)]]
 - [[ITokenService (API)]]
+- [[ITurnoService (API)]]
 - [[Opciones (API)]]
 - [[PrestacionService (API)]]
 - [[ProfesionalService (API)]]
@@ -206,6 +208,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Seguridad (API)]]
 - [[SesionService (API)]]
 - [[TokenService (API)]]
+- [[TurnoService (API)]]
 - [[ValidacionDatos (API)]]
 
 ### Modelos (16)
@@ -226,17 +229,22 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Controladores (8)
+### Controladores (13)
 - [[AnimalesController (API)]] · `api/v1/animales`
 - [[ClinicaController (API)]] · `api/v1/clinica`
 - [[CuentasController (API)]] · `api/v1/cuentas`
 - [[EspeciesController (API)]] · `api/v1/especies`
+- [[ManejadorConcurrencia (API)]]
 - [[Problemas (API)]]
 - [[ProfesionalesController (API)]] · `api/v1/profesionales`
+- [[RecepcionController (API)]] · `api/v1/recepcion`
 - [[ServiciosController (API)]] · `api/v1/servicios`
 - [[SesionesController (API)]] · `api/v1/sesiones`
+- [[TurnosController (API)]] · `api/v1/turnos`
+- [[UsuarioActual (API)]]
+- [[VeterinarioController (API)]] · `api/v1/veterinario`
 
-### Repositorios (10)
+### Repositorios (12)
 - [[AnimalRepository (API)]]
 - [[ClinicaRepository (API)]]
 - [[CuentaRepository (API)]]
@@ -245,16 +253,19 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ICuentaRepository (API)]]
 - [[IPrestacionRepository (API)]]
 - [[IProfesionalRepository (API)]]
+- [[ITurnoRepository (API)]]
 - [[PrestacionRepository (API)]]
 - [[ProfesionalRepository (API)]]
+- [[TurnoRepository (API)]]
 
-### DTOs (6)
+### DTOs (7)
 - [[AnimalDtos (API)]]
 - [[ClinicaReadDto (API)]]
 - [[CuentaDtos (API)]]
 - [[PaginaDto (API)]]
 - [[ProfesionalReadDto (API)]]
 - [[ServicioReadDto (API)]]
+- [[TurnoDtos (API)]]
 
 ### Datos (2)
 - [[AppDbContext (API)]]

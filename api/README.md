@@ -41,6 +41,20 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `POST /api/v1/animales` | Cliente | `201`, con el cliente como responsable; `400` con los errores de cada campo o `ESPECIE_INVALIDA`; `409` (`MICROCHIP_REPETIDO`, RN-41) |
 | `PUT /api/v1/animales/{id}` | Cliente | `200`; `404` si es ajeno; `409` si el microchip es de otro animal |
 | `DELETE /api/v1/animales/{id}` | Cliente | Baja lógica: `200` (la historia se conserva); `409` (`ANIMAL_CON_TURNOS`) si tiene turnos pendientes |
+| `GET /api/v1/turnos/disponibilidad?profesionalId=&prestacionId=&animalId=&fecha=` | Cliente | `200` con los horarios libres del día, `proximoDiaConHorarios` si no hay y `avisoAusencias` (RN-08); `400` si el profesional no hace ese servicio o no atiende esa especie |
+| `POST /api/v1/turnos` | Cliente | `201` Confirmado; `409` (`HORARIO_NO_DISPONIBLE`) si se ocupó; `403` (`RESERVA_POR_RECEPCION`) con 3 ausencias en 12 meses |
+| `GET /api/v1/turnos?vista=proximos\|historial` | Cliente | `200` paginado con los turnos propios y `puedeGestionar` |
+| `GET /api/v1/turnos/{id}` | Cliente | `200`; `404` si es ajeno |
+| `POST /api/v1/turnos/{id}/cancelacion` | Cliente | `200`; `409` (`CANCELAR_POR_RECEPCION`) a menos de 24 h (RN-06) |
+| `PUT /api/v1/turnos/{id}/horario` | Cliente | Reprograma el mismo turno: `200`; `409` si el horario no está libre o faltan menos de 24 h |
+| `GET /api/v1/recepcion/clientes?buscar=` | Recepción, Administrador | Clientes con sus animales y ausencias recientes |
+| `GET /api/v1/recepcion/disponibilidad?clienteId=&animalId=&profesionalId=&prestacionId=&fecha=` | Recepción, Administrador | Igual que la del cliente, sin exigir que el servicio sea reservable en línea |
+| `GET /api/v1/recepcion/turnos?fecha=&profesionalId=&estado=` | Recepción, Administrador | Agenda del día |
+| `POST /api/v1/recepcion/turnos` | Recepción, Administrador | Turno por mostrador; con `sobreturno: true` y motivo, fuera de la grilla o sobre un horario tomado del profesional (RN-09, queda auditado) |
+| `POST /api/v1/recepcion/turnos/{id}/llegada` | Recepción | Confirmado → En espera, el mismo día |
+| `POST /api/v1/recepcion/turnos/{id}/ausencia` | Recepción | Confirmado → Ausente, 15 min después del inicio |
+| `POST /api/v1/recepcion/turnos/{id}/cancelacion` | Recepción | En cualquier momento, con motivo; también el retiro de alguien En espera |
+| `GET /api/v1/veterinario/agenda?fecha=` | Veterinario | Turnos del día del profesional de la cuenta |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
@@ -86,6 +100,15 @@ Decisiones del esquema:
 - La clave `Jwt:Clave` de `appsettings.json` es **solo de desarrollo**. En producción se reemplaza por una secreta.
 - Pendiente: segundo factor del Administrador (RNF-SEG-04) y borrado automático de las cuentas sin verificar.
 - Para probar: `Veterinaria.Api.http`, que se abre en Visual Studio y tiene un botón «Enviar solicitud» en cada pedido.
+
+## Turnos
+
+- Mismas reglas que `AgendaService` de Blazor: horarios cada 15 min, 2 h de antelación, 60 días de horizonte, cancelación hasta 24 h antes, ausencia pasados 15 min y 3 ausencias en 12 meses para derivar a Recepción (P-RC-02). Se leen de `Parametros` y se pueden cambiar.
+- Un turno ocupa toda su duración; ni el profesional ni el animal pueden tener dos turnos a la vez. `CalculoAgenda` hace el cálculo sin tocar la base.
+- **Concurrencia (DT-BD-02):** reservar, reprogramar y el mostrador abren una transacción `READ COMMITTED`, bloquean con `SELECT … FOR UPDATE` la fila del profesional y la del animal (siempre en ese orden), revalidan el horario y guardan. Ante un interbloqueo reintentan hasta 3 veces (50, 100 y 200 ms). Los consultorios todavía no se bloquean: falta definir qué consultorio usa cada servicio (Diego, 2026-11-21).
+- Cambio simultáneo de un mismo registro: el segundo responde `409` (`CONFLICTO_DE_VERSION`, `Controllers/ManejadorConcurrencia.cs`).
+- La seña de las cirugías (RN-35) llega con el módulo de cobro; hasta entonces la castración queda Confirmada.
+- Hora: la local del servidor, que es la de la clínica.
 
 ## Crear la base en tu computadora
 

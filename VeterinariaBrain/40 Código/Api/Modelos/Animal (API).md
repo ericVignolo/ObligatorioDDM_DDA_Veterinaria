@@ -26,9 +26,13 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[Cobro (API)]]
 - [[Consulta (API)]]
 - [[IAnimalRepository (API)]]
+- [[ITurnoRepository (API)]]
 - [[Internacion (API)]]
 - [[Inventario (API)]]
 - [[Turno (API)]]
+- [[TurnoDtos (API)]]
+- [[TurnoRepository (API)]]
+- [[TurnoService (API)]]
 
 ## En las otras aplicaciones
 - [[Animal]]

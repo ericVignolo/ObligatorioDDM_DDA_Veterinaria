@@ -25,8 +25,13 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[CalculoAgenda (API)]]
 - [[Cobro (API)]]
 - [[Consulta (API)]]
+- [[ITurnoRepository (API)]]
+- [[TurnoDtos (API)]]
+- [[TurnoRepository (API)]]
+- [[TurnoService (API)]]
 
 ## En las otras aplicaciones
 - [[Turno]]
