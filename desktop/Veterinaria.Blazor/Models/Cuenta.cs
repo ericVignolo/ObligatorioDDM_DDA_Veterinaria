@@ -23,6 +23,10 @@ public class Cuenta
     public bool Verificada { get; set; }
     public DateTime FechaCreacion { get; set; }
 
+    // Derecho de supresión (A-028, RNF-LEG-02): los datos personales se reemplazan; el animal y su historia clínica se conservan sin identificar al titular.
+    public bool Eliminada { get; set; }
+    public DateTime? FechaEliminacion { get; set; }
+
     // Aceptaciones obligatorias con su versión (RN-43, RNF-LEG-03).
     public string VersionTerminosAceptada { get; set; } = "";
     public string VersionPrivacidadAceptada { get; set; } = "";

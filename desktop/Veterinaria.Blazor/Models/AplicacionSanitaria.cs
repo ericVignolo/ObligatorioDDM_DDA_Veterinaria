@@ -27,4 +27,7 @@ public class AplicacionSanitaria
 
     public int AplicadaPorId { get; set; }
     public string AplicadaPor { get; set; } = "";
+
+    // RN-16: justificación escrita cuando la dosis se adelantó al intervalo mínimo; vacío si no se adelantó.
+    public string JustificacionAdelanto { get; set; } = "";
 }

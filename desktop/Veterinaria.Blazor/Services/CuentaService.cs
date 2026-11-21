@@ -23,16 +23,71 @@ public class CuentaService
         CargarClientesDemo();
     }
 
-    // Clientes de demostración con turnos y animales ya cargados (sin contraseña: no pueden ingresar).
+    // Hash de la contraseña de demostración, calculado una sola vez (la derivación es lenta a propósito).
+    private static readonly Lazy<string> HashDemo = new(() => DerivarContrasena(PersonalService.ContrasenaDemo));
+
+    // Clientes de demostración con turnos y animales ya cargados (A-030): entran con la contraseña de demostración
+    // del personal, así el recorrido del Cliente se puede hacer sin registrarse.
     private void CargarClientesDemo()
     {
-        _cuentas.Add(new Cuenta { Id = 100, Nombre = "Ana", Apellido = "Rodríguez", Correo = "ana.demo@vitalia.uy", Telefono = "+59899111222", Verificada = true, FechaCreacion = new DateTime(2026, 10, 1) });
-        _cuentas.Add(new Cuenta { Id = 101, Nombre = "Pedro", Apellido = "Gómez", Correo = "pedro.demo@vitalia.uy", Telefono = "+59899333444", Verificada = true, FechaCreacion = new DateTime(2026, 10, 1) });
+        _cuentas.Add(new Cuenta { Id = 100, Nombre = "Ana", Apellido = "Rodríguez", Correo = "ana.demo@vitalia.uy", Telefono = "+59899111222", Verificada = true, HashContrasena = HashDemo.Value, FechaCreacion = new DateTime(2026, 10, 1) });
+        _cuentas.Add(new Cuenta { Id = 101, Nombre = "Pedro", Apellido = "Gómez", Correo = "pedro.demo@vitalia.uy", Telefono = "+59899333444", Verificada = true, HashContrasena = HashDemo.Value, FechaCreacion = new DateTime(2026, 10, 1) });
+    }
+
+    // G-009: agrega un cliente del conjunto grande de demostración. Entra con la contraseña de demostración del personal.
+    public Cuenta AgregarClienteDemo(Cuenta cuenta)
+    {
+        cuenta.Verificada = true;
+        cuenta.HashContrasena = HashDemo.Value;
+        _cuentas.Add(cuenta);
+        return cuenta;
     }
 
     public Cuenta? ObtenerPorId(int id)
     {
         return _cuentas.FirstOrDefault(c => c.Id == id);
+    }
+
+    // Todas las cuentas de clientes, para comunicaciones masivas (A-028). Incluye las eliminadas: quien llama las filtra.
+    public List<Cuenta> Todas()
+    {
+        return _cuentas.ToList();
+    }
+
+    // A-028, RNF-LEG-02: reemplaza los datos personales por valores neutros y bloquea el ingreso.
+    // El Id se conserva para que los animales, cargos y consentimientos sigan apuntando a «un titular eliminado».
+    public bool Anonimizar(int id)
+    {
+        var cuenta = ObtenerPorId(id);
+        if (cuenta is null || cuenta.Eliminada)
+        {
+            return false;
+        }
+
+        cuenta.Eliminada = true;
+        cuenta.FechaEliminacion = DateTime.Now;
+        cuenta.Nombre = "Titular";
+        cuenta.Apellido = "eliminado";
+        cuenta.Correo = $"eliminada-{cuenta.Id}@eliminada.invalid";
+        cuenta.Telefono = "";
+        cuenta.TipoDocumento = "";
+        cuenta.NumeroDocumento = "";
+        cuenta.Calle = "";
+        cuenta.NumeroPuerta = "";
+        cuenta.Apartamento = "";
+        cuenta.Localidad = "";
+        cuenta.Departamento = "";
+        cuenta.Referencias = "";
+        cuenta.HashContrasena = "";
+        cuenta.HashCodigo = "";
+        cuenta.CodigoDemo = "";
+        cuenta.HashCodigoRecuperacion = "";
+        cuenta.CodigoRecuperacionDemo = "";
+        cuenta.CorreoNuevoPendiente = "";
+        cuenta.HashCodigoCorreo = "";
+        cuenta.CodigoCorreoDemo = "";
+        cuenta.Verificada = false;
+        return true;
     }
 
     public List<string> Departamentos { get; } = new()

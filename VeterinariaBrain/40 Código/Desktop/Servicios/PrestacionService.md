@@ -11,25 +11,36 @@ generado: true
 
 Datos ficticios de la sección A. En la sección C se reemplaza por PrestacionApiService.
 
-**Tareas:** A-015
+**Tareas:** A-015, A-027
 
-**Requisitos y decisiones:** D-CAT-02, D-CAT-04
+**Requisitos y decisiones:** D-CAT-02, D-CAT-04, RF-ADM-02, RN-33
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
 - [[Consulta]]
 - [[Prestacion]]
+- [[PrestacionFormulario]]
+- [[TarifaPrestacion]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Acceso]]
+- [[AdminServicios]]
+- [[AdministracionService]]
 - [[AgendaRecepcion]]
 - [[AgendaService]]
 - [[AgendaVeterinario]]
 - [[AtencionConsulta]]
+- [[CobroService]]
+- [[ConsentimientoService]]
+- [[FirmarConsentimiento]]
 - [[Home]]
 - [[MiCuenta]]
 - [[PrestacionDetalle]]
 - [[Reservar]]
 - [[Servicios]]
+- [[TurnoMostrador]]
 - [[Turnos]]
+
+## En las otras aplicaciones
+- [[PrestacionService (API)]]

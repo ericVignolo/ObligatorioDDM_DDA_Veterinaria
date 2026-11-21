@@ -1,0 +1,291 @@
+@page "/panel/asistencia"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AsistenciaService Servicio
+@inject CuentaService Cuentas
+@inject AnimalService Animales
+@inject SesionService Sesion
+
+<PageTitle>Asistencia — VITALIA</PageTitle>
+
+@* A-026: cola por prioridad para Recepción (RF-REC-08, RF-REC-09) y solicitudes ofrecidas o aceptadas
+   para el Veterinario (RF-VET-16, RF-VET-17). *@
+<RequierePersonal>
+    <h1>Asistencia a domicilio</h1>
+    <p class="text-muted">
+        Orden: rojo → naranja → amarillo → verde y, dentro de cada nivel, por antigüedad.
+        Cobertura @Servicio.Cobertura km · un rojo sin aceptar en @Servicio.MinutosEscalarRojo minutos pasa a Recepción.
+        @if (!AsistenciaService.EnHorarioClinica(DateTime.Now))
+        {
+            <strong>Fuera del horario de la clínica: lo que no es rojo queda para el próximo día de atención.</strong>
+        }
+    </p>
+
+    <div class="alert alert-secondary small">@AsistenciaService.AvisoDemo</div>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    @if (EsVeterinario)
+    {
+        <section class="mb-4" aria-labelledby="titulo-mias">
+            <h2 class="h4" id="titulo-mias">Para vos</h2>
+            @if (mias.Count == 0)
+            {
+                <p class="text-muted">No tenés solicitudes ofrecidas ni aceptadas.</p>
+            }
+            <div class="list-group">
+                @foreach (var s in mias)
+                {
+                    <a class="list-group-item list-group-item-action" href="@($"panel/asistencia/{s.Id}")">
+                        <NivelAsistencia Nivel="@s.Nivel" />
+                        <strong class="ms-1">n.º @s.Id</strong> · @s.Especie @(s.Cantidad > 1 ? $"({s.Cantidad})" : "") · @s.Modalidad
+                        · <span class="fw-semibold">@(s.Estado == AsistenciaService.Ofrecida ? "Te la ofrecieron: aceptá o rechazá" : s.Estado)</span>
+                    </a>
+                }
+            </div>
+        </section>
+    }
+
+    <section class="mb-4" aria-labelledby="titulo-cola">
+        <h2 class="h4" id="titulo-cola">Cola de solicitudes</h2>
+        @if (cola.Count == 0)
+        {
+            <p class="text-muted">No hay solicitudes activas.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                    <caption class="visually-hidden">Solicitudes activas ordenadas por prioridad</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Nivel</th>
+                            <th scope="col">N.º</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Animal</th>
+                            <th scope="col">Modalidad</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Hace</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in cola)
+                        {
+                            <tr>
+                                <td><NivelAsistencia Nivel="@s.Nivel" /></td>
+                                <th scope="row">@s.Id</th>
+                                <td>@NombreCliente(s.ClienteId)<span class="d-block small">@s.TelefonoContacto</span></td>
+                                <td>@DescribirAnimal(s)</td>
+                                <td>@s.Modalidad @(s.Modalidad == AsistenciaService.Visita ? $"· {s.DistanciaKm} km" : "")</td>
+                                <td>
+                                    @s.Estado
+                                    @if (s.Estado == AsistenciaService.Coordinacion)
+                                    {
+                                        <span class="d-block small text-danger">@s.MotivoCoordinacion</span>
+                                    }
+                                    @if (s.ReevaluacionPedida)
+                                    {
+                                        <span class="badge bg-info text-dark d-inline-block mt-1">Reevaluación pedida (24 h)</span>
+                                    }
+                                    @if (AsistenciaService.ParaProximoDia(s, DateTime.Now))
+                                    {
+                                        <span class="badge bg-secondary d-inline-block mt-1">Próximo día de atención</span>
+                                    }
+                                </td>
+                                <td>@Antiguedad(s.FechaCreacion)</td>
+                                <td><a class="btn btn-outline-primary btn-sm" href="@($"panel/asistencia/{s.Id}")">Abrir</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
+    @if (EsRecepcion)
+    {
+        <section class="mb-4" aria-labelledby="titulo-telefono">
+            <h2 class="h4" id="titulo-telefono">Registrar solicitud por teléfono</h2>
+            <EditForm Model="nueva" OnValidSubmit="Registrar" FormName="solicitud-telefonica">
+                <DataAnnotationsValidator />
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <label class="form-label" for="clienteSol">Cliente</label>
+                        <InputSelect id="clienteSol" class="form-select" @bind-Value="nueva.ClienteId">
+                            <option value="0">Elegí el cliente…</option>
+                            @foreach (var cuenta in clientes)
+                            {
+                                <option value="@cuenta.Id">@cuenta.Nombre @cuenta.Apellido</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => nueva.ClienteId" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="animalSol">Animal</label>
+                        <InputSelect id="animalSol" class="form-select" @bind-Value="nueva.AnimalId">
+                            <option value="0">No registrado o grupo nuevo</option>
+                            @foreach (var animal in Animales.ObtenerDe(nueva.ClienteId))
+                            {
+                                <option value="@animal.Id">@animal.Nombre (@animal.Especie)</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    @if (nueva.AnimalId == 0)
+                    {
+                        <div class="col-md-2">
+                            <label class="form-label" for="especieSol">Especie</label>
+                            <InputSelect id="especieSol" class="form-select" @bind-Value="nueva.Especie">
+                                <option value="">Elegí…</option>
+                                @foreach (var especie in Animales.Especies)
+                                {
+                                    <option value="@especie">@especie</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    }
+                    <div class="col-md-2">
+                        <label class="form-label" for="cantidadSol">Cantidad</label>
+                        <InputNumber id="cantidadSol" class="form-control" @bind-Value="nueva.Cantidad" min="1" />
+                        <ValidationMessage For="() => nueva.Cantidad" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="sintomasSol">Síntomas y desde cuándo</label>
+                        <InputTextArea id="sintomasSol" class="form-control" rows="2" maxlength="1000" @bind-Value="nueva.Sintomas" />
+                        <ValidationMessage For="() => nueva.Sintomas" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="nivelSol">Gravedad que percibe el cliente</label>
+                        <InputSelect id="nivelSol" class="form-select" @bind-Value="nueva.Nivel">
+                            <option value="">Elegí…</option>
+                            @foreach (var nivel in AsistenciaService.Niveles)
+                            {
+                                <option value="@nivel">@nivel — @AsistenciaService.Descripcion(nivel)</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => nueva.Nivel" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="modalidadSol">Modalidad</label>
+                        <InputSelect id="modalidadSol" class="form-select" @bind-Value="nueva.Modalidad">
+                            <option value="">Elegí…</option>
+                            @foreach (var modalidad in AsistenciaService.Modalidades)
+                            {
+                                <option value="@modalidad">@modalidad</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => nueva.Modalidad" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="telefonoSol">Teléfono de contacto</label>
+                        <InputText id="telefonoSol" class="form-control" maxlength="30" @bind-Value="nueva.TelefonoContacto" />
+                        <ValidationMessage For="() => nueva.TelefonoContacto" />
+                    </div>
+                    @if (nueva.Modalidad == AsistenciaService.Visita)
+                    {
+                        <div class="col-md-3">
+                            <label class="form-label" for="kmSol">Distancia aprox. (km)</label>
+                            <InputNumber id="kmSol" class="form-control" @bind-Value="nueva.DistanciaKm" min="0" />
+                            <ValidationMessage For="() => nueva.DistanciaKm" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="direccionSol">Dirección</label>
+                            <InputText id="direccionSol" class="form-control" maxlength="200" @bind-Value="nueva.Direccion" />
+                            <ValidationMessage For="() => nueva.Direccion" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="referenciasSol">Referencias (opcional)</label>
+                            <InputText id="referenciasSol" class="form-control" maxlength="300" @bind-Value="nueva.Referencias" />
+                        </div>
+                    }
+                </div>
+                @if (!string.IsNullOrEmpty(nueva.Modalidad))
+                {
+                    <p class="small mt-2 mb-1">
+                        Costo a informar al cliente antes de confirmar (RF-CLI-25):
+                        <strong>$ @Servicio.Costo(nueva.Modalidad, nueva.DistanciaKm, nueva.Cantidad).ToString("N0")</strong>
+                        (base $ @Servicio.Base.ToString("N0") + $ @Servicio.PorKm.ToString("N0") por km + $ @Servicio.PorAnimalExtra.ToString("N0") por animal extra; la orientación no tiene costo).
+                    </p>
+                }
+                <button type="submit" class="btn btn-primary mt-2">Registrar solicitud</button>
+            </EditForm>
+        </section>
+    }
+
+    @if (cerradas.Count > 0)
+    {
+        <section class="mb-4" aria-labelledby="titulo-cerradas">
+            <h2 class="h5" id="titulo-cerradas">Cerradas recientes</h2>
+            <ul class="small">
+                @foreach (var s in cerradas.Take(10))
+                {
+                    <li><a href="@($"panel/asistencia/{s.Id}")">n.º @s.Id</a> · @s.Nivel · @s.Estado · @NombreCliente(s.ClienteId)</li>
+                }
+            </ul>
+        </section>
+    }
+
+    <a href="panel">← Volver al panel</a>
+</RequierePersonal>
+
+@code {
+    private List<SolicitudAsistencia> cola = new();
+    private List<SolicitudAsistencia> mias = new();
+    private List<SolicitudAsistencia> cerradas = new();
+    private List<Cuenta> clientes = new();
+    private SolicitudTelefonicaFormulario nueva = new();
+    private string mensaje = "";
+    private bool exito;
+
+    private bool EsRecepcion => Sesion.TieneRol(PersonalService.Recepcion);
+    private bool EsVeterinario => Sesion.TieneRol(PersonalService.Veterinario);
+
+    protected override void OnInitialized()
+    {
+        // Clientes de demostración para el formulario telefónico.
+        clientes = new[] { 100, 101 }.Select(Cuentas.ObtenerPorId).Where(c => c is not null).Select(c => c!).ToList();
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        Servicio.RevisarPlazos();
+        cola = Servicio.Cola();
+        cerradas = Servicio.Cerradas();
+        mias = Sesion.PersonalActual is null ? new() : Servicio.DeVeterinario(Sesion.PersonalActual.Id);
+    }
+
+    private string NombreCliente(int clienteId)
+    {
+        var cuenta = Cuentas.ObtenerPorId(clienteId);
+        return cuenta is null ? "Cliente" : $"{cuenta.Nombre} {cuenta.Apellido}";
+    }
+
+    private string DescribirAnimal(SolicitudAsistencia s)
+    {
+        var nombre = s.AnimalId == 0 ? "No registrado" : Animales.ObtenerParaPersonal(s.AnimalId)?.Nombre ?? "Animal";
+        return s.Cantidad > 1 ? $"{nombre} · {s.Especie} ({s.Cantidad})" : $"{nombre} · {s.Especie}";
+    }
+
+    private static string Antiguedad(DateTime fecha)
+    {
+        var tiempo = DateTime.Now - fecha;
+        return tiempo.TotalHours >= 1 ? $"{(int)tiempo.TotalHours} h" : $"{Math.Max(0, (int)tiempo.TotalMinutes)} min";
+    }
+
+    private void Registrar()
+    {
+        var resultado = Servicio.Crear(nueva, Sesion.PersonalActual);
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        if (resultado.Exito)
+        {
+            nueva = new();
+        }
+
+        Cargar();
+    }
+}

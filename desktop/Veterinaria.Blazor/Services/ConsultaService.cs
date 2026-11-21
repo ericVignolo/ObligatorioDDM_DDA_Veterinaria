@@ -11,24 +11,31 @@ namespace Veterinaria.Blazor.Services;
 // con control de versión, clave idempotente, auditoría protegida, consumos de stock y cargos.
 // Los insumos y las dosis de vacunas se apartan del inventario mientras la consulta está abierta y se
 // descuentan al firmar, en el mismo paso (RF-VET-06, RNF-CON-03, A-022).
-// Fuera de esta versión: adjuntos (RF-VET-03) y cargos (cobro de Recepción).
+// Al firmar se genera el cargo de la prestación, que Recepción cobra después (A-023, RN-32).
+// Fuera de esta versión: adjuntos (RF-VET-03).
 public class ConsultaService
 {
     private readonly AgendaService _agenda;
     private readonly PersonalService _personal;
     private readonly ProfesionalService _profesionales;
     private readonly InventarioService _inventario;
+    private readonly CobroService _cobros;
+    private readonly ConsentimientoService _consentimientos;
+    private readonly ComunicacionesService _comunicaciones;
     private readonly List<Consulta> _consultas = new();
     private readonly List<LecturaHistoria> _lecturas = new();
     private int _ultimoId;
     private int _ultimaEnmiendaId;
 
-    public ConsultaService(AgendaService agenda, PersonalService personal, ProfesionalService profesionales, InventarioService inventario)
+    public ConsultaService(AgendaService agenda, PersonalService personal, ProfesionalService profesionales, InventarioService inventario, CobroService cobros, ConsentimientoService consentimientos, ComunicacionesService comunicaciones)
     {
         _agenda = agenda;
         _personal = personal;
         _profesionales = profesionales;
         _inventario = inventario;
+        _cobros = cobros;
+        _consentimientos = consentimientos;
+        _comunicaciones = comunicaciones;
         CargarHistoriaDemo();
     }
 
@@ -56,6 +63,13 @@ public class ConsultaService
             peso: 430m, alergias: "Penicilina");
     }
 
+    // G-009: agrega una consulta histórica ya firmada (sin turno de origen) del conjunto grande de demostración.
+    public Consulta AgregarHistoriaDemo(int animalId, int profesionalId, int autorId, string autor, int haceDias,
+        string motivo, string diagnostico, string tipo, string tratamiento, decimal peso, string alergias)
+    {
+        return AgregarFirmadaDemo(animalId, profesionalId, autorId, autor, haceDias, motivo, diagnostico, tipo, tratamiento, peso, alergias);
+    }
+
     private Consulta AgregarFirmadaDemo(int animalId, int profesionalId, int autorId, string autor, int haceDias,
         string motivo, string diagnostico, string tipo, string tratamiento, decimal peso, string alergias)
     {
@@ -80,6 +94,35 @@ public class ConsultaService
         consulta.HashContenido = Huella(Contenido(consulta));
         _consultas.Add(consulta);
         return consulta;
+    }
+
+    // RN-17: alergias registradas del animal (consultas firmadas) más las que se escriben en la consulta en curso.
+    public List<string> AlergiasDe(int animalId, string enCurso = "")
+    {
+        var textos = _consultas.Where(c => c.AnimalId == animalId && c.Estado == "Firmada").Select(c => c.Alergias).Append(enCurso ?? "");
+        return textos
+            .SelectMany(t => System.Text.RegularExpressions.Regex.Split(t ?? "", @"[,;/\n]| y ", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            .Select(a => a.Trim().TrimEnd('.'))
+            .Where(a => a.Length >= 3 && !SinAlergia.Contains(Normalizar(a)))
+            .DistinctBy(Normalizar)
+            .ToList();
+    }
+
+    private static readonly string[] SinAlergia = { "ninguna", "ninguno", "no", "sin alergias", "sin alergias conocidas", "no conocidas", "niega", "nada" };
+
+    // Alergias que aparecen como palabra completa en el tratamiento o las indicaciones, sin distinguir mayúsculas ni tildes.
+    public List<string> AlergiasEnTratamiento(int animalId, ConsultaFormulario datos)
+    {
+        var texto = Normalizar($"{datos.Tratamiento} {datos.Indicaciones}");
+        return AlergiasDe(animalId, datos.Alergias)
+            .Where(a => System.Text.RegularExpressions.Regex.IsMatch(texto, $@"\b{System.Text.RegularExpressions.Regex.Escape(Normalizar(a))}\b"))
+            .ToList();
+    }
+
+    private static string Normalizar(string texto)
+    {
+        var descompuesto = (texto ?? "").ToLowerInvariant().Normalize(System.Text.NormalizationForm.FormD);
+        return new string(descompuesto.Where(c => System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark).ToArray());
     }
 
     public Consulta? ObtenerPorId(int id)
@@ -142,6 +185,12 @@ public class ConsultaService
         if (turno.Estado != "En espera")
         {
             return new ResultadoOperacion { Exito = false, Mensaje = "Solo se inicia la atención de un paciente En espera (Recepción registra la llegada)." };
+        }
+
+        // RN-10: una cirugía no pasa a En curso sin el consentimiento informado firmado (A-025).
+        if (_consentimientos.Requiere(turno) && !_consentimientos.EsValido(turnoId))
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "Este procedimiento necesita el consentimiento informado firmado por el responsable (RN-10). Todavía no está firmado." };
         }
 
         _agenda.IniciarAtencion(turnoId);
@@ -234,6 +283,17 @@ public class ConsultaService
             return new ResultadoOperacion { Exito = false, Mensaje = "El turno de esta consulta ya no está En consulta." };
         }
 
+        // RN-17: indicar un principio activo registrado como alergia del animal exige confirmación explícita.
+        var choques = AlergiasEnTratamiento(consulta.AnimalId, datos);
+        if (choques.Count > 0 && !datos.ConfirmaAlergia)
+        {
+            return new ResultadoOperacion
+            {
+                Exito = false,
+                Mensaje = $"El tratamiento o las indicaciones incluyen {string.Join(", ", choques)}, registrado como alergia de este animal. Si lo indicás igual, marcá la confirmación (RN-17). La consulta sigue en borrador."
+            };
+        }
+
         // RN-26, RN-29: lo apartado del inventario tiene que seguir disponible.
         var errorStock = _inventario.ValidarConsumo(consulta.Id);
         if (errorStock is not null)
@@ -243,14 +303,21 @@ public class ConsultaService
 
         // Desde acá no puede fallar: se aplican todos los cambios juntos (historia y stock, RNF-CON-03).
         CopiarDatos(datos, consulta);
+        consulta.AlergiaConfirmada = string.Join(", ", choques);
         consulta.Version++;
         consulta.Estado = "Firmada";
         consulta.FechaFirma = DateTime.Now;
         consulta.HashContenido = Huella(Contenido(consulta));
         _agenda.Finalizar(consulta.TurnoId);
         _inventario.ConfirmarConsumo(consulta.Id, veterinario);
+        _cobros.GenerarCargo(consulta);
 
-        return new ResultadoOperacion { Exito = true, Mensaje = "Consulta firmada y turno finalizado. El resumen al cliente y el cobro llegan con la API." };
+        // RF-CLI-10: el resumen al responsable se genera al firmar; se envía por el canal que eligió (A-028).
+        var resumen = _comunicaciones.EncolarResumenClinico(turno.ClienteId, consulta);
+        var aviso = resumen is null ? "El cliente no recibe el resumen por su preferencia o por su estado de cuenta." : $"El resumen al cliente quedó {resumen.Estado.ToLowerInvariant()} por {resumen.Canal.ToLowerInvariant()}.";
+
+        var alergia = choques.Count > 0 ? $" Quedó asentado que se indicó {string.Join(", ", choques)} pese a la alergia registrada." : "";
+        return new ResultadoOperacion { Exito = true, Mensaje = $"Consulta firmada y turno finalizado. El cargo quedó pendiente de cobro en Recepción. {aviso}{alergia}" };
     }
 
     // P-RC-04: sin atención ni consumos, el autor cancela con motivo. El borrador se conserva como evidencia.
@@ -432,6 +499,17 @@ public class ConsultaService
 
         _lecturas.Add(new LecturaHistoria { PersonalId = persona.Id, AnimalId = animalId, Fecha = DateTime.Now, Motivo = (motivo ?? "").Trim() });
         return new ResultadoOperacion { Exito = true, Mensaje = "" };
+    }
+
+    // Para la bitácora (RF-ADM-08): todas las lecturas y las consultas firmadas, sin texto clínico.
+    public List<LecturaHistoria> Lecturas()
+    {
+        return _lecturas.ToList();
+    }
+
+    public List<Consulta> Firmadas()
+    {
+        return _consultas.Where(c => c.Estado == "Firmada").ToList();
     }
 
     public List<LecturaHistoria> LecturasDe(int animalId)

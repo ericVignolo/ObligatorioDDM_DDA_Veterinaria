@@ -1,0 +1,160 @@
+<!doctype html><html lang="es-UY"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VITALIA — Opción A y B</title>
+<link rel="stylesheet" href="../fuentes/fuentes.css">
+<style>/* VITALIA — tokens de diseño, Opción A (Eric: verde salud + naranja cálido, Nunito, redondeo suave).
+   Un solo conjunto de variables --vt-* que consumen Blazor (escritorio) y React Native (móvil, mismos valores).
+   Contraste verificado WCAG AA: texto normal ≥ 4,5:1 en claro y oscuro (ver DISENO_COMPARACION.md). */
+[data-opcion="a"] {
+  /* Marca */
+  --vt-primario: #1B7F53;          --vt-primario-hover: #156A45;   --vt-primario-suave: #E3F4EA;   --vt-sobre-primario: #FFFFFF;
+  --vt-acento: #B8530A;            --vt-acento-hover: #9A4408;     --vt-acento-suave: #FDEBD9;     --vt-sobre-acento: #FFFFFF;
+  /* Estados */
+  --vt-exito: #187048; --vt-exito-suave: #E3F4EA;
+  --vt-aviso: #8A5A00; --vt-aviso-suave: #FFF1D6;
+  --vt-peligro: #B42318; --vt-peligro-suave: #FDE8E6;
+  --vt-info: #1D5FA8; --vt-info-suave: #E5EFFB;
+  /* Superficies y texto */
+  --vt-fondo: #F4FAF6; --vt-superficie: #FFFFFF; --vt-superficie-2: #ECF5EF;
+  --vt-texto: #1F2A24; --vt-texto-suave: #5A6B62; --vt-borde: #D3E3D9;
+  --vt-foco: #F28C28;
+  /* Forma */
+  --vt-radio-s: 6px; --vt-radio-m: 10px; --vt-radio-l: 16px; --vt-radio-pill: 999px;
+  --vt-sombra-1: 0 1px 3px rgba(31,42,36,.10), 0 1px 2px rgba(31,42,36,.06); --vt-sombra-2: 0 10px 28px rgba(31,42,36,.14);
+  /* Tipografía */
+  --vt-fuente: 'Nunito', system-ui, 'Segoe UI', sans-serif;
+  --vt-t-xs: .75rem; --vt-t-s: .875rem; --vt-t-m: 1rem; --vt-t-l: 1.25rem; --vt-t-xl: 1.625rem; --vt-t-2xl: 2.125rem;
+  --vt-peso-normal: 400; --vt-peso-medio: 600; --vt-peso-fuerte: 800;
+  /* Espacio (escala de 4 px) y movimiento */
+  --vt-e1: .25rem; --vt-e2: .5rem; --vt-e3: .75rem; --vt-e4: 1rem; --vt-e6: 1.5rem; --vt-e8: 2rem;
+  --vt-rapido: 120ms; --vt-normal: 220ms; --vt-lento: 400ms; --vt-curva: cubic-bezier(.2,.7,.2,1);
+  --vt-icono: "Lucide, contorno fino, trazo 1.75 px, 24 px";
+}
+[data-opcion="a"][data-tema="oscuro"] {
+  --vt-primario: #4ADE9A; --vt-primario-hover: #7CE8B5; --vt-primario-suave: #173528; --vt-sobre-primario: #0B1F16;
+  --vt-acento: #F5A25D; --vt-acento-hover: #F8B77F; --vt-acento-suave: #3A2512; --vt-sobre-acento: #1F1206;
+  --vt-exito: #5FD39A; --vt-exito-suave: #153325; --vt-aviso: #F5C467; --vt-aviso-suave: #3A2C0E;
+  --vt-peligro: #FF8A80; --vt-peligro-suave: #3C1815; --vt-info: #7DB6F2; --vt-info-suave: #14283F;
+  --vt-fondo: #101A15; --vt-superficie: #17241D; --vt-superficie-2: #1D2E25;
+  --vt-texto: #E6F2EB; --vt-texto-suave: #9DB3A7; --vt-borde: #2C4236; --vt-foco: #F5A25D;
+  --vt-sombra-1: 0 1px 2px rgba(0,0,0,.5); --vt-sombra-2: 0 8px 24px rgba(0,0,0,.45);
+}
+/* VITALIA — tokens de diseño, Opción B (Claude: verde azulado profundo + coral, fondo arena, Plus Jakarta Sans, formas más amplias).
+   Un solo conjunto de variables --vt-* que consumen Blazor (escritorio) y React Native (móvil, mismos valores).
+   Contraste verificado WCAG AA: texto normal ≥ 4,5:1 en claro y oscuro (ver DISENO_COMPARACION.md). */
+[data-opcion="b"] {
+  /* Marca */
+  --vt-primario: #0B7A75;          --vt-primario-hover: #095F5B;   --vt-primario-suave: #DDF1EF;   --vt-sobre-primario: #FFFFFF;
+  --vt-acento: #C4452E;            --vt-acento-hover: #A53824;     --vt-acento-suave: #FBE3DD;     --vt-sobre-acento: #FFFFFF;
+  /* Estados */
+  --vt-exito: #187048; --vt-exito-suave: #E3F4EA;
+  --vt-aviso: #8A5A00; --vt-aviso-suave: #FFF1D6;
+  --vt-peligro: #B42318; --vt-peligro-suave: #FDE8E6;
+  --vt-info: #1D5FA8; --vt-info-suave: #E5EFFB;
+  /* Superficies y texto */
+  --vt-fondo: #FBF8F3; --vt-superficie: #FFFFFF; --vt-superficie-2: #F3EEE5;
+  --vt-texto: #1B2625; --vt-texto-suave: #5C6B6A; --vt-borde: #E4DDD0;
+  --vt-foco: #C4452E;
+  /* Forma */
+  --vt-radio-s: 8px; --vt-radio-m: 14px; --vt-radio-l: 22px; --vt-radio-pill: 999px;
+  --vt-sombra-1: 0 1px 2px rgba(27,38,37,.08), 0 2px 6px rgba(27,38,37,.06); --vt-sombra-2: 0 14px 32px rgba(27,38,37,.16);
+  /* Tipografía */
+  --vt-fuente: 'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif;
+  --vt-t-xs: .75rem; --vt-t-s: .875rem; --vt-t-m: 1rem; --vt-t-l: 1.25rem; --vt-t-xl: 1.625rem; --vt-t-2xl: 2.125rem;
+  --vt-peso-normal: 400; --vt-peso-medio: 600; --vt-peso-fuerte: 800;
+  /* Espacio (escala de 4 px) y movimiento */
+  --vt-e1: .25rem; --vt-e2: .5rem; --vt-e3: .75rem; --vt-e4: 1rem; --vt-e6: 1.5rem; --vt-e8: 2rem;
+  --vt-rapido: 120ms; --vt-normal: 220ms; --vt-lento: 400ms; --vt-curva: cubic-bezier(.2,.7,.2,1);
+  --vt-icono: "Phosphor duotono, 24 px";
+}
+[data-opcion="b"][data-tema="oscuro"] {
+  --vt-primario: #5EC9C2; --vt-primario-hover: #86DAD4; --vt-primario-suave: #12312F; --vt-sobre-primario: #06201F;
+  --vt-acento: #FF9A85; --vt-acento-hover: #FFB3A3; --vt-acento-suave: #3D1E18; --vt-sobre-acento: #2A0F0A;
+  --vt-exito: #5FD39A; --vt-exito-suave: #153325; --vt-aviso: #F5C467; --vt-aviso-suave: #3A2C0E;
+  --vt-peligro: #FF8A80; --vt-peligro-suave: #3C1815; --vt-info: #7DB6F2; --vt-info-suave: #14283F;
+  --vt-fondo: #0F1B1A; --vt-superficie: #162423; --vt-superficie-2: #1C2F2D;
+  --vt-texto: #E8F1F0; --vt-texto-suave: #9DB5B3; --vt-borde: #2B4140; --vt-foco: #FF9A85;
+  --vt-sombra-1: 0 1px 2px rgba(0,0,0,.5); --vt-sombra-2: 0 8px 24px rgba(0,0,0,.45);
+}
+/* VITALIA — componentes base que usan solo variables --vt-*. Sirven para la previsualización y, más adelante,
+   reemplazan los estilos de app.css de Blazor. En React Native se traducen los mismos valores a StyleSheet. */
+[data-opcion] { font-family: var(--vt-fuente); background: var(--vt-fondo); color: var(--vt-texto); font-size: var(--vt-t-m); line-height: 1.5; }
+[data-opcion] h1,[data-opcion] h2,[data-opcion] h3 { font-weight: var(--vt-peso-fuerte); letter-spacing: -.01em; margin: 0 0 var(--vt-e2); }
+[data-opcion] .vt-muted { color: var(--vt-texto-suave); font-size: var(--vt-t-s); }
+[data-opcion] :focus-visible { outline: 3px solid var(--vt-foco); outline-offset: 2px; }
+
+.vt-btn { display: inline-flex; align-items: center; gap: var(--vt-e2); min-height: 44px; padding: 0 var(--vt-e4); border: 2px solid transparent; border-radius: var(--vt-radio-m); font: inherit; font-weight: var(--vt-peso-medio); cursor: pointer; transition: background var(--vt-rapido) var(--vt-curva), transform var(--vt-rapido) var(--vt-curva), box-shadow var(--vt-rapido) var(--vt-curva); }
+.vt-btn:active { transform: translateY(1px) scale(.99); }
+.vt-btn-primario { background: var(--vt-primario); color: var(--vt-sobre-primario); box-shadow: var(--vt-sombra-1); }
+.vt-btn-primario:hover { background: var(--vt-primario-hover); }
+.vt-btn-acento { background: var(--vt-acento); color: var(--vt-sobre-acento); }
+.vt-btn-acento:hover { background: var(--vt-acento-hover); }
+.vt-btn-borde { background: transparent; color: var(--vt-primario); border-color: var(--vt-primario); }
+.vt-btn-borde:hover { background: var(--vt-primario-suave); color: var(--vt-primario-hover); }
+.vt-btn-peligro { background: var(--vt-peligro-suave); color: var(--vt-peligro); border-color: var(--vt-peligro); }
+.vt-btn:disabled { opacity: .5; cursor: not-allowed; }
+.vt-btn svg, .vt-ico { width: 1.25rem; height: 1.25rem; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+.vt-card { background: var(--vt-superficie); border: 1px solid var(--vt-borde); border-radius: var(--vt-radio-l); padding: var(--vt-e4); box-shadow: var(--vt-sombra-1); transition: box-shadow var(--vt-normal) var(--vt-curva), transform var(--vt-normal) var(--vt-curva); }
+.vt-card:hover { box-shadow: var(--vt-sombra-2); transform: translateY(-2px); }
+.vt-badge { display: inline-block; padding: 2px var(--vt-e3); border-radius: var(--vt-radio-pill); font-size: var(--vt-t-xs); font-weight: var(--vt-peso-medio); }
+.vt-badge-exito { background: var(--vt-exito-suave); color: var(--vt-exito); }
+.vt-badge-aviso { background: var(--vt-aviso-suave); color: var(--vt-aviso); }
+.vt-badge-peligro { background: var(--vt-peligro-suave); color: var(--vt-peligro); }
+.vt-badge-info { background: var(--vt-info-suave); color: var(--vt-info); }
+.vt-input { width: 100%; min-height: 44px; padding: 0 var(--vt-e3); background: var(--vt-superficie); color: var(--vt-texto); border: 1.5px solid var(--vt-borde); border-radius: var(--vt-radio-m); font: inherit; }
+.vt-input:focus { border-color: var(--vt-primario); }
+.vt-icono-caja { display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--vt-radio-m); background: var(--vt-primario-suave); color: var(--vt-primario); }
+
+/* Carga: esqueletos que muestran la forma del contenido y se animan (se quietan con prefers-reduced-motion). */
+.vt-esqueleto { background: linear-gradient(90deg, var(--vt-superficie-2) 25%, var(--vt-borde) 50%, var(--vt-superficie-2) 75%); background-size: 200% 100%; animation: vt-brillo 1.3s linear infinite; border-radius: var(--vt-radio-s); min-height: 14px; }
+@keyframes vt-brillo { to { background-position: -200% 0; } }
+/* Respuestas: avisos flotantes que desaparecen solos; los errores no. */
+.vt-toasts { position: fixed; right: var(--vt-e4); bottom: var(--vt-e4); display: grid; gap: var(--vt-e2); z-index: 50; }
+.vt-toast { display: flex; gap: var(--vt-e2); align-items: center; padding: var(--vt-e3) var(--vt-e4); background: var(--vt-superficie); border: 1px solid var(--vt-borde); border-left: 5px solid var(--vt-primario); border-radius: var(--vt-radio-m); box-shadow: var(--vt-sombra-2); animation: vt-entra var(--vt-normal) var(--vt-curva); }
+.vt-toast-exito { border-left-color: var(--vt-exito); } .vt-toast-error { border-left-color: var(--vt-peligro); } .vt-toast-aviso { border-left-color: var(--vt-aviso); }
+@keyframes vt-entra { from { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce) { .vt-esqueleto, .vt-toast, .vt-btn, .vt-card { animation: none; transition: none; } }
+
+body{margin:0;font-family:system-ui;background:#888}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:900px){.dos{grid-template-columns:1fr}}
+.panel{padding:24px;min-height:100vh;position:relative}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.nav{display:flex;gap:20px;align-items:center;padding:10px 16px;background:var(--vt-superficie);border:1px solid var(--vt-borde);border-radius:var(--vt-radio-l);margin-bottom:24px}
+.nav .logo{display:flex;gap:8px;align-items:center;color:var(--vt-primario);margin-right:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:16px 0 24px}
+.fila{margin-bottom:20px} .botones{display:flex;flex-wrap:wrap;gap:10px}
+.vt-duo .vt-ico path,.vt-duo .vt-ico rect,.vt-duo .vt-ico circle{fill:var(--vt-primario);fill-opacity:.18}
+</style></head><body><div class="dos"><section data-opcion="a" data-tema="claro" class="panel" id="pa">
+<header class="top"><div><h2>Opción A — Eric</h2><p class="vt-muted">Verde salud · naranja cálido · Nunito · redondeo suave · iconos de contorno fino</p></div>
+<button class="vt-btn vt-btn-borde" onclick="tema('a')">🌙 Claro / oscuro</button></header>
+<nav class="nav"><strong class="logo"><svg class="vt-ico" viewBox="0 0 24 24"><circle cx="5" cy="10" r="1.6"/><circle cx="9" cy="5.5" r="1.6"/><circle cx="15" cy="5.5" r="1.6"/><circle cx="19" cy="10" r="1.6"/><path d="M12 12c-3 0-5.5 3-5.5 5.2 0 1.6 1.4 2.3 3 2.3 1 0 1.6-.4 2.5-.4s1.5.4 2.5.4c1.6 0 3-.7 3-2.3C17.5 15 15 12 12 12z"/></svg> VITALIA</strong><span>Servicios</span><span>Profesionales</span><span>Urgencias</span><button class="vt-btn vt-btn-primario">Ingresar</button></nav>
+<h3>Reservá un turno</h3><p class="vt-muted">Elegí el servicio que necesita tu animal.</p>
+<div class="grid">
+<article class="vt-card"><div class="vt-icono-caja"><svg class="vt-ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></div><h3>Consulta general</h3><p class="vt-muted">30 min · desde $ 1.200</p><span class="vt-badge vt-badge-exito">Hay horarios hoy</span></article>
+<article class="vt-card"><div class="vt-icono-caja"><svg class="vt-ico" viewBox="0 0 24 24"><path d="m18 2 4 4M17 7l3-3M19 9 8.5 19.5 4 15 14.5 4.5l4.5 4.5zM6 17l-3 3M11 12l2 2M8 15l2 2"/></svg></div><h3>Vacunación</h3><p class="vt-muted">20 min · desde $ 900</p><span class="vt-badge vt-badge-info">Refuerzo en 20 días</span></article>
+<article class="vt-card"><div class="vt-icono-caja"><svg class="vt-ico" viewBox="0 0 24 24"><path d="M12 21s-8-5-8-11a5 5 0 0 1 8-3.5A5 5 0 0 1 20 10c0 6-8 11-8 11z"/></svg></div><h3>Castración</h3><p class="vt-muted">90 min · desde $ 4.500</p><span class="vt-badge vt-badge-aviso">Pendiente de seña</span></article>
+</div>
+<div class="fila"><label class="vt-muted" for="ia">Nombre del animal</label><input id="ia" class="vt-input" value="Toby"></div>
+<div class="fila botones"><button class="vt-btn vt-btn-primario">Confirmar turno</button><button class="vt-btn vt-btn-acento">Pagar seña</button><button class="vt-btn vt-btn-borde">Volver</button><button class="vt-btn vt-btn-peligro">Cancelar turno</button><button class="vt-btn vt-btn-primario" disabled>Deshabilitado</button></div>
+<div class="fila"><span class="vt-muted">Cargando (esqueleto):</span><div class="vt-esqueleto" style="height:18px;width:60%;margin:8px 0"></div><div class="vt-esqueleto" style="height:60px"></div></div>
+<div class="fila botones"><button class="vt-btn vt-btn-borde" onclick="toast('a','exito','Turno confirmado.')">Ver aviso de éxito</button><button class="vt-btn vt-btn-borde" onclick="toast('a','error','No se pudo guardar. Probá de nuevo.')">Ver aviso de error</button></div>
+<div class="vt-toasts" id="ta"></div></section><section data-opcion="b" data-tema="claro" class="panel vt-duo" id="pb">
+<header class="top"><div><h2>Opción B — Claude</h2><p class="vt-muted">Verde azulado profundo · coral · fondo arena · Plus Jakarta Sans · formas amplias · iconos duotono</p></div>
+<button class="vt-btn vt-btn-borde" onclick="tema('b')">🌙 Claro / oscuro</button></header>
+<nav class="nav"><strong class="logo"><svg class="vt-ico" viewBox="0 0 24 24"><circle cx="5" cy="10" r="1.6"/><circle cx="9" cy="5.5" r="1.6"/><circle cx="15" cy="5.5" r="1.6"/><circle cx="19" cy="10" r="1.6"/><path d="M12 12c-3 0-5.5 3-5.5 5.2 0 1.6 1.4 2.3 3 2.3 1 0 1.6-.4 2.5-.4s1.5.4 2.5.4c1.6 0 3-.7 3-2.3C17.5 15 15 12 12 12z"/></svg> VITALIA</strong><span>Servicios</span><span>Profesionales</span><span>Urgencias</span><button class="vt-btn vt-btn-primario">Ingresar</button></nav>
+<h3>Reservá un turno</h3><p class="vt-muted">Elegí el servicio que necesita tu animal.</p>
+<div class="grid">
+<article class="vt-card"><div class="vt-icono-caja"><svg class="vt-ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></div><h3>Consulta general</h3><p class="vt-muted">30 min · desde $ 1.200</p><span class="vt-badge vt-badge-exito">Hay horarios hoy</span></article>
+<article class="vt-card"><div class="vt-icono-caja"><svg class="vt-ico" viewBox="0 0 24 24"><path d="m18 2 4 4M17 7l3-3M19 9 8.5 19.5 4 15 14.5 4.5l4.5 4.5zM6 17l-3 3M11 12l2 2M8 15l2 2"/></svg></div><h3>Vacunación</h3><p class="vt-muted">20 min · desde $ 900</p><span class="vt-badge vt-badge-info">Refuerzo en 20 días</span></article>
+<article class="vt-card"><div class="vt-icono-caja"><svg class="vt-ico" viewBox="0 0 24 24"><path d="M12 21s-8-5-8-11a5 5 0 0 1 8-3.5A5 5 0 0 1 20 10c0 6-8 11-8 11z"/></svg></div><h3>Castración</h3><p class="vt-muted">90 min · desde $ 4.500</p><span class="vt-badge vt-badge-aviso">Pendiente de seña</span></article>
+</div>
+<div class="fila"><label class="vt-muted" for="ib">Nombre del animal</label><input id="ib" class="vt-input" value="Toby"></div>
+<div class="fila botones"><button class="vt-btn vt-btn-primario">Confirmar turno</button><button class="vt-btn vt-btn-acento">Pagar seña</button><button class="vt-btn vt-btn-borde">Volver</button><button class="vt-btn vt-btn-peligro">Cancelar turno</button><button class="vt-btn vt-btn-primario" disabled>Deshabilitado</button></div>
+<div class="fila"><span class="vt-muted">Cargando (esqueleto):</span><div class="vt-esqueleto" style="height:18px;width:60%;margin:8px 0"></div><div class="vt-esqueleto" style="height:60px"></div></div>
+<div class="fila botones"><button class="vt-btn vt-btn-borde" onclick="toast('b','exito','Turno confirmado.')">Ver aviso de éxito</button><button class="vt-btn vt-btn-borde" onclick="toast('b','error','No se pudo guardar. Probá de nuevo.')">Ver aviso de error</button></div>
+<div class="vt-toasts" id="tb"></div></section></div>
+<script>
+function tema(o){const p=document.getElementById('p'+o);p.dataset.tema=p.dataset.tema==='oscuro'?'claro':'oscuro'}
+function toast(o,t,m){const c=document.getElementById('t'+o);const e=document.createElement('div');e.className='vt-toast vt-toast-'+t;e.setAttribute('role',t==='error'?'alert':'status');e.textContent=m;c.appendChild(e);if(t!=='error')setTimeout(()=>e.remove(),3500);else e.onclick=()=>e.remove()}
+</script></body></html>

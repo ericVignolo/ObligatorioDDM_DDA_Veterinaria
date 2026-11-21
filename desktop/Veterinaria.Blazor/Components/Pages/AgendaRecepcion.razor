@@ -26,6 +26,8 @@
         </div>
     }
 
+    <TurnoMostrador OnRegistrado="Cargar" />
+
     @* Filtros (A-017) *@
     <div class="row g-2 mb-3">
         <div class="col-md-3">
@@ -89,74 +91,82 @@
     }
     else
     {
-        <table class="table align-middle">
-            <thead>
-                <tr>
-                    <th scope="col">Hora</th>
-                    <th scope="col">Animal y cliente</th>
-                    <th scope="col">Servicio</th>
-                    <th scope="col">Profesional</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var turno in turnos)
-                {
-                    var animal = AnimalService.ObtenerParaPersonal(turno.AnimalId);
-                    var cliente = CuentaService.ObtenerPorId(turno.ClienteId);
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <caption class="visually-hidden">Turnos de la agenda</caption>
+                <thead>
                     <tr>
-                        <td>@turno.Inicio.ToString("HH:mm")–@turno.Fin.ToString("HH:mm")</td>
-                        <td>
-                            <strong>@animal?.Nombre</strong> <span class="text-muted">(@animal?.Especie)</span><br />
-                            <span class="small">@cliente?.Nombre @cliente?.Apellido · @cliente?.Telefono</span>
-                        </td>
-                        <td>@(PrestacionService.ObtenerPorId(turno.PrestacionId)?.Nombre)</td>
-                        <td>@(ProfesionalService.ObtenerPorId(turno.ProfesionalId)?.Nombre)</td>
-                        <td>
-                            <EstadoTurno Estado="@turno.Estado" />
-                            @if (turno.HoraLlegada is not null)
-                            {
-                                <div class="small text-muted">Llegó @turno.HoraLlegada.Value.ToString("HH:mm")</div>
-                            }
-                            @if (!string.IsNullOrEmpty(turno.MotivoCancelacion))
-                            {
-                                <div class="small text-muted">@turno.CanceladoPor: @turno.MotivoCancelacion</div>
-                            }
-                        </td>
-                        <td>
-                            @if (cancelandoId == turno.Id)
-                            {
-                                <EditForm Model="cancelacion" OnValidSubmit="() => Cancelar(turno.Id)" FormName="cancelacion-recepcion">
-                                    <DataAnnotationsValidator />
-                                    <InputText class="form-control form-control-sm mb-1" placeholder="Motivo (obligatorio)" maxlength="200" @bind-Value="cancelacion.Motivo" aria-label="Motivo de la cancelación" />
-                                    <ValidationMessage For="() => cancelacion.Motivo" />
-                                    <button type="submit" class="btn btn-danger btn-sm me-1">Confirmar</button>
-                                    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="() => cancelandoId = 0">Volver</button>
-                                </EditForm>
-                            }
-                            else
-                            {
-                                @if (turno.Estado == "Confirmado")
-                                {
-                                    <button class="btn btn-outline-primary btn-sm me-1 mb-1" @onclick="() => Llegada(turno.Id)">Llegó</button>
-                                    <button class="btn btn-outline-secondary btn-sm me-1 mb-1" @onclick="() => Ausencia(turno.Id)">Ausente</button>
-                                }
-                                @if (turno.Estado == "Confirmado" || turno.Estado == "En espera")
-                                {
-                                    <button class="btn btn-outline-danger btn-sm mb-1" @onclick="() => EmpezarCancelacion(turno.Id)">@(turno.Estado == "En espera" ? "Se retiró" : "Cancelar")</button>
-                                }
-                            }
-                        </td>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Animal y cliente</th>
+                        <th scope="col">Servicio</th>
+                        <th scope="col">Profesional</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var turno in turnos)
+                    {
+                        var animal = AnimalService.ObtenerParaPersonal(turno.AnimalId);
+                        var cliente = CuentaService.ObtenerPorId(turno.ClienteId);
+                        <tr>
+                            <td>@turno.Inicio.ToString("HH:mm")–@turno.Fin.ToString("HH:mm")</td>
+                            <td>
+                                <strong>@animal?.Nombre</strong> <span class="text-muted">(@animal?.Especie)</span><br />
+                                <span class="small">@cliente?.Nombre @cliente?.Apellido · @cliente?.Telefono</span>
+                            </td>
+                            <td>@(PrestacionService.ObtenerPorId(turno.PrestacionId)?.Nombre)</td>
+                            <td>@(ProfesionalService.ObtenerPorId(turno.ProfesionalId)?.Nombre)</td>
+                            <td>
+                                <EstadoTurno Estado="@turno.Estado" />
+                                @if (turno.EsSobreturno)
+                                {
+                                    <span class="badge bg-dark ms-1" title="@turno.MotivoSobreturno">Sobreturno</span>
+                                }
+                                <EstadoConsentimiento Turno="turno" />
+                                @if (turno.HoraLlegada is not null)
+                                {
+                                    <div class="small text-muted">Llegó @turno.HoraLlegada.Value.ToString("HH:mm")</div>
+                                }
+                                @if (!string.IsNullOrEmpty(turno.MotivoCancelacion))
+                                {
+                                    <div class="small text-muted">@turno.CanceladoPor: @turno.MotivoCancelacion</div>
+                                }
+                            </td>
+                            <td>
+                                @if (cancelandoId == turno.Id)
+                                {
+                                    <EditForm Model="cancelacion" OnValidSubmit="() => Cancelar(turno.Id)" FormName="cancelacion-recepcion">
+                                        <DataAnnotationsValidator />
+                                        <InputText class="form-control form-control-sm mb-1" placeholder="Motivo (obligatorio)" maxlength="200" @bind-Value="cancelacion.Motivo" aria-label="Motivo de la cancelación" />
+                                        <ValidationMessage For="() => cancelacion.Motivo" />
+                                        <button type="submit" class="btn btn-danger btn-sm me-1">Confirmar</button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="() => cancelandoId = 0">Volver</button>
+                                    </EditForm>
+                                }
+                                else
+                                {
+                                    @if (turno.Estado == "Confirmado")
+                                    {
+                                        <button class="btn btn-outline-primary btn-sm me-1 mb-1" @onclick="() => Llegada(turno.Id)">Llegó</button>
+                                        <button class="btn btn-outline-secondary btn-sm me-1 mb-1" @onclick="() => Ausencia(turno.Id)">Ausente</button>
+                                    }
+                                    @if (turno.Estado == "Confirmado" || turno.Estado == "En espera" || turno.Estado == AgendaService.PendienteSena)
+                                    {
+                                        <button class="btn btn-outline-danger btn-sm mb-1" @onclick="() => EmpezarCancelacion(turno.Id)">@(turno.Estado == "En espera" ? "Se retiró" : "Cancelar")</button>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
 </RequierePersonal>
 
 @code {
-    private readonly string[] estados = { "Confirmado", "En espera", "En curso", "Finalizado", "Ausente", "Cancelado" };
+    private readonly string[] estados = { AgendaService.PendienteSena, "Confirmado", "En espera", "En curso", "Finalizado", "Ausente", "Cancelado" };
 
     private DateOnly fecha = DateOnly.FromDateTime(DateTime.Today);
     private int profesionalId;

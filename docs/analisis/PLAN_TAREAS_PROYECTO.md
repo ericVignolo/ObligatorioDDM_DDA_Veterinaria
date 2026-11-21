@@ -84,18 +84,19 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 - [x] **A-020 — Mostrar historia clínica y firma.** Diferenciar borrador, firmado y enmienda; impedir edición visual del original firmado en el modelo de interacción.
 - [x] **A-021 — Crear vistas de vacunación y alertas sanitarias.** Mostrar lote, fechas, intervalo, refuerzo y alertas según la especificación profesional; incluir estados de vacuna vencida y no aplicable.
 - [x] **A-022 — Crear vistas de inventario.** Productos, lotes, vencimientos, movimientos, stock mínimo, ajustes y consumo; dejar claro que no hay saldos persistentes en modo demo.
-- [ ] **A-023 — Crear cargos, cobro y comprobante interno.** Solo prestaciones de la clínica, sin venta de productos (DT-ALC-01). Separar cargo y pago; soportar medios acordados para el ejemplo, sin pasarela online mientras no se apruebe su cambio de alcance.
-- [ ] **A-024 — Crear gestión de internación.** Ingreso, box, plan, evolución, novedades internas/visibles y alta; representar la exclusividad del box y la protección de notas.
-- [ ] **A-025 — Crear consentimiento informado.** Mostrar versión, procedimiento, paciente, lectura/aceptación/firma según mecanismo aprobado; mantener separado de términos y privacidad.
-- [ ] **A-026 — Crear panel de asistencia para Recepción/Veterinario.** Cola por prioridad, elegibilidad, ofertas/asignación, escalamiento y estados; los tiempos y las competencias usan parámetros aprobados.
-- [ ] **A-027 — Crear vistas de configuración y administración.** Catálogo, horarios, recursos, tarifas, roles, parámetros, competencias, cobertura, auditoría e indicadores según RF.
-- [ ] **A-028 — Crear comunicaciones y derechos.** Resumen/correo y su estado, alertas sanitarias/operativas, preferencias, exportación/eliminación y conservación con controles visibles.
+- [x] **A-023 — Crear cargos, cobro y comprobante interno.** Solo prestaciones de la clínica, sin venta de productos (DT-ALC-01). Separar cargo y pago; soportar medios acordados para el ejemplo, sin pasarela online (DT-ALC-02, 2026-11-16: el cobro es solo presencial).
+- [x] **A-024 — Crear gestión de internación.** Ingreso, box, plan, evolución, novedades internas/visibles y alta; representar la exclusividad del box y la protección de notas.
+- [x] **A-025 — Crear consentimiento informado.** Mostrar versión, procedimiento, paciente, lectura/aceptación/firma según mecanismo aprobado; mantener separado de términos y privacidad.
+- [x] **A-026 — Crear panel de asistencia para Recepción/Veterinario.** Cola por prioridad, elegibilidad, ofertas/asignación, escalamiento y estados; los tiempos y las competencias usan parámetros aprobados.
+- [x] **A-027 — Crear vistas de configuración y administración.** Catálogo, horarios, recursos, tarifas, roles, parámetros, competencias, cobertura, auditoría e indicadores según RF.
+- [x] **A-028 — Crear comunicaciones y derechos.** Resumen/correo y su estado, alertas sanitarias/operativas, preferencias, exportación/eliminación y conservación con controles visibles.
 
 ### A.5 Cierre de escritorio
 
-- [ ] **A-029 — Aplicar accesibilidad y adaptación de escritorio.** Teclado, foco, contraste, etiquetas, mensajes y puntos de corte aplicables; documentar limitaciones del prototipo.
-- [ ] **A-030 — Integrar recorridos demostrativos de escritorio.** Preparar datos sintéticos y recorridos de Visitante, Cliente, Recepción, Veterinario y Administrador con resultados repetibles y marca de simulación.
-- [ ] **A-031 — Revisar sección A y preparar integración.** Revisar requisitos asignados, estados, navegación, errores, requisitos de privacidad y evidencia; no marcar backend/seguridad como completos.
+- [x] **A-029 — Aplicar accesibilidad y adaptación de escritorio.** Teclado, foco, contraste, etiquetas, mensajes y puntos de corte aplicables; documentar limitaciones del prototipo.
+- [x] **A-030 — Integrar recorridos demostrativos de escritorio.** Preparar datos sintéticos y recorridos de Visitante, Cliente, Recepción, Veterinario y Administrador con resultados repetibles y marca de simulación.
+- [x] **A-031 — Revisar sección A y preparar integración.** Revisar requisitos asignados, estados, navegación, errores, requisitos de privacidad y evidencia; no marcar backend/seguridad como completos.
+- [ ] **A-032 — Aplicar el sistema de diseño de VITALIA a Blazor.** Diego elige la Opción A o la B (`design/vitalia/`); copiar tokens, componentes y fuentes a `wwwroot`, migrar `MainLayout` y los componentes comunes y luego cada recorrido (una rama por sesión, con prueba). Preparar los mismos valores para React Native.
 
 ## 6. Sección B — Aplicación móvil
 

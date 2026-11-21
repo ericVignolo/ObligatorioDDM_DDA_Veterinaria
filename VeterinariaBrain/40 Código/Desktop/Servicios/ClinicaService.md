@@ -17,6 +17,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Clinica]]
 
 ## Usado por (si cambia, revisar estos)
+- [[Comprobante]]
 - [[Cookies]]
 - [[EncabezadoLegal]]
 - [[Home]]
@@ -28,3 +29,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Terminos]]
 - [[Turnos]]
 - [[Urgencias]]
+
+## En las otras aplicaciones
+- [[ClinicaService (API)]]

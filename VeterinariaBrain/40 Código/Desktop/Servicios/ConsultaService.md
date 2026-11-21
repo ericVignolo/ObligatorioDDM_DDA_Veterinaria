@@ -11,15 +11,18 @@ generado: true
 
 Consultas e historia clínica de demostración en memoria (A-019, A-020, CU-VET-01).
 
-**Tareas:** A-019, A-020, A-021, A-022
+**Tareas:** A-019, A-020, A-021, A-022, A-023, A-025, A-028
 
-**Requisitos y decisiones:** CU-VET-01, HU-VET-02, RF-CLI-05, RF-VET-03, RF-VET-06, RN-12, RN-13, RN-26, RN-27, RN-29, RN-40, RNF-CON-03
+**Requisitos y decisiones:** CU-VET-01, HU-VET-02, RF-ADM-08, RF-CLI-05, RF-CLI-10, RF-VET-03, RF-VET-06, RN-10, RN-12, RN-13, RN-17, RN-26, RN-27, RN-29, RN-32, RN-40, RNF-CON-03
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
 - [[AgendaService]]
 - [[Articulo]]
+- [[CobroService]]
+- [[ComunicacionesService]]
+- [[ConsentimientoService]]
 - [[Consulta]]
 - [[ConsultaFormulario]]
 - [[ConsumoFormulario]]
@@ -37,7 +40,11 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AgendaRecepcion]]
 - [[AgendaVeterinario]]
 - [[AtencionConsulta]]
+- [[BitacoraService]]
 - [[HistoriaAnimal]]
 - [[HistoriaClinica]]
 - [[MiCuenta]]
 - [[VacunaService]]
+
+## En las otras aplicaciones
+- [[ConsultaService (API)]]

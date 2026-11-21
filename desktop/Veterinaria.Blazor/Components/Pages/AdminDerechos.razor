@@ -1,0 +1,142 @@
+@page "/panel/admin/derechos"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject DerechosService Servicio
+@inject CuentaService Cuentas
+@inject SesionService Sesion
+
+<PageTitle>Derechos sobre datos personales — VITALIA</PageTitle>
+
+@* A-028, RF-CLI-19, RNF-LEG-01, RNF-LEG-02, RNF-LEG-06: pedidos de eliminación y política de conservación. *@
+<RequierePersonal Roles="@(new[] { PersonalService.Administrador })">
+    <h1>Derechos sobre datos personales</h1>
+    <p class="text-muted">Pedidos de los clientes para eliminar sus datos. Al aprobar, la cuenta se anonimiza: animales, historia clínica, cargos y consentimientos se conservan sin identificar al titular.</p>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    <h2 class="h5">Pedidos (@solicitudes.Count)</h2>
+    @if (solicitudes.Count == 0)
+    {
+        <p>Todavía no hay pedidos.</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-sm align-middle">
+                <caption class="visually-hidden">Pedidos de exportación y eliminación de datos personales</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Titular</th>
+                        <th scope="col">Pedido</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Resolución</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var solicitud in solicitudes)
+                    {
+                        var id = solicitud.Id;
+                        <tr>
+                            <td>@solicitud.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@NombreTitular(solicitud.CuentaId)</td>
+                            <td>@solicitud.Tipo</td>
+                            <td>@solicitud.Estado</td>
+                            <td>
+                                @if (solicitud.Estado == DerechosService.Recibida && solicitud.Tipo == DerechosService.Eliminacion)
+                                {
+                                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                                        <button type="button" class="btn btn-danger btn-sm" @onclick="() => Aprobar(id)">Aprobar y anonimizar</button>
+                                        <label class="visually-hidden" for="@($"motivo-{id}")">Motivo del rechazo</label>
+                                        <input id="@($"motivo-{id}")" class="form-control form-control-sm" style="max-width: 16rem;" placeholder="Motivo del rechazo" @bind="motivos[id]" />
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="() => Rechazar(id)">Rechazar</button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="small">@solicitud.ResueltaPor@(string.IsNullOrEmpty(solicitud.Detalle) ? "" : " · " + solicitud.Detalle)</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <h2 class="h5 mt-4">Qué se guarda y por cuánto tiempo (RNF-LEG-06)</h2>
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <caption class="visually-hidden">Política de conservación por categoría de dato</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Dato</th>
+                    <th scope="col">Finalidad</th>
+                    <th scope="col">Acceso</th>
+                    <th scope="col">Conservación</th>
+                    <th scope="col">Al eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var politica in Servicio.Politicas())
+                {
+                    <tr>
+                        <th scope="row">@politica.Categoria</th>
+                        <td>@politica.Finalidad</td>
+                        <td>@politica.Acceso</td>
+                        <td>@politica.Conservacion</td>
+                        <td>@politica.AlEliminar</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <p class="small text-muted">Los plazos marcados «a confirmar» dependen de la revisión de normativa uruguaya previa a producción (RNF-LEG-04, RNF-LEG-08).</p>
+</RequierePersonal>
+
+@code {
+    private List<SolicitudDerecho> solicitudes = new();
+    private Dictionary<int, string> motivos = new();
+    private string mensaje = "";
+    private bool exito;
+
+    protected override void OnInitialized()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        solicitudes = Servicio.Todas();
+        foreach (var solicitud in solicitudes.Where(s => !motivos.ContainsKey(s.Id)))
+        {
+            motivos[solicitud.Id] = "";
+        }
+    }
+
+    private void Aprobar(int id)
+    {
+        Mostrar(Servicio.Resolver(id, true, "", Sesion.PersonalActual));
+    }
+
+    private void Rechazar(int id)
+    {
+        Mostrar(Servicio.Resolver(id, false, motivos.GetValueOrDefault(id, ""), Sesion.PersonalActual));
+    }
+
+    private void Mostrar(ResultadoOperacion resultado)
+    {
+        mensaje = resultado.Mensaje;
+        exito = resultado.Exito;
+        Cargar();
+    }
+
+    private string NombreTitular(int cuentaId)
+    {
+        var cuenta = Cuentas.ObtenerPorId(cuentaId);
+        return cuenta is null || cuenta.Eliminada ? "Titular eliminado" : $"{cuenta.Nombre} {cuenta.Apellido}";
+    }
+}

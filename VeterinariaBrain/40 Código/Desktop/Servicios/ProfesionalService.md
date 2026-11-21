@@ -23,10 +23,19 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Profesional]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminHorarios]]
+- [[AdminPersonal]]
+- [[AdministracionService]]
 - [[AgendaRecepcion]]
 - [[AgendaService]]
+- [[AsistenciaService]]
 - [[ConsultaService]]
+- [[IndicadoresService]]
 - [[ProfesionalDetalle]]
 - [[Profesionales]]
 - [[Reservar]]
+- [[TurnoMostrador]]
 - [[Turnos]]
+
+## En las otras aplicaciones
+- [[ProfesionalService (API)]]

@@ -8,6 +8,8 @@
 @inject ConsultaService Consultas
 @inject PrestacionService PrestacionService
 @inject VacunaService Vacunas
+@inject CobroService Cobro
+@inject ConsentimientoService Consentimientos
 
 @* Perfil del Cliente (A-009): datos personales con quién ve cada uno, animales con su historia,
    turnos y servicios usados con «Reservar de nuevo». Los datos son de demostración. *@
@@ -224,6 +226,24 @@
             </div>
         </section>
 
+        @* Consentimientos pendientes (A-025, CU-CLI-10 paso 1) *@
+        @if (consentimientosPendientes.Count > 0)
+        {
+            <div class="alert alert-warning" role="status">
+                <strong>Tenés @consentimientosPendientes.Count @(consentimientosPendientes.Count == 1 ? "consentimiento" : "consentimientos") para firmar.</strong>
+                Sin firmarlo, la clínica no puede hacer el procedimiento.
+                <ul class="mb-0 mt-1">
+                    @foreach (var turno in consentimientosPendientes)
+                    {
+                        <li>
+                            @NombreServicio(turno.PrestacionId) de @NombreAnimal(turno.AnimalId), @turno.Inicio.ToString("dddd d 'de' MMMM, HH:mm") ·
+                            <a class="alert-link" href="@($"consentimiento/{turno.Id}")">Leer y firmar</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+
         @* Alertas sanitarias: refuerzos próximos o vencidos de sus animales (RF-CLI-07, A-021) *@
         @if (alertas.Count > 0)
         {
@@ -244,7 +264,7 @@
                         </li>
                     }
                 </ul>
-                <p class="small text-muted mt-1">Te avisamos @Vacunas.DiasAvisoRefuerzo días antes. El aviso por correo llega con la API.</p>
+                <p class="small text-muted mt-1">Te avisamos @Vacunas.DiasAvisoRefuerzo días antes, por el canal que elijas en «Mis comunicaciones».</p>
             </section>
         }
 
@@ -296,6 +316,52 @@
             <a href="turnos">Ver todos mis turnos</a>
         </section>
 
+        @* Cargos y comprobantes (A-023, RF-CLI-12 reducido: se consulta y se paga en Recepción, no en línea) *@
+        <section class="mb-4" aria-labelledby="titulo-cuenta-corriente">
+            <h2 class="h4" id="titulo-cuenta-corriente">Mis cargos y comprobantes</h2>
+            @if (misCargos.Count == 0)
+            {
+                <p>Cuando la clínica termine una atención, su cargo aparece acá.</p>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var cargo in misCargos)
+                    {
+                        <li class="list-group-item">
+                            <div class="d-flex flex-wrap justify-content-between gap-2">
+                                <span>
+                                    <strong>@cargo.Descripcion</strong> · @NombreAnimal(cargo.AnimalId)
+                                    <span class="d-block small text-muted">Atención del @cargo.Fecha.ToString("d 'de' MMMM 'de' yyyy") · $ @cargo.Monto.ToString("N0")</span>
+                                </span>
+                                <span class="text-end">
+                                    <span class="badge @(Cobro.Estado(cargo) == "Pagado" ? "bg-success" : "bg-secondary")">@Cobro.Estado(cargo)</span>
+                                    @if (Cobro.Saldo(cargo) > 0)
+                                    {
+                                        <span class="d-block small">Saldo: $ @Cobro.Saldo(cargo).ToString("N0")</span>
+                                    }
+                                </span>
+                            </div>
+                            @foreach (var pago in Cobro.PagosDe(cargo.Id))
+                            {
+                                <div class="small text-muted">
+                                    Comprobante @pago.Numero · @pago.Fecha.ToString("dd/MM/yyyy") · $ @pago.Monto.ToString("N0") · @pago.Medio
+                                    @if (Cobro.EstaAnulado(pago.Id))
+                                    {
+                                        <span>(anulado)</span>
+                                    }
+                                </div>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            <p class="small text-muted mt-2">Los pagos se hacen en la clínica (efectivo, débito, crédito o transferencia). No hay pago en línea.</p>
+        </section>
+
+        @* Comunicaciones y preferencias (A-028) *@
+        <MisComunicaciones Cuenta="cuenta" />
+
         @* Servicios usados *@
         <section class="mb-4">
             <h2 class="h4">Servicios que usaste</h2>
@@ -324,6 +390,9 @@
                 </ul>
             }
         </section>
+
+        @* Derechos sobre los datos personales (A-028) *@
+        <MisDerechos Cuenta="cuenta" />
     }
 </RequiereSesion>
 
@@ -347,6 +416,8 @@
     private List<(Animal Animal, ItemCarnet Item)> alertas = new();
     private List<Turno> proximos = new();
     private List<Turno> usados = new();
+    private List<Cargo> misCargos = new();
+    private List<Turno> consentimientosPendientes = new();
     private HashSet<int> reservables = new();
 
     protected override void OnInitialized()
@@ -365,6 +436,8 @@
         animales = AnimalService.ObtenerDe(cuenta.Id);
         alertas = Vacunas.AlertasDe(cuenta.Id);
         proximos = Agenda.ProximosDe(cuenta.Id);
+        misCargos = Cobro.CargosDe(cuenta.Id);
+        consentimientosPendientes = Consentimientos.PendientesDe(cuenta.Id);
 
         // Un servicio por fila, con la última atención terminada (Finalizado).
         usados = Agenda.HistorialDe(cuenta.Id)

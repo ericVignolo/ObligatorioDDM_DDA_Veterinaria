@@ -213,6 +213,11 @@
                                     @* RN-27: el lote lo elige el sistema (FEFO); acá se ve cuál usar. *@
                                     @LoteSugerido
                                 </div>
+                                <div class="col-12">
+                                    @* RN-16: solo hace falta si la dosis se adelanta al intervalo mínimo; si falta, el sistema la pide. *@
+                                    <label class="form-label small" for="justificacionDosis">Justificación si adelantás la dosis (opcional)</label>
+                                    <InputText id="justificacionDosis" class="form-control form-control-sm" maxlength="300" @bind-Value="nuevaAplicacion.Justificacion" />
+                                </div>
                                 <div class="col-md-2">
                                     <button type="submit" class="btn btn-outline-primary w-100">Registrar</button>
                                 </div>
@@ -289,6 +294,18 @@
                                     <InputText id="contrasena" type="password" class="form-control" @bind-Value="firma.Contrasena" autocomplete="current-password" />
                                     <ValidationMessage For="() => firma.Contrasena" />
                                 </div>
+                                @{ var choques = Consultas.AlergiasEnTratamiento(consulta!.AnimalId, formulario); }
+                                @if (choques.Count > 0)
+                                {
+                                    @* RN-17: indicar algo registrado como alergia pide confirmación explícita y queda asentado. *@
+                                    <div class="alert alert-danger py-2" role="alert">
+                                        El tratamiento incluye <strong>@string.Join(", ", choques)</strong>, registrado como alergia de este animal.
+                                        <div class="form-check mt-1">
+                                            <input id="confirmaAlergia" type="checkbox" class="form-check-input" @bind="formulario.ConfirmaAlergia" />
+                                            <label class="form-check-label" for="confirmaAlergia">Lo indico igual, bajo mi responsabilidad</label>
+                                        </div>
+                                    </div>
+                                }
                                 <button type="submit" class="btn btn-success">Firmar consulta</button>
                                 <button type="button" class="btn btn-link" @onclick="() => mostrarFirma = false">Seguir editando</button>
                             </EditForm>

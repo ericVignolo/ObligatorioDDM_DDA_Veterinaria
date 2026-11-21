@@ -334,3 +334,39 @@ Antes de confirmar se muestra un importe cuando pueda calcularse o una estimaci�
 - RF-ADM-13.
 - RN-36 y RN-46 a RN-59.
 - RNF-SEG-13 y 14; RNF-CON-10; RNF-DIS-05; RNF-USA-07; RNF-LEG-06, 08 y 09.
+
+## 20. Implementación en escritorio (A-026, 2026-11-16)
+
+Panel del personal en `/panel/asistencia` y `/panel/asistencia/{Id}` con `AsistenciaService` (datos de demostración). La solicitud del cliente y su seguimiento con mapa van en el móvil (B-013, B-014); en escritorio, **Recepción registra las solicitudes que llegan por teléfono** con los mismos datos.
+
+### Decisiones de la implementación (D-ASI)
+
+| Id | Decisión |
+|---|---|
+| D-ASI-01 | Sin cuestionario clínico aprobado todavía (sección 18): el nivel preliminar es el que indica el cliente (RN-46 se cumple: no baja). |
+| D-ASI-02 | Parámetros por defecto de Eric (31/10): cobertura 30 km, rojo sin aceptar 10 min → Recepción, horario lun–vie 9–19 y sáb 9–13, reevaluación a las 24 h. Guardia de demostración: Dra. Ferreira (Personal 2). |
+| D-ASI-03 | Tarifa de demostración: $ 1.500 base + $ 40 por km + $ 300 por animal extra; la orientación sin costo. Al finalizar se genera el cargo, que se cobra en Recepción (A-023). |
+| D-ASI-04 | Rojo: se ofrece **a la vez** a todos los elegibles (especie y matrícula, y además de guardia o en jornada en ese momento); el primero que acepta se la queda. Sin elegibles, rechazado por todos o 10 min sin aceptar → «Requiere coordinación de Recepción». |
+| D-ASI-05 | Verde, amarillo y naranja: Recepción la ofrece a un veterinario elegible por especie y matrícula; si rechaza (con motivo) vuelve a la cola. |
+| D-ASI-06 | Estados implementados: Pendiente de asignación, Ofrecida, Requiere coordinación de Recepción, Aceptada, En camino, En el lugar, En atención, Finalizada, Cancelada por la clínica y No concretada. «Borrador», «Enviada» y «Clasificada» son pasos del formulario del cliente (móvil). La orientación salta de Aceptada a En atención. |
+| D-ASI-07 | Visita con más de 30 km → Recepción («Fuera de cobertura»), y un empeoramiento a rojo no la saca de ahí. Visita sin dirección no se registra (RN-56). |
+| D-ASI-08 | Empeoramiento (RN-51): siempre queda el evento; solo puede subir. Si sube a rojo sin aceptar, se activa la guardia. Cualquier veterinario puede confirmar, subir o bajar el nivel con motivo (RN-52); si baja un rojo ofrecido, vuelve a la cola. |
+| D-ASI-09 | Recepción cierra sin atención («Cancelada por la clínica» o «No concretada») con motivo, solo antes de que el veterinario salga; un rojo solo después de pasar a Recepción. |
+| D-ASI-10 | La estimación de llegada se muestra recién al aceptar: 15 min + 2 min por km (con la API la calcula el mapa, RN-53). La ubicación del veterinario se comparte solo en «En camino» (RN-57). |
+| D-ASI-11 | La distancia la carga Recepción a mano; en la sección C la calcula el proveedor de mapas. Equipamiento y capacidad por cantidad quedan para A-027 (no hay datos todavía). |
+
+### Datos de demostración
+
+Cinco solicitudes al arrancar: 1 naranja (rodeo de Pedro, 18 km), 2 amarilla de Toby con más de 24 h (reevaluación pedida), 3 verde de orientación (Mishi), 4 amarilla de oveja a 45 km (fuera de cobertura) y 5 roja de un potrillo hace 15 min (pasa a Recepción al abrir el panel si nadie aceptó).
+
+### Aclaraciones (preguntas del agente probador)
+
+- Crear, ofrecer, registrar empeoramientos por teléfono y cerrar: solo Recepción. El Administrador solo mira.
+- `Cola()` muestra todas las activas (incluidas rojas, ofrecidas, aceptadas y en coordinación) en el orden de RN-47; las rojas van primero.
+- Un reintento (misma clave, aceptar o finalizar dos veces) devuelve éxito sin duplicar nada. Un empeoramiento repetido al mismo nivel deja el evento, pero no vuelve a ofrecer.
+- Fuera del rojo, `Elegibles` filtra solo por especie y matrícula; Recepción decide cuándo. Una no roja sin elegibles queda en la cola: Recepción la coordina.
+- El rojo pasa a Recepción a los 10 minutos exactos o más. La clínica cierra a las 19:00 (lun–vie) y 13:00 (sáb): a esa hora ya está fuera de horario.
+- La orientación no genera cargo. Solo se finaliza desde «En atención». No se cambia el nivel de una solicitud cerrada.
+- Quien rechaza se quita de la oferta; Recepción puede volver a ofrecérsela.
+- El servicio valida largos y rangos del formulario (las reglas van en el backend). La especie sale del animal registrado, que tiene que ser del cliente; el canal queda «Teléfono».
+- La deuda previa no se consulta al crear (RN-58): ningún nivel se bloquea por deuda.

@@ -1,14 +1,22 @@
 @inherits LayoutComponentBase
 
+@* Con <base href="/"> un enlace "#..." navegaría al inicio: se lleva el foco al contenido sin cambiar la URL. *@
+<a class="skip-link" href="#contenido-principal" onclick="event.preventDefault(); document.getElementById('contenido-principal').focus();">Saltar al contenido</a>
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <BarraSesion />
+    <main id="contenido-principal" tabindex="-1">
+        <div class="demo-banner px-4" role="note">
+            Demostración con datos ficticios: no se envían correos ni se cobra de verdad.
+            <a href="demo">Guía de recorridos</a>
         </div>
+
+        <header class="top-row px-4">
+            <BarraSesion />
+        </header>
 
         <article class="content px-4">
             @Body
@@ -17,8 +25,8 @@
     </main>
 </div>
 
-<div id="blazor-error-ui" data-nosnippet>
+<div id="blazor-error-ui" data-nosnippet role="alert">
     Ocurrió un error inesperado.
     <a href="." class="reload">Recargar</a>
-    <span class="dismiss">🗙</span>
+    <button type="button" class="dismiss" aria-label="Cerrar el aviso">🗙</button>
 </div>

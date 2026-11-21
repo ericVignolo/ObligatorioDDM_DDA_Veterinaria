@@ -45,7 +45,8 @@ Antes de planificar, diseñar o implementar, leer:
 - Un PR con el CI en rojo no se mezcla.
 - Cada regla nueva o cambiada del backend agrega o ajusta su prueba xUnit en el mismo PR (`tests/README.md`).
 - **Agente revisor:** cuando quien trabaja en la sesión lo pide (por ejemplo «revisá el PR»), Claude lanza un agente revisor independiente que compara el cambio con `MATRIZ_REQUISITOS.md`, las decisiones y las convenciones del docente, y busca errores típicos de Razor. Sus hallazgos se corrigen o se informan en el PR.
-- El CI y el revisor no reemplazan la prueba con F5 de quien trabajó.
+- **Agente probador (Eric, 2026-11-16):** después de implementar cada tarea, Claude lanza el probador de caja negra (`.claude/agents/probador.md`), que escribe pruebas xUnit en `tests/Veterinaria.Tests/CajaNegra/` leyendo solo la especificación, los modelos y las firmas públicas, sin ver la implementación. Lo que falle se corrige (código o especificación) antes de pedir la prueba con F5.
+- El CI, el revisor y el probador no reemplazan la prueba con F5 de quien trabajó.
 
 ## Convenciones de código (estilo del docente)
 
@@ -61,7 +62,7 @@ Antes de planificar, diseñar o implementar, leer:
 
 Actualizado: 2026-11-10.
 
-- **Entrega: jueves 4 de diciembre de 2026** (DT-ORG-07).
+- **Entrega: domingo 13 de diciembre de 2026** (DT-ORG-07; antes jueves 4 de diciembre).
 - **Diego (2026-11-10):** proveedor decidido — `MySql.EntityFrameworkCore` 10.0.7 (Oracle) con EF Core 10 (DT-BD-02). API en un solo proyecto `api/Veterinaria.Api` (DT-API-01), empezada en paralelo (DT-ORG-08); primera versión de la base con `AppDbContext` y semilla, ver `api/README.md`. Plan B: R1 y R2 no se aplican todavía.
 - Fase: construcción, sección A (DT-ORG-04, 2026-10-31).
 
@@ -71,4 +72,5 @@ Actualizado: 2026-11-10.
 - Ramas (DT-ORG-09, 2026-11-11): una sola rama de trabajo, `desarrollo` (antes `desktop`), con escritorio, API y móvil en sus carpetas; una rama corta por sesión con PR contra `desarrollo`; `main` para versiones estables; etiquetas por aplicación (`desktop-vX.Y`, `api-vX.Y`, `mobile-vX.Y`).
 - Plan B de alcance sin recortes aplicados (Diego, 2026-11-10: R1 y R2 todavía no): `docs/analisis/PLAN_B_ALCANCE.md`.
 - Estado de la sección A y próximos pasos: ver la última bitácora en `docs/sesiones/`.
+- **Diseño (Eric, 2026-11-17):** propuesta de sistema de diseño en dos opciones (A de Eric, B de Claude) en `design/vitalia/`; Diego elige y luego se aplica a Blazor (A-032) y a React Native. OpenPencil se maneja con el CLI `op` desde Claude Code en la PC (ver `design/vitalia/README.md`).
 - Cobro, internación, avisos de refuerzo, parámetros de asistencia y proveedores: decididos el 2026-10-31 (`docs/analisis/DECISIONES_ERIC_2026-10-31.md`). Cada módulo los incorpora a su especificación al abordarse.

@@ -1,0 +1,358 @@
+@page "/panel/internacion/{Id:int}"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject InternacionService Internaciones
+@inject AnimalService Animales
+@inject CuentaService Cuentas
+@inject SesionService Sesion
+
+<PageTitle>Internación de @animal?.Nombre — VITALIA</PageTitle>
+
+<RequierePersonal>
+    @if (internacion is null || animal is null)
+    {
+        <div class="alert alert-warning">Esa internación no existe.</div>
+    }
+    else
+    {
+        <h1>Internación de @animal.Nombre</h1>
+        <p class="lead">
+            @animal.Especie · @NombreCliente() ·
+            <span class="badge @ClaseEstado()">@TextoEstado()</span>
+        </p>
+
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+        }
+
+        <div class="row">
+            <section class="col-md-6 mb-4" aria-labelledby="titulo-admin">
+                <h2 class="h5" id="titulo-admin">Ingreso administrativo</h2>
+                <dl class="row small mb-0">
+                    <dt class="col-sm-4">Motivo</dt>
+                    <dd class="col-sm-8">@internacion.Motivo</dd>
+                    <dt class="col-sm-4">Contacto</dt>
+                    <dd class="col-sm-8">@internacion.TelefonoContacto</dd>
+                    <dt class="col-sm-4">Admitido</dt>
+                    <dd class="col-sm-8">@internacion.FechaAdmision.ToString("dd/MM/yyyy HH:mm") por @internacion.AdmitidoPor</dd>
+                    @if (!string.IsNullOrEmpty(internacion.Observaciones))
+                    {
+                        <dt class="col-sm-4">Observaciones</dt>
+                        <dd class="col-sm-8">@internacion.Observaciones</dd>
+                    }
+                    @if (internacion.Estado == InternacionService.Anulada)
+                    {
+                        <dt class="col-sm-4">Anulada</dt>
+                        <dd class="col-sm-8">@internacion.MotivoAnulacion</dd>
+                    }
+                </dl>
+            </section>
+
+            @if (internacion.FechaIngreso is not null)
+            {
+                <section class="col-md-6 mb-4" aria-labelledby="titulo-clinico">
+                    <h2 class="h5" id="titulo-clinico">Ingreso clínico</h2>
+                    <dl class="row small mb-0">
+                        <dt class="col-sm-4">Box</dt>
+                        <dd class="col-sm-8">@(Internaciones.ObtenerBox(internacion.BoxId)?.Nombre)</dd>
+                        <dt class="col-sm-4">Ingresó</dt>
+                        <dd class="col-sm-8">@internacion.FechaIngreso?.ToString("dd/MM/yyyy HH:mm") con @internacion.VeterinarioIngreso</dd>
+                        @if (EsVeterinario)
+                        {
+                            <dt class="col-sm-4">Plan</dt>
+                            <dd class="col-sm-8">@internacion.PlanTerapeutico</dd>
+                        }
+                    </dl>
+                </section>
+            }
+        </div>
+
+        @* Recepción: anular una admisión que no ingresó *@
+        @if (EsRecepcion && internacion.Estado == InternacionService.Admitida)
+        {
+            <section class="mb-4" aria-labelledby="titulo-anular">
+                <h2 class="h5" id="titulo-anular">Anular admisión</h2>
+                <p class="small text-muted">Solo mientras ningún veterinario hizo el ingreso clínico (por ejemplo, el responsable se lo llevó).</p>
+                <div class="input-group" style="max-width: 36rem;">
+                    <label class="visually-hidden" for="motivoAnular">Motivo</label>
+                    <input id="motivoAnular" class="form-control" maxlength="200" placeholder="Motivo" @bind="motivoAnulacion" />
+                    <button type="button" class="btn btn-outline-danger" @onclick="AnularAdmision">Anular</button>
+                </div>
+            </section>
+        }
+
+        @* Veterinario: ingreso clínico (RF-VET-09, RN-22) *@
+        @if (EsVeterinario && internacion.Estado == InternacionService.Admitida)
+        {
+            <section class="mb-4" aria-labelledby="titulo-ingreso">
+                <h2 class="h5" id="titulo-ingreso">Ingreso clínico</h2>
+                @if (boxesLibres.Count == 0)
+                {
+                    <div class="alert alert-warning">No hay boxes libres de @InternacionService.TipoDeBoxPara(animal).ToLower(). Dá un alta o esperá a que se libere uno.</div>
+                }
+                <EditForm Model="ingreso" OnValidSubmit="IngresarClinico" FormName="ingreso">
+                    <DataAnnotationsValidator />
+                    <div class="mb-2" style="max-width: 20rem;">
+                        <label class="form-label" for="boxIngreso">Box</label>
+                        <InputSelect id="boxIngreso" class="form-select" @bind-Value="ingreso.BoxId">
+                            <option value="0">Elegí un box libre…</option>
+                            @foreach (var box in boxesLibres)
+                            {
+                                <option value="@box.Id">@box.Nombre</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => ingreso.BoxId" />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="planIngreso">Plan terapéutico</label>
+                        <InputTextArea id="planIngreso" class="form-control" rows="3" maxlength="2000" @bind-Value="ingreso.PlanTerapeutico" />
+                        <ValidationMessage For="() => ingreso.PlanTerapeutico" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Internar</button>
+                </EditForm>
+            </section>
+        }
+
+        @* Veterinario: publicar (RF-VET-10, RF-VET-11) *@
+        @if (EsVeterinario && internacion.Estado == InternacionService.Internado)
+        {
+            <section class="mb-4" aria-labelledby="titulo-publicar">
+                <h2 class="h5" id="titulo-publicar">@(rectificando is null ? "Publicar" : "Rectificar la entrada del " + rectificando.Fecha.ToString("dd/MM HH:mm"))</h2>
+                @if (rectificando is not null)
+                {
+                    <p class="small border-start ps-2 text-muted">@rectificando.Texto</p>
+                }
+                <EditForm Model="novedad" OnValidSubmit="Publicar" FormName="novedad">
+                    <DataAnnotationsValidator />
+                    @if (rectificando is null)
+                    {
+                        <div class="mb-2" style="max-width: 20rem;">
+                            <label class="form-label" for="tipoNovedad">Tipo</label>
+                            <InputSelect id="tipoNovedad" class="form-select" @bind-Value="novedad.Tipo">
+                                <option value="@InternacionService.Novedad">Novedad</option>
+                                <option value="@InternacionService.Evolucion">Evolución diaria</option>
+                            </InputSelect>
+                        </div>
+                    }
+                    <div class="mb-2">
+                        <label class="form-label" for="textoNovedad">Texto</label>
+                        <InputTextArea id="textoNovedad" class="form-control" rows="3" maxlength="1000" @bind-Value="novedad.Texto" />
+                        <ValidationMessage For="() => novedad.Texto" />
+                    </div>
+                    @if (rectificando is null)
+                    {
+                        <div class="form-check mb-2">
+                            <InputCheckbox id="visibleNovedad" class="form-check-input" @bind-Value="novedad.Visible" />
+                            <label class="form-check-label" for="visibleNovedad">Visible para el responsable (sin marcar es una nota interna)</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="small text-muted">La rectificación es @(rectificando.Visible ? "visible para el responsable" : "interna"), igual que la entrada que corrige. La original no se borra.</p>
+                    }
+                    <button type="submit" class="btn btn-primary">@(rectificando is null ? "Publicar" : "Publicar rectificación")</button>
+                    @if (rectificando is not null)
+                    {
+                        <button type="button" class="btn btn-outline-secondary ms-2" @onclick="CancelarRectificacion">Cancelar</button>
+                    }
+                </EditForm>
+            </section>
+        }
+
+        @* Seguimiento: el Veterinario ve todo; Recepción y Administración, solo lo visible (RN-23) *@
+        <section class="mb-4" aria-labelledby="titulo-seguimiento">
+            <h2 class="h5" id="titulo-seguimiento">Seguimiento</h2>
+            @if (!EsVeterinario)
+            {
+                <p class="small text-muted">Ves lo mismo que el responsable. Las notas internas son solo para veterinarios.</p>
+            }
+            @if (novedades.Count == 0)
+            {
+                <p class="text-muted">Todavía no hay entradas.</p>
+            }
+            <ul class="list-group">
+                @foreach (var entrada in novedades)
+                {
+                    <li class="list-group-item">
+                        <div class="d-flex flex-wrap justify-content-between gap-2">
+                            <span class="small text-muted">
+                                @entrada.Fecha.ToString("dd/MM HH:mm") · @entrada.AutorNombre · @entrada.Tipo
+                                @if (entrada.RectificaId != 0)
+                                {
+                                    <span>(corrige la del @(Internaciones.ObtenerNovedad(entrada.RectificaId)?.Fecha.ToString("dd/MM HH:mm")))</span>
+                                }
+                            </span>
+                            <span>
+                                <span class="badge @(entrada.Visible ? "bg-info text-dark" : "bg-secondary")">@(entrada.Visible ? "Visible" : "Interna")</span>
+                                @if (EsVeterinario && internacion.Estado == InternacionService.Internado)
+                                {
+                                    <button type="button" class="btn btn-link btn-sm p-0 ms-2" @onclick="() => EmpezarRectificacion(entrada)">Rectificar</button>
+                                }
+                            </span>
+                        </div>
+                        <p class="mb-0 mt-1">@entrada.Texto</p>
+                    </li>
+                }
+            </ul>
+        </section>
+
+        @* Alta (RF-VET-11, RN-25) *@
+        @if (internacion.Estado == InternacionService.Alta)
+        {
+            <section class="mb-4" aria-labelledby="titulo-alta">
+                <h2 class="h5" id="titulo-alta">Alta</h2>
+                <dl class="row small">
+                    <dt class="col-sm-3">Fecha</dt>
+                    <dd class="col-sm-9">@internacion.FechaAlta?.ToString("dd/MM/yyyy HH:mm") por @internacion.VeterinarioAlta</dd>
+                    <dt class="col-sm-3">Evolución final</dt>
+                    <dd class="col-sm-9">@internacion.EvolucionFinal</dd>
+                    <dt class="col-sm-3">Indicaciones</dt>
+                    <dd class="col-sm-9">@internacion.IndicacionesDomicilio</dd>
+                </dl>
+            </section>
+        }
+        else if (EsVeterinario && internacion.Estado == InternacionService.Internado)
+        {
+            <section class="mb-4" aria-labelledby="titulo-dar-alta">
+                <h2 class="h5" id="titulo-dar-alta">Dar el alta</h2>
+                <EditForm Model="alta" OnValidSubmit="DarAlta" FormName="alta">
+                    <DataAnnotationsValidator />
+                    <div class="mb-2">
+                        <label class="form-label" for="evolucionAlta">Evolución final</label>
+                        <InputTextArea id="evolucionAlta" class="form-control" rows="2" maxlength="1000" @bind-Value="alta.EvolucionFinal" />
+                        <ValidationMessage For="() => alta.EvolucionFinal" />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="indicacionesAlta">Indicaciones para el domicilio</label>
+                        <InputTextArea id="indicacionesAlta" class="form-control" rows="3" maxlength="2000" @bind-Value="alta.IndicacionesDomicilio" />
+                        <ValidationMessage For="() => alta.IndicacionesDomicilio" />
+                    </div>
+                    <button type="submit" class="btn btn-success">Dar el alta</button>
+                </EditForm>
+            </section>
+        }
+    }
+
+    <a href="panel/internacion">← Volver a Internación</a>
+</RequierePersonal>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Internacion? internacion;
+    private Animal? animal;
+    private List<NovedadInternacion> novedades = new();
+    private List<Box> boxesLibres = new();
+    private IngresoClinicoFormulario ingreso = new();
+    private NovedadFormulario novedad = new();
+    private AltaFormulario alta = new();
+    private NovedadInternacion? rectificando;
+    private string motivoAnulacion = "";
+    private string mensaje = "";
+    private bool exito;
+
+    private bool EsRecepcion => Sesion.TieneRol(PersonalService.Recepcion);
+    private bool EsVeterinario => Sesion.TieneRol(PersonalService.Veterinario);
+
+    protected override void OnParametersSet()
+    {
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        internacion = Internaciones.ObtenerPorId(Id);
+        animal = internacion is null ? null : Animales.ObtenerParaPersonal(internacion.AnimalId);
+        if (internacion is null || animal is null)
+        {
+            return;
+        }
+
+        novedades = EsVeterinario ? Internaciones.Novedades(internacion.Id) : Internaciones.NovedadesVisibles(internacion.Id);
+        boxesLibres = Internaciones.BoxesLibresPara(animal);
+    }
+
+    private string NombreCliente()
+    {
+        var cuenta = Cuentas.ObtenerPorId(internacion!.ClienteId);
+        return cuenta is null ? "Responsable" : $"{cuenta.Nombre} {cuenta.Apellido}";
+    }
+
+    private string TextoEstado()
+    {
+        return internacion!.Estado == InternacionService.Admitida ? "Espera ingreso clínico" : internacion.Estado;
+    }
+
+    private string ClaseEstado()
+    {
+        return internacion!.Estado switch
+        {
+            InternacionService.Admitida => "bg-warning text-dark",
+            InternacionService.Internado => "bg-primary",
+            InternacionService.Alta => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+
+    private void Mostrar(ResultadoOperacion resultado)
+    {
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        Cargar();
+    }
+
+    private void AnularAdmision()
+    {
+        Mostrar(Internaciones.AnularAdmision(Id, motivoAnulacion, Sesion.PersonalActual));
+        if (exito)
+        {
+            motivoAnulacion = "";
+        }
+    }
+
+    private void IngresarClinico()
+    {
+        Mostrar(Internaciones.IngresarClinico(Id, ingreso, Sesion.PersonalActual));
+        if (exito)
+        {
+            ingreso = new();
+        }
+    }
+
+    private void EmpezarRectificacion(NovedadInternacion entrada)
+    {
+        rectificando = entrada;
+        novedad = new();
+        mensaje = "";
+    }
+
+    private void CancelarRectificacion()
+    {
+        rectificando = null;
+        novedad = new();
+    }
+
+    private void Publicar()
+    {
+        var resultado = rectificando is null
+            ? Internaciones.Publicar(Id, novedad, Sesion.PersonalActual)
+            : Internaciones.Rectificar(Id, rectificando.Id, novedad, Sesion.PersonalActual);
+        Mostrar(resultado);
+        if (resultado.Exito)
+        {
+            novedad = new();
+            rectificando = null;
+        }
+    }
+
+    private void DarAlta()
+    {
+        Mostrar(Internaciones.DarAlta(Id, alta, Sesion.PersonalActual));
+        if (exito)
+        {
+            alta = new();
+        }
+    }
+}

@@ -13,7 +13,7 @@ Consulta clínica de un turno (A-019, CU-VET-01, RF-VET-02). Un turno tiene 0..1
 
 **Tareas:** A-019
 
-**Requisitos y decisiones:** CU-VET-01, RF-VET-02, RN-12, RN-20, RNF-CON-05
+**Requisitos y decisiones:** CU-VET-01, RF-VET-02, RN-12, RN-17, RN-20, RNF-CON-05
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -24,7 +24,11 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usado por (si cambia, revisar estos)
 - [[AgendaService]]
 - [[AgendaVeterinario]]
+- [[AsistenciaService]]
 - [[AtencionConsulta]]
+- [[BitacoraService]]
+- [[CobroService]]
+- [[ComunicacionesService]]
 - [[ConsultaService]]
 - [[HistoriaAnimal]]
 - [[HistoriaClinica]]
@@ -32,3 +36,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[MovimientoStock]]
 - [[PrestacionService]]
 - [[RegistroClinico]]
+
+## En las otras aplicaciones
+- [[Consulta (API)]]

@@ -35,25 +35,28 @@
 <section class="mb-4">
     <h2 class="h4">Cómo clasificamos las solicitudes de asistencia</h2>
     <p>Cuando pedís asistencia, el equipo asigna un nivel según la gravedad. El nivel define el orden de atención.</p>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th scope="col">Nivel</th>
-                <th scope="col">Qué significa</th>
-                <th scope="col">Cuándo se atiende</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var nivel in niveles)
-            {
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <caption class="visually-hidden">Niveles de asistencia y su prioridad</caption>
+            <thead>
                 <tr>
-                    <th scope="row"><span class="badge @nivel.Clase">@nivel.Nombre</span></th>
-                    <td>@nivel.Significado</td>
-                    <td>@nivel.Horario</td>
+                    <th scope="col">Nivel</th>
+                    <th scope="col">Qué significa</th>
+                    <th scope="col">Cuándo se atiende</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var nivel in niveles)
+                {
+                    <tr>
+                        <th scope="row"><span class="badge @nivel.Clase">@nivel.Nombre</span></th>
+                        <td>@nivel.Significado</td>
+                        <td>@nivel.Horario</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
     <p class="text-muted small">
         El nivel es una clasificación inicial y puede cambiar cuando un veterinario evalúa el caso.
         Pedir asistencia no garantiza un horario de llegada.

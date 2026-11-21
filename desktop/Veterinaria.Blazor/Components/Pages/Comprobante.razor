@@ -1,0 +1,117 @@
+@page "/panel/comprobantes/{Id:int}"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject CobroService Cobro
+@inject CuentaService Cuentas
+@inject AnimalService Animales
+@inject ClinicaService Clinicas
+@inject ComunicacionesService Comunicaciones
+@inject SesionService Sesion
+
+<PageTitle>Comprobante @pago?.Numero — VITALIA</PageTitle>
+
+@* A-023: comprobante interno de cobro, para imprimir. No es un comprobante fiscal (la clínica es ficticia). *@
+<RequierePersonal Roles="@(new[] { PersonalService.Recepcion, PersonalService.Administrador })">
+    @if (pago is null || cargo is null)
+    {
+        <div class="alert alert-warning">Ese comprobante no existe.</div>
+        <a href="panel/cobros">← Volver a Cobros</a>
+    }
+    else
+    {
+        <div class="d-print-none mb-3">
+            <a href="panel/cobros">← Volver a Cobros</a>
+            <button type="button" class="btn btn-primary btn-sm ms-3" onclick="window.print()">Imprimir</button>
+            <button type="button" class="btn btn-outline-primary btn-sm ms-2" @onclick="EnviarAlCliente">Enviar al cliente</button>
+        </div>
+        @if (!string.IsNullOrEmpty(mensajeEnvio))
+        {
+            <div class="alert @(envioExitoso ? "alert-success" : "alert-warning") d-print-none" role="status">@mensajeEnvio</div>
+        }
+
+        <article class="border p-4" style="max-width: 36rem;" aria-labelledby="titulo-comprobante">
+            <header class="mb-3">
+                <p class="h4 mb-0">@clinica.Nombre</p>
+                <p class="small mb-0">@clinica.RazonSocial</p>
+                <p class="small mb-0">@clinica.Direccion, @clinica.Ciudad · @clinica.Telefono</p>
+            </header>
+
+            <h1 class="h5" id="titulo-comprobante">Comprobante de cobro @pago.Numero</h1>
+            @if (nota is not null)
+            {
+                <p class="border border-dark p-2 fw-bold">
+                    ANULADO el @nota.Fecha.ToString("dd/MM/yyyy HH:mm") con la nota de crédito @nota.Numero.
+                    Motivo: @nota.Motivo
+                </p>
+            }
+
+            <dl class="row mb-3">
+                <dt class="col-sm-4">Fecha</dt>
+                <dd class="col-sm-8">@pago.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
+                <dt class="col-sm-4">Cliente</dt>
+                <dd class="col-sm-8">@NombreCliente()</dd>
+                <dt class="col-sm-4">Animal</dt>
+                <dd class="col-sm-8">@(Animales.ObtenerParaPersonal(cargo.AnimalId)?.Nombre)</dd>
+                <dt class="col-sm-4">Servicio</dt>
+                <dd class="col-sm-8">@cargo.Descripcion (atención del @cargo.Fecha.ToString("dd/MM/yyyy"))</dd>
+                <dt class="col-sm-4">Medio de pago</dt>
+                <dd class="col-sm-8">
+                    @pago.Medio
+                    @if (!string.IsNullOrEmpty(pago.Referencia))
+                    {
+                        <span> · operación @pago.Referencia</span>
+                    }
+                </dd>
+                <dt class="col-sm-4">Cobró</dt>
+                <dd class="col-sm-8">@pago.PersonalNombre</dd>
+            </dl>
+
+            <div class="table-responsive">
+                <table class="table table-sm mb-2">
+                    <caption class="visually-hidden">Detalle del cobro</caption>
+                    <tbody>
+                        <tr><th scope="row">Importe del cargo</th><td class="text-end">$ @cargo.Monto.ToString("N0")</td></tr>
+                        <tr><th scope="row">Importe cobrado en este comprobante</th><td class="text-end fw-bold">$ @pago.Monto.ToString("N0")</td></tr>
+                        <tr><th scope="row">Saldo actual del cargo</th><td class="text-end">$ @Cobro.Saldo(cargo).ToString("N0")</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="small text-muted mb-0">Comprobante interno de la clínica. No modifica el registro clínico.</p>
+        </article>
+    }
+</RequierePersonal>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Pago? pago;
+    private Cargo? cargo;
+    private NotaCredito? nota;
+    private Clinica clinica = new();
+
+    protected override void OnParametersSet()
+    {
+        pago = Cobro.ObtenerPago(Id);
+        cargo = pago is null ? null : Cobro.ObtenerCargo(pago.CargoId);
+        nota = pago is null ? null : Cobro.NotaDe(pago.Id);
+        clinica = Clinicas.Obtener();
+    }
+
+    private string mensajeEnvio = "";
+    private bool envioExitoso;
+
+    // RF-REC-07: Recepción envía el comprobante al cliente por el canal que eligió (A-028).
+    private void EnviarAlCliente()
+    {
+        var resultado = Comunicaciones.EnviarComprobante(pago!, cargo!, Sesion.PersonalActual);
+        mensajeEnvio = resultado.Mensaje;
+        envioExitoso = resultado.Exito;
+    }
+
+    private string NombreCliente()
+    {
+        var cuenta = Cuentas.ObtenerPorId(cargo!.ClienteId);
+        return cuenta is null ? "Cliente" : $"{cuenta.Nombre} {cuenta.Apellido}";
+    }
+}

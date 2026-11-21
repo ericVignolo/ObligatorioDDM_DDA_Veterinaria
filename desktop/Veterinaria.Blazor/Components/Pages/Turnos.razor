@@ -7,6 +7,7 @@
 @inject ProfesionalService ProfesionalService
 @inject ClinicaService ClinicaService
 @inject SesionService Sesion
+@inject ConsentimientoService Consentimientos
 
 <PageTitle>Mis turnos — VITALIA</PageTitle>
 
@@ -17,8 +18,12 @@
     @if (confirmado is not null)
     {
         <div class="alert alert-success" role="status">
-            <strong>@(Reprogramado is not null ? "¡Turno reprogramado!" : "¡Turno confirmado!")</strong>
+            <strong>@(Reprogramado is not null ? "¡Turno reprogramado!" : confirmado.Estado == AgendaService.PendienteSena ? "¡Horario reservado!" : "¡Turno confirmado!")</strong>
             @Describir(confirmado). Número de turno: @confirmado.Id.
+            @if (confirmado.Estado == AgendaService.PendienteSena)
+            {
+                <span>La cirugía se confirma cuando pagues la seña en Recepción.</span>
+            }
             Podés cancelar o reprogramar sin costo hasta @AgendaService.HorasParaCancelar horas antes.
         </div>
     }
@@ -52,7 +57,15 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <h2 class="h5 card-title">@turno.Inicio.ToString("dddd d 'de' MMMM, HH:mm")</h2>
-                        <p class="card-text mb-2">@Resumen(turno) <EstadoTurno Estado="@turno.Estado" /></p>
+                        <p class="card-text mb-2">@Resumen(turno) <EstadoTurno Estado="@turno.Estado" /> <EstadoConsentimiento Turno="turno" /></p>
+                        @if (Consentimientos.Requiere(turno) && !Consentimientos.EsValido(turno.Id))
+                        {
+                            <a class="btn btn-warning btn-sm mb-2" href="@($"consentimiento/{turno.Id}")">Leer y firmar el consentimiento</a>
+                        }
+                        else if (Consentimientos.Requiere(turno))
+                        {
+                            <a class="btn btn-link btn-sm mb-2 ps-0" href="@($"consentimiento/{turno.Id}")">Ver el consentimiento firmado</a>
+                        }
 
                         @if (cancelandoId == turno.Id)
                         {
@@ -93,31 +106,34 @@
         }
         else
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Día y hora</th>
-                        <th scope="col">Detalle</th>
-                        <th scope="col">Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var turno in historial)
-                    {
+            <div class="table-responsive">
+                <table class="table">
+                    <caption class="visually-hidden">Turnos reservados</caption>
+                    <thead>
                         <tr>
-                            <td>@turno.Inicio.ToString("ddd d/MM/yyyy HH:mm")</td>
-                            <td>
-                                @Resumen(turno)
-                                @if (!string.IsNullOrEmpty(turno.MotivoCancelacion))
-                                {
-                                    <div class="small text-muted">Motivo: @turno.MotivoCancelacion</div>
-                                }
-                            </td>
-                            <td><EstadoTurno Estado="@turno.Estado" Pasado="@(turno.Fin < DateTime.Now)" /></td>
+                            <th scope="col">Día y hora</th>
+                            <th scope="col">Detalle</th>
+                            <th scope="col">Estado</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var turno in historial)
+                        {
+                            <tr>
+                                <td>@turno.Inicio.ToString("ddd d/MM/yyyy HH:mm")</td>
+                                <td>
+                                    @Resumen(turno)
+                                    @if (!string.IsNullOrEmpty(turno.MotivoCancelacion))
+                                    {
+                                        <div class="small text-muted">Motivo: @turno.MotivoCancelacion</div>
+                                    }
+                                </td>
+                                <td><EstadoTurno Estado="@turno.Estado" Pasado="@(turno.Fin < DateTime.Now)" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
     }
 </RequiereSesion>

@@ -61,6 +61,7 @@ else
         var fechas = ausencia.Desde == ausencia.Hasta
             ? ausencia.Desde.ToString("d 'de' MMMM")
             : $"del {ausencia.Desde:d 'de' MMMM} al {ausencia.Hasta:d 'de' MMMM}";
-        return $"{fechas} ({ausencia.Motivo.ToLower()})";
+        // El motivo (puede ser una licencia médica) es un dato del empleado: no se publica.
+        return fechas;
     }
 }

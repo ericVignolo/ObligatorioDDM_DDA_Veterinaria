@@ -15,16 +15,40 @@ public class Fabrica
     public SesionService Sesion { get; }
     public AgendaService Agenda { get; }
     public InventarioService Inventario { get; } = new();
+    public CobroService Cobros { get; }
+    public ConsentimientoService Consentimientos { get; }
+    public ComunicacionesService Comunicaciones { get; }
     public ConsultaService Consultas { get; }
+    public ConjuntoDemoService ConjuntoDemo { get; }
     public VacunaService Vacunas { get; }
+    public AvisosRefuerzoService AvisosRefuerzo { get; }
+    public DerechosService Derechos { get; }
+    public RecorridosService Recorridos { get; } = new();
+    public InternacionService Internaciones { get; }
+    public AsistenciaService Asistencias { get; }
+    public AuditoriaService Auditoria { get; } = new();
+    public AdministracionService Administracion { get; }
+    public BitacoraService Bitacora { get; }
+    public IndicadoresService Indicadores { get; }
 
     public Fabrica()
     {
         Cuentas = new CuentaService(Legales);
         Sesion = new SesionService(Cuentas, Personal);
-        Agenda = new AgendaService(Profesionales, Prestaciones, Animales);
-        Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario);
+        Agenda = new AgendaService(Profesionales, Prestaciones, Animales, Auditoria);
+        Cobros = new CobroService(Agenda, Prestaciones);
+        Consentimientos = new ConsentimientoService(Agenda, Prestaciones);
+        Comunicaciones = new ComunicacionesService(Cuentas, Animales, Auditoria);
+        Consultas = new ConsultaService(Agenda, Personal, Profesionales, Inventario, Cobros, Consentimientos, Comunicaciones);
+        ConjuntoDemo = new ConjuntoDemoService(Cuentas, Animales, Consultas);
         Vacunas = new VacunaService(Consultas, Animales, Inventario);
+        AvisosRefuerzo = new AvisosRefuerzoService(Comunicaciones, Vacunas, Cuentas);
+        Internaciones = new InternacionService(Animales);
+        Derechos = new DerechosService(Cuentas, Animales, Agenda, Cobros, Consentimientos, Internaciones, Comunicaciones, Auditoria);
+        Asistencias = new AsistenciaService(Personal, Profesionales, Animales, Cobros);
+        Administracion = new AdministracionService(Prestaciones, Personal, Profesionales, Agenda, Internaciones, Asistencias, Inventario, Vacunas, Consentimientos, Auditoria, Cobros);
+        Bitacora = new BitacoraService(Auditoria, Consultas, Inventario, Cobros, Consentimientos, Internaciones, Asistencias, Personal, Cuentas);
+        Indicadores = new IndicadoresService(Agenda, Profesionales, Cobros, Inventario);
     }
 
     public static RegistroCliente RegistroValido(string correo = "cliente@prueba.uy", string cedula = "1.234.567-2")
@@ -91,6 +115,18 @@ public class Fabrica
         var inicio = DateTime.Today.AddHours(7);
         Agenda.OcuparComoOtroCliente(1, 1, inicio);
         var turno = Agenda.TurnosDelDia(DateOnly.FromDateTime(inicio), 1).Last(t => t.Inicio == inicio);
+        Agenda.RegistrarLlegada(turno.Id);
+        return turno;
+    }
+
+    // Castración de hoy (prestación 8, pide consentimiento) para un animal del cliente, con la llegada registrada.
+    public Turno CirugiaEnEspera(int clienteId, int animalId)
+    {
+        var inicio = DateTime.Today.AddHours(7);
+        Agenda.OcuparComoOtroCliente(1, 8, inicio);
+        var turno = Agenda.TurnosDelDia(DateOnly.FromDateTime(inicio), 1).Last(t => t.Inicio == inicio);
+        turno.ClienteId = clienteId;
+        turno.AnimalId = animalId;
         Agenda.RegistrarLlegada(turno.Id);
         return turno;
     }

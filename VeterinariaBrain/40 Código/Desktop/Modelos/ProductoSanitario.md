@@ -13,7 +13,7 @@ Producto del catálogo sanitario: una vacuna o un antiparasitario (A-021, RF-VET
 
 **Tareas:** A-021, A-022
 
-**Requisitos y decisiones:** RF-VET-04, RN-19
+**Requisitos y decisiones:** RF-VET-04, RN-16, RN-19
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 

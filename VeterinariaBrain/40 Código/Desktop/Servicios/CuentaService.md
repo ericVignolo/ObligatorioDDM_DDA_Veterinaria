@@ -11,9 +11,9 @@ generado: true
 
 Cuentas de demostración en memoria (sección A). Se pierden al reiniciar la aplicación.
 
-**Tareas:** A-009
+**Tareas:** A-009, A-028, A-030
 
-**Requisitos y decisiones:** CU-VIS-03, D-PER-04, D-PER-05, D-REG-02, D-REG-03, RN-42, RNF-SEG-01
+**Requisitos y decisiones:** CU-VIS-03, D-PER-04, D-PER-05, D-REG-02, D-REG-03, RN-42, RNF-LEG-02, RNF-SEG-01
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
@@ -28,12 +28,28 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[ValidacionDatos]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminDerechos]]
 - [[AgendaRecepcion]]
+- [[AsistenciaDetalle]]
+- [[Asistencias]]
 - [[AtencionConsulta]]
+- [[AvisosRefuerzoService]]
+- [[BitacoraService]]
+- [[Cobros]]
+- [[Comprobante]]
+- [[Comunicaciones]]
+- [[ComunicacionesService]]
+- [[DerechosService]]
 - [[HistoriaClinica]]
+- [[InternacionDetalle]]
+- [[Internaciones]]
 - [[MiCuenta]]
 - [[Recuperar]]
 - [[Registro]]
 - [[Restablecer]]
 - [[SesionService]]
+- [[TurnoMostrador]]
 - [[Verificar]]
+
+## En las otras aplicaciones
+- [[CuentaService (API)]]

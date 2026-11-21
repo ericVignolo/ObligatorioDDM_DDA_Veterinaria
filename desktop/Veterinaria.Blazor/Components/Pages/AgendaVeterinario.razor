@@ -60,6 +60,7 @@
                     </div>
                     <div>
                         <EstadoTurno Estado="@turno.Estado" />
+                        <EstadoConsentimiento Turno="turno" />
                         @if (turno.Estado == "En espera")
                         {
                             <button class="btn btn-success btn-sm ms-2" @onclick="() => IniciarAtencion(turno.Id)">Iniciar atención</button>

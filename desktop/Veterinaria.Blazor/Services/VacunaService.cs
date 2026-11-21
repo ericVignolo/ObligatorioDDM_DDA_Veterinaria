@@ -29,13 +29,13 @@ public class VacunaService
 
     public List<ProductoSanitario> Productos { get; } = new()
     {
-        new() { Id = 1, ArticuloId = 1, Nombre = "Vacuna polivalente canina", Tipo = "Vacuna", Laboratorio = "Laboratorio Demo Norte", Especies = { "Perro" }, IntervaloRefuerzoDias = 365 },
-        new() { Id = 2, ArticuloId = 2, Nombre = "Vacuna antirrábica", Tipo = "Vacuna", Laboratorio = "Laboratorio Demo Sur", Especies = { "Perro", "Gato" }, IntervaloRefuerzoDias = 365 },
-        new() { Id = 3, ArticuloId = 3, Nombre = "Vacuna triple felina", Tipo = "Vacuna", Laboratorio = "Laboratorio Demo Norte", Especies = { "Gato" }, IntervaloRefuerzoDias = 365 },
-        new() { Id = 4, ArticuloId = 4, Nombre = "Vacuna antitetánica equina", Tipo = "Vacuna", Laboratorio = "Laboratorio Demo Campo", Especies = { "Caballo" }, IntervaloRefuerzoDias = 365 },
-        new() { Id = 5, ArticuloId = 5, Nombre = "Vacuna clostridial", Tipo = "Vacuna", Laboratorio = "Laboratorio Demo Campo", Especies = { "Vaca", "Oveja", "Cabra" }, IntervaloRefuerzoDias = 180 },
-        new() { Id = 6, ArticuloId = 6, Nombre = "Antiparasitario interno", Tipo = "Antiparasitario", Laboratorio = "Laboratorio Demo Sur", Especies = { "Perro", "Gato" }, IntervaloRefuerzoDias = 90 },
-        new() { Id = 7, ArticuloId = 7, Nombre = "Antiparasitario externo", Tipo = "Antiparasitario", Laboratorio = "Laboratorio Demo Sur", Especies = { "Perro", "Gato" }, IntervaloRefuerzoDias = 30 }
+        new() { Id = 1, ArticuloId = 1, Nombre = "Vacuna polivalente canina", Tipo = "Vacuna", Laboratorio = "Laboratorio Demo Norte", Especies = { "Perro" }, IntervaloRefuerzoDias = 365, IntervaloMinimoDias = 330 },
+        new() { Id = 2, ArticuloId = 2, Nombre = "Vacuna antirrábica", Tipo = "Vacuna", Laboratorio = "Laboratorio Demo Sur", Especies = { "Perro", "Gato" }, IntervaloRefuerzoDias = 365, IntervaloMinimoDias = 330 },
+        new() { Id = 3, ArticuloId = 3, Nombre = "Vacuna triple felina", Tipo = "Vacuna", Laboratorio = "Laboratorio Demo Norte", Especies = { "Gato" }, IntervaloRefuerzoDias = 365, IntervaloMinimoDias = 330 },
+        new() { Id = 4, ArticuloId = 4, Nombre = "Vacuna antitetánica equina", Tipo = "Vacuna", Laboratorio = "Laboratorio Demo Campo", Especies = { "Caballo" }, IntervaloRefuerzoDias = 365, IntervaloMinimoDias = 330 },
+        new() { Id = 5, ArticuloId = 5, Nombre = "Vacuna clostridial", Tipo = "Vacuna", Laboratorio = "Laboratorio Demo Campo", Especies = { "Vaca", "Oveja", "Cabra" }, IntervaloRefuerzoDias = 180, IntervaloMinimoDias = 150 },
+        new() { Id = 6, ArticuloId = 6, Nombre = "Antiparasitario interno", Tipo = "Antiparasitario", Laboratorio = "Laboratorio Demo Sur", Especies = { "Perro", "Gato" }, IntervaloRefuerzoDias = 90, IntervaloMinimoDias = 75 },
+        new() { Id = 7, ArticuloId = 7, Nombre = "Antiparasitario externo", Tipo = "Antiparasitario", Laboratorio = "Laboratorio Demo Sur", Especies = { "Perro", "Gato" }, IntervaloRefuerzoDias = 30, IntervaloMinimoDias = 25 }
     };
 
     public VacunaService(ConsultaService consultas, AnimalService animales, InventarioService inventario)
@@ -164,6 +164,25 @@ public class VacunaService
             return new ResultadoOperacion { Exito = false, Mensaje = $"Ya registraste {producto.Nombre} en esta consulta." };
         }
 
+        // RN-16: adelantar la dosis al intervalo mínimo exige una justificación escrita, que queda en la aplicación.
+        var justificacion = (datos.Justificacion ?? "").Trim();
+        var anterior = HistorialDe(animal.Id).FirstOrDefault(a => a.ProductoId == producto.Id);
+        var adelantada = anterior is not null && producto.IntervaloMinimoDias > 0
+            && Hoy < anterior.FechaAplicacion.AddDays(producto.IntervaloMinimoDias);
+        if (adelantada && justificacion.Length < 10)
+        {
+            return new ResultadoOperacion
+            {
+                Exito = false,
+                Mensaje = $"Se está adelantando la dosis: {producto.Nombre} se aplicó el {anterior!.FechaAplicacion:dd/MM/yyyy} y el intervalo mínimo es de {producto.IntervaloMinimoDias} días. Escribí la justificación (al menos 10 caracteres) para registrarla igual (RN-16)."
+            };
+        }
+
+        if (justificacion.Length > 300)
+        {
+            return new ResultadoOperacion { Exito = false, Mensaje = "La justificación puede tener hasta 300 caracteres." };
+        }
+
         // RN-15 y RN-27: se aparta una dosis del lote usable que vence antes; los vencidos nunca se eligen.
         var id = _ultimoId + 1;
         var reserva = _inventario.Reservar(consulta.Id, producto.ArticuloId, 1, id);
@@ -175,11 +194,12 @@ public class VacunaService
         _ultimoId = id;
         var lote = _inventario.ObtenerLote(reserva[0].LoteId)!;
         var aplicacion = Crear(id, animal.Id, consulta.Id, producto, lote, Hoy, veterinario!.Id, veterinario.Nombre);
+        aplicacion.JustificacionAdelanto = adelantada ? justificacion : "";
         _aplicaciones.Add(aplicacion);
         return new ResultadoOperacion
         {
             Exito = true,
-            Mensaje = $"{producto.Nombre} registrada con el lote {lote.Numero}. Refuerzo calculado: {aplicacion.FechaRefuerzo:dd/MM/yyyy}."
+            Mensaje = $"{producto.Nombre} registrada con el lote {lote.Numero}. Refuerzo calculado: {aplicacion.FechaRefuerzo:dd/MM/yyyy}." + (adelantada ? " Quedó registrada como dosis adelantada, con su justificación." : "")
         };
     }
 

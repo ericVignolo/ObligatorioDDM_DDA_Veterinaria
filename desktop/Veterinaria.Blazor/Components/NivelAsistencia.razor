@@ -1,0 +1,40 @@
+@using Veterinaria.Blazor.Services
+
+@* Nivel de una solicitud de asistencia: nunca solo color, siempre con nombre, símbolo y descripción (RN-47). *@
+<span class="badge @Clase()" title="@AsistenciaService.Descripcion(Nivel)">
+    <span aria-hidden="true">@Simbolo()</span> @Nivel
+</span>
+@if (ConDescripcion)
+{
+    <span class="small text-muted ms-1">@AsistenciaService.Descripcion(Nivel)</span>
+}
+
+@code {
+    [Parameter]
+    public string Nivel { get; set; } = "";
+
+    [Parameter]
+    public bool ConDescripcion { get; set; }
+
+    private string Clase()
+    {
+        return Nivel switch
+        {
+            AsistenciaService.Rojo => "bg-danger",
+            AsistenciaService.Naranja => "bg-warning text-dark border border-dark",
+            AsistenciaService.Amarillo => "bg-warning text-dark",
+            _ => "bg-success"
+        };
+    }
+
+    private string Simbolo()
+    {
+        return Nivel switch
+        {
+            AsistenciaService.Rojo => "‼",
+            AsistenciaService.Naranja => "!",
+            AsistenciaService.Amarillo => "●",
+            _ => "✓"
+        };
+    }
+}

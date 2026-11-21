@@ -20,8 +20,21 @@ builder.Services.AddScoped<IntencionService>();
 builder.Services.AddScoped<AnimalService>();
 builder.Services.AddScoped<AgendaService>();
 builder.Services.AddScoped<InventarioService>();
+builder.Services.AddScoped<CobroService>();
+builder.Services.AddScoped<ConsentimientoService>();
+builder.Services.AddScoped<InternacionService>();
+builder.Services.AddScoped<AsistenciaService>();
+builder.Services.AddScoped<AuditoriaService>();
+builder.Services.AddScoped<AdministracionService>();
+builder.Services.AddScoped<BitacoraService>();
+builder.Services.AddScoped<IndicadoresService>();
+builder.Services.AddScoped<ComunicacionesService>();
 builder.Services.AddScoped<ConsultaService>();
+builder.Services.AddScoped<ConjuntoDemoService>();
 builder.Services.AddScoped<VacunaService>();
+builder.Services.AddScoped<AvisosRefuerzoService>();
+builder.Services.AddScoped<DerechosService>();
+builder.Services.AddScoped<RecorridosService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

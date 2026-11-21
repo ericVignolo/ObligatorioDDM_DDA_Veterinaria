@@ -18,22 +18,33 @@
         {
             <Atajo Titulo="Agenda del día" Texto="Turnos de todos los profesionales: llegadas, ausencias y cancelaciones." Enlace="panel/agenda" />
             <Atajo Titulo="Clientes y animales" Texto="Buscar y registrar clientes y animales en mostrador (RF-REC-03)." />
-            <Atajo Titulo="Cobros" Texto="Cobrar prestaciones finalizadas y emitir comprobantes (RF-REC-05)." />
+            <Atajo Titulo="Cobros" Texto="Cobrar prestaciones finalizadas y emitir comprobantes (RF-REC-05, A-023)." Enlace="panel/cobros" />
+            <Atajo Titulo="Internación" Texto="Admitir el ingreso de un animal y ver los boxes (A-024)." Enlace="panel/internacion" />
+            <Atajo Titulo="Asistencia a domicilio" Texto="Cola por prioridad, asignación, escalamientos y solicitudes por teléfono (A-026)." Enlace="panel/asistencia" />
+            <Atajo Titulo="Comunicaciones" Texto="Bandeja de salida, reenvío de resúmenes y comprobantes, avisos de refuerzo (RF-REC-07, A-028)." Enlace="panel/comunicaciones" />
         }
         @if (Sesion.TieneRol(PersonalService.Veterinario))
         {
             <Atajo Titulo="Mi agenda" Texto="Tus turnos del día y quién está en espera." Enlace="panel/mi-agenda" />
             <Atajo Titulo="Consultas" Texto="Atender, registrar y firmar la consulta (A-019)." />
-            <Atajo Titulo="Internación" Texto="Evolución y alta de animales internados." />
+            <Atajo Titulo="Internación" Texto="Ingreso clínico, evolución, novedades y alta (RF-VET-09 a RF-VET-11)." Enlace="panel/internacion" />
+            <Atajo Titulo="Asistencias" Texto="Aceptar o rechazar, clasificar y actualizar el traslado (RF-VET-16, RF-VET-17)." Enlace="panel/asistencia" />
             <Atajo Titulo="Inventario" Texto="Stock, lotes y vencimientos, en solo lectura (A-022)." Enlace="panel/inventario" />
         }
         @if (Sesion.TieneRol(PersonalService.Administrador))
         {
             <Atajo Titulo="Inventario" Texto="Compras, ajustes, bajas y alertas de stock mínimo y vencimiento (RF-ADM-05, RF-ADM-06)." Enlace="panel/inventario" />
-            <Atajo Titulo="Servicios y tarifas" Texto="Alta, baja y precios de servicios (RF-ADM-02)." />
-            <Atajo Titulo="Horarios del personal" Texto="Jornadas, licencias y feriados (RF-ADM-04)." />
-            <Atajo Titulo="Usuarios y roles" Texto="Cuentas del personal y permisos (RF-ADM-01)." />
-            <Atajo Titulo="Parámetros" Texto="24 h, 2 h, 60 días, tolerancia y demás reglas (RF-ADM-10)." />
+            <Atajo Titulo="Internación" Texto="Ocupación de boxes e internaciones en curso (A-024)." Enlace="panel/internacion" />
+            <Atajo Titulo="Asistencia a domicilio" Texto="Cola de solicitudes y su estado (A-026)." Enlace="panel/asistencia" />
+            <Atajo Titulo="Cobros y comprobantes" Texto="Cobros registrados y anulación con nota de crédito (RN-34, A-023)." Enlace="panel/cobros" />
+            <Atajo Titulo="Servicios y tarifas" Texto="Alta, edición y precios con fecha de vigencia (RF-ADM-02)." Enlace="panel/admin/servicios" />
+            <Atajo Titulo="Horarios del personal" Texto="Jornadas, licencias y feriados (RF-ADM-04)." Enlace="panel/admin/horarios" />
+            <Atajo Titulo="Usuarios y roles" Texto="Cuentas del personal, roles y bloqueo (RF-ADM-01)." Enlace="panel/admin/personal" />
+            <Atajo Titulo="Auditoría" Texto="Bitácora con filtros por usuario, entidad, acción y fechas (RF-ADM-08)." Enlace="panel/admin/auditoria" />
+            <Atajo Titulo="Indicadores" Texto="Ocupación de agenda, ingresos, ausencias y rotación de stock (RF-ADM-07)." Enlace="panel/admin/indicadores" />
+            <Atajo Titulo="Comunicaciones" Texto="Bandeja de salida, reintentos, avisos de la clínica y alertas sanitarias (A-028)." Enlace="panel/comunicaciones" />
+            <Atajo Titulo="Datos personales" Texto="Pedidos de eliminación, anonimización y política de conservación (RF-CLI-19, RNF-LEG-02)." Enlace="panel/admin/derechos" />
+            <Atajo Titulo="Parámetros" Texto="Guardia y tarifas de asistencia, boxes, avisos, stock mínimo y consentimiento (RF-ADM-10, RF-ADM-13)." Enlace="panel/admin/parametros" />
         }
     </div>
 </RequierePersonal>

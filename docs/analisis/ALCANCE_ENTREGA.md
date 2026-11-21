@@ -28,7 +28,7 @@ Las RN y RNF aplicables acompañan cada módulo desde su construcción. Segurida
 | Inventario | Productos, lotes, vencimiento, compras, ajustes, bajas, consumo FEFO, stock no negativo, alertas y trazabilidad. | Automatizaciones adicionales a las exigidas por las RN vigentes. | Administrador en Blazor; consumo desde atención. |
 | Cobros y cargos | Cargo por prestación finalizada, tarifa histórica, cobro registrado por Recepción, medio de pago, comprobante interno y nota de crédito trazable. | Portal de cuenta corriente y pago online del Cliente; pasarela de pago. | Recepción en Blazor; configuración administrativa. |
 | Internación | Ingreso, box exclusivo, plan terapéutico, evolución, novedades internas/públicas en tiempo real y alta con indicaciones. | Capacidades adicionales no enumeradas en los RF de base. | Veterinario y Recepción según permisos; seguimiento del Cliente. |
-| Consentimientos | Aceptaciones por finalidad/versión y consentimiento informado firmado para procedimientos que lo requieren; mecanismo de firma por especificar. | Receta digital verificable. | Cliente y personal autorizado. |
+| Consentimientos | Aceptaciones por finalidad/versión y consentimiento informado firmado para procedimientos que lo requieren; mecanismo de P-RC-06 (casilla y nombre completo), implementado en escritorio (A-025). | Receta digital verificable. | Cliente y personal autorizado. |
 | Comunicaciones y derechos | Resumen por correo con reintentos; alertas sanitarias/operativas; preferencias, exportación/eliminación con conservación exigible. | Chat postoperatorio, encuestas, edición de plantillas y reenvío manual dedicado. | Cliente móvil y administración en Blazor. |
 | Asistencia | Solicitud, clasificación, empeoramiento, reevaluación, cobertura/guardia, asignación y aceptación, ubicación consentida, estados, mapa/estimación y cargos; desarrollar después del recorrido clínico. | Mejoras adicionales de optimización del despacho; no se difieren las funciones Must existentes de mapa/seguimiento. | Cliente/Veterinario móvil, tablero de Recepción y configuración en Blazor. |
 | Administración e indicadores | Usuarios, servicios, tarifas, recursos, horarios, parámetros, auditoría e indicadores de ocupación, ingresos por servicio, ausencias y rotación de stock. | Gestión operativa de múltiples sucursales; indicadores adicionales. | Administrador en Blazor. |
@@ -134,7 +134,7 @@ Cada RF aparece una sola vez en esta tabla. “Base” mantiene la prioridad de 
 
 ## 5. Límites y dependencias que no se pueden omitir
 
-- RF-CLI-12 se deja como extensión completa: el cobro de Recepción (RF-REC-05) sí entra en H2. Compartir cargos internos no implica que el portal del Cliente ni el pago online estén terminados.
+- RF-CLI-12 se reduce a consultar cargos, saldo y comprobantes: el pago en línea se descartó el 2026-11-16 (DT-ALC-02). El cobro de Recepción (RF-REC-05) sí entra en H2 y está implementado en escritorio (A-023, probado).
 - RNF-SEG-04 conserva 2FA obligatorio para Administrador. La sugerencia docente de “2FA como extensión” no se adopta globalmente.
 - RF-CLI-11 y RN-10 conservan el consentimiento clínico firmado. Su mecanismo concreto se definirá antes de habilitar procedimientos afectados. Firma de consulta y consentimiento del responsable son actos distintos.
 - RF-CLI-09 conserva tiempo real en internación. RF-CLI-23 y RF-VET-17 conservan el seguimiento de asistencia comprometido. Reducirlos requeriría una decisión de alcance y actualización de la matriz.

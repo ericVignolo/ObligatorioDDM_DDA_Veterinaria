@@ -1,0 +1,7 @@
+/* Fuentes alojadas en el proyecto (licencia SIL OFL 1.1), sin depender de internet. Subconjunto latino: cubre ñ y tildes. */
+@font-face{font-family:'Nunito';font-weight:400;font-display:swap;src:url(nunito-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-weight:600;font-display:swap;src:url(nunito-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-weight:800;font-display:swap;src:url(nunito-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-weight:400;font-display:swap;src:url(plus-jakarta-sans-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-weight:600;font-display:swap;src:url(plus-jakarta-sans-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-weight:800;font-display:swap;src:url(plus-jakarta-sans-latin-800-normal.woff2) format('woff2')}

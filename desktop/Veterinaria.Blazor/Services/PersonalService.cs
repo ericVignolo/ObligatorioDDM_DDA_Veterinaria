@@ -33,10 +33,33 @@ public class PersonalService
         return _personal;
     }
 
+    public Personal? ObtenerPorId(int id)
+    {
+        return _personal.FirstOrDefault(p => p.Id == id);
+    }
+
+    // Alta de una cuenta del personal (A-027). Las validaciones y el permiso los aplica AdministracionService.
+    // En la demostración la contraseña inicial es la de demostración.
+    public Personal Agregar(string nombre, string correo, string rol, int? profesionalId)
+    {
+        var persona = new Personal
+        {
+            Id = _personal.Max(p => p.Id) + 1,
+            Nombre = nombre.Trim(),
+            Correo = correo.Trim().ToLowerInvariant(),
+            Rol = rol,
+            ProfesionalId = profesionalId,
+            HashContrasena = CuentaService.DerivarContrasena(ContrasenaDemo)
+        };
+        _personal.Add(persona);
+        return persona;
+    }
+
     public Personal? ValidarCredenciales(string correo, string contrasena)
     {
         var buscado = (correo ?? "").Trim().ToLowerInvariant();
         var persona = _personal.FirstOrDefault(p => p.Correo == buscado);
-        return persona is not null && CuentaService.ContrasenaCoincide(contrasena, persona.HashContrasena) ? persona : null;
+        // Una cuenta bloqueada no ingresa (RF-ADM-01).
+        return persona is not null && persona.Activo && CuentaService.ContrasenaCoincide(contrasena, persona.HashContrasena) ? persona : null;
     }
 }

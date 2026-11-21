@@ -11,7 +11,7 @@ generado: true
 
 Cuenta del personal de la clínica (A-010, RF-ADM-01). En la sección C la crea el Administrador en la API.
 
-**Tareas:** A-010
+**Tareas:** A-010, A-027
 
 **Requisitos y decisiones:** RF-ADM-01
 
@@ -21,10 +21,23 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Cuenta]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminPersonal]]
+- [[AdministracionService]]
 - [[AgendaService]]
+- [[AsistenciaDetalle]]
+- [[AsistenciaService]]
+- [[AuditoriaService]]
+- [[BitacoraService]]
+- [[CobroService]]
+- [[ComunicacionesService]]
+- [[ConsentimientoService]]
 - [[Consulta]]
 - [[ConsultaService]]
+- [[DerechosService]]
+- [[InternacionService]]
 - [[InventarioService]]
 - [[PersonalService]]
+- [[RegistroAuditoria]]
 - [[SesionService]]
+- [[SolicitudAsistencia]]
 - [[VacunaService]]

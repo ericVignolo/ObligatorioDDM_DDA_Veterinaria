@@ -1,0 +1,404 @@
+@page "/panel/cobros"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject CobroService Cobro
+@inject CuentaService Cuentas
+@inject AnimalService Animales
+@inject SesionService Sesion
+
+<PageTitle>Cobros — VITALIA</PageTitle>
+
+@* A-023: el cobro es presencial. Recepción registra los cobros y emite el comprobante (RF-REC-05);
+   el Administrador anula comprobantes con una nota de crédito (RN-34). No hay pago en línea (DT-ALC-02). *@
+<RequierePersonal Roles="@(new[] { PersonalService.Recepcion, PersonalService.Administrador })">
+    <h1>Cobros</h1>
+    <p class="text-muted">
+        @(EsRecepcion ? "Cobrá en el mostrador las atenciones finalizadas y entregá el comprobante." : "Vista de cobros y comprobantes. Solo Recepción cobra; vos anulás comprobantes con una nota de crédito.")
+    </p>
+
+    <div class="alert alert-secondary small">@CobroService.AvisoDemo</div>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    <section class="mb-4" aria-labelledby="titulo-resumen">
+        <h2 class="h4" id="titulo-resumen">Resumen</h2>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h6">Pendiente de cobro</h3>
+                        <p class="h4 mb-0">$ @Cobro.TotalPendiente().ToString("N0")</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h6">Cobrado hoy</h3>
+                        <p class="h4 mb-0">$ @Cobro.CobradoHoy().ToString("N0")</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h6">Cargos con saldo</h3>
+                        <p class="h4 mb-0">@(cargos.Count(c => Cobro.Saldo(c) > 0))</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* Cargos: los genera la firma de la consulta (RN-32) *@
+    <section class="mb-4" aria-labelledby="titulo-cargos">
+        <h2 class="h4" id="titulo-cargos">Cargos</h2>
+        <div class="mb-2" style="max-width: 16rem;">
+            <label class="form-label small" for="filtroCargos">Mostrar</label>
+            <select id="filtroCargos" class="form-select form-select-sm" @bind="filtro">
+                <option value="pendientes">Con saldo pendiente</option>
+                <option value="todos">Todos</option>
+            </select>
+        </div>
+
+        @if (CargosVisibles().Count == 0)
+        {
+            <p class="text-muted">
+                @(filtro == "pendientes" ? "No hay cargos con saldo. Cuando un veterinario firme una consulta, su cargo aparece acá." : "Todavía no hay cargos.")
+            </p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                    <caption class="visually-hidden">Cargos por atenciones finalizadas, con lo cobrado y el saldo</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Cliente y animal</th>
+                            <th scope="col">Servicio</th>
+                            <th scope="col" class="text-end">Monto</th>
+                            <th scope="col" class="text-end">Cobrado</th>
+                            <th scope="col" class="text-end">Saldo</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cargo in CargosVisibles())
+                        {
+                            var saldo = Cobro.Saldo(cargo);
+                            <tr>
+                                <td>@cargo.Fecha.ToString("dd/MM HH:mm")</td>
+                                <td>
+                                    <strong>@NombreAnimal(cargo)</strong><br />
+                                    <span class="small">@NombreCliente(cargo)</span>
+                                </td>
+                                <td>@cargo.Descripcion</td>
+                                <td class="text-end">$ @cargo.Monto.ToString("N0")</td>
+                                <td class="text-end">$ @Cobro.Pagado(cargo.Id).ToString("N0")</td>
+                                <td class="text-end">$ @saldo.ToString("N0")</td>
+                                <td><span class="badge @ClaseEstado(Cobro.Estado(cargo))">@Cobro.Estado(cargo)</span></td>
+                                <td>
+                                    @if (EsRecepcion && saldo > 0)
+                                    {
+                                        <button type="button" class="btn btn-primary btn-sm" @onclick="() => ElegirCargo(cargo)">Cobrar</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
+    @* Cobro en el mostrador (RF-REC-05) *@
+    @if (EsRecepcion && cargoElegido is not null)
+    {
+        <section class="mb-4" aria-labelledby="titulo-cobrar">
+            <h2 class="h4" id="titulo-cobrar">Cobrar</h2>
+            <p>
+                <strong>@cargoElegido.Descripcion</strong> · @NombreAnimal(cargoElegido) · @NombreCliente(cargoElegido)<br />
+                Saldo: <strong>$ @Cobro.Saldo(cargoElegido).ToString("N0")</strong>
+            </p>
+            <EditForm Model="cobro" OnValidSubmit="RegistrarCobro" FormName="cobro">
+                <DataAnnotationsValidator />
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <label class="form-label" for="montoCobro">Monto ($)</label>
+                        <InputNumber id="montoCobro" class="form-control" @bind-Value="cobro.Monto" />
+                        <ValidationMessage For="() => cobro.Monto" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="medioCobro">Medio de pago</label>
+                        <InputSelect id="medioCobro" class="form-select" @bind-Value="cobro.Medio">
+                            <option value="">Elegí un medio…</option>
+                            @foreach (var medio in Cobro.Medios)
+                            {
+                                <option value="@medio">@medio</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => cobro.Medio" />
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label" for="referenciaCobro">
+                            N.º de operación@(cobro.Medio == CobroService.Transferencia ? "" : " (opcional)")
+                        </label>
+                        <InputText id="referenciaCobro" class="form-control" maxlength="40" @bind-Value="cobro.Referencia" />
+                        <ValidationMessage For="() => cobro.Referencia" />
+                    </div>
+                </div>
+                <p class="small text-muted mt-2">
+                    Se puede cobrar una parte: el cargo queda con saldo hasta que se complete. El monto no puede superar el saldo.
+                </p>
+                <button type="submit" class="btn btn-primary">Registrar cobro y emitir comprobante</button>
+                <button type="button" class="btn btn-outline-secondary ms-2" @onclick="CancelarCobro">Cancelar</button>
+            </EditForm>
+        </section>
+    }
+
+    @* Comprobantes (RN-34: no se modifican, se anulan con nota de crédito) *@
+    <section class="mb-4" aria-labelledby="titulo-comprobantes">
+        <h2 class="h4" id="titulo-comprobantes">Comprobantes</h2>
+        @if (pagos.Count == 0)
+        {
+            <p class="text-muted">Todavía no se registró ningún cobro.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                    <caption class="visually-hidden">Comprobantes de cobro emitidos</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Número</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Cliente y servicio</th>
+                            <th scope="col" class="text-end">Monto</th>
+                            <th scope="col">Medio</th>
+                            <th scope="col">Cobró</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pago in pagos)
+                        {
+                            var cargo = Cobro.ObtenerCargo(pago.CargoId);
+                            var nota = Cobro.NotaDe(pago.Id);
+                            <tr>
+                                <th scope="row">@pago.Numero</th>
+                                <td>@pago.Fecha.ToString("dd/MM HH:mm")</td>
+                                <td>
+                                    @(cargo is null ? "" : NombreCliente(cargo))<br />
+                                    <span class="small text-muted">@cargo?.Descripcion</span>
+                                </td>
+                                <td class="text-end">$ @pago.Monto.ToString("N0")</td>
+                                <td>
+                                    @pago.Medio
+                                    @if (!string.IsNullOrEmpty(pago.Referencia))
+                                    {
+                                        <span class="small text-muted d-block">@pago.Referencia</span>
+                                    }
+                                </td>
+                                <td>@pago.PersonalNombre</td>
+                                <td>
+                                    @if (nota is null)
+                                    {
+                                        <span class="badge bg-success">Vigente</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Anulado</span>
+                                        <span class="small text-muted d-block">@nota.Numero</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-primary btn-sm" href="@($"panel/comprobantes/{pago.Id}")">Ver</a>
+                                    @if (EsAdministrador && nota is null)
+                                    {
+                                        <button type="button" class="btn btn-outline-danger btn-sm ms-1" @onclick="() => ElegirAnulacion(pago)">Anular</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
+    @* Nota de crédito: solo el Administrador y con motivo (RN-34) *@
+    @if (EsAdministrador && pagoAAnular is not null)
+    {
+        <section class="mb-4" aria-labelledby="titulo-anular">
+            <h2 class="h4" id="titulo-anular">Anular comprobante @pagoAAnular.Numero</h2>
+            <p>
+                Se emite una nota de crédito por $ @pagoAAnular.Monto.ToString("N0"). El comprobante no se borra ni se modifica,
+                y el cargo vuelve a tener ese saldo.
+            </p>
+            <EditForm Model="anulacion" OnValidSubmit="Anular" FormName="anulacion">
+                <DataAnnotationsValidator />
+                <div class="mb-2" style="max-width: 32rem;">
+                    <label class="form-label" for="motivoAnulacion">Motivo <span class="text-danger">*</span></label>
+                    <InputText id="motivoAnulacion" class="form-control" maxlength="200" @bind-Value="anulacion.Motivo" placeholder="Ej.: monto cargado por error" />
+                    <ValidationMessage For="() => anulacion.Motivo" />
+                </div>
+                <button type="submit" class="btn btn-danger">Emitir nota de crédito</button>
+                <button type="button" class="btn btn-outline-secondary ms-2" @onclick="CancelarAnulacion">Cancelar</button>
+            </EditForm>
+        </section>
+    }
+
+    @if (notas.Count > 0)
+    {
+        <section class="mb-4" aria-labelledby="titulo-notas">
+            <h2 class="h4" id="titulo-notas">Notas de crédito</h2>
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <caption class="visually-hidden">Notas de crédito emitidas</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Número</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Anula</th>
+                            <th scope="col" class="text-end">Monto</th>
+                            <th scope="col">Motivo</th>
+                            <th scope="col">Quién</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var nota in notas)
+                        {
+                            <tr>
+                                <th scope="row">@nota.Numero</th>
+                                <td>@nota.Fecha.ToString("dd/MM HH:mm")</td>
+                                <td>@(Cobro.ObtenerPago(nota.PagoId)?.Numero)</td>
+                                <td class="text-end">$ @nota.Monto.ToString("N0")</td>
+                                <td>@nota.Motivo</td>
+                                <td>@nota.PersonalNombre</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    }
+
+    <a href="panel">← Volver al panel</a>
+</RequierePersonal>
+
+@code {
+    private List<Cargo> cargos = new();
+    private List<Pago> pagos = new();
+    private List<NotaCredito> notas = new();
+    private string filtro = "pendientes";
+    private Cargo? cargoElegido;
+    private Pago? pagoAAnular;
+    private CobroFormulario cobro = new();
+    private AnulacionFormulario anulacion = new();
+    private string mensaje = "";
+    private bool exito;
+
+    private bool EsRecepcion => Sesion.TieneRol(PersonalService.Recepcion);
+    private bool EsAdministrador => Sesion.TieneRol(PersonalService.Administrador);
+
+    protected override void OnInitialized()
+    {
+        // RN-35: las señas de las cirugías reservadas en línea aparecen como cargos a cobrar.
+        Cobro.GenerarSenasPendientes();
+        Cargar();
+    }
+
+    private void Cargar()
+    {
+        cargos = Cobro.Cargos();
+        pagos = Cobro.Pagos();
+        notas = Cobro.Notas();
+    }
+
+    private List<Cargo> CargosVisibles()
+    {
+        return filtro == "pendientes" ? cargos.Where(c => Cobro.Saldo(c) > 0).ToList() : cargos;
+    }
+
+    private string NombreCliente(Cargo cargo)
+    {
+        var cuenta = Cuentas.ObtenerPorId(cargo.ClienteId);
+        return cuenta is null ? "Cliente" : $"{cuenta.Nombre} {cuenta.Apellido}";
+    }
+
+    private string NombreAnimal(Cargo cargo)
+    {
+        return Animales.ObtenerParaPersonal(cargo.AnimalId)?.Nombre ?? "Animal";
+    }
+
+    private static string ClaseEstado(string estado)
+    {
+        return estado switch
+        {
+            "Pagado" => "bg-success",
+            "Pago parcial" => "bg-warning text-dark",
+            _ => "bg-secondary"
+        };
+    }
+
+    private void ElegirCargo(Cargo cargo)
+    {
+        cargoElegido = cargo;
+        cobro = new CobroFormulario { CargoId = cargo.Id, Monto = (int)Cobro.Saldo(cargo) };
+        mensaje = "";
+    }
+
+    private void CancelarCobro()
+    {
+        cargoElegido = null;
+        cobro = new();
+    }
+
+    private void RegistrarCobro()
+    {
+        var resultado = Cobro.Cobrar(cobro, Sesion.PersonalActual);
+        Mostrar(resultado);
+        if (resultado.Exito)
+        {
+            cargoElegido = null;
+            cobro = new();
+        }
+    }
+
+    private void ElegirAnulacion(Pago pago)
+    {
+        pagoAAnular = pago;
+        anulacion = new();
+        mensaje = "";
+    }
+
+    private void CancelarAnulacion()
+    {
+        pagoAAnular = null;
+        anulacion = new();
+    }
+
+    private void Anular()
+    {
+        var resultado = Cobro.Anular(pagoAAnular!.Id, anulacion, Sesion.PersonalActual);
+        Mostrar(resultado);
+        if (resultado.Exito)
+        {
+            pagoAAnular = null;
+            anulacion = new();
+        }
+    }
+
+    private void Mostrar(ResultadoOperacion resultado)
+    {
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+        Cargar();
+    }
+}

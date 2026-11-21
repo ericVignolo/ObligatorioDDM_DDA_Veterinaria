@@ -17,6 +17,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[ClinicaService]]
+- [[Comprobante]]
 - [[Cookies]]
 - [[Home]]
 - [[LaClinica]]

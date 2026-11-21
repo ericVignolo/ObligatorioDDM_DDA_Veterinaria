@@ -36,6 +36,9 @@ public class Consulta
     public string Tratamiento { get; set; } = "";
     public string Indicaciones { get; set; } = "";
 
+    // RN-17: alergias registradas que se indicaron igual, con confirmación explícita al firmar. Vacío si no hubo.
+    public string AlergiaConfirmada { get; set; } = "";
+
     // Firma (P-RC-06): autor, fecha y hora, y huella del contenido firmado.
     public DateTime? FechaFirma { get; set; }
     public string HashContenido { get; set; } = "";

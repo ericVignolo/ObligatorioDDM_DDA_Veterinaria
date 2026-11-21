@@ -30,7 +30,14 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[ResultadoOperacion]]
 
 ## Usado por (si cambia, revisar estos)
+- [[AdminParametros]]
+- [[AdministracionService]]
 - [[AtencionConsulta]]
+- [[BitacoraService]]
 - [[ConsultaService]]
+- [[IndicadoresService]]
 - [[Inventario]]
 - [[VacunaService]]
+
+## En las otras aplicaciones
+- [[InventarioService (API)]]

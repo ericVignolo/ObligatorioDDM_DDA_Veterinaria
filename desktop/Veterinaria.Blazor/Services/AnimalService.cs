@@ -18,10 +18,25 @@ public class AnimalService
 
     private int _ultimoId = 4;
 
+    // G-009: agrega un animal del conjunto grande de demostración y devuelve el mismo animal con su número.
+    public Animal AgregarDemo(Animal animal)
+    {
+        _ultimoId++;
+        animal.Id = _ultimoId;
+        _animales.Add(animal);
+        return animal;
+    }
+
     // Para el personal: cualquier animal, sin filtrar por responsable (RF-REC-03).
     public Animal? ObtenerParaPersonal(int id)
     {
         return _animales.FirstOrDefault(a => a.Id == id);
+    }
+
+    // Para el personal: todos los animales, por nombre (RF-REC-03, A-024).
+    public List<Animal> ObtenerTodos()
+    {
+        return _animales.OrderBy(a => a.Nombre).ToList();
     }
 
     public List<string> Especies { get; } = new()

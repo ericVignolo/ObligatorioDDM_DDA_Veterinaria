@@ -1,0 +1,194 @@
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AgendaService Agenda
+@inject CuentaService Cuentas
+@inject AnimalService Animales
+@inject PrestacionService Prestaciones
+@inject ProfesionalService Profesionales
+@inject CobroService Cobros
+@inject SesionService Sesion
+
+@* RF-REC-02, RN-09: Recepción da un turno en el mostrador; con «sobreturno» puede salir de los horarios libres, con motivo. *@
+<section class="border rounded p-3 mb-4" aria-labelledby="titulo-mostrador">
+    <h2 class="h5" id="titulo-mostrador">Dar un turno en el mostrador</h2>
+
+    <div class="row g-2">
+        <div class="col-md-4">
+            <label class="form-label" for="mostradorCliente">Cliente</label>
+            <select id="mostradorCliente" class="form-select" @bind="clienteId" @bind:after="CambioCliente">
+                <option value="0">Elegí…</option>
+                @foreach (var cuenta in Cuentas.Todas().Where(c => !c.Eliminada && c.Verificada))
+                {
+                    <option value="@cuenta.Id">@cuenta.Nombre @cuenta.Apellido</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="mostradorAnimal">Animal</label>
+            <select id="mostradorAnimal" class="form-select" @bind="animalId" @bind:after="Limpiar">
+                <option value="0">Elegí…</option>
+                @foreach (var animal in Animales.ObtenerDe(clienteId))
+                {
+                    <option value="@animal.Id">@animal.Nombre (@animal.Especie)</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="mostradorServicio">Servicio</label>
+            <select id="mostradorServicio" class="form-select" @bind="prestacionId" @bind:after="Limpiar">
+                <option value="0">Elegí…</option>
+                @foreach (var prestacion in Prestaciones.ObtenerReservables())
+                {
+                    <option value="@prestacion.Id">@prestacion.Nombre (@prestacion.DuracionMinutos min)</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="mostradorProfesional">Profesional</label>
+            <select id="mostradorProfesional" class="form-select" @bind="profesionalId" @bind:after="Limpiar">
+                <option value="0">Elegí…</option>
+                @foreach (var profesional in ProfesionalesPosibles())
+                {
+                    <option value="@profesional.Id">@profesional.Nombre</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="mostradorFecha">Día</label>
+            <input id="mostradorFecha" type="date" class="form-control" @bind="fecha" @bind:after="Limpiar" />
+        </div>
+        <div class="col-md-5 d-flex align-items-end">
+            <div class="form-check mb-2">
+                <input id="mostradorSobreturno" type="checkbox" class="form-check-input" @bind="sobreturno" @bind:after="Limpiar" />
+                <label class="form-check-label" for="mostradorSobreturno">Sobreturno (fuera de los horarios libres)</label>
+            </div>
+        </div>
+    </div>
+
+    @if (clienteId > 0)
+    {
+        var ausencias = Agenda.AusenciasRecientes(clienteId);
+        var deuda = Cobros.AvisoDeuda(clienteId);
+        if (ausencias > 0)
+        {
+            <p class="small text-muted mt-2 mb-0">Ausencias sin aviso en 12 meses: @ausencias. @(Agenda.BloqueadoPorAusencias(clienteId) ? "No puede reservar en línea: el turno se da acá." : "")</p>
+        }
+        if (!string.IsNullOrEmpty(deuda))
+        {
+            <div class="alert alert-warning small mt-2 mb-0" role="status">@deuda</div>
+        }
+    }
+
+    <div class="row g-2 mt-1">
+        @if (sobreturno)
+        {
+            <div class="col-md-3">
+                <label class="form-label" for="mostradorHora">Hora</label>
+                <input id="mostradorHora" type="time" class="form-control" @bind="horaSobreturno" />
+            </div>
+            <div class="col-md-9">
+                <label class="form-label" for="mostradorMotivo">Motivo del sobreturno</label>
+                <input id="mostradorMotivo" class="form-control" maxlength="200" @bind="motivo" />
+            </div>
+        }
+        else
+        {
+            var libres = Libres();
+            <div class="col-md-4">
+                <label class="form-label" for="mostradorLibre">Horario libre</label>
+                <select id="mostradorLibre" class="form-select" @bind="hora">
+                    <option value="">@(libres.Count == 0 ? "Sin horarios libres" : "Elegí…")</option>
+                    @foreach (var libre in libres)
+                    {
+                        <option value="@(libre.ToString("HH:mm"))">@(libre.ToString("HH:mm"))</option>
+                    }
+                </select>
+            </div>
+        }
+    </div>
+
+    <button type="button" class="btn btn-primary mt-3" @onclick="Registrar">@(sobreturno ? "Registrar sobreturno" : "Registrar turno")</button>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger") mt-3 mb-0" role="status">@mensaje</div>
+    }
+</section>
+
+@code {
+    [Parameter]
+    public EventCallback OnRegistrado { get; set; }
+
+    private int clienteId;
+    private int animalId;
+    private int prestacionId;
+    private int profesionalId;
+    private DateOnly fecha = DateOnly.FromDateTime(DateTime.Today);
+    private bool sobreturno;
+    private string hora = "";
+    private TimeOnly horaSobreturno = new(9, 0);
+    private string motivo = "";
+    private string mensaje = "";
+    private bool exito;
+
+    private void CambioCliente()
+    {
+        animalId = 0;
+        Limpiar();
+    }
+
+    private void Limpiar()
+    {
+        mensaje = "";
+        if (!sobreturno)
+        {
+            hora = "";
+        }
+    }
+
+    private List<Profesional> ProfesionalesPosibles()
+    {
+        var animal = Animales.ObtenerPorId(animalId, clienteId);
+        return animal is null || prestacionId == 0 ? new() : Profesionales.ObtenerPara(prestacionId, animal.Especie);
+    }
+
+    private List<DateTime> Libres()
+    {
+        if (animalId == 0 || prestacionId == 0 || profesionalId == 0)
+        {
+            return new();
+        }
+
+        return Agenda.HorariosLibres(profesionalId, prestacionId, animalId, fecha);
+    }
+
+    private async Task Registrar()
+    {
+        exito = false;
+        var horaElegida = horaSobreturno;
+        if (!sobreturno && !TimeOnly.TryParse(hora, out horaElegida))
+        {
+            mensaje = "Elegí la hora del turno.";
+            return;
+        }
+
+        var resultado = Agenda.ReservarPorMostrador(clienteId, animalId, prestacionId, profesionalId, fecha.ToDateTime(horaElegida),
+            sobreturno, motivo, Sesion.PersonalActual, out var turno);
+        exito = resultado.Exito;
+        mensaje = resultado.Mensaje;
+
+        if (resultado.Exito && turno is not null)
+        {
+            var sena = Cobros.GenerarSena(turno);
+            if (sena is not null)
+            {
+                mensaje += $" Seña a cobrar: $ {sena.Monto:N0} en Cobros.";
+            }
+
+            hora = "";
+            motivo = "";
+            sobreturno = false;
+            await OnRegistrado.InvokeAsync();
+        }
+    }
+}

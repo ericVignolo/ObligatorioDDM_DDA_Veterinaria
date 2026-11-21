@@ -9,20 +9,36 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Desktop — [[Carpeta desktop]]
 
-### Páginas (30)
+### Páginas (46)
 - [[Acceso]] · `/acceso`
+- [[AdminAuditoria]] · `/panel/admin/auditoria`
+- [[AdminDerechos]] · `/panel/admin/derechos`
+- [[AdminHorarios]] · `/panel/admin/horarios`
+- [[AdminIndicadores]] · `/panel/admin/indicadores`
+- [[AdminParametros]] · `/panel/admin/parametros`
+- [[AdminPersonal]] · `/panel/admin/personal`
+- [[AdminServicios]] · `/panel/admin/servicios`
 - [[AgendaRecepcion]] · `/panel/agenda`
 - [[AgendaVeterinario]] · `/panel/mi-agenda`
 - [[AnimalDetalle]] · `/animales/{Id:int}`
 - [[AnimalEditar]] · `/animales/{Id:int}/editar`
 - [[AnimalNuevo]] · `/animales/nuevo`
 - [[Animales]] · `/animales`
+- [[AsistenciaDetalle]] · `/panel/asistencia/{Id:int}`
+- [[Asistencias]] · `/panel/asistencia`
 - [[AtencionConsulta]] · `/panel/consulta/{TurnoId:int}`
+- [[Cobros]] · `/panel/cobros`
+- [[Comprobante]] · `/panel/comprobantes/{Id:int}`
+- [[Comunicaciones]] · `/panel/comunicaciones`
 - [[Cookies]] · `/cookies`
+- [[Demostracion]] · `/demo`
+- [[FirmarConsentimiento]] · `/consentimiento/{TurnoId:int}`
 - [[HistoriaAnimal]] · `/animales/{Id:int}/historia`
 - [[HistoriaClinica]] · `/panel/historia/{AnimalId:int}`
 - [[Home]] · `/`
 - [[Ingresar]] · `/ingresar`
+- [[InternacionDetalle]] · `/panel/internacion/{Id:int}`
+- [[Internaciones]] · `/panel/internacion`
 - [[Inventario]] · `/panel/inventario`
 - [[LaClinica]] · `/clinica`
 - [[MiCuenta]] · `/cuenta`
@@ -41,17 +57,21 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-### Componentes (17)
+### Componentes (22)
 - [[AnimalCard]]
 - [[AnimalForm]]
 - [[Atajo]]
 - [[BarraSesion]]
 - [[CarnetSanitario]]
 - [[EncabezadoLegal]]
+- [[EstadoConsentimiento]]
 - [[EstadoRefuerzo]]
 - [[EstadoTurno]]
 - [[MainLayout]]
+- [[MisComunicaciones]]
+- [[MisDerechos]]
 - [[NavMenu]]
+- [[NivelAsistencia]]
 - [[PasosReserva]]
 - [[PieLegal]]
 - [[PrestacionCard]]
@@ -59,46 +79,75 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RegistroClinico]]
 - [[RequierePersonal]]
 - [[RequiereSesion]]
+- [[TurnoMostrador]]
 
-### Servicios (13)
+### Servicios (25)
+- [[AdministracionService]]
 - [[AgendaService]]
 - [[AnimalService]]
+- [[AsistenciaService]]
+- [[AuditoriaService]]
+- [[AvisosRefuerzoService]]
+- [[BitacoraService]]
 - [[ClinicaService]]
+- [[CobroService]]
+- [[ComunicacionesService]]
+- [[ConsentimientoService]]
 - [[ConsultaService]]
 - [[CuentaService]]
+- [[DerechosService]]
 - [[DocumentoLegalService]]
+- [[IndicadoresService]]
 - [[IntencionService]]
+- [[InternacionService]]
 - [[InventarioService]]
 - [[PersonalService]]
 - [[PrestacionService]]
 - [[ProfesionalService]]
+- [[RecorridosService]]
 - [[SesionService]]
 - [[VacunaService]]
 
-### Modelos (42)
+### Modelos (74)
+- [[AdmisionFormulario]]
 - [[AjusteFormulario]]
 - [[AlertaStock]]
+- [[AltaFormulario]]
 - [[Animal]]
 - [[AnimalFormulario]]
+- [[AnulacionFormulario]]
 - [[AplicacionFormulario]]
 - [[AplicacionSanitaria]]
 - [[Articulo]]
 - [[Ausencia]]
+- [[AusenciaFormulario]]
+- [[Box]]
 - [[CambioContrasenaFormulario]]
 - [[CambioCorreoFormulario]]
+- [[CambioNivelFormulario]]
+- [[Cargo]]
 - [[Clinica]]
+- [[CobroFormulario]]
 - [[CodigoVerificacion]]
+- [[Comunicacion]]
+- [[Consentimiento]]
+- [[ConsentimientoFormulario]]
 - [[Consulta]]
 - [[ConsultaFormulario]]
 - [[ConsumoFormulario]]
 - [[Cuenta]]
+- [[DocumentoConsentimiento]]
 - [[DocumentoLegal]]
 - [[Enmienda]]
 - [[EnmiendaFormulario]]
+- [[EventoAsistencia]]
 - [[FirmaConsulta]]
 - [[FranjaHoraria]]
+- [[Indicadores]]
+- [[IngresoClinicoFormulario]]
 - [[IngresoLoteFormulario]]
 - [[InicioSesion]]
+- [[Internacion]]
 - [[ItemCarnet]]
 - [[LecturaHistoria]]
 - [[LoteProducto]]
@@ -106,22 +155,172 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[MotivoOpcionalFormulario]]
 - [[MovimientoStock]]
 - [[NivelUrgencia]]
+- [[NotaCredito]]
+- [[NovedadFormulario]]
+- [[NovedadInternacion]]
 - [[NuevaContrasena]]
+- [[Pago]]
 - [[PerfilFormulario]]
 - [[Personal]]
+- [[PersonalFormulario]]
+- [[PoliticaConservacion]]
+- [[PreferenciaComunicacion]]
 - [[Prestacion]]
+- [[PrestacionFormulario]]
 - [[ProductoSanitario]]
 - [[Profesional]]
+- [[Recorrido]]
+- [[RegistroAuditoria]]
 - [[RegistroCliente]]
 - [[ReservaStock]]
 - [[ResultadoOperacion]]
+- [[SolicitudAsistencia]]
+- [[SolicitudDerecho]]
 - [[SolicitudRecuperacion]]
+- [[SolicitudTelefonicaFormulario]]
+- [[TarifaFormulario]]
+- [[TarifaPrestacion]]
+- [[TipoComunicacion]]
 - [[Turno]]
 - [[ValidacionDatos]]
 
 ## Api — [[Carpeta api]]
 
-Todavía sin código.
+### Servicios (43)
+- [[AdministracionService (API)]]
+- [[AnimalService (API)]]
+- [[AsistenciaService (API)]]
+- [[CalculoAgenda (API)]]
+- [[CarnetService (API)]]
+- [[ClinicaService (API)]]
+- [[CobroService (API)]]
+- [[ComunicacionService (API)]]
+- [[ConsentimientoService (API)]]
+- [[ConsultaService (API)]]
+- [[CuentaService (API)]]
+- [[EnvioCorreo (API)]]
+- [[IAdministracionService (API)]]
+- [[IAnimalService (API)]]
+- [[IAsistenciaService (API)]]
+- [[ICarnetService (API)]]
+- [[IClinicaService (API)]]
+- [[ICobroService (API)]]
+- [[IComunicacionService (API)]]
+- [[IConsentimientoService (API)]]
+- [[IConsultaService (API)]]
+- [[ICuentaService (API)]]
+- [[IInternacionService (API)]]
+- [[IInventarioService (API)]]
+- [[IPrestacionService (API)]]
+- [[IProfesionalService (API)]]
+- [[ISesionService (API)]]
+- [[ITokenService (API)]]
+- [[ITurnoService (API)]]
+- [[InternacionService (API)]]
+- [[InventarioService (API)]]
+- [[Opciones (API)]]
+- [[PrestacionService (API)]]
+- [[ProfesionalService (API)]]
+- [[ReglasCatalogo (API)]]
+- [[ReglasClinicas (API)]]
+- [[ReglasStock (API)]]
+- [[Resultado (API)]]
+- [[Seguridad (API)]]
+- [[SesionService (API)]]
+- [[TokenService (API)]]
+- [[TurnoService (API)]]
+- [[ValidacionDatos (API)]]
+
+### Modelos (16)
+- [[Animal (API)]]
+- [[Asistencia (API)]]
+- [[Cobro (API)]]
+- [[CodigoCuenta (API)]]
+- [[Comunicaciones (API)]]
+- [[Configuracion (API)]]
+- [[Consulta (API)]]
+- [[Cuenta (API)]]
+- [[DocumentoLegal (API)]]
+- [[Internacion (API)]]
+- [[Inventario (API)]]
+- [[Prestacion (API)]]
+- [[Profesional (API)]]
+- [[Rol (API)]]
+- [[SesionRefresco (API)]]
+- [[Turno (API)]]
+
+### Controladores (22)
+- [[AdminSaludController (API)]] · `api/v1/admin`
+- [[AdministracionController (API)]] · `api/v1/admin`
+- [[AnimalesController (API)]] · `api/v1/animales`
+- [[AsistenciaController (API)]] · `api/v1/asistencias`
+- [[ClinicaController (API)]] · `api/v1/clinica`
+- [[CobrosController (API)]] · `api/v1/cobros`
+- [[ComunicacionesController (API)]] · `api/v1/comunicaciones`
+- [[CuentasController (API)]] · `api/v1/cuentas`
+- [[EspeciesController (API)]] · `api/v1/especies`
+- [[InternacionesController (API)]] · `api/v1/internaciones`
+- [[InventarioController (API)]] · `api/v1/admin/inventario`
+- [[ManejadorConcurrencia (API)]]
+- [[Problemas (API)]]
+- [[ProfesionalesController (API)]] · `api/v1/profesionales`
+- [[RecepcionController (API)]] · `api/v1/recepcion`
+- [[SaludController (API)]] · `api/v1`
+- [[ServiciosController (API)]] · `api/v1/servicios`
+- [[SesionesController (API)]] · `api/v1/sesiones`
+- [[StockVeterinarioController (API)]] · `api/v1/veterinario`
+- [[TurnosController (API)]] · `api/v1/turnos`
+- [[UsuarioActual (API)]]
+- [[VeterinarioController (API)]] · `api/v1/veterinario`
+
+### Repositorios (26)
+- [[AdministracionRepository (API)]]
+- [[AnimalRepository (API)]]
+- [[AsistenciaRepository (API)]]
+- [[ClinicaRepository (API)]]
+- [[CobroRepository (API)]]
+- [[ComunicacionRepository (API)]]
+- [[ConsultaRepository (API)]]
+- [[CuentaRepository (API)]]
+- [[IAdministracionRepository (API)]]
+- [[IAnimalRepository (API)]]
+- [[IAsistenciaRepository (API)]]
+- [[IClinicaRepository (API)]]
+- [[ICobroRepository (API)]]
+- [[IComunicacionRepository (API)]]
+- [[IConsultaRepository (API)]]
+- [[ICuentaRepository (API)]]
+- [[IInternacionRepository (API)]]
+- [[IPrestacionRepository (API)]]
+- [[IProfesionalRepository (API)]]
+- [[ISaludRepository (API)]]
+- [[ITurnoRepository (API)]]
+- [[InternacionRepository (API)]]
+- [[PrestacionRepository (API)]]
+- [[ProfesionalRepository (API)]]
+- [[SaludRepository (API)]]
+- [[TurnoRepository (API)]]
+
+### DTOs (14)
+- [[AdminDtos (API)]]
+- [[AnimalDtos (API)]]
+- [[AsistenciaDtos (API)]]
+- [[ClinicaReadDto (API)]]
+- [[CobroDtos (API)]]
+- [[ComunicacionDtos (API)]]
+- [[ConsultaDtos (API)]]
+- [[CuentaDtos (API)]]
+- [[InternacionDtos (API)]]
+- [[PaginaDto (API)]]
+- [[ProfesionalReadDto (API)]]
+- [[SaludDtos (API)]]
+- [[ServicioReadDto (API)]]
+- [[TurnoDtos (API)]]
+
+### Datos (3)
+- [[AppDbContext (API)]]
+- [[ConfiguracionModulos (API)]]
+- [[Transacciones (API)]]
 
 ## Mobile — [[Carpeta mobile]]
 

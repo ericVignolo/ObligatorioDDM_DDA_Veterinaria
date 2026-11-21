@@ -1,0 +1,215 @@
+@page "/panel/admin/parametros"
+@using Veterinaria.Blazor.Models
+@using Veterinaria.Blazor.Services
+@inject AdministracionService Admin
+@inject AsistenciaService Asistencias
+@inject InternacionService Internaciones
+@inject InventarioService Inventario
+@inject VacunaService Vacunas
+@inject ConsentimientoService Consentimientos
+@inject PersonalService Equipo
+@inject SesionService Sesion
+@inject AgendaService Agenda
+@inject CobroService Cobros
+
+<PageTitle>Parámetros — VITALIA</PageTitle>
+
+@* A-027: boxes (RF-ADM-03), asistencia (RF-ADM-13), avisos y stock mínimo (RF-ADM-10) y versiones del consentimiento. *@
+<RequierePersonal Roles="@(new[] { PersonalService.Administrador })">
+    <h1>Parámetros</h1>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(exito ? "alert-success" : "alert-danger")" role="@(exito ? "status" : "alert")">@mensaje</div>
+    }
+
+    @* Asistencia (RF-ADM-13) *@
+    <section class="mb-4 border rounded p-3" aria-labelledby="titulo-asistencia">
+        <h2 class="h5" id="titulo-asistencia">Asistencia a domicilio</h2>
+        <div class="input-group mb-3" style="max-width: 30rem;">
+            <label class="input-group-text" for="guardia">Guardia</label>
+            <select id="guardia" class="form-select" @bind="guardiaId">
+                @foreach (var vet in Equipo.ObtenerTodos().Where(p => p.Rol == PersonalService.Veterinario && p.Activo))
+                {
+                    <option value="@vet.Id">@vet.Nombre</option>
+                }
+            </select>
+            <button type="button" class="btn btn-primary" @onclick="CambiarGuardia">Asignar</button>
+        </div>
+        <div class="row g-2">
+            <div class="col-md-2"><label class="form-label" for="cob">Cobertura (km)</label><input id="cob" type="number" class="form-control" @bind="cobertura" /></div>
+            <div class="col-md-2"><label class="form-label" for="minRojo">Rojo a Recepción (min)</label><input id="minRojo" type="number" class="form-control" @bind="minutosRojo" /></div>
+            <div class="col-md-2"><label class="form-label" for="base">Tarifa base ($)</label><input id="base" type="number" class="form-control" @bind="tarifaBase" /></div>
+            <div class="col-md-2"><label class="form-label" for="km">Por km ($)</label><input id="km" type="number" class="form-control" @bind="porKm" /></div>
+            <div class="col-md-2"><label class="form-label" for="animal">Por animal extra ($)</label><input id="animal" type="number" class="form-control" @bind="porAnimal" /></div>
+        </div>
+        <button type="button" class="btn btn-primary mt-2" @onclick="GuardarAsistencia">Guardar asistencia</button>
+    </section>
+
+    @* Boxes (RF-ADM-03) *@
+    <section class="mb-4 border rounded p-3" aria-labelledby="titulo-boxes">
+        <h2 class="h5" id="titulo-boxes">Boxes de internación</h2>
+        <ul class="small">
+            @foreach (var box in Internaciones.Boxes())
+            {
+                <li>
+                    @box.Nombre · @box.Tipo ·
+                    <span class="badge @(box.Activo ? "bg-success" : "bg-secondary")">@(box.Activo ? "En servicio" : "Fuera de servicio")</span>
+                    @if (Internaciones.OcupanteDe(box.Id) is not null)
+                    {
+                        <span class="text-muted">(ocupado)</span>
+                    }
+                    <button type="button" class="btn btn-link btn-sm" @onclick="() => CambiarBox(box)">@(box.Activo ? "Sacar de servicio" : "Poner en servicio")</button>
+                </li>
+            }
+        </ul>
+        <div class="input-group" style="max-width: 36rem;">
+            <label class="visually-hidden" for="nombreBox">Nombre</label>
+            <input id="nombreBox" class="form-control" maxlength="40" placeholder="Nombre del box" @bind="nombreBox" />
+            <label class="visually-hidden" for="tipoBox">Tipo</label>
+            <select id="tipoBox" class="form-select" @bind="tipoBox">
+                <option value="@InternacionService.PequenosAnimales">@InternacionService.PequenosAnimales</option>
+                <option value="@InternacionService.GrandesAnimales">@InternacionService.GrandesAnimales</option>
+            </select>
+            <button type="button" class="btn btn-primary" @onclick="AgregarBox">Agregar box</button>
+        </div>
+    </section>
+
+    @* Avisos y stock mínimo (RF-ADM-10) *@
+    <section class="mb-4 border rounded p-3" aria-labelledby="titulo-avisos">
+        <h2 class="h5" id="titulo-avisos">Avisos e inventario</h2>
+        <div class="row g-2">
+            <div class="col-md-3"><label class="form-label" for="diasVenc">Próximo a vencer (días)</label><input id="diasVenc" type="number" class="form-control" @bind="diasVencimiento" /></div>
+            <div class="col-md-3"><label class="form-label" for="diasRef">Aviso de refuerzo (3 a 5 días)</label><input id="diasRef" type="number" class="form-control" @bind="diasRefuerzo" /></div>
+        </div>
+        <button type="button" class="btn btn-primary mt-2 mb-3" @onclick="GuardarAvisos">Guardar avisos</button>
+
+        <div class="input-group" style="max-width: 36rem;">
+            <label class="visually-hidden" for="articuloMin">Artículo</label>
+            <select id="articuloMin" class="form-select" @bind="articuloId">
+                <option value="0">Artículo…</option>
+                @foreach (var articulo in Inventario.Articulos())
+                {
+                    <option value="@articulo.Id">@articulo.Nombre (mínimo @articulo.StockMinimo)</option>
+                }
+            </select>
+            <label class="visually-hidden" for="minimo">Mínimo nuevo</label>
+            <input id="minimo" type="number" class="form-control" placeholder="Mínimo" @bind="minimo" />
+            <button type="button" class="btn btn-primary" @onclick="GuardarMinimo">Cambiar mínimo</button>
+        </div>
+    </section>
+
+    @* Reglas de agenda y cobro (RN-08, RN-35, RN-36) *@
+    <section class="mb-4 border rounded p-3" aria-labelledby="titulo-reglas-agenda">
+        <h2 class="h5" id="titulo-reglas-agenda">Ausencias, seña y deuda</h2>
+        <div class="row g-2">
+            <div class="col-md-4"><label class="form-label" for="limAus">Ausencias en 12 meses para reservar solo por Recepción</label><input id="limAus" type="number" class="form-control" @bind="limiteAusencias" /></div>
+            <div class="col-md-4"><label class="form-label" for="porSena">Seña de cirugía (% del precio)</label><input id="porSena" type="number" class="form-control" @bind="porcentajeSena" /></div>
+            <div class="col-md-4"><label class="form-label" for="limDeuda">Aviso por deuda vencida desde ($)</label><input id="limDeuda" type="number" class="form-control" @bind="limiteDeuda" /></div>
+        </div>
+        <p class="small text-muted mt-2 mb-0">Desde @AgendaService.AvisoAusencias ausencias se le avisa al cliente. La deuda vence a los @CobroService.DiasParaVencer días y nunca bloquea un turno ni una urgencia.</p>
+        <button type="button" class="btn btn-primary mt-2" @onclick="GuardarReglasAgenda">Guardar</button>
+    </section>
+
+    @* Consentimiento (A-025, K-07) *@
+    <section class="mb-4 border rounded p-3" aria-labelledby="titulo-consentimiento">
+        <h2 class="h5" id="titulo-consentimiento">Consentimiento de castración</h2>
+        @{ var vigente = Consentimientos.DocumentoVigente(8); }
+        <p class="small mb-2">Versión vigente: <strong>@vigente?.Version</strong>. Publicar una versión nueva obliga a volver a firmar lo que esté firmado con la anterior.</p>
+        <div class="mb-2" style="max-width: 10rem;">
+            <label class="form-label" for="versionCi">Versión nueva</label>
+            <input id="versionCi" class="form-control" maxlength="10" @bind="versionNueva" />
+        </div>
+        <label class="form-label" for="textoCi">Texto</label>
+        <textarea id="textoCi" class="form-control" rows="4" @bind="textoNuevo"></textarea>
+        <button type="button" class="btn btn-primary mt-2" @onclick="PublicarConsentimiento">Publicar versión</button>
+    </section>
+
+    @* Lo que todavía no se edita *@
+    <section class="mb-4" aria-labelledby="titulo-fijos">
+        <h2 class="h5" id="titulo-fijos">Reglas de la agenda (fijas en la demostración)</h2>
+        <ul class="small">
+            <li>Cancelar o reprogramar sin costo hasta @AgendaService.HorasParaCancelar h antes (RN-06).</li>
+            <li>Reservar con al menos @AgendaService.HorasDeAnticipacion h de anticipación y hasta @AgendaService.DiasHaciaAdelante días.</li>
+            <li>Horarios cada @AgendaService.MinutosEntreHorarios minutos; tolerancia de ausencia @AgendaService.MinutosToleranciaAusencia minutos.</li>
+        </ul>
+        <p class="small text-muted">Se vuelven editables con la API, porque cambiarlas afecta turnos ya reservados.</p>
+    </section>
+
+    <a href="panel">← Volver al panel</a>
+</RequierePersonal>
+
+@code {
+    private int guardiaId;
+    private int cobertura;
+    private int minutosRojo;
+    private int tarifaBase;
+    private int porKm;
+    private int porAnimal;
+    private string nombreBox = "";
+    private string tipoBox = InternacionService.PequenosAnimales;
+    private int diasVencimiento;
+    private int diasRefuerzo;
+    private int articuloId;
+    private int minimo;
+    private string versionNueva = "";
+    private string textoNuevo = "";
+    private string mensaje = "";
+    private bool exito;
+
+    protected override void OnInitialized()
+    {
+        guardiaId = Asistencias.GuardiaId;
+        cobertura = Asistencias.Cobertura;
+        minutosRojo = Asistencias.MinutosEscalarRojo;
+        tarifaBase = (int)Asistencias.Base;
+        porKm = (int)Asistencias.PorKm;
+        porAnimal = (int)Asistencias.PorAnimalExtra;
+        diasVencimiento = Inventario.DiasProximoAVencer;
+        diasRefuerzo = Vacunas.DiasAvisoRefuerzo;
+        limiteAusencias = Agenda.LimiteAusencias;
+        porcentajeSena = Cobros.PorcentajeSena;
+        limiteDeuda = Cobros.LimiteDeuda;
+        textoNuevo = Consentimientos.DocumentoVigente(8)?.Texto ?? "";
+    }
+
+    private void CambiarGuardia() => Mostrar(Admin.CambiarGuardia(guardiaId, Sesion.PersonalActual));
+
+    private void GuardarAsistencia() => Mostrar(Admin.CambiarParametrosAsistencia(cobertura, minutosRojo, tarifaBase, porKm, porAnimal, Sesion.PersonalActual));
+
+    private void CambiarBox(Box box) => Mostrar(Admin.CambiarServicioBox(box.Id, !box.Activo, Sesion.PersonalActual));
+
+    private void AgregarBox()
+    {
+        Mostrar(Admin.AgregarBox(nombreBox, tipoBox, Sesion.PersonalActual));
+        if (exito)
+        {
+            nombreBox = "";
+        }
+    }
+
+    private int limiteAusencias;
+    private int porcentajeSena;
+    private int limiteDeuda;
+
+    private void GuardarReglasAgenda() => Mostrar(Admin.CambiarParametrosAgenda(limiteAusencias, porcentajeSena, limiteDeuda, Sesion.PersonalActual));
+
+    private void GuardarAvisos() => Mostrar(Admin.CambiarDiasAvisos(diasVencimiento, diasRefuerzo, Sesion.PersonalActual));
+
+    private void GuardarMinimo() => Mostrar(Admin.CambiarStockMinimo(articuloId, minimo, Sesion.PersonalActual));
+
+    private void PublicarConsentimiento()
+    {
+        Mostrar(Admin.PublicarConsentimiento(8, versionNueva, textoNuevo, Sesion.PersonalActual));
+        if (exito)
+        {
+            versionNueva = "";
+        }
+    }
+
+    private void Mostrar(ResultadoOperacion r)
+    {
+        exito = r.Exito;
+        mensaje = r.Mensaje;
+    }
+}

@@ -19,3 +19,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[DocumentoLegalService]]
 - [[EncabezadoLegal]]
 - [[PieLegal]]
+
+## En las otras aplicaciones
+- [[DocumentoLegal (API)]]
