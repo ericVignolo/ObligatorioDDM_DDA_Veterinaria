@@ -23,6 +23,8 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
 - [[ConfiguracionModulos (API)]]
+- [[ICarnetService (API)]]
+- [[SaludRepository (API)]]
 
 ## En las otras aplicaciones
 - [[Comunicaciones]]

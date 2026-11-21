@@ -380,3 +380,94 @@ Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
 
 GET {{api}}/animales/{{altaAnimal.response.body.$.id}}/historia
 Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### ---------- 12. Carnet, inventario y consentimiento ----------
+### Carnet de Luna y alertas de refuerzo de Ana (después de firmar una vacuna en la sección 11)
+
+GET {{api}}/animales/{{altaAnimal.response.body.$.id}}/carnet
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/alertas-sanitarias
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Consentimientos pendientes de Ana (reservar antes una castración, servicio 8, en la sección 8)
+
+GET {{api}}/turnos/consentimientos-pendientes
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Firmar el consentimiento de ese turno (cambiar el 1 por el id del turno y poner el nombre de la cuenta)
+
+POST {{api}}/turnos/1/consentimiento
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "acepta": true,
+  "nombreCompleto": "Ana Pérez"
+}
+
+### Lo que el veterinario puede usar en la consulta
+
+GET {{api}}/veterinario/insumos
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/veterinario/productos-sanitarios?animalId={{altaAnimal.response.body.$.id}}
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### Inventario (admin: enviar antes «ingresoPersonal», al principio del archivo, con admin@vitalia.uy)
+
+GET {{api}}/admin/inventario/articulos
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/admin/inventario/articulos/8/lotes
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Compra: lote nuevo (el vencimiento tiene que ser futuro y el número no repetido)
+
+POST {{api}}/admin/inventario/compras
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "articuloId": 8,
+  "numero": "JER-2027-A",
+  "vencimiento": "2027-06-30",
+  "cantidad": 50
+}
+
+### Baja de 2 unidades del lote (cambiar el loteId por uno de la lista de lotes)
+
+POST {{api}}/admin/inventario/bajas
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "loteId": 1,
+  "cantidad": 2,
+  "motivo": "Envase dañado"
+}
+
+###
+GET {{api}}/admin/inventario/movimientos?page=1
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/admin/inventario/alertas
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+###
+POST {{api}}/admin/inventario/vencidos
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Avisos de refuerzo (repetirlo no duplica)
+
+POST {{api}}/admin/avisos-refuerzo
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### Versiones del consentimiento de la castración
+
+GET {{api}}/admin/consentimientos?prestacionId=8
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}

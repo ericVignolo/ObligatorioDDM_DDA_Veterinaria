@@ -9,7 +9,9 @@ generado: true
 
 > Fuente: `api/Veterinaria.Api/Repositories/ConsultaRepository.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
-Orden fijo: la consulta y después los artículos de menor a mayor Id.
+Vale solo la última respuesta, y solo si es de la versión vigente del documento (RN-10).
+
+**Requisitos y decisiones:** RN-10
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 

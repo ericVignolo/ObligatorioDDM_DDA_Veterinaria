@@ -84,3 +84,36 @@ En la rama `diego/sesion-2026-11-21-consulta`, F5. Hace falta un turno de Luna c
    - `SELECT * FROM Cargos;` → un cargo de 1200;
    - `SELECT * FROM MovimientosStock WHERE Tipo='Consumo';` → dos movimientos;
    - `SELECT * FROM Comunicaciones;` → el resumen Pendiente.
+
+## Módulo 3: Carnet, inventario y consentimiento
+
+Rama `diego/sesion-2026-11-21-salud`, que sale de la de consulta. PR #46. No cambia la base.
+
+- **Cliente:** carnet de cada animal (Vigente, Refuerzo próximo o Vencida), alertas de refuerzo, consentimientos pendientes, firmar o rechazar el consentimiento de un turno.
+- **Veterinario:** insumos disponibles y productos sanitarios de la especie con el lote que se usaría (FEFO).
+- **Administrador:**
+  - inventario: artículos, lotes, movimientos, compras, ajustes y bajas con motivo, baja de vencidos, alertas de mínimo;
+  - avisos de refuerzo (se pueden disparar varias veces sin duplicar);
+  - versiones del texto del consentimiento.
+- **Cambio en la consulta:** la firma exige ahora que el consentimiento sea de la versión **vigente** del documento.
+- **Archivos:**
+  - `Services/CarnetService.cs`, `InventarioService.cs`, `ConsentimientoService.cs` y sus interfaces;
+  - `Repositories/ISaludRepository.cs` y `SaludRepository.cs`; `ConsultaRepository.cs` (consentimiento vigente);
+  - `Controllers/SaludController.cs`, `StockVeterinarioController.cs`, `InventarioController.cs` y `AdminSaludController.cs`;
+  - `DTOs/SaludDtos.cs`; `Program.cs`; pedidos en `Veterinaria.Api.http` (sección 12).
+- **Pruebas:** `ApiSaludTests`, 11 nuevas. CI en verde.
+- **Simplificación:** los avisos de refuerzo los dispara el Administrador; la tarea diaria automática queda para después.
+
+### Cómo probar el módulo 3
+
+En la rama `diego/sesion-2026-11-21-salud`, F5. En `Veterinaria.Api.http`:
+1. Ingreso de Ana (sección 1) y de admin con «ingresoPersonal».
+2. Sección 12: carnet y alertas de Luna (aparece la vacuna firmada en la sección 11).
+3. Reservar una castración (servicio 8) en la sección 8, ver los consentimientos pendientes y firmarlo con «Ana Pérez» (o el nombre de tu cuenta). Un nombre distinto da 400.
+4. Inventario: artículos, lotes del 8, compra, baja, movimientos y alertas.
+
+### Pendientes
+
+- [ ] Diego: probar los módulos 1, 2 y 3 con el `.http`.
+- [ ] Módulo 4: cobro (cargos, pago con comprobante, nota de crédito, seña RN-35).
+- [ ] Al final: mezclar los PR #39 a #46 en orden y ordenar las ramas.

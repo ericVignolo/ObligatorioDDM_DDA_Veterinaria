@@ -66,6 +66,21 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `POST /api/v1/veterinario/consultas/{id}/enmiendas` | Veterinario | Solo el autor, con la contraseña; el original no cambia (RN-12) |
 | `GET /api/v1/veterinario/animales/{animalId}/historia?motivo=` | Veterinario | Historia completa; sin caso activo exige motivo. Cada lectura queda en `LecturasHistoria` (RN-40, P-RC-05) |
 | `GET /api/v1/animales/{id}/historia` | Cliente | Consultas firmadas, enmiendas y vacunas de su animal |
+| `GET /api/v1/animales/{id}/carnet` | Cliente | Última aplicación de cada producto con su estado: Vigente, Refuerzo próximo (5 días, parámetro) o Vencida |
+| `GET /api/v1/alertas-sanitarias` | Cliente | Refuerzos próximos o vencidos de todos sus animales |
+| `GET /api/v1/turnos/consentimientos-pendientes` | Cliente | Turnos próximos que piden consentimiento y no lo tienen firmado en la versión vigente |
+| `GET/POST /api/v1/turnos/{id}/consentimiento` | Cliente | Estado y texto; firmar (`acepta: true` con el nombre de la cuenta) o rechazar. `409` si ya respondió o el turno empezó (RN-10) |
+| `GET /api/v1/veterinario/insumos` | Veterinario | Insumos con lo disponible (sin lo apartado) |
+| `GET /api/v1/veterinario/productos-sanitarios?animalId=` | Veterinario | Productos de la especie del animal con el lote que se usaría (FEFO) |
+| `GET /api/v1/admin/inventario/articulos` | Administrador | Stock, disponible, bajo mínimo y lotes que vencen en 30 días |
+| `GET /api/v1/admin/inventario/articulos/{id}/lotes` | Administrador | Lotes con lo apartado, vencidos e inhabilitados |
+| `GET /api/v1/admin/inventario/movimientos?articuloId=&page=` | Administrador | Historial paginado (RN-30) |
+| `POST /api/v1/admin/inventario/compras` | Administrador | Lote nuevo: `201`; vencimiento futuro, número sin repetir |
+| `POST /api/v1/admin/inventario/ajustes` y `/bajas` | Administrador | Con motivo (RN-31); nunca negativo ni debajo de lo apartado (RN-26); alerta si cruza el mínimo (RN-28) |
+| `POST /api/v1/admin/inventario/vencidos` | Administrador | Inhabilita y da de baja los lotes vencidos (RN-29) |
+| `GET /api/v1/admin/inventario/alertas` y `POST .../alertas/{id}/atendida` | Administrador | Alertas de stock mínimo |
+| `POST /api/v1/admin/avisos-refuerzo` | Administrador | Encola los avisos de refuerzo; repetirlo no duplica |
+| `GET/POST /api/v1/admin/consentimientos` | Administrador | Versiones del texto de un servicio; publicar una nueva deja la anterior sin vigencia |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
@@ -128,6 +143,13 @@ Decisiones del esquema:
 - El cargo usa la tarifa vigente en la fecha del turno, se redondea a peso entero (P-RC-07) y queda a nombre del cliente que reservó, si sigue siendo responsable. Los insumos no se cobran aparte: los artículos todavía no tienen precio.
 - El resumen al cliente queda en `Comunicaciones` como Pendiente, una sola vez por consulta (`Clave = consulta-{id}`). El envío real llega con el servicio de correo.
 - Reglas puras, sin base: `ReglasStock` (FEFO, disponible, mínimo) y `ReglasClinicas` (alergias, matrícula, huella, redondeo).
+
+## Carnet, inventario y consentimiento
+
+- Mismas reglas y mensajes que `VacunaService`, `InventarioService` y `ConsentimientoService` de Blazor.
+- **Carnet:** cuentan las aplicaciones de consultas firmadas o anteriores al sistema. Los avisos de refuerzo quedan en `Comunicaciones` (tipo 4, `Clave = refuerzo-{aplicación}`) por el canal que eligió el cliente; si eligió «No recibir», no se genera. Pensado para correr una vez por día; mientras no haya tarea programada, lo dispara el Administrador.
+- **Inventario:** cada compra, ajuste o baja bloquea la fila del artículo (`Transacciones`) y deja su movimiento con la persona. La baja de vencidos queda a nombre del sistema.
+- **Consentimiento:** vale solo la última respuesta del turno y solo si es de la versión vigente; la firma de la consulta lo comprueba igual. Se guarda el nombre escrito, la versión, el canal «En línea», la fecha y la huella SHA-256 del texto.
 
 ## Crear la base en tu computadora
 

@@ -35,6 +35,7 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[IConsultaService (API)]]
 - [[Inventario (API)]]
 - [[ReglasClinicas (API)]]
+- [[SaludRepository (API)]]
 
 ## En las otras aplicaciones
 - [[Consulta]]

@@ -24,6 +24,12 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[ConfiguracionModulos (API)]]
+- [[IInventarioService (API)]]
+- [[ISaludRepository (API)]]
+- [[InventarioController (API)]]
+- [[InventarioService (API)]]
+- [[SaludDtos (API)]]
+- [[SaludRepository (API)]]
 
 ## En las otras aplicaciones
 - [[Inventario]]
