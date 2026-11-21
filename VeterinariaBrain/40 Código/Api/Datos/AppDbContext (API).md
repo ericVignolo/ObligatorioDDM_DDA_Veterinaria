@@ -34,6 +34,7 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 ## Usado por (si cambia, revisar estos)
 - [[AdministracionRepository (API)]]
 - [[AnimalRepository (API)]]
+- [[AsistenciaRepository (API)]]
 - [[ClinicaRepository (API)]]
 - [[CobroRepository (API)]]
 - [[ComunicacionRepository (API)]]

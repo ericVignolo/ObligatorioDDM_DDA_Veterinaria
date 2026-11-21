@@ -23,4 +23,8 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[AsistenciaController (API)]]
+- [[AsistenciaDtos (API)]]
+- [[AsistenciaService (API)]]
 - [[ConfiguracionModulos (API)]]
+- [[IAsistenciaService (API)]]

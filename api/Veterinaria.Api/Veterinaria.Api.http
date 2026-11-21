@@ -688,3 +688,64 @@ Content-Type: application/json
   "titulo": "Cerramos el 8 de diciembre",
   "mensaje": "La clínica no atiende ese día. La guardia sigue disponible por teléfono."
 }
+
+### ---------- 17. Asistencia ----------
+### Ana pide una visita para Luna (con la misma claveIdempotencia no se duplica)
+
+POST {{api}}/asistencias
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "animalId": {{altaAnimal.response.body.$.id}},
+  "nivel": "Amarillo",
+  "modalidad": "Visita",
+  "sintomas": "Vómitos desde ayer, come poco.",
+  "direccion": "Rivera 1234, Nueva Palmira",
+  "distanciaKm": 6,
+  "telefonoContacto": "+59899111222",
+  "claveIdempotencia": "prueba-1"
+}
+
+### Cola de Recepción
+
+GET {{api}}/recepcion/asistencias
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Elegibles y asignación (cambiar el 1 por el id de la solicitud)
+
+GET {{api}}/recepcion/asistencias/1/elegibles
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+###
+POST {{api}}/recepcion/asistencias/1/asignacion
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "veterinarioId": 2
+}
+
+### Ferreira acepta y avanza (repetir «avance» hasta «En atención»)
+
+POST {{api}}/veterinario/asistencias/1/aceptacion
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+###
+POST {{api}}/veterinario/asistencias/1/avance
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### Finalizar (genera el cargo de la visita)
+
+POST {{api}}/veterinario/asistencias/1/finalizacion
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "resultado": "Gastroenteritis leve. Dieta blanda e hidratación."
+}
+
+### Lo que ve Ana
+
+GET {{api}}/asistencias/1
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}

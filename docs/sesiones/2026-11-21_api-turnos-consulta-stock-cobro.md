@@ -234,9 +234,46 @@ Rama `diego/sesion-2026-11-21-comunicaciones`, que sale de la de internación. P
   - una tarea que procese la cola sola;
   - el aviso en tiempo real (RF-CLI-09).
 
+## Módulo 8: Asistencia
+
+Rama `diego/sesion-2026-11-21-asistencia`, que sale de la de comunicaciones. PR #51. No cambia la base.
+
+- Igual a `AsistenciaService` de Blazor y a las decisiones D-ASI-01 a 11 de la especificación.
+- **Cliente:**
+  - crea una solicitud desde la app, con GPS consentido o dirección, y sin duplicar si repite la clave;
+  - sigue la solicitud e informa empeoramiento, que solo sube el nivel.
+- **Recepción:**
+  - cola por nivel y antigüedad;
+  - solicitudes por teléfono, elegibles, asignación, empeoramiento por teléfono y cierre (un rojo, solo tras escalar);
+  - revisión de los plazos de 10 minutos y 24 horas.
+- **Veterinario:** acepta (el primero se la queda) o rechaza, avanza el traslado, finaliza con cargo y cambia el nivel con motivo.
+- **Administrador:** la guardia y los parámetros de asistencia, que ahora se editan desde `admin/parametros`.
+- **Archivos:**
+  - `Services/IAsistenciaService.cs` y `AsistenciaService.cs`;
+  - `Repositories/IAsistenciaRepository.cs` y `AsistenciaRepository.cs`;
+  - `Controllers/AsistenciaController.cs`, con cuatro controladores;
+  - `DTOs/AsistenciaDtos.cs`;
+  - `AdministracionService.cs` (catálogo de parámetros) y `Program.cs`;
+  - sección 17 del `.http`.
+- **Pruebas:** `ApiAsistenciaTests`, 14 nuevas. CI en verde con **1150 pruebas**, sin advertencias.
+- **Falta:** el proveedor de mapas (distancia y ruta), la ubicación en vivo del veterinario, las notificaciones de cada estado, el cuestionario clínico y una tarea programada para los plazos.
+- **Corrección de ramas:** el commit del módulo se hizo primero en la rama de comunicaciones, sin subirlo. Se movió a la rama nueva y la de comunicaciones quedó igual que en GitHub.
+
+## Cierre de la sesión
+
+Hoy salieron los módulos 1 a 8 (PR #44 a #51), todos con el CI en verde. La API cubre todos los recorridos de Blazor: catálogo, cuentas, animales, turnos, consulta, carnet, inventario, consentimiento, cobro, administración, internación, comunicaciones y asistencia.
+
 ### Pendientes
 
-- [ ] Al final: mezclar los PR #39 a #50 en orden y ordenar las ramas.
-- [ ] Siguiente módulo: asistencia; después, 2FA y el correo real.
+- [ ] Al final: mezclar los PR #39 a #51 en orden (cada uno sale del anterior) y ordenar las ramas.
+- [ ] Diego: probar con F5 la consulta (un día hábil, con Ferreira) y los módulos 3 a 8 con el `.http`.
+- [ ] Falta para cerrar la API:
+  - verificación en dos pasos (2FA);
+  - correo real (SMTP o un proveedor);
+  - tareas programadas (cola de correo, avisos de refuerzo, plazos de asistencia, vencidos de stock);
+  - tiempo real (internación y asistencia);
+  - derechos del titular (DerechosService de Blazor);
+  - borrado de cuentas sin verificar.
+- [ ] Después: conectar Blazor a la API (sección C, `XxxApiService`) y React Native.
 - [ ] Definir con Eric si la internación cobra (tarifa por día) y qué especies van a box de grandes animales.
 - [ ] Definir con Eric si la internación cobra (tarifa por día) y qué especies van a box de grandes animales.

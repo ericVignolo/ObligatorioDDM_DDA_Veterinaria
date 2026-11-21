@@ -110,6 +110,14 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `POST /api/v1/recepcion/comunicaciones/{id}/reintento` y `/{id}/reenvio` | Recepción, Administrador | Reintentar un Fallido; reenviar como copia nueva por correo |
 | `POST /api/v1/recepcion/comunicaciones/comprobantes/{pagoId}` y `/avisos` | Recepción, Administrador | Comprobante de un pago (una vez) y aviso de la clínica a todos los clientes |
 | `POST /api/v1/difusion/alerta-sanitaria` | Administrador, Veterinario | Alerta para los clientes con animales de una especie que la activaron |
+| `POST /api/v1/asistencias`, `GET /` y `GET /{id}` | Cliente | Solicitud de asistencia (GPS consentido o dirección; idempotente por `claveIdempotencia`) y su seguimiento |
+| `POST /api/v1/asistencias/{id}/empeoramiento` | Cliente | El nivel solo sube (RN-51); a rojo activa la guardia |
+| `GET /api/v1/recepcion/asistencias`, `/cerradas`, `/{id}` y `/{id}/elegibles` | Recepción, Administrador | Cola por nivel y antigüedad (revisa los plazos), historial y veterinarios elegibles |
+| `POST /api/v1/recepcion/asistencias`, `/{id}/asignacion`, `/{id}/empeoramiento` y `/{id}/cierre` | Recepción | Solicitud telefónica, asignación, empeoramiento por teléfono y cierre sin atención |
+| `POST /api/v1/recepcion/asistencias/plazos` | Recepción, Administrador | Rojo sin aceptar en 10 min → Recepción; 24 h → reevaluación |
+| `GET /api/v1/veterinario/asistencias` y `/{id}` | Veterinario | Ofrecidas a mí y las que acepté |
+| `POST /api/v1/veterinario/asistencias/{id}/aceptacion`, `/rechazo`, `/avance`, `/finalizacion` y `/nivel` | Veterinario | El primero que acepta se la queda; traslado; finalizar genera el cargo; nivel con motivo (RN-52) |
+| `PUT /api/v1/admin/guardia` | Administrador | Veterinario de guardia (RF-ADM-13) |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
@@ -192,6 +200,19 @@ Decisiones del esquema:
 - Mismas reglas y mensajes que `ComunicacionesService` de Blazor.
 - **Envío:** `IEnvioComunicacion`. La versión de desarrollo (`EnvioComunicacionDesarrollo`) no manda nada y da el envío por hecho, para probar la cola. Para el correo real se cambia esa clase en `Program.cs`.
 - **Cola:** lo que va solo a la app queda entregado en la bandeja. `POST recepcion/comunicaciones/cola` también entrega los avisos de refuerzo y los resúmenes clínicos que dejan pendientes los otros módulos. Todavía no hay una tarea que procese la cola sola.
+
+## Asistencia
+
+- Mismas reglas que `AsistenciaService` de Blazor y las decisiones D-ASI-01 a 11 de `docs/analisis/ESPECIFICACION_ALERTAS_ASISTENCIA.md`.
+- **Parámetros** (Administrador, `admin/parametros`):
+  - `asistencia.cobertura_km` (30) y `asistencia.escalado_rojo_minutos` (10);
+  - `asistencia.tarifa_base` (1500), `asistencia.tarifa_km` (40) y `asistencia.tarifa_animal_extra` (300);
+  - la guardia queda en `asistencia.guardia_cuenta_id`; por defecto es la cuenta 2, la Dra. Ferreira.
+- **Plazos:** se revisan al abrir la cola de Recepción o la lista del veterinario, y con `POST recepcion/asistencias/plazos`. Todavía no hay una tarea programada.
+- **Todavía no está:**
+  - la distancia la manda el móvil o la carga Recepción: no hay proveedor de mapas;
+  - la ubicación en vivo del veterinario y las notificaciones de cada estado;
+  - el cuestionario clínico por especie (D-ASI-01).
 
 ## Crear la base en tu computadora
 

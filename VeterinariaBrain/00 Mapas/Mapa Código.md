@@ -186,9 +186,10 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (41)
+### Servicios (43)
 - [[AdministracionService (API)]]
 - [[AnimalService (API)]]
+- [[AsistenciaService (API)]]
 - [[CalculoAgenda (API)]]
 - [[CarnetService (API)]]
 - [[ClinicaService (API)]]
@@ -200,6 +201,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[EnvioCorreo (API)]]
 - [[IAdministracionService (API)]]
 - [[IAnimalService (API)]]
+- [[IAsistenciaService (API)]]
 - [[ICarnetService (API)]]
 - [[IClinicaService (API)]]
 - [[ICobroService (API)]]
@@ -247,10 +249,11 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Controladores (21)
+### Controladores (22)
 - [[AdminSaludController (API)]] · `api/v1/admin`
 - [[AdministracionController (API)]] · `api/v1/admin`
 - [[AnimalesController (API)]] · `api/v1/animales`
+- [[AsistenciaController (API)]] · `api/v1/asistencias`
 - [[ClinicaController (API)]] · `api/v1/clinica`
 - [[CobrosController (API)]] · `api/v1/cobros`
 - [[ComunicacionesController (API)]] · `api/v1/comunicaciones`
@@ -270,9 +273,10 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[UsuarioActual (API)]]
 - [[VeterinarioController (API)]] · `api/v1/veterinario`
 
-### Repositorios (24)
+### Repositorios (26)
 - [[AdministracionRepository (API)]]
 - [[AnimalRepository (API)]]
+- [[AsistenciaRepository (API)]]
 - [[ClinicaRepository (API)]]
 - [[CobroRepository (API)]]
 - [[ComunicacionRepository (API)]]
@@ -280,6 +284,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[CuentaRepository (API)]]
 - [[IAdministracionRepository (API)]]
 - [[IAnimalRepository (API)]]
+- [[IAsistenciaRepository (API)]]
 - [[IClinicaRepository (API)]]
 - [[ICobroRepository (API)]]
 - [[IComunicacionRepository (API)]]
@@ -296,9 +301,10 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SaludRepository (API)]]
 - [[TurnoRepository (API)]]
 
-### DTOs (13)
+### DTOs (14)
 - [[AdminDtos (API)]]
 - [[AnimalDtos (API)]]
+- [[AsistenciaDtos (API)]]
 - [[ClinicaReadDto (API)]]
 - [[CobroDtos (API)]]
 - [[ComunicacionDtos (API)]]

@@ -11,7 +11,7 @@ generado: true
 
 Configuración, igual a AdministracionService de Blazor: servicios y tarifas con fecha (RN-33), personal y roles
 
-**Requisitos y decisiones:** RF-ADM-01, RF-ADM-02, RF-ADM-04, RN-08, RN-33, RN-35, RN-36
+**Requisitos y decisiones:** RF-ADM-01, RF-ADM-02, RF-ADM-04, RN-08, RN-33, RN-35, RN-36, RN-55, RN-58
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
