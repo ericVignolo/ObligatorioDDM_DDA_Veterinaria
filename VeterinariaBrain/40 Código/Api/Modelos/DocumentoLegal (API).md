@@ -20,6 +20,8 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[CuentaRepository (API)]]
+- [[ICuentaRepository (API)]]
 
 ## En las otras aplicaciones
 - [[DocumentoLegal]]

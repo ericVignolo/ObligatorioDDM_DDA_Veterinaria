@@ -20,3 +20,6 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[CuentaRepository (API)]]
+- [[CuentaService (API)]]
+- [[ICuentaRepository (API)]]

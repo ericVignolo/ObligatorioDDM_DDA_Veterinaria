@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\desktop\Veterinaria.Blazor\Veterinaria.Blazor.csproj" />
+    <ProjectReference Include="..\..\api\Veterinaria.Api\Veterinaria.Api.csproj" />
   </ItemGroup>
 
 </Project>

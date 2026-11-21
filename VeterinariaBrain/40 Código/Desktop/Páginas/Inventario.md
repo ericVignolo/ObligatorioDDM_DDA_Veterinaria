@@ -30,3 +30,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[RequierePersonal]]
 - [[ResultadoOperacion]]
 - [[SesionService]]
+
+## En las otras aplicaciones
+- [[Inventario (API)]]

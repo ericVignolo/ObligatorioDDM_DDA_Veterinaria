@@ -29,3 +29,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Terminos]]
 - [[Turnos]]
 - [[Urgencias]]
+
+## En las otras aplicaciones
+- [[ClinicaService (API)]]
