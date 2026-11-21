@@ -178,7 +178,35 @@ Rama `diego/sesion-2026-11-21-admin`, que sale de la de cobro. PR #48. No cambia
 - **Pruebas:** `ApiAdministracionTests`, 8 nuevas. CI en verde.
 - **Falta:** los boxes van con internación. La guardia del veterinario va con asistencia.
 
+## Módulo 6: Internación
+
+Rama `diego/sesion-2026-11-21-internacion`, que sale de la de administración. PR #49. No cambia la base.
+
+- **Recepción:**
+  - admite (RN-21: una internación abierta por animal; un grupo no se interna);
+  - anula antes del ingreso.
+- **Veterinario:**
+  - ingreso clínico con un box libre, en servicio y del tipo de la especie (RN-22), más el plan;
+  - novedades visibles o internas (RN-23) y rectificaciones que conservan la original (RN-24);
+  - alta con evolución e indicaciones (RN-25).
+- **Cliente:** ve las internaciones de sus animales, solo con lo visible.
+- **Administrador:** agrega boxes y los saca de servicio, si no están ocupados.
+- **Concurrencia:** la admisión bloquea la fila del animal y el ingreso la del box (`Transacciones` admite ahora `Boxes`).
+- **Archivos:**
+  - `Services/IInternacionService.cs` y `InternacionService.cs`;
+  - `Repositories/IInternacionRepository.cs` y `InternacionRepository.cs`;
+  - `Controllers/InternacionesController.cs`, con `InternacionesController`, `MisInternacionesController` y `BoxesController`;
+  - `DTOs/InternacionDtos.cs`;
+  - `Data/Transacciones.cs` y `Program.cs`;
+  - sección 15 del `.http`.
+- **Pruebas:** `ApiInternacionTests`, 7 nuevas. CI en verde.
+- **Igual que Blazor:**
+  - la internación no genera cargo, porque no tiene tarifa;
+  - van a box de grandes animales solo caballos y vacas;
+  - las novedades se ven al consultar: el tiempo real (RF-CLI-09) llega con comunicaciones.
+
 ### Pendientes
 
-- [ ] Al final: mezclar los PR #39 a #48 en orden y ordenar las ramas.
-- [ ] Siguientes módulos: internación → comunicaciones → asistencia; después, 2FA.
+- [ ] Al final: mezclar los PR #39 a #49 en orden y ordenar las ramas.
+- [ ] Siguientes módulos: comunicaciones → asistencia; después, 2FA.
+- [ ] Definir con Eric si la internación cobra (tarifa por día) y qué especies van a box de grandes animales.

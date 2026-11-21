@@ -24,6 +24,9 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
 - [[ConfiguracionModulos (API)]]
+- [[IInternacionRepository (API)]]
+- [[InternacionRepository (API)]]
+- [[InternacionService (API)]]
 
 ## En las otras aplicaciones
 - [[Internacion]]

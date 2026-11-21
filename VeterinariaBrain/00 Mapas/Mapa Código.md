@@ -186,7 +186,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (37)
+### Servicios (39)
 - [[AdministracionService (API)]]
 - [[AnimalService (API)]]
 - [[CalculoAgenda (API)]]
@@ -205,12 +205,14 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[IConsentimientoService (API)]]
 - [[IConsultaService (API)]]
 - [[ICuentaService (API)]]
+- [[IInternacionService (API)]]
 - [[IInventarioService (API)]]
 - [[IPrestacionService (API)]]
 - [[IProfesionalService (API)]]
 - [[ISesionService (API)]]
 - [[ITokenService (API)]]
 - [[ITurnoService (API)]]
+- [[InternacionService (API)]]
 - [[InventarioService (API)]]
 - [[Opciones (API)]]
 - [[PrestacionService (API)]]
@@ -243,7 +245,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Controladores (19)
+### Controladores (20)
 - [[AdminSaludController (API)]] · `api/v1/admin`
 - [[AdministracionController (API)]] · `api/v1/admin`
 - [[AnimalesController (API)]] · `api/v1/animales`
@@ -251,6 +253,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[CobrosController (API)]] · `api/v1/cobros`
 - [[CuentasController (API)]] · `api/v1/cuentas`
 - [[EspeciesController (API)]] · `api/v1/especies`
+- [[InternacionesController (API)]] · `api/v1/internaciones`
 - [[InventarioController (API)]] · `api/v1/admin/inventario`
 - [[ManejadorConcurrencia (API)]]
 - [[Problemas (API)]]
@@ -264,7 +267,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[UsuarioActual (API)]]
 - [[VeterinarioController (API)]] · `api/v1/veterinario`
 
-### Repositorios (20)
+### Repositorios (22)
 - [[AdministracionRepository (API)]]
 - [[AnimalRepository (API)]]
 - [[ClinicaRepository (API)]]
@@ -277,22 +280,25 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ICobroRepository (API)]]
 - [[IConsultaRepository (API)]]
 - [[ICuentaRepository (API)]]
+- [[IInternacionRepository (API)]]
 - [[IPrestacionRepository (API)]]
 - [[IProfesionalRepository (API)]]
 - [[ISaludRepository (API)]]
 - [[ITurnoRepository (API)]]
+- [[InternacionRepository (API)]]
 - [[PrestacionRepository (API)]]
 - [[ProfesionalRepository (API)]]
 - [[SaludRepository (API)]]
 - [[TurnoRepository (API)]]
 
-### DTOs (11)
+### DTOs (12)
 - [[AdminDtos (API)]]
 - [[AnimalDtos (API)]]
 - [[ClinicaReadDto (API)]]
 - [[CobroDtos (API)]]
 - [[ConsultaDtos (API)]]
 - [[CuentaDtos (API)]]
+- [[InternacionDtos (API)]]
 - [[PaginaDto (API)]]
 - [[ProfesionalReadDto (API)]]
 - [[SaludDtos (API)]]

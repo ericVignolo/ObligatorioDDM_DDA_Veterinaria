@@ -96,6 +96,13 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `GET /api/v1/admin/parametros` y `PUT /parametros/{clave}` | Administrador | Con rango; se crean si faltan (`cobro.porcentaje_sena`, `cobro.limite_deuda`) |
 | `PUT /api/v1/admin/inventario/articulos/{id}/minimo` | Administrador | Stock mínimo del artículo |
 | `GET /api/v1/admin/auditoria?entidad=&desde=&page=` | Administrador | Registro de cambios, del más reciente al más antiguo |
+| `GET /api/v1/internaciones`, `/altas`, `/{id}` y `/boxes` | Personal | Tablero de abiertas, altas, detalle (el veterinario ve también las notas internas) y boxes con su ocupante |
+| `POST /api/v1/internaciones` y `/{id}/anulacion` | Recepción | Admisión (una abierta por animal, RN-21; un grupo no se interna) y anulación antes del ingreso |
+| `GET /api/v1/internaciones/{id}/boxes-libres` y `POST /{id}/ingreso` | Personal / Veterinario | Box libre, en servicio y del tipo de la especie (RN-22) con el plan terapéutico |
+| `POST /api/v1/internaciones/{id}/novedades` y `/novedades/{n}/rectificacion` | Veterinario | Novedad o evolución, visible o interna (RN-23); la rectificación conserva la original (RN-24) |
+| `POST /api/v1/internaciones/{id}/alta` | Veterinario | Con evolución final e indicaciones (RN-25); libera el box |
+| `GET /api/v1/mis-internaciones` y `/{id}` | Cliente | Las de sus animales, con lo visible y el alta, sin el plan ni las notas internas |
+| `POST /api/v1/admin/boxes` y `PUT /{id}/servicio` | Administrador | Agregar un box; sacarlo de servicio si no está ocupado |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.

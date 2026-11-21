@@ -586,3 +586,65 @@ Content-Type: application/json
 ###
 GET {{api}}/admin/auditoria?page=1
 Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### ---------- 15. Internación (Recepción admite; el veterinario ingresa, publica y da el alta) ----------
+### Admitir a Luna (token de Recepción, sección 9)
+
+POST {{api}}/internaciones
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "animalId": {{altaAnimal.response.body.$.id}},
+  "motivo": "Vómitos y decaimiento",
+  "telefonoContacto": "+59899123456",
+  "observaciones": ""
+}
+
+###
+GET {{api}}/internaciones
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Boxes libres para esa internación (cambiar el 1 por su id; token de Ferreira, sección 10)
+
+GET {{api}}/internaciones/1/boxes-libres
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+
+### Ingreso clínico
+
+POST {{api}}/internaciones/1/ingreso
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "boxId": 1,
+  "planTerapeutico": "Fluidoterapia 24 h y control cada 6 h"
+}
+
+### Novedad visible para Ana
+
+POST {{api}}/internaciones/1/novedades
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "tipo": "Novedad",
+  "texto": "Luna está tranquila y comió un poco.",
+  "visible": true
+}
+
+### Lo que ve Ana
+
+GET {{api}}/mis-internaciones
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Alta
+
+POST {{api}}/internaciones/1/alta
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "evolucionFinal": "Recuperada, sin vómitos en 24 h",
+  "indicacionesDomicilio": "Dieta blanda 3 días y control en una semana"
+}
