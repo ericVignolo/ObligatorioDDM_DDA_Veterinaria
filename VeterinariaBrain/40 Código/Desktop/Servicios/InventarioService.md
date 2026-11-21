@@ -38,3 +38,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[IndicadoresService]]
 - [[Inventario]]
 - [[VacunaService]]
+
+## En las otras aplicaciones
+- [[InventarioService (API)]]

@@ -2,7 +2,9 @@
 
 Fecha: 2026-10-08
 
-Estado: decisiones D-CAT-01 a D-CAT-04 **cerradas** (D-CAT-01 por Eric, el resto por Diego el 2026-10-29); contrato listo para implementar; no implementado.
+Estado: decisiones D-CAT-01 a D-CAT-04 **cerradas** (D-CAT-01 por Eric, el resto por Diego el 2026-10-29); **implementado en la API** el 2026-11-16 (Diego): `ServiciosController`, pruebas CAT-02 a CAT-06 en `ApiCatalogoTests`. Blazor todavía usa sus datos de demostración.
+
+**Ajustes de Diego (2026-11-16):** (1) mientras no existan tarifas con vigencia, el importe publicable es `Prestacion.PrecioDesde` (> 0) y la vigencia del servicio es la marca «Publicado»; las tarifas por variante de D-CAT-04 llegan con una migración posterior. (2) Los identificadores son **enteros** (`int`), como en el curso y en la base ya creada; reemplaza «UUID en texto» de D-CAT-03.
 
 ## Propósito y límite
 
@@ -82,7 +84,7 @@ La API valida parámetros de paginación y responde `400` con un error legible s
 |---|---|---|---|
 | D-CAT-01 | Diseño/UX | **Cerrada 2026-10-08:** Eric indicó mostrar siempre el precio como «Desde». | Blazor rotula así todo importe público de referencia. |
 | D-CAT-02 | Regla de negocio / diseño-UX | **Cerrada 2026-10-29 (Diego):** un servicio aparece si cumple las tres condiciones: marcado «Publicado» por Administración, vigente hoy (`vigenteDesde` ≤ hoy y `vigenteHasta` vacío o posterior) y con importe publicable (D-CAT-04). «Reservable en línea» es un indicador aparte; si está apagado se muestra «Consultar/llamar» (Eric, 2026-10-08). | Filtro de los GET y modelo de publicación. |
-| D-CAT-03 | Decisión técnica | **Cerrada 2026-10-29 (Diego):** paginación `page` (desde 1) y `pageSize` (por defecto 20, máximo 50; fuera de rango → `400`). Errores en formato Problem Details (RFC 9457, `application/problem+json`) con `type`, `title`, `status`, `detail` y un `code` propio estable; sin datos internos ni clínicos. Identificadores UUID en texto. Rutas versionadas con `/api/v1/`. Se aplica a toda la API, no solo al catálogo. | Contrato OpenAPI compartido. |
+| D-CAT-03 | Decisión técnica | **Cerrada 2026-10-29 (Diego):** paginación `page` (desde 1) y `pageSize` (por defecto 20, máximo 50; fuera de rango → `400`). Errores en formato Problem Details (RFC 9457, `application/problem+json`) con `type`, `title`, `status`, `detail` y un `code` propio estable; sin datos internos ni clínicos. Identificadores enteros (`int`; antes «UUID en texto», cambiado por Diego el 2026-11-16). Rutas versionadas con `/api/v1/`. Se aplica a toda la API, no solo al catálogo. | Contrato OpenAPI compartido. |
 | D-CAT-04 | Regla de negocio | **Cerrada 2026-10-29 (Diego):** el importe «Desde» es la menor tarifa vigente hoy entre las variantes publicadas del servicio (por especie, duración u otra variante). Sin ninguna tarifa vigente el servicio no aparece (Eric, 2026-10-08). Moneda UYU, en pesos enteros. | Cálculo de referencia sin anuncios engañosos. |
 
 Los valores del ejemplo JSON siguen siendo ilustrativos. Ver el [tablero de decisiones](DECISIONES_PARA_DESARROLLO.md) para su orden junto con registro y consulta.
