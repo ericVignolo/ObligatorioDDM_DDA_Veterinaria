@@ -63,3 +63,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[TurnoMostrador]]
 - [[Turnos]]
 - [[Verificar]]
+
+## En las otras aplicaciones
+- [[SesionService (API)]]

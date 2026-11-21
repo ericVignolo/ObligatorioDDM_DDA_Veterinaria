@@ -16,6 +16,9 @@ public class Profesional
     [MaxLength(500)] public string Descripcion { get; set; } = "";
     [MaxLength(30)] public string Matricula { get; set; } = "";
 
+    // Sin matrícula vigente no se firman consultas (RN-13). Columna DATE.
+    public DateTime? MatriculaVigenteHasta { get; set; }
+
     public bool Publicado { get; set; } = true;
     public bool Activo { get; set; } = true;
 
