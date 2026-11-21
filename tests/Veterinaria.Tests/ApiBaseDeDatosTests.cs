@@ -46,6 +46,16 @@ public class ApiBaseDeDatosTests
     }
 
     [Fact]
+    public void Las_migraciones_estan_al_dia_con_el_modelo()
+    {
+        // Si alguien cambia Models/ o AppDbContext y se olvida de Add-Migration, esto falla en el CI.
+        using var db = Contexto();
+
+        Assert.False(db.Database.HasPendingModelChanges(),
+            "El modelo cambió y falta una migración: correr Add-Migration <Nombre> en la API y subir la carpeta Migrations.");
+    }
+
+    [Fact]
     public void No_hay_borrado_en_cascada()
     {
         using var db = Contexto();

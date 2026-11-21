@@ -196,3 +196,105 @@ Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
 
 DELETE {{api}}/animales/{{altaAnimal.response.body.$.id}}
 Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### ---------- 8. Turnos del cliente (con el token de Ana) ----------
+# Antes: «ingreso» de Ana y el alta de Luna (sección 7). Cambiá la fecha por un día hábil dentro de los próximos 60.
+
+GET {{api}}/turnos/disponibilidad?profesionalId=1&prestacionId=1&animalId={{altaAnimal.response.body.$.id}}&fecha=2026-11-25
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Reservar (usá un horario de la lista anterior)
+
+# @name reserva
+POST {{api}}/turnos
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "animalId": {{altaAnimal.response.body.$.id}},
+  "prestacionId": 1,
+  "profesionalId": 1,
+  "inicio": "2026-11-25T09:00:00"
+}
+
+### Mis próximos turnos
+
+GET {{api}}/turnos?vista=proximos
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Reprogramar
+
+PUT {{api}}/turnos/{{reserva.response.body.$.id}}/horario
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "inicio": "2026-11-25T10:00:00"
+}
+
+### Cancelar
+
+POST {{api}}/turnos/{{reserva.response.body.$.id}}/cancelacion
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "motivo": "No puedo ir"
+}
+
+### ---------- 9. Recepción (ingresá con recepcion@vitalia.uy / Vitalia2026!) ----------
+
+# @name ingresoRecepcion
+POST {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "correo": "recepcion@vitalia.uy",
+  "contrasena": "Vitalia2026!"
+}
+
+### Buscar clientes
+
+GET {{api}}/recepcion/clientes?buscar=pérez
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Agenda del día (cambiá la fecha)
+
+GET {{api}}/recepcion/turnos?fecha=2026-11-25
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Sobreturno en nombre de Ana (clienteId = el de Ana en cuentas/yo)
+
+POST {{api}}/recepcion/turnos
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "clienteId": 6,
+  "animalId": {{altaAnimal.response.body.$.id}},
+  "prestacionId": 1,
+  "profesionalId": 1,
+  "inicio": "2026-11-25T09:00:00",
+  "sobreturno": true,
+  "motivo": "Control urgente"
+}
+
+### Registrar llegada (solo el mismo día del turno)
+
+POST {{api}}/recepcion/turnos/{{reserva.response.body.$.id}}/llegada
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### ---------- 10. Agenda del veterinario (ferreira@vitalia.uy / Vitalia2026!) ----------
+
+# @name ingresoFerreira
+POST {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "correo": "ferreira@vitalia.uy",
+  "contrasena": "Vitalia2026!"
+}
+
+###
+GET {{api}}/veterinario/agenda?fecha=2026-11-25
+Authorization: Bearer {{ingresoFerreira.response.body.$.tokenAcceso}}
