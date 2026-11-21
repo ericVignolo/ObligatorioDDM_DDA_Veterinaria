@@ -26,7 +26,12 @@ public class AdministracionService : IAdministracionService
         ["agenda.limite_ausencias"] = (2, 10, 3, "Ausencias en 12 meses a partir de las que se reserva solo por Recepción (RN-08)."),
         ["avisos.refuerzo_dias_antes"] = (0, 30, 5, "Días de anticipación del aviso de refuerzo de vacunas y desparasitaciones."),
         ["cobro.porcentaje_sena"] = (10, 100, 30, "Porcentaje del precio de la cirugía que se paga como seña (RN-35)."),
-        ["cobro.limite_deuda"] = (0, 1_000_000, 3000, "Deuda vencida a partir de la que se avisa al agendar (RN-36).")
+        ["cobro.limite_deuda"] = (0, 1_000_000, 3000, "Deuda vencida a partir de la que se avisa al agendar (RN-36)."),
+        ["asistencia.cobertura_km"] = (1, 200, 30, "Zona de cobertura desde la clínica."),
+        ["asistencia.escalado_rojo_minutos"] = (1, 60, 10, "Espera de aceptación de un rojo antes de escalar a Recepción (RN-55)."),
+        ["asistencia.tarifa_base"] = (0, 100_000, 1500, "Tarifa base de la visita a domicilio (RN-58)."),
+        ["asistencia.tarifa_km"] = (0, 10_000, 40, "Pesos por kilómetro de la visita a domicilio."),
+        ["asistencia.tarifa_animal_extra"] = (0, 100_000, 300, "Pesos por cada animal extra de la visita.")
     };
 
     private readonly IAdministracionRepository _repository;

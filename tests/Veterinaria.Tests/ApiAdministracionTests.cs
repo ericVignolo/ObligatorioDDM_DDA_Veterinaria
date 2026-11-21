@@ -273,7 +273,7 @@ public class ApiAdministracionTests
 
         Assert.Equal("VALOR_FUERA_DE_RANGO", (await s.CambiarParametroAsync(Admin, "cobro.porcentaje_sena", new ParametroUpdateDto { Valor = "5" })).Codigo);
         Assert.Equal("VALOR_FUERA_DE_RANGO", (await s.CambiarParametroAsync(Admin, "agenda.horizonte_dias", new ParametroUpdateDto { Valor = "muchos" })).Codigo);
-        Assert.Equal(404, (await s.CambiarParametroAsync(Admin, "asistencia.cobertura_km", new ParametroUpdateDto { Valor = "40" })).Estado);
+        Assert.Equal(404, (await s.CambiarParametroAsync(Admin, "registro.codigo_intentos", new ParametroUpdateDto { Valor = "4" })).Estado);
 
         Assert.Equal("40", (await s.CambiarParametroAsync(Admin, "cobro.porcentaje_sena", new ParametroUpdateDto { Valor = " 40 " })).Valor!.Valor);
         Assert.Equal("40", d.Parametros.Single(p => p.Clave == "cobro.porcentaje_sena").Valor);
