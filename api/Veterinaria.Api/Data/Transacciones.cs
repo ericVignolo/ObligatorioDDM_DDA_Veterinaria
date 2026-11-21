@@ -18,8 +18,9 @@ public static class Transacciones
     public const string Articulos = "Articulos";
     public const string Numeradores = "Numeradores";
     public const string Cargos = "Cargos";
+    public const string Boxes = "Boxes";
 
-    private static readonly HashSet<string> Permitidas = new() { Profesionales, Animales, Consultas, Articulos, Cargos };
+    private static readonly HashSet<string> Permitidas = new() { Profesionales, Animales, Consultas, Articulos, Cargos, Boxes };
 
     // `bloqueos`: (tabla, id) en el orden en que se toman. `accion` vuelve a leer lo que necesita, valida y guarda.
     public static async Task<T> EjecutarAsync<T>(AppDbContext context, IEnumerable<(string Tabla, int Id)> bloqueos, Func<Task<T>> accion,
