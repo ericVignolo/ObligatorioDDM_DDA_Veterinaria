@@ -26,4 +26,6 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
+- [[CobroDtos (API)]]
+- [[CobroService (API)]]
 - [[ConfiguracionModulos (API)]]

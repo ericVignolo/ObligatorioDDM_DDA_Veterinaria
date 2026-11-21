@@ -11,7 +11,7 @@ generado: true
 
 Acceso a lo que usa la consulta clínica: turno, consulta, stock, vacunas, cargo y comunicación.
 
-**Requisitos y decisiones:** RN-10, RN-17
+**Requisitos y decisiones:** RN-10, RN-17, RN-35
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 

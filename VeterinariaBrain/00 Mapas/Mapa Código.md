@@ -186,11 +186,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (33)
+### Servicios (35)
 - [[AnimalService (API)]]
 - [[CalculoAgenda (API)]]
 - [[CarnetService (API)]]
 - [[ClinicaService (API)]]
+- [[CobroService (API)]]
 - [[ConsentimientoService (API)]]
 - [[ConsultaService (API)]]
 - [[CuentaService (API)]]
@@ -198,6 +199,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[IAnimalService (API)]]
 - [[ICarnetService (API)]]
 - [[IClinicaService (API)]]
+- [[ICobroService (API)]]
 - [[IConsentimientoService (API)]]
 - [[IConsultaService (API)]]
 - [[ICuentaService (API)]]
@@ -239,10 +241,11 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Controladores (17)
+### Controladores (18)
 - [[AdminSaludController (API)]] · `api/v1/admin`
 - [[AnimalesController (API)]] · `api/v1/animales`
 - [[ClinicaController (API)]] · `api/v1/clinica`
+- [[CobrosController (API)]] · `api/v1/cobros`
 - [[CuentasController (API)]] · `api/v1/cuentas`
 - [[EspeciesController (API)]] · `api/v1/especies`
 - [[InventarioController (API)]] · `api/v1/admin/inventario`
@@ -258,13 +261,15 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[UsuarioActual (API)]]
 - [[VeterinarioController (API)]] · `api/v1/veterinario`
 
-### Repositorios (16)
+### Repositorios (18)
 - [[AnimalRepository (API)]]
 - [[ClinicaRepository (API)]]
+- [[CobroRepository (API)]]
 - [[ConsultaRepository (API)]]
 - [[CuentaRepository (API)]]
 - [[IAnimalRepository (API)]]
 - [[IClinicaRepository (API)]]
+- [[ICobroRepository (API)]]
 - [[IConsultaRepository (API)]]
 - [[ICuentaRepository (API)]]
 - [[IPrestacionRepository (API)]]
@@ -276,9 +281,10 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SaludRepository (API)]]
 - [[TurnoRepository (API)]]
 
-### DTOs (9)
+### DTOs (10)
 - [[AnimalDtos (API)]]
 - [[ClinicaReadDto (API)]]
+- [[CobroDtos (API)]]
 - [[ConsultaDtos (API)]]
 - [[CuentaDtos (API)]]
 - [[PaginaDto (API)]]

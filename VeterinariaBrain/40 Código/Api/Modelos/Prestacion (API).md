@@ -20,6 +20,8 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 ## Usado por (si cambia, revisar estos)
 - [[AppDbContext (API)]]
 - [[Cobro (API)]]
+- [[CobroRepository (API)]]
+- [[CobroService (API)]]
 - [[ConsentimientoService (API)]]
 - [[Consulta (API)]]
 - [[ConsultaDtos (API)]]

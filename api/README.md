@@ -81,6 +81,13 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `GET /api/v1/admin/inventario/alertas` y `POST .../alertas/{id}/atendida` | Administrador | Alertas de stock mínimo |
 | `POST /api/v1/admin/avisos-refuerzo` | Administrador | Encola los avisos de refuerzo; repetirlo no duplica |
 | `GET/POST /api/v1/admin/consentimientos` | Administrador | Versiones del texto de un servicio; publicar una nueva deja la anterior sin vigencia |
+| `GET /api/v1/cobros` | Cliente | Sus cargos con lo pagado, el saldo y el estado (Pendiente, Pago parcial, Pagado) |
+| `GET /api/v1/recepcion/cobros/cargos?clienteId=&pendientes=true` y `/cargos/{id}` | Recepción, Administrador | Cargos (por defecto, con saldo); el detalle trae sus comprobantes |
+| `POST /api/v1/recepcion/cobros/pagos` | Recepción | Comprobante `C-000001`: `201`; monto hasta el saldo, transferencia con número, `409` si ya está pagado. Si paga la seña, confirma la cirugía |
+| `GET /api/v1/recepcion/cobros/pagos?fecha=`, `/pagos/{id}` y `/resumen` | Recepción, Administrador | Comprobantes del día (con los anulados marcados) y caja |
+| `GET /api/v1/recepcion/cobros/deuda/{clienteId}` | Recepción, Administrador | Deuda vencida (más de 30 días) y aviso si pasa el límite (RN-36); nunca bloquea |
+| `POST /api/v1/admin/cobros/pagos/{id}/anulacion` | Administrador | Nota de crédito `NC-000001` con motivo y auditoría; el comprobante no cambia (RN-34) |
+| `GET /api/v1/admin/cobros/notas` | Administrador | Notas de crédito emitidas |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
@@ -133,7 +140,7 @@ Decisiones del esquema:
 - Un turno ocupa toda su duración; ni el profesional ni el animal pueden tener dos turnos a la vez. `CalculoAgenda` hace el cálculo sin tocar la base.
 - **Concurrencia (DT-BD-02):** reservar, reprogramar y el mostrador abren una transacción `READ COMMITTED`, bloquean con `SELECT … FOR UPDATE` la fila del profesional y la del animal (siempre en ese orden), revalidan el horario y guardan. Ante un interbloqueo reintentan hasta 3 veces (50, 100 y 200 ms). Los consultorios todavía no se bloquean: falta definir qué consultorio usa cada servicio (Diego, 2026-11-21).
 - Cambio simultáneo de un mismo registro: el segundo responde `409` (`CONFLICTO_DE_VERSION`, `Controllers/ManejadorConcurrencia.cs`).
-- La seña de las cirugías (RN-35) llega con el módulo de cobro; hasta entonces la castración queda Confirmada.
+- Las cirugías (servicios que piden consentimiento) se reservan *Pendiente de seña* (RN-35) y se confirman al pagar la seña en Recepción.
 - Hora: la local del servidor, que es la de la clínica.
 
 ## Consulta clínica
@@ -150,6 +157,13 @@ Decisiones del esquema:
 - **Carnet:** cuentan las aplicaciones de consultas firmadas o anteriores al sistema. Los avisos de refuerzo quedan en `Comunicaciones` (tipo 4, `Clave = refuerzo-{aplicación}`) por el canal que eligió el cliente; si eligió «No recibir», no se genera. Pensado para correr una vez por día; mientras no haya tarea programada, lo dispara el Administrador.
 - **Inventario:** cada compra, ajuste o baja bloquea la fila del artículo (`Transacciones`) y deja su movimiento con la persona. La baja de vencidos queda a nombre del sistema.
 - **Consentimiento:** vale solo la última respuesta del turno y solo si es de la versión vigente; la firma de la consulta lo comprueba igual. Se guarda el nombre escrito, la versión, el canal «En línea», la fecha y la huella SHA-256 del texto.
+
+## Cobro
+
+- Mismas reglas y mensajes que `CobroService` de Blazor. No hay pago en línea: se cobra en Recepción (DT-ALC-02).
+- Cobrar y anular bloquean la fila del cargo y el numerador (`Numeradores`, claves `Comprobante` y `NotaCredito`): dos cobros a la vez no pasan el saldo y los números no se repiten ni saltean.
+- **Seña (RN-35):** el cargo de seña se genera la primera vez que se listan los cargos del cliente o de Recepción, una sola vez por turno. Es el 30 % de la tarifa vigente en la fecha del turno (o del precio desde). Los parámetros opcionales `cobro.porcentaje_sena` y `cobro.limite_deuda` (3000 por defecto) se pueden agregar a `Parametros` sin migración.
+- Un turno *Pendiente de seña* conserva el horario. Todavía no se cancela solo si no se paga.
 
 ## Crear la base en tu computadora
 

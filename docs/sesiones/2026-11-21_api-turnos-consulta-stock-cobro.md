@@ -112,8 +112,41 @@ En la rama `diego/sesion-2026-11-21-salud`, F5. En `Veterinaria.Api.http`:
 3. Reservar una castración (servicio 8) en la sección 8, ver los consentimientos pendientes y firmarlo con «Ana Pérez» (o el nombre de tu cuenta). Un nombre distinto da 400.
 4. Inventario: artículos, lotes del 8, compra, baja, movimientos y alertas.
 
+## Módulo 4: Cobro
+
+Rama `diego/sesion-2026-11-21-cobro`, que sale de la de salud. PR #47. No cambia la base.
+
+- **Cliente:** sus cargos con saldo y estado.
+- **Recepción:** cargos con saldo, cobro con comprobante correlativo (`C-000001`), comprobantes del día, resumen de caja y aviso de deuda vencida (RN-36). Solo Recepción cobra.
+- **Administrador:** anula un comprobante con nota de crédito (`NC-000001`), motivo y auditoría (RN-34).
+- **Seña (RN-35):**
+  - las cirugías se reservan *Pendiente de seña*;
+  - el cargo de seña (30 %) se genera una vez;
+  - pagarla confirma el turno y anularla lo vuelve atrás;
+  - al firmar la consulta se descuenta lo pagado.
+- **Archivos:**
+  - `Services/ICobroService.cs` y `CobroService.cs`;
+  - `Repositories/ICobroRepository.cs` y `CobroRepository.cs`;
+  - `Controllers/CobrosController.cs`, con `CobrosController`, `CajaController` y `AdminCobrosController`;
+  - `DTOs/CobroDtos.cs`;
+  - `TurnoService.cs` (estado inicial), `ConsultaService.cs` y `ConsultaRepository.cs` (descuento de la seña);
+  - `Program.cs`;
+  - sección 13 del `.http`.
+- **Pruebas:** `ApiCobroTests`, 8 nuevas, y 1 en `ApiConsultaTests`. CI en verde con 1113 pruebas.
+- **Simplificaciones:**
+  - la seña se genera al listar los cargos, sin tarea programada;
+  - un turno sin seña no se cancela solo;
+  - los parámetros de seña y deuda usan valores por defecto hasta que se carguen en `Parametros`.
+
+### Cómo probar el cobro
+
+En la rama `diego/sesion-2026-11-21-cobro`, F5. Hace falta haber firmado una consulta (sección 11), que deja un cargo.
+1. Sección 13: cargos con saldo, cobrar 500, cobrar el resto y ver los comprobantes.
+2. Con el admin: anular un comprobante y ver que el cargo vuelve a tener saldo.
+3. Castración: reservarla como Ana (servicio 8) → queda *Pendiente de seña*. En los cargos aparece la seña: cobrarla confirma el turno.
+
 ### Pendientes
 
-- [ ] Diego: probar los módulos 1, 2 y 3 con el `.http`.
-- [ ] Módulo 4: cobro (cargos, pago con comprobante, nota de crédito, seña RN-35).
-- [ ] Al final: mezclar los PR #39 a #46 en orden y ordenar las ramas.
+- [ ] Diego: probar los módulos 1 a 4 con el `.http`.
+- [ ] Al final: mezclar los PR #39 a #47 en orden y ordenar las ramas.
+- [ ] Siguientes módulos: internación, asistencia, comunicaciones (envío real), administración (tarifas, parámetros, personal), 2FA.

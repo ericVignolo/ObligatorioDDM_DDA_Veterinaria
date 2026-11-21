@@ -471,3 +471,50 @@ Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
 
 GET {{api}}/admin/consentimientos?prestacionId=8
 Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### ---------- 13. Cobro (Recepción cobra; el Administrador anula) ----------
+### Cargos con saldo (con el token de Recepción, sección 9)
+
+GET {{api}}/recepcion/cobros/cargos?pendientes=true
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Cobrar (cambiar el cargoId por uno de la lista; transferencia pide "referencia")
+
+POST {{api}}/recepcion/cobros/pagos
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "cargoId": 1,
+  "monto": 500,
+  "medio": "Efectivo",
+  "referencia": ""
+}
+
+### Comprobantes de hoy y resumen de caja
+
+GET {{api}}/recepcion/cobros/pagos
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+###
+GET {{api}}/recepcion/cobros/resumen
+Authorization: Bearer {{ingresoRecepcion.response.body.$.tokenAcceso}}
+
+### Cargos vistos por Ana
+
+GET {{api}}/cobros
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Anular un comprobante (admin, «ingresoPersonal»; cambiar el 1 por el id del pago)
+
+POST {{api}}/admin/cobros/pagos/1/anulacion
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "motivo": "Se cobró de más"
+}
+
+###
+GET {{api}}/admin/cobros/notas
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
