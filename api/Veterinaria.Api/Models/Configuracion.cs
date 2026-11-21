@@ -43,9 +43,20 @@ public class Auditoria
 
     public int? CuentaId { get; set; }
 
+    // Rol con el que actuó (una persona puede tener varios).
+    [MaxLength(30)] public string Rol { get; set; } = "";
+
     [MaxLength(60)] public string Accion { get; set; } = "";
     [MaxLength(60)] public string Entidad { get; set; } = "";
     [MaxLength(40)] public string EntidadId { get; set; } = "";
     [MaxLength(60)] public string Origen { get; set; } = "";
     [MaxLength(500)] public string Detalle { get; set; } = "";
+}
+
+// Numeración correlativa de comprobantes y notas de crédito (RF-REC-05, RN-34).
+// La API toma el siguiente número dentro de la transacción del cobro, con SELECT … FOR UPDATE sobre esta fila.
+public class Numerador
+{
+    [MaxLength(20)] public string Clave { get; set; } = "";
+    public int Ultimo { get; set; }
 }

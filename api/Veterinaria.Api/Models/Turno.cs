@@ -40,6 +40,20 @@ public class Turno
     [MaxLength(250)] public string MotivoCancelacion { get; set; } = "";
     public DateTime? FechaCancelacion { get; set; }
 
+    // Quién canceló: "Cliente" o "Recepción" (A-017).
+    [MaxLength(20)] public string CanceladoPor { get; set; } = "";
+
+    // Hora real de llegada que registra Recepción (Confirmado → En espera).
+    public DateTime? HoraLlegada { get; set; }
+
+    // RN-09: sobreturno dado por Recepción o el Administrador, con su motivo.
+    public bool EsSobreturno { get; set; }
+    [MaxLength(250)] public string MotivoSobreturno { get; set; } = "";
+
+    // Persona del personal que lo dio en el mostrador; null si lo reservó el cliente.
+    public int? CreadoPorId { get; set; }
+    public Cuenta? CreadoPor { get; set; }
+
     // Reprogramación (A-016): conserva el número y guarda el horario anterior.
     public DateTime? InicioAnterior { get; set; }
 

@@ -45,3 +45,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AdminParametros]]
 - [[AdminPersonal]]
 - [[AdminServicios]]
+
+## En las otras aplicaciones
+- [[AdministracionService (API)]]
