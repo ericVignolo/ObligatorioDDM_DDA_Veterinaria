@@ -139,6 +139,9 @@ public class InicioSesionDto
 
     [Required(ErrorMessage = "Ingresá tu contraseña.")]
     public string Contrasena { get; set; } = "";
+
+    // Solo si la cuenta tiene la verificación en dos pasos activa: el código de 6 cifras de la app.
+    public string? CodigoSegundoFactor { get; set; }
 }
 
 public class RefrescoDto
@@ -157,6 +160,44 @@ public class SesionReadDto
     public int CuentaId { get; set; }
     public string Nombre { get; set; } = "";
     public List<string> Roles { get; set; } = new();
+
+    // true = la contraseña es correcta pero falta el código de la app: se repite el ingreso con codigoSegundoFactor.
+    public bool RequiereSegundoFactor { get; set; }
+
+    // true = es Administrador y todavía no activó la verificación en dos pasos (RNF-SEG-04).
+    public bool DebeConfigurarSegundoFactor { get; set; }
+}
+
+// ---------- Verificación en dos pasos (RNF-SEG-04) ----------
+
+public class EstadoSegundoFactorDto
+{
+    public bool Activo { get; set; }
+    public bool Obligatorio { get; set; }
+}
+
+public class ConfiguracionSegundoFactorDto
+{
+    // Clave para cargar a mano en la app; el enlace otpauth:// es el que va dentro del código QR.
+    public string Secreto { get; set; } = "";
+    public string Enlace { get; set; } = "";
+    public string Mensaje { get; set; } = "";
+}
+
+public class CodigoSegundoFactorDto
+{
+    [Required(ErrorMessage = "Escribí el código de 6 cifras de la app.")]
+    [StringLength(10, ErrorMessage = "Escribí el código de 6 cifras de la app.")]
+    public string Codigo { get; set; } = "";
+}
+
+public class DesactivacionSegundoFactorDto
+{
+    [Required(ErrorMessage = "Ingresá tu contraseña.")]
+    public string Contrasena { get; set; } = "";
+
+    [Required(ErrorMessage = "Escribí el código de 6 cifras de la app.")]
+    public string Codigo { get; set; } = "";
 }
 
 // Datos de la cuenta propia. Nunca incluye hashes, códigos ni intentos.

@@ -81,7 +81,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequiereSesion]]
 - [[TurnoMostrador]]
 
-### Servicios (25)
+### Servicios (26)
 - [[AdministracionService]]
 - [[AgendaService]]
 - [[AnimalService]]
@@ -92,6 +92,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ClinicaService]]
 - [[CobroService]]
 - [[ComunicacionesService]]
+- [[ConjuntoDemoService]]
 - [[ConsentimientoService]]
 - [[ConsultaService]]
 - [[CuentaService]]
@@ -186,7 +187,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (43)
+### Servicios (48)
 - [[AdministracionService (API)]]
 - [[AnimalService (API)]]
 - [[AsistenciaService (API)]]
@@ -198,6 +199,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ConsentimientoService (API)]]
 - [[ConsultaService (API)]]
 - [[CuentaService (API)]]
+- [[DerechosService (API)]]
 - [[EnvioCorreo (API)]]
 - [[IAdministracionService (API)]]
 - [[IAnimalService (API)]]
@@ -209,6 +211,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[IConsentimientoService (API)]]
 - [[IConsultaService (API)]]
 - [[ICuentaService (API)]]
+- [[IDerechosService (API)]]
 - [[IInternacionService (API)]]
 - [[IInventarioService (API)]]
 - [[IPrestacionService (API)]]
@@ -218,6 +221,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ITurnoService (API)]]
 - [[InternacionService (API)]]
 - [[InventarioService (API)]]
+- [[Notificador (API)]]
 - [[Opciones (API)]]
 - [[PrestacionService (API)]]
 - [[ProfesionalService (API)]]
@@ -225,8 +229,10 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ReglasClinicas (API)]]
 - [[ReglasStock (API)]]
 - [[Resultado (API)]]
+- [[SegundoFactor (API)]]
 - [[Seguridad (API)]]
 - [[SesionService (API)]]
+- [[TareasProgramadas (API)]]
 - [[TokenService (API)]]
 - [[TurnoService (API)]]
 - [[ValidacionDatos (API)]]
@@ -249,7 +255,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Controladores (22)
+### Controladores (24)
 - [[AdminSaludController (API)]] · `api/v1/admin`
 - [[AdministracionController (API)]] · `api/v1/admin`
 - [[AnimalesController (API)]] · `api/v1/animales`
@@ -258,6 +264,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[CobrosController (API)]] · `api/v1/cobros`
 - [[ComunicacionesController (API)]] · `api/v1/comunicaciones`
 - [[CuentasController (API)]] · `api/v1/cuentas`
+- [[DerechosController (API)]] · `api/v1/privacidad`
 - [[EspeciesController (API)]] · `api/v1/especies`
 - [[InternacionesController (API)]] · `api/v1/internaciones`
 - [[InventarioController (API)]] · `api/v1/admin/inventario`
@@ -266,6 +273,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ProfesionalesController (API)]] · `api/v1/profesionales`
 - [[RecepcionController (API)]] · `api/v1/recepcion`
 - [[SaludController (API)]] · `api/v1`
+- [[SegundoFactorController (API)]] · `api/v1/cuentas/yo/segundo-factor`
 - [[ServiciosController (API)]] · `api/v1/servicios`
 - [[SesionesController (API)]] · `api/v1/sesiones`
 - [[StockVeterinarioController (API)]] · `api/v1/veterinario`
@@ -273,7 +281,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[UsuarioActual (API)]]
 - [[VeterinarioController (API)]] · `api/v1/veterinario`
 
-### Repositorios (26)
+### Repositorios (28)
 - [[AdministracionRepository (API)]]
 - [[AnimalRepository (API)]]
 - [[AsistenciaRepository (API)]]
@@ -282,6 +290,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ComunicacionRepository (API)]]
 - [[ConsultaRepository (API)]]
 - [[CuentaRepository (API)]]
+- [[DerechosRepository (API)]]
 - [[IAdministracionRepository (API)]]
 - [[IAnimalRepository (API)]]
 - [[IAsistenciaRepository (API)]]
@@ -290,6 +299,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[IComunicacionRepository (API)]]
 - [[IConsultaRepository (API)]]
 - [[ICuentaRepository (API)]]
+- [[IDerechosRepository (API)]]
 - [[IInternacionRepository (API)]]
 - [[IPrestacionRepository (API)]]
 - [[IProfesionalRepository (API)]]
@@ -301,7 +311,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SaludRepository (API)]]
 - [[TurnoRepository (API)]]
 
-### DTOs (14)
+### DTOs (15)
 - [[AdminDtos (API)]]
 - [[AnimalDtos (API)]]
 - [[AsistenciaDtos (API)]]
@@ -310,6 +320,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ComunicacionDtos (API)]]
 - [[ConsultaDtos (API)]]
 - [[CuentaDtos (API)]]
+- [[DerechosDtos (API)]]
 - [[InternacionDtos (API)]]
 - [[PaginaDto (API)]]
 - [[ProfesionalReadDto (API)]]
@@ -324,4 +335,26 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Mobile — [[Carpeta mobile]]
 
-Todavía sin código.
+### Pantallas (5)
+- [[Veterinaria.Movil-app-_layout (Móvil)]]
+- [[Veterinaria.Movil-app-index (Móvil)]]
+- [[Veterinaria.Movil-app-servicios-index (Móvil)]]
+- [[[id] (Móvil)]]
+- [[acceso (Móvil)]]
+
+### Componentes (2)
+- [[Boton (Móvil)]]
+- [[TarjetaPrestacion (Móvil)]]
+
+### Servicios (1)
+- [[prestacionService (Móvil)]]
+
+### Modelos (2)
+- [[Clinica (Móvil)]]
+- [[Prestacion (Móvil)]]
+
+### Otros (4)
+- [[Veterinaria.Movil-tema-index (Móvil)]]
+- [[clinica (Móvil)]]
+- [[paleta (Móvil)]]
+- [[prestaciones (Móvil)]]

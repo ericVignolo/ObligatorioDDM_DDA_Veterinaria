@@ -9,6 +9,7 @@ namespace Veterinaria.Api.Controllers;
 [ApiController]
 [Route("api/v1/sesiones")]
 [EnableRateLimiting(Problemas.PoliticaCuentas)]
+[PermitirSinSegundoFactor]
 public class SesionesController : ControllerBase
 {
     private readonly ISesionService _service;

@@ -35,3 +35,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usado por (si cambia, revisar estos)
 - [[AdminDerechos]]
 - [[MisDerechos]]
+
+## En las otras aplicaciones
+- [[DerechosService (API)]]

@@ -118,6 +118,14 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `GET /api/v1/veterinario/asistencias` y `/{id}` | Veterinario | Ofrecidas a mí y las que acepté |
 | `POST /api/v1/veterinario/asistencias/{id}/aceptacion`, `/rechazo`, `/avance`, `/finalizacion` y `/nivel` | Veterinario | El primero que acepta se la queda; traslado; finalizar genera el cargo; nivel con motivo (RN-52) |
 | `PUT /api/v1/admin/guardia` | Administrador | Veterinario de guardia (RF-ADM-13) |
+| `GET /api/v1/privacidad/politicas` | Pública | Qué se guarda de cada categoría, para qué, quién accede y cuánto se conserva (RNF-LEG-06) |
+| `GET /api/v1/privacidad/exportacion` | Cliente | Descarga `mis-datos-vitalia.json` con sus datos (RNF-LEG-02); queda registrado |
+| `GET /api/v1/privacidad/solicitudes` y `/obstaculos` | Cliente | Sus pedidos y lo que falta resolver antes de eliminar |
+| `POST /api/v1/privacidad/eliminacion` y `/solicitudes/{id}/cancelacion` | Cliente | Pedido de eliminación con confirmación; se puede cancelar mientras esté Recibido |
+| `GET /api/v1/admin/derechos` y `POST /{id}/resolucion` | Administrador | Aprobar anonimiza la cuenta; rechazar pide motivo |
+| `GET /api/v1/cuentas/yo/segundo-factor` | Cualquier cuenta | Estado de la verificación en dos pasos y si es obligatoria |
+| `POST /api/v1/cuentas/yo/segundo-factor/configuracion` | Cualquier cuenta | Clave y enlace `otpauth://` para el QR de la app autenticadora |
+| `POST /api/v1/cuentas/yo/segundo-factor/activacion` y `/desactivacion` | Cualquier cuenta | Activar con el primer código (cierra las sesiones); desactivar con contraseña y código (el Administrador no puede) |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
@@ -184,7 +192,7 @@ Decisiones del esquema:
 ## Carnet, inventario y consentimiento
 
 - Mismas reglas y mensajes que `VacunaService`, `InventarioService` y `ConsentimientoService` de Blazor.
-- **Carnet:** cuentan las aplicaciones de consultas firmadas o anteriores al sistema. Los avisos de refuerzo quedan en `Comunicaciones` (tipo 4, `Clave = refuerzo-{aplicación}`) por el canal que eligió el cliente; si eligió «No recibir», no se genera. Pensado para correr una vez por día; mientras no haya tarea programada, lo dispara el Administrador.
+- **Carnet:** cuentan las aplicaciones de consultas firmadas o anteriores al sistema. Los avisos de refuerzo quedan en `Comunicaciones` (tipo 4, `Clave = refuerzo-{aplicación}`) por el canal que eligió el cliente; si eligió «No recibir», no se genera. Corre una vez por día con `ServicioTareas`; el Administrador también lo puede disparar.
 - **Inventario:** cada compra, ajuste o baja bloquea la fila del artículo (`Transacciones`) y deja su movimiento con la persona. La baja de vencidos queda a nombre del sistema.
 - **Consentimiento:** vale solo la última respuesta del turno y solo si es de la versión vigente; la firma de la consulta lo comprueba igual. Se guarda el nombre escrito, la versión, el canal «En línea», la fecha y la huella SHA-256 del texto.
 
@@ -198,8 +206,8 @@ Decisiones del esquema:
 ## Comunicaciones
 
 - Mismas reglas y mensajes que `ComunicacionesService` de Blazor.
-- **Envío:** `IEnvioComunicacion`. La versión de desarrollo (`EnvioComunicacionDesarrollo`) no manda nada y da el envío por hecho, para probar la cola. Para el correo real se cambia esa clase en `Program.cs`.
-- **Cola:** lo que va solo a la app queda entregado en la bandeja. `POST recepcion/comunicaciones/cola` también entrega los avisos de refuerzo y los resúmenes clínicos que dejan pendientes los otros módulos. Todavía no hay una tarea que procese la cola sola.
+- **Envío:** `IEnvioComunicacion`. Sin la sección `Correo` completa, `EnvioComunicacionDesarrollo` no manda nada y da el envío por hecho; con ella, manda `CorreoSmtp` (ver «Correo real»).
+- **Cola:** lo que va solo a la app queda entregado en la bandeja. `POST recepcion/comunicaciones/cola` también entrega los avisos de refuerzo y los resúmenes clínicos que dejan pendientes los otros módulos. La procesa sola, cada minuto, `ServicioTareas` (ver «Tareas automáticas»).
 
 ## Asistencia
 
@@ -208,11 +216,68 @@ Decisiones del esquema:
   - `asistencia.cobertura_km` (30) y `asistencia.escalado_rojo_minutos` (10);
   - `asistencia.tarifa_base` (1500), `asistencia.tarifa_km` (40) y `asistencia.tarifa_animal_extra` (300);
   - la guardia queda en `asistencia.guardia_cuenta_id`; por defecto es la cuenta 2, la Dra. Ferreira.
-- **Plazos:** se revisan al abrir la cola de Recepción o la lista del veterinario, y con `POST recepcion/asistencias/plazos`. Todavía no hay una tarea programada.
+- **Plazos:** se revisan al abrir la cola de Recepción o la lista del veterinario, con `POST recepcion/asistencias/plazos` y cada minuto con `ServicioTareas`.
 - **Todavía no está:**
   - la distancia la manda el móvil o la carga Recepción: no hay proveedor de mapas;
-  - la ubicación en vivo del veterinario y las notificaciones de cada estado;
+  - la ubicación en vivo del veterinario (los avisos de cada estado ya van por el hub);
   - el cuestionario clínico por especie (D-ASI-01).
+
+## Tareas automáticas
+
+- `ServicioTareas` (en `Services/TareasProgramadas.cs`) corre dentro de la API mientras está levantada:
+  - **cada minuto:** la cola de comunicaciones y los plazos de asistencia;
+  - **una vez por día**, desde las 6 o en la primera revisión si la API arranca más tarde: los avisos de refuerzo, la baja de lotes vencidos y el borrado de las cuentas sin verificar de más de 7 días.
+- **Configuración:** sección `TareasProgramadas` de `appsettings.json`. Con `"Activas": false` no corre nada solo; los endpoints manuales siguen disponibles.
+- Si una tarea falla (por ejemplo, porque la base está apagada), queda un aviso en la consola y se reintenta en la próxima revisión.
+
+## Correo real
+
+- Mientras la sección `Correo` esté vacía, la API **no manda correos**:
+  - los códigos vuelven en la respuesta (`codigoDesarrollo`, solo en Development);
+  - la cola de Comunicaciones da los envíos por hechos.
+- **Para mandar de verdad**, completá en `appsettings.Development.json` (no se sube a GitHub):
+
+```json
+"Correo": {
+  "Servidor": "smtp.gmail.com",
+  "Puerto": 587,
+  "UsarSsl": true,
+  "Usuario": "tu-cuenta@gmail.com",
+  "Contrasena": "la contraseña de aplicación de 16 letras",
+  "Remitente": "tu-cuenta@gmail.com"
+}
+```
+
+- Con Gmail se usa una **contraseña de aplicación**, no la contraseña común. Se crea en la cuenta de Google → Seguridad → Verificación en dos pasos → Contraseñas de aplicaciones.
+- Si el servidor falla, queda un aviso en la consola, sin el correo ni el código. El cliente puede pedir otro código y la cola reintenta hasta 3 veces.
+
+## Avisos en tiempo real
+
+- **Hub:** SignalR en `/hubs/avisos`, con sesión iniciada. El token va en el encabezado o en `?access_token=`.
+- **Eventos:**
+
+| Evento | Quién lo recibe | Cuándo |
+|---|---|---|
+| `internacion.cambio` | Cliente | Admisión, ingreso, novedad o rectificación visible, alta |
+| `internacion.tablero` | Recepción, Veterinario, Administrador | Cualquier cambio de una internación |
+| `asistencia.cambio` | Cliente | Cada cambio de su solicitud |
+| `asistencia.cola` | Recepción, Administrador | Cada cambio de una solicitud |
+| `asistencia.oferta` | Veterinarios ofrecidos o asignado | Cada cambio de esa solicitud |
+
+- Los avisos llevan solo ids, nivel, estado y llegada estimada. El detalle se pide a la API.
+- Cliente en React Native: paquete `@microsoft/signalr`, con `accessTokenFactory` que devuelva el token.
+
+## Verificación en dos pasos
+
+- Con app autenticadora (Google Authenticator, Microsoft Authenticator…). Es obligatoria para el Administrador y opcional para el resto (RNF-SEG-04).
+- **Activarla:**
+  1. `POST cuentas/yo/segundo-factor/configuracion` devuelve `secreto` y `enlace`. En la app se elige «Ingresar una clave» y se pega el `secreto`; o se arma un QR con el `enlace`.
+  2. `POST cuentas/yo/segundo-factor/activacion` con el código de 6 cifras que muestra la app. Se cierran las sesiones abiertas.
+- **Ingresar:** `POST sesiones` con correo y contraseña. Si responde `requiereSegundoFactor: true`, se repite agregando `"codigoSegundoFactor": "123456"`.
+- **Administrador:**
+  - sin los dos pasos activos, todo lo que no sea su cuenta da `403 SEGUNDO_FACTOR_REQUERIDO`, y el ingreso avisa con `debeConfigurarSegundoFactor: true`;
+  - para probar en tu computadora sin teléfono, poné en `appsettings.Development.json`: `"Seguridad": { "ExigirSegundoFactorAdministrador": false }`.
+- **Base:** la migración `SegundoFactor` agrega `SegundoFactorActivo`, `SecretoSegundoFactor` y `UltimoPasoSegundoFactor` a `Cuentas`. Hay que correr `Update-Database`.
 
 ## Crear la base en tu computadora
 

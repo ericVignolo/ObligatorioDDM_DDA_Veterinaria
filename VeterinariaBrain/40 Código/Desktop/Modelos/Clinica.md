@@ -25,3 +25,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Privacidad]]
 - [[Terminos]]
 - [[Urgencias]]
+
+## En las otras aplicaciones
+- [[Clinica (Móvil)]]

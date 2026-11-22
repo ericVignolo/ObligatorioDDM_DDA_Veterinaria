@@ -11,6 +11,8 @@ generado: true
 
 Nombres de los datos dentro del token (Program.cs valida con los mismos).
 
+**Requisitos y decisiones:** RNF-SEG-04
+
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usa

@@ -88,6 +88,9 @@ public class ApiCuentasTests
             Sesiones.Add(sesion);
         }
 
+        public Task<List<Cuenta>> ObtenerNoVerificadasAntesDeAsync(DateTime limite)
+            => Task.FromResult(Cuentas.Where(c => !c.Verificada && !c.Eliminada && c.FechaCreacion < limite).ToList());
+
         public Task EliminarNoVerificadaAsync(Cuenta cuenta)
         {
             Codigos.RemoveAll(c => c.CuentaId == cuenta.Id);
@@ -129,6 +132,60 @@ public class ApiCuentasTests
             await Cuentas.VerificarAsync(new VerificacionDto { Correo = correo, Codigo = Correo.UltimoCodigo });
             return Repo.Cuentas.Single(c => c.Correo == correo);
         }
+    }
+
+    [Fact]
+    public async Task Tarea_diaria_borra_solo_las_cuentas_sin_verificar_de_mas_de_7_dias()
+    {
+        var e = new Escenario();
+        await e.ClienteVerificadoAsync("ana@correo.uy");
+        await e.Cuentas.RegistrarAsync(Registro("beto@correo.uy", cedula: "4.444.444-4"));
+
+        e.Reloj.Avanzar(TimeSpan.FromDays(6));
+        Assert.Equal(0, await e.Cuentas.EliminarNoVerificadasAsync());
+
+        e.Reloj.Avanzar(TimeSpan.FromDays(2));
+        Assert.Equal(1, await e.Cuentas.EliminarNoVerificadasAsync());
+        Assert.Equal("ana@correo.uy", Assert.Single(e.Repo.Cuentas).Correo);
+    }
+
+    [Fact]
+    public async Task Dos_pasos_activar_ingresar_con_codigo_sin_repetirlo_y_desactivar()
+    {
+        var e = new Escenario();
+        var proteccion = new ProteccionSecretos(new Microsoft.AspNetCore.DataProtection.EphemeralDataProtectionProvider());
+        var sesiones = new SesionService(e.Repo, new TokenService(Options.Create(e.Jwt)), e.Reloj, Options.Create(new OpcionesCuentas()), Options.Create(e.Jwt), proteccion);
+        var dosPasos = new SegundoFactorService(e.Repo, proteccion, e.Reloj);
+        var cuenta = await e.ClienteVerificadoAsync();
+        string CodigoAhora(string secreto) => Totp.Codigo(secreto, Totp.Paso(e.Reloj.GetUtcNow().UtcDateTime));
+
+        var config = (await dosPasos.ConfigurarAsync(cuenta.Id)).Valor!;
+        Assert.DoesNotContain(config.Secreto, cuenta.SecretoSegundoFactor); // se guarda cifrado
+        Assert.Equal("CODIGO_INVALIDO", (await dosPasos.ActivarAsync(cuenta.Id, "000000")).Codigo);
+        Assert.True((await dosPasos.ActivarAsync(cuenta.Id, CodigoAhora(config.Secreto))).Exito);
+        Assert.True(cuenta.SegundoFactorActivo);
+
+        // Sin código: pide el segundo factor y no entrega tokens.
+        var sinCodigo = await sesiones.IniciarAsync(new InicioSesionDto { Correo = "ana@correo.uy", Contrasena = "Secreta123" }, "prueba");
+        Assert.True(sinCodigo.Valor!.RequiereSegundoFactor);
+        Assert.Equal("", sinCodigo.Valor.TokenAcceso);
+
+        // El mismo código de la activación no sirve otra vez.
+        var repetido = await sesiones.IniciarAsync(new InicioSesionDto { Correo = "ana@correo.uy", Contrasena = "Secreta123", CodigoSegundoFactor = CodigoAhora(config.Secreto) }, "prueba");
+        Assert.Equal("CODIGO_SEGUNDO_FACTOR_INVALIDO", repetido.Codigo);
+        Assert.Equal(1, cuenta.IntentosFallidos);
+
+        e.Reloj.Avanzar(TimeSpan.FromSeconds(30));
+        var ok = await sesiones.IniciarAsync(new InicioSesionDto { Correo = "ana@correo.uy", Contrasena = "Secreta123", CodigoSegundoFactor = CodigoAhora(config.Secreto) }, "prueba");
+        Assert.NotEqual("", ok.Valor!.TokenAcceso);
+        Assert.False(ok.Valor.RequiereSegundoFactor);
+        Assert.Equal(0, cuenta.IntentosFallidos);
+
+        e.Reloj.Avanzar(TimeSpan.FromSeconds(30));
+        Assert.Equal("DATOS_INCORRECTOS", (await dosPasos.DesactivarAsync(cuenta.Id, new DesactivacionSegundoFactorDto { Contrasena = "Otra", Codigo = CodigoAhora(config.Secreto) })).Codigo);
+        Assert.True((await dosPasos.DesactivarAsync(cuenta.Id, new DesactivacionSegundoFactorDto { Contrasena = "Secreta123", Codigo = CodigoAhora(config.Secreto) })).Exito);
+        Assert.False(cuenta.SegundoFactorActivo);
+        Assert.Equal("", cuenta.SecretoSegundoFactor);
     }
 
     private static RegistroCreateDto Registro(string correo = "ana@correo.uy", string contrasena = "Secreta123", string cedula = "1.234.567-2") => new()

@@ -340,6 +340,30 @@ public class ApiAsistenciaTests
     }
 
     [Fact]
+    public async Task Tiempo_real_avisa_al_cliente_a_Recepcion_y_a_los_veterinarios_ofrecidos_sin_ubicacion()
+    {
+        var (_, d, r) = Escenario();
+        var aviso = new NotificadorDePrueba();
+        var s = new AsistenciaService(d, r, aviso);
+
+        await s.CrearDesdeAppAsync(Ana, new SolicitudAppDto { AnimalId = 1, Nivel = "Rojo", Modalidad = AsistenciaService.Visita, UbicacionGps = true, Latitud = -33.87m, Longitud = -58.41m, DistanciaKm = 3, Sintomas = "Convulsiona", TelefonoContacto = "099" });
+
+        var destinos = aviso.Enviados.Select(e => e.Destino).ToList();
+        Assert.Contains($"cuenta-{Ana}", destinos);
+        Assert.Contains("rol-Recepcionista", destinos);
+        Assert.Contains("rol-Administrador", destinos);
+        Assert.Contains(aviso.Enviados, e => e.Destino == $"cuenta-{Ferreira}" && e.Evento == AsistenciaService.EventoOferta);
+        Assert.All(aviso.Enviados, e => Assert.DoesNotContain("Latitud", NotificadorDePrueba.Campos(e.Datos)));
+        Assert.All(aviso.Enviados, e => Assert.DoesNotContain("Sintomas", NotificadorDePrueba.Campos(e.Datos)));
+
+        // Al escalar por plazo también se avisa.
+        aviso.Enviados.Clear();
+        r.Ahora = Lunes10.AddMinutes(10);
+        await s.RevisarPlazosAsync();
+        Assert.Contains(aviso.Enviados, e => e.Destino == "rol-Recepcionista");
+    }
+
+    [Fact]
     public void Controladores_tienen_los_roles_correctos()
     {
         Assert.Equal("Cliente", typeof(AsistenciasController).GetCustomAttribute<AuthorizeAttribute>()!.Roles);

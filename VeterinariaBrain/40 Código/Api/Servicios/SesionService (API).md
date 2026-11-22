@@ -13,7 +13,7 @@ Sesiones de clientes y personal (A-008). El mismo ingreso sirve para todos: los 
 
 **Tareas:** A-008
 
-**Requisitos y decisiones:** RNF-SEG-09
+**Requisitos y decisiones:** RNF-SEG-04, RNF-SEG-09
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
