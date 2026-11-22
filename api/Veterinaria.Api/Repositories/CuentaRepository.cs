@@ -92,6 +92,11 @@ public class CuentaRepository : ICuentaRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<List<Cuenta>> ObtenerNoVerificadasAntesDeAsync(DateTime limite)
+    {
+        return await _context.Cuentas.Where(c => !c.Verificada && !c.Eliminada && c.FechaCreacion < limite).ToListAsync();
+    }
+
     public async Task GuardarAsync()
     {
         try

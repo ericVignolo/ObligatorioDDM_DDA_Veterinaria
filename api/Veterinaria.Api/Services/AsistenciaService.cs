@@ -41,13 +41,41 @@ public class AsistenciaService : IAsistenciaService
     public const int GuardiaPorDefecto = 2; // Dra. Ferreira, como en Blazor
     public const string ClaveGuardia = "asistencia.guardia_cuenta_id";
 
+    // Eventos en tiempo real (sección 15 de la especificación).
+    public const string EventoCliente = "asistencia.cambio";
+    public const string EventoCola = "asistencia.cola";
+    public const string EventoOferta = "asistencia.oferta";
+
     private readonly IAsistenciaRepository _repository;
     private readonly TimeProvider _reloj;
+    private readonly INotificador _notificador;
 
-    public AsistenciaService(IAsistenciaRepository repository, TimeProvider reloj)
+    public AsistenciaService(IAsistenciaRepository repository, TimeProvider reloj, INotificador? notificador = null)
     {
         _repository = repository;
         _reloj = reloj;
+        _notificador = notificador ?? NotificadorNulo.Instancia;
+    }
+
+    // Avisa al cliente, a Recepción y Administración (la cola) y a cada veterinario con la oferta abierta o asignado.
+    // Solo ids, nivel y estado: nunca coordenadas ni síntomas (sección 14).
+    private async Task AvisarAsync(SolicitudAsistencia s)
+    {
+        var datos = new { solicitudId = s.Id, nivel = s.Nivel, estado = s.Estado, etaMinutos = SinAceptar(s) ? null : s.EtaMinutos };
+        await _notificador.ACuentaAsync(s.ClienteId, EventoCliente, datos);
+        await _notificador.ARolAsync("Recepcionista", EventoCola, datos);
+        await _notificador.ARolAsync("Administrador", EventoCola, datos);
+
+        var veterinarios = Abiertas(s).Select(o => o.VeterinarioId).ToList();
+        if (s.VeterinarioId is int asignado && !veterinarios.Contains(asignado))
+        {
+            veterinarios.Add(asignado);
+        }
+
+        foreach (var cuentaId in veterinarios)
+        {
+            await _notificador.ACuentaAsync(cuentaId, EventoOferta, datos);
+        }
     }
 
     private DateTime Ahora => _reloj.GetLocalNow().DateTime;
@@ -218,6 +246,7 @@ public class AsistenciaService : IAsistenciaService
         }
 
         await _repository.GuardarAsync();
+        await AvisarAsync(s);
         var resultado = await DetalleDtoAsync(s, paraPersonal: canal == "Teléfono");
         resultado.Mensaje = $"Solicitud n.º {s.Id} registrada ({s.Nivel}, {s.Estado}).";
         return new Resultado<SolicitudAsistenciaReadDto> { Exito = true, Estado = 201, Valor = resultado };
@@ -315,6 +344,7 @@ public class AsistenciaService : IAsistenciaService
         var ahora = Ahora;
         var p = await LeerParametrosAsync();
         var resultado = new PlazosRevisadosDto();
+        var cambiadas = new List<SolicitudAsistencia>();
         foreach (var s in await _repository.ObtenerActivasAsync())
         {
             var cambio = false;
@@ -337,10 +367,16 @@ public class AsistenciaService : IAsistenciaService
             if (cambio)
             {
                 s.Version++;
+                cambiadas.Add(s);
             }
         }
 
         await _repository.GuardarAsync();
+        foreach (var s in cambiadas)
+        {
+            await AvisarAsync(s);
+        }
+
         return resultado;
     }
 
@@ -406,6 +442,7 @@ public class AsistenciaService : IAsistenciaService
         s.Version++;
         Evento(s, ahora, "Ofrecida", $"Recepción la ofreció a {veterinario.Nombre}.", personaId);
         await _repository.GuardarAsync();
+        await AvisarAsync(s);
         return Con(s, $"Ofrecida a {veterinario.Nombre}. Queda esperando que acepte.");
     }
 
@@ -450,6 +487,7 @@ public class AsistenciaService : IAsistenciaService
         s.Version++;
         Evento(s, ahora, datos.Estado, s.MotivoCierre, personaId);
         await _repository.GuardarAsync();
+        await AvisarAsync(s);
         return Con(s, $"Solicitud cerrada: {datos.Estado}.");
     }
 
@@ -499,6 +537,7 @@ public class AsistenciaService : IAsistenciaService
         s.Version++;
         Evento(s, ahora, "Aceptada", s.EtaMinutos == null ? "Orientación: el veterinario contacta al cliente." : $"Llegada estimada en {s.EtaMinutos} minutos.", cuentaId);
         await _repository.GuardarAsync();
+        await AvisarAsync(s);
         return Con(s, "Aceptaste la asistencia.");
     }
 
@@ -530,6 +569,7 @@ public class AsistenciaService : IAsistenciaService
 
         s.Version++;
         await _repository.GuardarAsync();
+        await AvisarAsync(s);
         return Con(s, "Rechazo registrado.");
     }
 
@@ -552,6 +592,7 @@ public class AsistenciaService : IAsistenciaService
         s.Version++;
         Evento(s, Ahora, siguiente, siguiente == EnCamino ? "El cliente ve la ubicación del veterinario hasta la llegada (RN-57)." : "", cuentaId);
         await _repository.GuardarAsync();
+        await AvisarAsync(s);
         return Con(s, $"Estado: {siguiente}.");
     }
 
@@ -596,6 +637,7 @@ public class AsistenciaService : IAsistenciaService
         }
 
         await _repository.GuardarAsync();
+        await AvisarAsync(s);
         return Con(s, mensaje);
     }
 
@@ -618,11 +660,13 @@ public class AsistenciaService : IAsistenciaService
         {
             Evento(s, ahora, "Nivel confirmado", datos.Motivo.Trim(), cuentaId);
             await _repository.GuardarAsync();
+            await AvisarAsync(s);
             return Con(s, $"Nivel {s.Nivel} confirmado.");
         }
 
         await AplicarNivelAsync(s, datos.Nivel, "Nivel cambiado por el veterinario", datos.Motivo.Trim(), cuentaId, ahora);
         await _repository.GuardarAsync();
+        await AvisarAsync(s);
         return Con(s, $"Nivel cambiado a {s.Nivel}.");
     }
 
@@ -684,6 +728,7 @@ public class AsistenciaService : IAsistenciaService
         }
 
         await _repository.GuardarAsync();
+        await AvisarAsync(s);
         return Con(s, mensaje, paraPersonal);
     }
 

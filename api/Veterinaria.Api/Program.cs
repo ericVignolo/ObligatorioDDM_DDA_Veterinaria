@@ -22,6 +22,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 
 // Opciones de tokens y cuentas (secciones "Jwt" y "Cuentas" de appsettings).
 builder.Services.Configure<OpcionesJwt>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<OpcionesTareas>(builder.Configuration.GetSection("TareasProgramadas"));
 builder.Services.Configure<OpcionesCuentas>(o =>
 {
     builder.Configuration.GetSection("Cuentas").Bind(o);
@@ -40,7 +41,17 @@ builder.Services.AddScoped<ICuentaRepository, CuentaRepository>();
 builder.Services.AddScoped<ICuentaService, CuentaService>();
 builder.Services.AddScoped<ISesionService, SesionService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IEnvioCorreo, EnvioCorreoDesarrollo>();
+// Correo: si la sección "Correo" tiene servidor y remitente, se envía de verdad por SMTP; si no, envío de prueba.
+builder.Services.Configure<OpcionesCorreo>(builder.Configuration.GetSection("Correo"));
+var correo = builder.Configuration.GetSection("Correo").Get<OpcionesCorreo>() ?? new OpcionesCorreo();
+if (correo.Configurado)
+{
+    builder.Services.AddScoped<IEnvioCorreo, CorreoSmtp>();
+}
+else
+{
+    builder.Services.AddScoped<IEnvioCorreo, EnvioCorreoDesarrollo>();
+}
 builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
 builder.Services.AddScoped<ITurnoRepository, TurnoRepository>();
@@ -59,9 +70,26 @@ builder.Services.AddScoped<IInternacionRepository, InternacionRepository>();
 builder.Services.AddScoped<IInternacionService, InternacionService>();
 builder.Services.AddScoped<IComunicacionRepository, ComunicacionRepository>();
 builder.Services.AddScoped<IComunicacionService, ComunicacionService>();
-builder.Services.AddScoped<IEnvioComunicacion, EnvioComunicacionDesarrollo>();
+if (correo.Configurado)
+{
+    builder.Services.AddScoped<IEnvioComunicacion, CorreoSmtp>();
+}
+else
+{
+    builder.Services.AddScoped<IEnvioComunicacion, EnvioComunicacionDesarrollo>();
+}
 builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
 builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
+builder.Services.AddScoped<IDerechosRepository, DerechosRepository>();
+builder.Services.AddScoped<IDerechosService, DerechosService>();
+
+// Tareas automáticas: cola de correos y plazos de asistencia cada minuto; avisos de refuerzo, vencidos y
+// cuentas sin verificar una vez por día. Se apagan con TareasProgramadas:Activas = false.
+builder.Services.AddHostedService<ServicioTareas>();
+
+// Avisos en tiempo real (SignalR, viene con ASP.NET Core): internación y asistencia.
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<INotificador, NotificadorSignalR>();
 
 // Autenticación con token de acceso corto (RNF-SEG-03). La autorización se verifica en cada pedido (RNF-SEG-05).
 var jwt = builder.Configuration.GetSection("Jwt").Get<OpcionesJwt>() ?? new OpcionesJwt();
@@ -78,6 +106,21 @@ builder.Services
             NameClaimType = TokenService.ClaimNombre,
             RoleClaimType = TokenService.ClaimRol,
             ClockSkew = TimeSpan.FromSeconds(30)
+        };
+
+        // Los WebSockets del hub no mandan encabezados: el token llega en ?access_token= solo para /hubs.
+        o.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = contexto =>
+            {
+                var token = contexto.Request.Query["access_token"];
+                if (!string.IsNullOrEmpty(token) && contexto.HttpContext.Request.Path.StartsWithSegments("/hubs"))
+                {
+                    contexto.Token = token;
+                }
+
+                return Task.CompletedTask;
+            }
         };
     });
 builder.Services.AddAuthorization();
@@ -118,5 +161,6 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<AvisosHub>(AvisosHub.Ruta);
 
 app.Run();

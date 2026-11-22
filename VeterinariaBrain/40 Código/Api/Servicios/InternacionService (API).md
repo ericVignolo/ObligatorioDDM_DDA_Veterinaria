@@ -11,7 +11,7 @@ generado: true
 
 Internación, igual a InternacionService de Blazor. Un animal tiene a lo sumo una abierta (RN-21) y un box un solo
 
-**Requisitos y decisiones:** RF-VET-09, RF-VET-10, RF-VET-11, RN-21, RN-22, RN-23, RN-24, RN-25
+**Requisitos y decisiones:** RF-CLI-09, RF-VET-09, RF-VET-10, RF-VET-11, RN-21, RN-22, RN-23, RN-24, RN-25
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 
