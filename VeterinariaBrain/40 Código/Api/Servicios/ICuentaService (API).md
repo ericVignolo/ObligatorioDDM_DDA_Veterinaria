@@ -11,7 +11,7 @@ generado: true
 
 Registro, verificación y recuperación de la contraseña (ESPECIFICACION_REGISTRO_CLIENTE.md, D-REG-01 a 04).
 
-**Requisitos y decisiones:** D-REG-01, D-REG-03
+**Requisitos y decisiones:** D-REG-01, D-REG-02, D-REG-03
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 

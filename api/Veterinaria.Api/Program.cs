@@ -22,6 +22,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 
 // Opciones de tokens y cuentas (secciones "Jwt" y "Cuentas" de appsettings).
 builder.Services.Configure<OpcionesJwt>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<OpcionesTareas>(builder.Configuration.GetSection("TareasProgramadas"));
 builder.Services.Configure<OpcionesCuentas>(o =>
 {
     builder.Configuration.GetSection("Cuentas").Bind(o);
@@ -62,6 +63,12 @@ builder.Services.AddScoped<IComunicacionService, ComunicacionService>();
 builder.Services.AddScoped<IEnvioComunicacion, EnvioComunicacionDesarrollo>();
 builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
 builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
+builder.Services.AddScoped<IDerechosRepository, DerechosRepository>();
+builder.Services.AddScoped<IDerechosService, DerechosService>();
+
+// Tareas automáticas: cola de correos y plazos de asistencia cada minuto; avisos de refuerzo, vencidos y
+// cuentas sin verificar una vez por día. Se apagan con TareasProgramadas:Activas = false.
+builder.Services.AddHostedService<ServicioTareas>();
 
 // Autenticación con token de acceso corto (RNF-SEG-03). La autorización se verifica en cada pedido (RNF-SEG-05).
 var jwt = builder.Configuration.GetSection("Jwt").Get<OpcionesJwt>() ?? new OpcionesJwt();
