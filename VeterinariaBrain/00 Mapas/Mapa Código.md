@@ -187,7 +187,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (45)
+### Servicios (46)
 - [[AdministracionService (API)]]
 - [[AnimalService (API)]]
 - [[AsistenciaService (API)]]
@@ -230,6 +230,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Resultado (API)]]
 - [[Seguridad (API)]]
 - [[SesionService (API)]]
+- [[TareasProgramadas (API)]]
 - [[TokenService (API)]]
 - [[TurnoService (API)]]
 - [[ValidacionDatos (API)]]

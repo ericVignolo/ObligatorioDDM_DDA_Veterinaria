@@ -189,7 +189,7 @@ Decisiones del esquema:
 ## Carnet, inventario y consentimiento
 
 - Mismas reglas y mensajes que `VacunaService`, `InventarioService` y `ConsentimientoService` de Blazor.
-- **Carnet:** cuentan las aplicaciones de consultas firmadas o anteriores al sistema. Los avisos de refuerzo quedan en `Comunicaciones` (tipo 4, `Clave = refuerzo-{aplicación}`) por el canal que eligió el cliente; si eligió «No recibir», no se genera. Pensado para correr una vez por día; mientras no haya tarea programada, lo dispara el Administrador.
+- **Carnet:** cuentan las aplicaciones de consultas firmadas o anteriores al sistema. Los avisos de refuerzo quedan en `Comunicaciones` (tipo 4, `Clave = refuerzo-{aplicación}`) por el canal que eligió el cliente; si eligió «No recibir», no se genera. Corre una vez por día con `ServicioTareas`; el Administrador también lo puede disparar.
 - **Inventario:** cada compra, ajuste o baja bloquea la fila del artículo (`Transacciones`) y deja su movimiento con la persona. La baja de vencidos queda a nombre del sistema.
 - **Consentimiento:** vale solo la última respuesta del turno y solo si es de la versión vigente; la firma de la consulta lo comprueba igual. Se guarda el nombre escrito, la versión, el canal «En línea», la fecha y la huella SHA-256 del texto.
 
@@ -204,7 +204,7 @@ Decisiones del esquema:
 
 - Mismas reglas y mensajes que `ComunicacionesService` de Blazor.
 - **Envío:** `IEnvioComunicacion`. La versión de desarrollo (`EnvioComunicacionDesarrollo`) no manda nada y da el envío por hecho, para probar la cola. Para el correo real se cambia esa clase en `Program.cs`.
-- **Cola:** lo que va solo a la app queda entregado en la bandeja. `POST recepcion/comunicaciones/cola` también entrega los avisos de refuerzo y los resúmenes clínicos que dejan pendientes los otros módulos. Todavía no hay una tarea que procese la cola sola.
+- **Cola:** lo que va solo a la app queda entregado en la bandeja. `POST recepcion/comunicaciones/cola` también entrega los avisos de refuerzo y los resúmenes clínicos que dejan pendientes los otros módulos. La procesa sola, cada minuto, `ServicioTareas` (ver «Tareas automáticas»).
 
 ## Asistencia
 
@@ -213,11 +213,19 @@ Decisiones del esquema:
   - `asistencia.cobertura_km` (30) y `asistencia.escalado_rojo_minutos` (10);
   - `asistencia.tarifa_base` (1500), `asistencia.tarifa_km` (40) y `asistencia.tarifa_animal_extra` (300);
   - la guardia queda en `asistencia.guardia_cuenta_id`; por defecto es la cuenta 2, la Dra. Ferreira.
-- **Plazos:** se revisan al abrir la cola de Recepción o la lista del veterinario, y con `POST recepcion/asistencias/plazos`. Todavía no hay una tarea programada.
+- **Plazos:** se revisan al abrir la cola de Recepción o la lista del veterinario, con `POST recepcion/asistencias/plazos` y cada minuto con `ServicioTareas`.
 - **Todavía no está:**
   - la distancia la manda el móvil o la carga Recepción: no hay proveedor de mapas;
   - la ubicación en vivo del veterinario y las notificaciones de cada estado;
   - el cuestionario clínico por especie (D-ASI-01).
+
+## Tareas automáticas
+
+- `ServicioTareas` (en `Services/TareasProgramadas.cs`) corre dentro de la API mientras está levantada:
+  - **cada minuto:** la cola de comunicaciones y los plazos de asistencia;
+  - **una vez por día**, desde las 6 o en la primera revisión si la API arranca más tarde: los avisos de refuerzo, la baja de lotes vencidos y el borrado de las cuentas sin verificar de más de 7 días.
+- **Configuración:** sección `TareasProgramadas` de `appsettings.json`. Con `"Activas": false` no corre nada solo; los endpoints manuales siguen disponibles.
+- Si una tarea falla (por ejemplo, porque la base está apagada), queda un aviso en la consola y se reintenta en la próxima revisión.
 
 ## Crear la base en tu computadora
 

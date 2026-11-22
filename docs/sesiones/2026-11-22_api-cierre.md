@@ -36,3 +36,18 @@ Rama `diego/sesion-2026-11-22-derechos`. PR #52. No cambia la base.
   - `Program.cs`;
   - sección 18 del `.http`.
 - **Pruebas:** `ApiDerechosTests`, 5 nuevas. CI en verde.
+
+## Parte 2: Tareas automáticas
+
+Rama `diego/sesion-2026-11-22-tareas`, que sale de la de derechos. PR #53. No cambia la base.
+
+- `ServicioTareas`, un `BackgroundService` de .NET (no se instala nada):
+  - **cada minuto:** la cola de comunicaciones y los plazos de asistencia;
+  - **una vez por día**, desde las 6: avisos de refuerzo, lotes vencidos y cuentas sin verificar de más de 7 días.
+- Se configura en `appsettings.json` → `TareasProgramadas`.
+- **Archivos:**
+  - `Services/TareasProgramadas.cs` (`OpcionesTareas`, `PlanTareas`, `ServicioTareas`);
+  - `CuentaService` y `CuentaRepository` (borrado de cuentas sin verificar);
+  - `Program.cs` y `appsettings.json`.
+- **Pruebas:** `ApiTareasTests`, 3 nuevas, y 1 en `ApiCuentasTests`. CI en verde.
+- **Para Diego:** si la base está apagada cuando levantás la API, en la consola va a aparecer cada minuto un aviso de que la tarea falló. Es normal: se reintenta sola.
