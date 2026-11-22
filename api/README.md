@@ -203,7 +203,7 @@ Decisiones del esquema:
 ## Comunicaciones
 
 - Mismas reglas y mensajes que `ComunicacionesService` de Blazor.
-- **Envío:** `IEnvioComunicacion`. La versión de desarrollo (`EnvioComunicacionDesarrollo`) no manda nada y da el envío por hecho, para probar la cola. Para el correo real se cambia esa clase en `Program.cs`.
+- **Envío:** `IEnvioComunicacion`. Sin la sección `Correo` completa, `EnvioComunicacionDesarrollo` no manda nada y da el envío por hecho; con ella, manda `CorreoSmtp` (ver «Correo real»).
 - **Cola:** lo que va solo a la app queda entregado en la bandeja. `POST recepcion/comunicaciones/cola` también entrega los avisos de refuerzo y los resúmenes clínicos que dejan pendientes los otros módulos. La procesa sola, cada minuto, `ServicioTareas` (ver «Tareas automáticas»).
 
 ## Asistencia
@@ -226,6 +226,27 @@ Decisiones del esquema:
   - **una vez por día**, desde las 6 o en la primera revisión si la API arranca más tarde: los avisos de refuerzo, la baja de lotes vencidos y el borrado de las cuentas sin verificar de más de 7 días.
 - **Configuración:** sección `TareasProgramadas` de `appsettings.json`. Con `"Activas": false` no corre nada solo; los endpoints manuales siguen disponibles.
 - Si una tarea falla (por ejemplo, porque la base está apagada), queda un aviso en la consola y se reintenta en la próxima revisión.
+
+## Correo real
+
+- Mientras la sección `Correo` esté vacía, la API **no manda correos**:
+  - los códigos vuelven en la respuesta (`codigoDesarrollo`, solo en Development);
+  - la cola de Comunicaciones da los envíos por hechos.
+- **Para mandar de verdad**, completá en `appsettings.Development.json` (no se sube a GitHub):
+
+```json
+"Correo": {
+  "Servidor": "smtp.gmail.com",
+  "Puerto": 587,
+  "UsarSsl": true,
+  "Usuario": "tu-cuenta@gmail.com",
+  "Contrasena": "la contraseña de aplicación de 16 letras",
+  "Remitente": "tu-cuenta@gmail.com"
+}
+```
+
+- Con Gmail se usa una **contraseña de aplicación**, no la contraseña común. Se crea en la cuenta de Google → Seguridad → Verificación en dos pasos → Contraseñas de aplicaciones.
+- Si el servidor falla, queda un aviso en la consola, sin el correo ni el código. El cliente puede pedir otro código y la cola reintenta hasta 3 veces.
 
 ## Crear la base en tu computadora
 

@@ -51,3 +51,13 @@ Rama `diego/sesion-2026-11-22-tareas`, que sale de la de derechos. PR #53. No ca
   - `Program.cs` y `appsettings.json`.
 - **Pruebas:** `ApiTareasTests`, 3 nuevas, y 1 en `ApiCuentasTests`. CI en verde.
 - **Para Diego:** si la base está apagada cuando levantás la API, en la consola va a aparecer cada minuto un aviso de que la tarea falló. Es normal: se reintenta sola.
+
+## Parte 3: Correo real
+
+Rama `diego/sesion-2026-11-22-correo`, que sale de la de tareas. PR #54. No cambia la base.
+
+- `CorreoSmtp` (`System.Net.Mail`, viene con .NET) manda los códigos y la cola de Comunicaciones.
+- Se activa solo si `appsettings` tiene `Correo:Servidor` y `Correo:Remitente`. Si no, sigue el envío de prueba.
+- **Para Diego:** cuando tengan una cuenta para mandar, completen la sección `Correo` en `appsettings.Development.json`. Los pasos para Gmail están en `api/README.md`. La contraseña no va en GitHub.
+- **Archivos:** `Services/EnvioCorreo.cs` (`OpcionesCorreo`, `CorreoSmtp`), `Program.cs`, `appsettings.json` y `appsettings.Development.example.json`.
+- **Pruebas:** `ApiCorreoTests`, 3 nuevas. CI en verde.
