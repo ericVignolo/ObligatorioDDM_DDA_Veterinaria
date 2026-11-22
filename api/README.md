@@ -118,6 +118,11 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `GET /api/v1/veterinario/asistencias` y `/{id}` | Veterinario | Ofrecidas a mí y las que acepté |
 | `POST /api/v1/veterinario/asistencias/{id}/aceptacion`, `/rechazo`, `/avance`, `/finalizacion` y `/nivel` | Veterinario | El primero que acepta se la queda; traslado; finalizar genera el cargo; nivel con motivo (RN-52) |
 | `PUT /api/v1/admin/guardia` | Administrador | Veterinario de guardia (RF-ADM-13) |
+| `GET /api/v1/privacidad/politicas` | Pública | Qué se guarda de cada categoría, para qué, quién accede y cuánto se conserva (RNF-LEG-06) |
+| `GET /api/v1/privacidad/exportacion` | Cliente | Descarga `mis-datos-vitalia.json` con sus datos (RNF-LEG-02); queda registrado |
+| `GET /api/v1/privacidad/solicitudes` y `/obstaculos` | Cliente | Sus pedidos y lo que falta resolver antes de eliminar |
+| `POST /api/v1/privacidad/eliminacion` y `/solicitudes/{id}/cancelacion` | Cliente | Pedido de eliminación con confirmación; se puede cancelar mientras esté Recibido |
+| `GET /api/v1/admin/derechos` y `POST /{id}/resolucion` | Administrador | Aprobar anonimiza la cuenta; rechazar pide motivo |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
