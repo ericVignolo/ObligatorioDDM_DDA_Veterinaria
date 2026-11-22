@@ -50,3 +50,90 @@ public class EnvioComunicacionDesarrollo : IEnvioComunicacion
         return Task.FromResult<string?>(null);
     }
 }
+
+// Servidor de correo (sección "Correo" de appsettings). La contraseña va en appsettings.Development.json o en
+// los secretos de usuario, nunca en GitHub.
+public class OpcionesCorreo
+{
+    public string Servidor { get; set; } = "";
+    public int Puerto { get; set; } = 587;
+    public bool UsarSsl { get; set; } = true;
+    public string Usuario { get; set; } = "";
+    public string Contrasena { get; set; } = "";
+    public string Remitente { get; set; } = "";
+    public string NombreRemitente { get; set; } = "Clínica VITALIA";
+
+    // Sin servidor ni remitente, la API sigue con el envío de prueba.
+    public bool Configurado => !string.IsNullOrWhiteSpace(Servidor) && !string.IsNullOrWhiteSpace(Remitente);
+}
+
+// Envío real por SMTP con System.Net.Mail (viene con .NET; no se instala nada). Sirve para los códigos y para la
+// cola de Comunicaciones. Nunca escribe en el log el destino, el código ni el contenido (RNF-SEG-11).
+public class CorreoSmtp : IEnvioCorreo, IEnvioComunicacion
+{
+    private readonly OpcionesCorreo _opciones;
+    private readonly ILogger<CorreoSmtp> _logger;
+
+    public CorreoSmtp(Microsoft.Extensions.Options.IOptions<OpcionesCorreo> opciones, ILogger<CorreoSmtp> logger)
+    {
+        _opciones = opciones.Value;
+        _logger = logger;
+    }
+
+    // Texto del correo con el código. Público para poder probarlo.
+    public static (string Asunto, string Cuerpo) ArmarCodigo(string tipo, string codigo, DateTime vence)
+    {
+        var hora = (vence.Kind == DateTimeKind.Utc ? vence.ToLocalTime() : vence).ToString("HH:mm");
+        return tipo == CuentaService.TipoRecuperacion
+            ? ("Recuperá tu contraseña de VITALIA",
+               $"Tu código para elegir una contraseña nueva es {codigo}.\nVale hasta las {hora}.\n\nSi no lo pediste, ignorá este correo: tu contraseña sigue igual.")
+            : ("Verificá tu correo en VITALIA",
+               $"Tu código de verificación es {codigo}.\nVale hasta las {hora}.\n\nSi no creaste una cuenta en la Clínica VITALIA, ignorá este correo.");
+    }
+
+    // Si el servidor falla, la cuenta no se pierde: el cliente pide otro código con «Reenviar código».
+    public async Task EnviarCodigoAsync(string destino, string tipo, string codigo, DateTime vence)
+    {
+        var (asunto, cuerpo) = ArmarCodigo(tipo, codigo, vence);
+        var error = await EnviarAsync(destino, asunto, cuerpo);
+        if (error != null)
+        {
+            _logger.LogWarning("No se pudo enviar el código de {Tipo}: {Error}", tipo, error);
+        }
+    }
+
+    public async Task<string?> EnviarAsync(string destino, string asunto, string cuerpo)
+    {
+        try
+        {
+            using var mensaje = new System.Net.Mail.MailMessage
+            {
+                From = new System.Net.Mail.MailAddress(_opciones.Remitente, _opciones.NombreRemitente),
+                Subject = asunto,
+                Body = cuerpo,
+                IsBodyHtml = false,
+                BodyEncoding = System.Text.Encoding.UTF8,
+                SubjectEncoding = System.Text.Encoding.UTF8
+            };
+            mensaje.To.Add(destino);
+
+            using var cliente = new System.Net.Mail.SmtpClient(_opciones.Servidor, _opciones.Puerto)
+            {
+                EnableSsl = _opciones.UsarSsl,
+                DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network,
+                Credentials = string.IsNullOrEmpty(_opciones.Usuario) ? null : new System.Net.NetworkCredential(_opciones.Usuario, _opciones.Contrasena),
+                Timeout = 15000
+            };
+            await cliente.SendMailAsync(mensaje);
+            return null;
+        }
+        catch (System.Net.Mail.SmtpException ex)
+        {
+            return $"El servidor de correo respondió con error ({ex.StatusCode}).";
+        }
+        catch (Exception ex) when (ex is FormatException or InvalidOperationException or System.Net.Sockets.SocketException or IOException)
+        {
+            return "No se pudo conectar con el servidor de correo.";
+        }
+    }
+}

@@ -14,4 +14,7 @@ public interface ICuentaService
     Task<Resultado<MensajeDto>> ConfirmarRecuperacionAsync(NuevaContrasenaDto datos);
 
     Task<Resultado<CuentaReadDto>> ObtenerPerfilAsync(int cuentaId);
+
+    // D-REG-02: borra las cuentas que no se verificaron en 7 días (lo corre la tarea diaria). Devuelve cuántas.
+    Task<int> EliminarNoVerificadasAsync();
 }

@@ -29,6 +29,8 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[ConsultaDtos (API)]]
 - [[ConsultaRepository (API)]]
 - [[ConsultaService (API)]]
+- [[DerechosRepository (API)]]
+- [[DerechosService (API)]]
 - [[IAdministracionRepository (API)]]
 - [[IPrestacionRepository (API)]]
 - [[ISaludRepository (API)]]
@@ -48,3 +50,4 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## En las otras aplicaciones
 - [[Prestacion]]
+- [[Prestacion (Móvil)]]

@@ -29,6 +29,9 @@ public interface ICuentaRepository
     // Borra una cuenta que nunca se verificó, con sus códigos, roles y aceptaciones (D-REG-02, 7 días).
     Task EliminarNoVerificadaAsync(Cuenta cuenta);
 
+    // D-REG-02: cuentas que nunca se verificaron, creadas antes de la fecha límite.
+    Task<List<Cuenta>> ObtenerNoVerificadasAntesDeAsync(DateTime limite);
+
     // Lanza CuentaDuplicadaException si choca con el índice único del correo.
     Task GuardarAsync();
 }
