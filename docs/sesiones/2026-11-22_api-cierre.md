@@ -61,3 +61,18 @@ Rama `diego/sesion-2026-11-22-correo`, que sale de la de tareas. PR #54. No camb
 - **Para Diego:** cuando tengan una cuenta para mandar, completen la sección `Correo` en `appsettings.Development.json`. Los pasos para Gmail están en `api/README.md`. La contraseña no va en GitHub.
 - **Archivos:** `Services/EnvioCorreo.cs` (`OpcionesCorreo`, `CorreoSmtp`), `Program.cs`, `appsettings.json` y `appsettings.Development.example.json`.
 - **Pruebas:** `ApiCorreoTests`, 3 nuevas. CI en verde.
+
+## Parte 4: Tiempo real
+
+Rama `diego/sesion-2026-11-22-tiempo-real`, que sale de la de correo. PR #55. No cambia la base.
+
+- `AvisosHub` (SignalR) en `/hubs/avisos`. Cada conexión entra a los grupos de su cuenta y de sus roles.
+- **Eventos:**
+  - internación: `internacion.cambio` al cliente, solo lo visible, y `internacion.tablero` al personal;
+  - asistencia: `asistencia.cambio` al cliente, `asistencia.cola` a Recepción y Administración, y `asistencia.oferta` a los veterinarios.
+- **Privacidad:** solo ids, nivel y estado; nunca ubicación ni texto clínico.
+- **Archivos:**
+  - `Services/Notificador.cs` (`INotificador`, `NotificadorNulo`, `AvisosHub`, `NotificadorSignalR`);
+  - `InternacionService.cs` y `AsistenciaService.cs`, con el notificador opcional en el constructor;
+  - `Program.cs` (SignalR, el hub y el token por `?access_token=`).
+- **Pruebas:** una en `ApiInternacionTests` y otra en `ApiAsistenciaTests`, con `NotificadorDePrueba`. CI en verde.

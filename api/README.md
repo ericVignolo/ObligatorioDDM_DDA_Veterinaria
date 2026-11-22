@@ -216,7 +216,7 @@ Decisiones del esquema:
 - **Plazos:** se revisan al abrir la cola de Recepción o la lista del veterinario, con `POST recepcion/asistencias/plazos` y cada minuto con `ServicioTareas`.
 - **Todavía no está:**
   - la distancia la manda el móvil o la carga Recepción: no hay proveedor de mapas;
-  - la ubicación en vivo del veterinario y las notificaciones de cada estado;
+  - la ubicación en vivo del veterinario (los avisos de cada estado ya van por el hub);
   - el cuestionario clínico por especie (D-ASI-01).
 
 ## Tareas automáticas
@@ -247,6 +247,22 @@ Decisiones del esquema:
 
 - Con Gmail se usa una **contraseña de aplicación**, no la contraseña común. Se crea en la cuenta de Google → Seguridad → Verificación en dos pasos → Contraseñas de aplicaciones.
 - Si el servidor falla, queda un aviso en la consola, sin el correo ni el código. El cliente puede pedir otro código y la cola reintenta hasta 3 veces.
+
+## Avisos en tiempo real
+
+- **Hub:** SignalR en `/hubs/avisos`, con sesión iniciada. El token va en el encabezado o en `?access_token=`.
+- **Eventos:**
+
+| Evento | Quién lo recibe | Cuándo |
+|---|---|---|
+| `internacion.cambio` | Cliente | Admisión, ingreso, novedad o rectificación visible, alta |
+| `internacion.tablero` | Recepción, Veterinario, Administrador | Cualquier cambio de una internación |
+| `asistencia.cambio` | Cliente | Cada cambio de su solicitud |
+| `asistencia.cola` | Recepción, Administrador | Cada cambio de una solicitud |
+| `asistencia.oferta` | Veterinarios ofrecidos o asignado | Cada cambio de esa solicitud |
+
+- Los avisos llevan solo ids, nivel, estado y llegada estimada. El detalle se pide a la API.
+- Cliente en React Native: paquete `@microsoft/signalr`, con `accessTokenFactory` que devuelva el token.
 
 ## Crear la base en tu computadora
 
