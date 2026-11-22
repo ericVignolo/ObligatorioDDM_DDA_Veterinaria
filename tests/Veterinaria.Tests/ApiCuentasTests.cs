@@ -88,6 +88,9 @@ public class ApiCuentasTests
             Sesiones.Add(sesion);
         }
 
+        public Task<List<Cuenta>> ObtenerNoVerificadasAntesDeAsync(DateTime limite)
+            => Task.FromResult(Cuentas.Where(c => !c.Verificada && !c.Eliminada && c.FechaCreacion < limite).ToList());
+
         public Task EliminarNoVerificadaAsync(Cuenta cuenta)
         {
             Codigos.RemoveAll(c => c.CuentaId == cuenta.Id);
@@ -129,6 +132,21 @@ public class ApiCuentasTests
             await Cuentas.VerificarAsync(new VerificacionDto { Correo = correo, Codigo = Correo.UltimoCodigo });
             return Repo.Cuentas.Single(c => c.Correo == correo);
         }
+    }
+
+    [Fact]
+    public async Task Tarea_diaria_borra_solo_las_cuentas_sin_verificar_de_mas_de_7_dias()
+    {
+        var e = new Escenario();
+        await e.ClienteVerificadoAsync("ana@correo.uy");
+        await e.Cuentas.RegistrarAsync(Registro("beto@correo.uy", cedula: "4.444.444-4"));
+
+        e.Reloj.Avanzar(TimeSpan.FromDays(6));
+        Assert.Equal(0, await e.Cuentas.EliminarNoVerificadasAsync());
+
+        e.Reloj.Avanzar(TimeSpan.FromDays(2));
+        Assert.Equal(1, await e.Cuentas.EliminarNoVerificadasAsync());
+        Assert.Equal("ana@correo.uy", Assert.Single(e.Repo.Cuentas).Correo);
     }
 
     private static RegistroCreateDto Registro(string correo = "ana@correo.uy", string contrasena = "Secreta123", string cedula = "1.234.567-2") => new()

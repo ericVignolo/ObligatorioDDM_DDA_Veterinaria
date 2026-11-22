@@ -32,6 +32,17 @@ public class CuentaService : ICuentaService
 
     private DateTime Ahora => _reloj.GetUtcNow().UtcDateTime;
 
+    public async Task<int> EliminarNoVerificadasAsync()
+    {
+        var cuentas = await _repository.ObtenerNoVerificadasAntesDeAsync(Ahora.AddDays(-_opciones.DiasSinVerificar));
+        foreach (var cuenta in cuentas)
+        {
+            await _repository.EliminarNoVerificadaAsync(cuenta);
+        }
+
+        return cuentas.Count;
+    }
+
     public async Task<Resultado<RespuestaCodigoDto>> RegistrarAsync(RegistroCreateDto datos)
     {
         var ahora = Ahora;
