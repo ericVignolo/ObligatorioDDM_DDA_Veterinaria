@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.DataProtection;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 
 // Opciones de tokens y cuentas (secciones "Jwt" y "Cuentas" de appsettings).
 builder.Services.Configure<OpcionesJwt>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<OpcionesSeguridad>(builder.Configuration.GetSection("Seguridad"));
 builder.Services.Configure<OpcionesTareas>(builder.Configuration.GetSection("TareasProgramadas"));
 builder.Services.Configure<OpcionesCuentas>(o =>
 {
@@ -91,6 +93,11 @@ builder.Services.AddHostedService<ServicioTareas>();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<INotificador, NotificadorSignalR>();
 
+// Verificación en dos pasos: el secreto se guarda cifrado con la protección de datos de ASP.NET Core.
+builder.Services.AddDataProtection().SetApplicationName("Vitalia");
+builder.Services.AddSingleton<ProteccionSecretos>();
+builder.Services.AddScoped<ISegundoFactorService, SegundoFactorService>();
+
 // Autenticación con token de acceso corto (RNF-SEG-03). La autorización se verifica en cada pedido (RNF-SEG-05).
 var jwt = builder.Configuration.GetSection("Jwt").Get<OpcionesJwt>() ?? new OpcionesJwt();
 builder.Services
@@ -140,7 +147,8 @@ builder.Services.AddRateLimiter(o =>
     };
 });
 
-builder.Services.AddControllers();
+// RNF-SEG-04: el Administrador sin la verificación en dos pasos solo usa su cuenta y la activación.
+builder.Services.AddControllers(o => o.Filters.Add<ExigirSegundoFactorFiltro>());
 builder.Services.AddOpenApi();
 
 // Errores no controlados en formato Problem Details, sin detalles internos (D-CAT-03).

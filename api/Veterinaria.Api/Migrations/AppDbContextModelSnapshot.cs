@@ -1032,6 +1032,14 @@ namespace Veterinaria.Api.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("varchar(250)");
 
+                    b.Property<string>("SecretoSegundoFactor")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)");
+
+                    b.Property<bool>("SegundoFactorActivo")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Telefono")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -1041,6 +1049,9 @@ namespace Veterinaria.Api.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
+
+                    b.Property<long>("UltimoPasoSegundoFactor")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("Verificada")
                         .HasColumnType("tinyint(1)");
@@ -1074,8 +1085,11 @@ namespace Veterinaria.Api.Migrations
                             NumeroDocumento = "",
                             NumeroPuerta = "",
                             Referencias = "",
+                            SecretoSegundoFactor = "",
+                            SegundoFactorActivo = false,
                             Telefono = "",
                             TipoDocumento = "",
+                            UltimoPasoSegundoFactor = 0L,
                             Verificada = true
                         },
                         new
@@ -1097,8 +1111,11 @@ namespace Veterinaria.Api.Migrations
                             NumeroDocumento = "",
                             NumeroPuerta = "",
                             Referencias = "",
+                            SecretoSegundoFactor = "",
+                            SegundoFactorActivo = false,
                             Telefono = "",
                             TipoDocumento = "",
+                            UltimoPasoSegundoFactor = 0L,
                             Verificada = true
                         },
                         new
@@ -1120,8 +1137,11 @@ namespace Veterinaria.Api.Migrations
                             NumeroDocumento = "",
                             NumeroPuerta = "",
                             Referencias = "",
+                            SecretoSegundoFactor = "",
+                            SegundoFactorActivo = false,
                             Telefono = "",
                             TipoDocumento = "",
+                            UltimoPasoSegundoFactor = 0L,
                             Verificada = true
                         },
                         new
@@ -1143,8 +1163,11 @@ namespace Veterinaria.Api.Migrations
                             NumeroDocumento = "",
                             NumeroPuerta = "",
                             Referencias = "",
+                            SecretoSegundoFactor = "",
+                            SegundoFactorActivo = false,
                             Telefono = "",
                             TipoDocumento = "",
+                            UltimoPasoSegundoFactor = 0L,
                             Verificada = true
                         },
                         new
@@ -1166,8 +1189,11 @@ namespace Veterinaria.Api.Migrations
                             NumeroDocumento = "",
                             NumeroPuerta = "",
                             Referencias = "",
+                            SecretoSegundoFactor = "",
+                            SegundoFactorActivo = false,
                             Telefono = "",
                             TipoDocumento = "",
+                            UltimoPasoSegundoFactor = 0L,
                             Verificada = true
                         });
                 });

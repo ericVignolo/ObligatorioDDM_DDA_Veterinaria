@@ -10,6 +10,7 @@ namespace Veterinaria.Api.Controllers;
 [ApiController]
 [Route("api/v1/cuentas")]
 [EnableRateLimiting(Problemas.PoliticaCuentas)]
+[PermitirSinSegundoFactor]
 public class CuentasController : ControllerBase
 {
     private readonly ICuentaService _service;
