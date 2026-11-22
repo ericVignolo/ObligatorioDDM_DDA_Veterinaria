@@ -41,7 +41,17 @@ builder.Services.AddScoped<ICuentaRepository, CuentaRepository>();
 builder.Services.AddScoped<ICuentaService, CuentaService>();
 builder.Services.AddScoped<ISesionService, SesionService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IEnvioCorreo, EnvioCorreoDesarrollo>();
+// Correo: si la sección "Correo" tiene servidor y remitente, se envía de verdad por SMTP; si no, envío de prueba.
+builder.Services.Configure<OpcionesCorreo>(builder.Configuration.GetSection("Correo"));
+var correo = builder.Configuration.GetSection("Correo").Get<OpcionesCorreo>() ?? new OpcionesCorreo();
+if (correo.Configurado)
+{
+    builder.Services.AddScoped<IEnvioCorreo, CorreoSmtp>();
+}
+else
+{
+    builder.Services.AddScoped<IEnvioCorreo, EnvioCorreoDesarrollo>();
+}
 builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
 builder.Services.AddScoped<ITurnoRepository, TurnoRepository>();
@@ -60,7 +70,14 @@ builder.Services.AddScoped<IInternacionRepository, InternacionRepository>();
 builder.Services.AddScoped<IInternacionService, InternacionService>();
 builder.Services.AddScoped<IComunicacionRepository, ComunicacionRepository>();
 builder.Services.AddScoped<IComunicacionService, ComunicacionService>();
-builder.Services.AddScoped<IEnvioComunicacion, EnvioComunicacionDesarrollo>();
+if (correo.Configurado)
+{
+    builder.Services.AddScoped<IEnvioComunicacion, CorreoSmtp>();
+}
+else
+{
+    builder.Services.AddScoped<IEnvioComunicacion, EnvioComunicacionDesarrollo>();
+}
 builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
 builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
 builder.Services.AddScoped<IDerechosRepository, DerechosRepository>();
