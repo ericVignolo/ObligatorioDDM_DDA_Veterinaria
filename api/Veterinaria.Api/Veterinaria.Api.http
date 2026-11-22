@@ -749,3 +749,22 @@ Content-Type: application/json
 
 GET {{api}}/asistencias/1
 Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### ---------- 18. Derechos del titular ----------
+
+GET {{api}}/privacidad/politicas
+
+### Descargar mis datos (Ana)
+
+GET {{api}}/privacidad/exportacion
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Qué falta para poder eliminar la cuenta
+
+GET {{api}}/privacidad/obstaculos
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Pedidos (admin)
+
+GET {{api}}/admin/derechos
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
