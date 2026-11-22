@@ -187,7 +187,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Api — [[Carpeta api]]
 
-### Servicios (47)
+### Servicios (48)
 - [[AdministracionService (API)]]
 - [[AnimalService (API)]]
 - [[AsistenciaService (API)]]
@@ -229,6 +229,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ReglasClinicas (API)]]
 - [[ReglasStock (API)]]
 - [[Resultado (API)]]
+- [[SegundoFactor (API)]]
 - [[Seguridad (API)]]
 - [[SesionService (API)]]
 - [[TareasProgramadas (API)]]
@@ -254,7 +255,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[SesionRefresco (API)]]
 - [[Turno (API)]]
 
-### Controladores (23)
+### Controladores (24)
 - [[AdminSaludController (API)]] · `api/v1/admin`
 - [[AdministracionController (API)]] · `api/v1/admin`
 - [[AnimalesController (API)]] · `api/v1/animales`
@@ -272,6 +273,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ProfesionalesController (API)]] · `api/v1/profesionales`
 - [[RecepcionController (API)]] · `api/v1/recepcion`
 - [[SaludController (API)]] · `api/v1`
+- [[SegundoFactorController (API)]] · `api/v1/cuentas/yo/segundo-factor`
 - [[ServiciosController (API)]] · `api/v1/servicios`
 - [[SesionesController (API)]] · `api/v1/sesiones`
 - [[StockVeterinarioController (API)]] · `api/v1/veterinario`

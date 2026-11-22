@@ -123,6 +123,9 @@ Capas (estilo del profesor): `Controllers/` → `Services/` (`IXxxService`) → 
 | `GET /api/v1/privacidad/solicitudes` y `/obstaculos` | Cliente | Sus pedidos y lo que falta resolver antes de eliminar |
 | `POST /api/v1/privacidad/eliminacion` y `/solicitudes/{id}/cancelacion` | Cliente | Pedido de eliminación con confirmación; se puede cancelar mientras esté Recibido |
 | `GET /api/v1/admin/derechos` y `POST /{id}/resolucion` | Administrador | Aprobar anonimiza la cuenta; rechazar pide motivo |
+| `GET /api/v1/cuentas/yo/segundo-factor` | Cualquier cuenta | Estado de la verificación en dos pasos y si es obligatoria |
+| `POST /api/v1/cuentas/yo/segundo-factor/configuracion` | Cualquier cuenta | Clave y enlace `otpauth://` para el QR de la app autenticadora |
+| `POST /api/v1/cuentas/yo/segundo-factor/activacion` y `/desactivacion` | Cualquier cuenta | Activar con el primer código (cierra las sesiones); desactivar con contraseña y código (el Administrador no puede) |
 | `GET /api/v1/clinica` | Público | `200` con nombre, dirección, teléfonos, guardia, correo, horario y cobertura; `404` (`CLINICA_NO_CONFIGURADA`) si no hay datos |
 
 Un servicio es público si está publicado y tiene precio (`ReglasCatalogo.EsPublica`); un profesional, si está publicado y activo (`ReglasProfesionales.EsPublico`). A los profesionales no se les expone la matrícula, la cuenta ni las ausencias. Los errores salen de `Controllers/Problemas.cs`. Pruebas: `ApiCatalogoTests.cs` y `ApiProfesionalesTests.cs` en `tests/Veterinaria.Tests/`. El contrato OpenAPI se ve en `/openapi/v1.json` al correr en Development.
@@ -263,6 +266,18 @@ Decisiones del esquema:
 
 - Los avisos llevan solo ids, nivel, estado y llegada estimada. El detalle se pide a la API.
 - Cliente en React Native: paquete `@microsoft/signalr`, con `accessTokenFactory` que devuelva el token.
+
+## Verificación en dos pasos
+
+- Con app autenticadora (Google Authenticator, Microsoft Authenticator…). Es obligatoria para el Administrador y opcional para el resto (RNF-SEG-04).
+- **Activarla:**
+  1. `POST cuentas/yo/segundo-factor/configuracion` devuelve `secreto` y `enlace`. En la app se elige «Ingresar una clave» y se pega el `secreto`; o se arma un QR con el `enlace`.
+  2. `POST cuentas/yo/segundo-factor/activacion` con el código de 6 cifras que muestra la app. Se cierran las sesiones abiertas.
+- **Ingresar:** `POST sesiones` con correo y contraseña. Si responde `requiereSegundoFactor: true`, se repite agregando `"codigoSegundoFactor": "123456"`.
+- **Administrador:**
+  - sin los dos pasos activos, todo lo que no sea su cuenta da `403 SEGUNDO_FACTOR_REQUERIDO`, y el ingreso avisa con `debeConfigurarSegundoFactor: true`;
+  - para probar en tu computadora sin teléfono, poné en `appsettings.Development.json`: `"Seguridad": { "ExigirSegundoFactorAdministrador": false }`.
+- **Base:** la migración `SegundoFactor` agrega `SegundoFactorActivo`, `SecretoSegundoFactor` y `UltimoPasoSegundoFactor` a `Cuentas`. Hay que correr `Update-Database`.
 
 ## Crear la base en tu computadora
 

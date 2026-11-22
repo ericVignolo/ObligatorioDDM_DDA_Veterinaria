@@ -13,6 +13,6 @@ Registro de cliente (A-006, D-REG-01, D-REG-04). Mismas reglas y mensajes que Re
 
 **Tareas:** A-006
 
-**Requisitos y decisiones:** D-REG-01, D-REG-04, RN-43, RNF-SEG-03
+**Requisitos y decisiones:** D-REG-01, D-REG-04, RN-43, RNF-SEG-03, RNF-SEG-04
 
 Parte de [[Mapa Código]] · [[Carpeta api]]

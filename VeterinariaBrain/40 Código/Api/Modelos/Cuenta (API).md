@@ -13,7 +13,7 @@ Cuenta de una persona: Cliente o personal (RF-VIS-07, D-REG-01). Los roles van e
 
 **Tareas:** A-028
 
-**Requisitos y decisiones:** D-PER-04, D-REG-01, RF-VIS-07, RNF-LEG-02, RNF-SEG-01, RNF-SEG-09
+**Requisitos y decisiones:** D-PER-04, D-REG-01, RF-VIS-07, RNF-LEG-02, RNF-SEG-01, RNF-SEG-04, RNF-SEG-09
 
 Parte de [[Mapa Código]] · [[Carpeta api]]
 

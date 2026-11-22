@@ -76,3 +76,37 @@ Rama `diego/sesion-2026-11-22-tiempo-real`, que sale de la de correo. PR #55. No
   - `InternacionService.cs` y `AsistenciaService.cs`, con el notificador opcional en el constructor;
   - `Program.cs` (SignalR, el hub y el token por `?access_token=`).
 - **Pruebas:** una en `ApiInternacionTests` y otra en `ApiAsistenciaTests`, con `NotificadorDePrueba`. CI en verde.
+
+## Parte 5: Verificación en dos pasos
+
+Rama `diego/sesion-2026-11-22-dos-pasos`, que sale de la de tiempo real. PR #56. **Cambia la base:** migración `SegundoFactor`.
+
+- **Mecanismo:** TOTP (RFC 6238) con lo que trae .NET. El secreto se guarda cifrado y un código no se puede usar dos veces.
+- **Cuenta propia:** estado, configuración (clave y enlace para el QR), activación y desactivación (el Administrador no puede desactivarla).
+- **Ingreso:** con dos pasos activos se pide el código; un código malo cuenta como intento fallido.
+- **Administrador:** sin los dos pasos activos solo usa su cuenta. Se puede apagar en desarrollo con `Seguridad:ExigirSegundoFactorAdministrador = false`.
+- **Migración:** la escribió Claude a mano (`20261122190000_SegundoFactor` y su `Designer`, más el snapshot). El CI comprobó con `HasPendingModelChanges` que coincide con el modelo.
+- **Archivos:**
+  - `Services/SegundoFactor.cs` (`Totp`, `ProteccionSecretos`, `OpcionesSeguridad`, `SegundoFactorService`, el filtro);
+  - `Controllers/SegundoFactorController.cs`;
+  - `SesionService.cs`, `TokenService.cs` y `DTOs/CuentaDtos.cs`;
+  - `Models/Cuenta.cs` y `Migrations/`;
+  - `Program.cs` y `appsettings.json`;
+  - sección 19 del `.http`;
+  - `CONTEXTO_BASE.md` (DT-SEG-02).
+- **Pruebas:** `ApiSegundoFactorTests`, 4 nuevas, y 1 en `ApiCuentasTests`. CI en verde con **1177 pruebas**.
+
+## Cómo probar todo
+
+1. En GitHub Desktop: **Fetch origin** y elegí `diego/sesion-2026-11-22-dos-pasos`, que tiene todo lo de hoy.
+2. En la Consola del Administrador de paquetes: `Update-Database` (aplica `SegundoFactor`).
+3. Si querés probar con el admin sin teléfono: en `appsettings.Development.json` agregá `"Seguridad": { "ExigirSegundoFactorAdministrador": false }`.
+4. F5 y `Veterinaria.Api.http`, secciones 11 a 19.
+
+## Pendientes
+
+- [ ] Diego: `Update-Database` y probar con F5.
+- [ ] Mezclar los PR #52 a #56 en orden (cada uno sale del anterior).
+- [ ] Cuando haya una cuenta de correo: completar la sección `Correo` en `appsettings.Development.json`.
+- [ ] Siguiente etapa: conectar Blazor a la API (sección C, `XxxApiService`) y React Native, con el hub de avisos (`@microsoft/signalr`).
+- [ ] Para Eric: si la internación cobra por día y qué especies van al box de grandes animales.
