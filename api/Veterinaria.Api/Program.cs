@@ -87,6 +87,10 @@ builder.Services.AddScoped<IDerechosService, DerechosService>();
 // cuentas sin verificar una vez por día. Se apagan con TareasProgramadas:Activas = false.
 builder.Services.AddHostedService<ServicioTareas>();
 
+// Avisos en tiempo real (SignalR, viene con ASP.NET Core): internación y asistencia.
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<INotificador, NotificadorSignalR>();
+
 // Autenticación con token de acceso corto (RNF-SEG-03). La autorización se verifica en cada pedido (RNF-SEG-05).
 var jwt = builder.Configuration.GetSection("Jwt").Get<OpcionesJwt>() ?? new OpcionesJwt();
 builder.Services
@@ -102,6 +106,21 @@ builder.Services
             NameClaimType = TokenService.ClaimNombre,
             RoleClaimType = TokenService.ClaimRol,
             ClockSkew = TimeSpan.FromSeconds(30)
+        };
+
+        // Los WebSockets del hub no mandan encabezados: el token llega en ?access_token= solo para /hubs.
+        o.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = contexto =>
+            {
+                var token = contexto.Request.Query["access_token"];
+                if (!string.IsNullOrEmpty(token) && contexto.HttpContext.Request.Path.StartsWithSegments("/hubs"))
+                {
+                    contexto.Token = token;
+                }
+
+                return Task.CompletedTask;
+            }
         };
     });
 builder.Services.AddAuthorization();
@@ -142,5 +161,6 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<AvisosHub>(AvisosHub.Ruta);
 
 app.Run();

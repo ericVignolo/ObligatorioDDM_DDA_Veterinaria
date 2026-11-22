@@ -24,13 +24,34 @@ public class InternacionService : IInternacionService
     // Especies que van a un box de grandes animales (las mismas de Blazor).
     private static readonly string[] EspeciesGrandes = { "Caballo", "Vaca" };
 
+    // Eventos en tiempo real (RF-CLI-09).
+    public const string EventoCliente = "internacion.cambio";
+    public const string EventoTablero = "internacion.tablero";
+
     private readonly IInternacionRepository _repository;
     private readonly TimeProvider _reloj;
+    private readonly INotificador _notificador;
 
-    public InternacionService(IInternacionRepository repository, TimeProvider reloj)
+    public InternacionService(IInternacionRepository repository, TimeProvider reloj, INotificador? notificador = null)
     {
         _repository = repository;
         _reloj = reloj;
+        _notificador = notificador ?? NotificadorNulo.Instancia;
+    }
+
+    // Avisa al cliente (si corresponde) y al tablero del personal. Solo ids y estado: el detalle se pide a la API.
+    private async Task AvisarAsync(Internacion i, bool alCliente, string queCambio)
+    {
+        var datos = new { internacionId = i.Id, animalId = i.AnimalId, estado = i.Estado, cambio = queCambio };
+        if (alCliente)
+        {
+            await _notificador.ACuentaAsync(i.ClienteId, EventoCliente, datos);
+        }
+
+        foreach (var rol in new[] { "Recepcionista", "Veterinario", "Administrador" })
+        {
+            await _notificador.ARolAsync(rol, EventoTablero, datos);
+        }
     }
 
     private DateTime Ahora => _reloj.GetLocalNow().DateTime;
@@ -115,6 +136,7 @@ public class InternacionService : IInternacionService
             };
             _repository.Agregar(internacion);
             await _repository.GuardarAsync();
+            await AvisarAsync(internacion, alCliente: true, "Admisión");
 
             var dto = ADto(internacion, animal);
             dto.Mensaje = $"{animal.Nombre} quedó admitido. Falta que un veterinario le asigne box y plan.";
@@ -140,6 +162,7 @@ public class InternacionService : IInternacionService
         internacion.MotivoAnulacion = datos.Motivo.Trim();
         internacion.Version++;
         await _repository.GuardarAsync();
+        await AvisarAsync(internacion, alCliente: false, "Anulación");
 
         var dto = ADto(internacion);
         dto.Mensaje = "Admisión anulada.";
@@ -195,6 +218,7 @@ public class InternacionService : IInternacionService
             internacion.Estado = Internado;
             internacion.Version++;
             await _repository.GuardarAsync();
+            await AvisarAsync(internacion, alCliente: true, "Ingreso");
 
             var dto = ADto(internacion);
             dto.Mensaje = $"{internacion.Animal?.Nombre} internado en {box.Nombre}.";
@@ -219,6 +243,9 @@ public class InternacionService : IInternacionService
         AgregarNovedad(internacion!.Id, datos.Tipo, datos.Texto, datos.Visible, null, personaId);
         await _repository.GuardarAsync();
 
+        // Una nota interna no se le avisa al cliente (RN-23).
+        await AvisarAsync(internacion, alCliente: datos.Visible, datos.Tipo);
+
         var dto = await ConNovedadesAsync(internacion, soloVisibles: false);
         dto.Mensaje = datos.Visible ? "Publicado: el cliente lo ve." : "Nota interna guardada: el cliente no la ve.";
         return new Resultado<InternacionReadDto> { Exito = true, Estado = 201, Valor = dto };
@@ -241,6 +268,7 @@ public class InternacionService : IInternacionService
 
         AgregarNovedad(id, Rectificacion, datos.Texto, original.Visible, original.Id, personaId);
         await _repository.GuardarAsync();
+        await AvisarAsync(internacion!, alCliente: original.Visible, Rectificacion);
 
         var dto = await ConNovedadesAsync(internacion!, soloVisibles: false);
         dto.Mensaje = "Rectificación publicada. La entrada original se conserva.";
@@ -273,6 +301,7 @@ public class InternacionService : IInternacionService
         internacion.Estado = Alta;
         internacion.Version++;
         await _repository.GuardarAsync();
+        await AvisarAsync(internacion, alCliente: true, "Alta");
 
         var dto = ADto(internacion);
         dto.Mensaje = "Alta registrada. El box quedó libre y el cliente ve las indicaciones.";
