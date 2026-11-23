@@ -41,3 +41,7 @@ Rama: `eric/sesion-2026-11-23-movil`, desde `eric/sesion-2026-11-21-movil-b001` 
 - Cambio de correo con verificación (D-PER-04): en Blazor existe; en la app queda para escritorio.
 - Las cuentas de la app son de demostración y viven en memoria; contraseñas y tokens reales llegan en la sección C.
 - B-007: animales del Cliente.
+
+## Integración (misma jornada)
+Rama `eric/sesion-2026-11-23-integracion`, desde `main`: se mezclaron la API y la base de datos completas (PR #52 a #56, hasta `diego/sesion-2026-11-22-dos-pasos`), la app móvil (B-001 a B-006) y el README. Un solo conflicto, en notas generadas de `VeterinariaBrain`, resuelto regenerándolas. `desarrollo` y `main` no se tocaron.
+No se compiló el C# en esta sesión (sin SDK de .NET): hay que abrir la solución con F5 y correr las pruebas. Siguen pendientes la migración con la semilla de D-CAT-05 en la API y `Update-Database` para `SegundoFactor`.

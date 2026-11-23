@@ -11,8 +11,8 @@ Sistema integral para **VITALIA**, una clínica veterinaria **ficticia** que ati
 | Parte | Tecnología | Estado |
 |---|---|---|
 | Escritorio | **Blazor Web App** · **C#** · **.NET 10** · interactividad Server · Bootstrap | ✅ Sección A terminada (A-001 a A-031), con datos de demostración. Falta el diseño visual |
-| API | **ASP.NET Core** (.NET 10) · EF Core 10 · `MySql.EntityFrameworkCore` 10.0.7 · JWT | ✅ Completa (22/11): 21 controladores y unos 150 endpoints. Los últimos cinco PR (#52 a #56) están pendientes de mezclar en `desarrollo` |
-| Base de datos | **MySQL 8.4 LTS** | ✅ 52 tablas y semilla de demostración. 3 migraciones en `desarrollo`; la cuarta (`SegundoFactor`) viene en el PR #56 |
+| API | **ASP.NET Core** (.NET 10) · EF Core 10 · `MySql.EntityFrameworkCore` 10.0.7 · JWT | ✅ Completa (22/11): 21 controladores y unos 150 endpoints. Incluye los PR #52 a #56 (derechos del titular, tareas automáticas, correo SMTP, SignalR y segundo factor) |
+| Base de datos | **MySQL 8.4 LTS** | ✅ 52 tablas y semilla de demostración. 4 migraciones; la última (`SegundoFactor`) requiere `Update-Database` |
 | Móvil | **React Native** · **Expo SDK 58** · TypeScript · Expo Router · NativeWind 4 | 🟡 Sección B en curso |
 
 Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ningún cliente accede a la base de datos**. Detalle en los [principios vigentes](docs/contexto-base/CONTEXTO_BASE.md#31-principios-vigentes). Entrega: **domingo 13/12/2026**.
@@ -22,8 +22,8 @@ Reglas de arquitectura: una sola API; Blazor y React Native la consumen y **ning
 | Sección | Qué incluye | Estado |
 |---|---|---|
 | **A — Escritorio** | Visitante, Cliente, Recepción, Veterinario y Administrador: catálogo, registro e ingreso, animales, turnos, consulta e historia clínica, vacunas y carnet, inventario FEFO, cobro presencial, internación, consentimiento, asistencia a domicilio, administración, comunicaciones y accesibilidad. Ver [`desktop/README.md`](desktop/README.md) | ✅ Funcional (falta el CSS de diseño) |
-| **Base de datos + API** | Catálogo, profesionales, clínica, cuentas y sesiones, animales, turnos con bloqueo de agenda, consulta con firma atómica, carnet, inventario, consentimiento, cobro, administración, internación, comunicaciones y asistencia. Más de 970 métodos de prueba y CI. Ver [`api/README.md`](api/README.md) | ✅ Completa. En los PR #52 a #56 (pendientes de mezclar): derechos del titular, tareas automáticas, correo por SMTP, avisos en tiempo real con SignalR y verificación en dos pasos (TOTP) del Administrador. Falta cargar la cuenta de correo (`Correo` en `appsettings.Development.json`) |
-| **B — Móvil** | Proyecto Expo con la paleta de VITALIA (claro y oscuro) y el primer recorrido del Visitante (inicio, servicios, detalle). Ver [`mobile/README.md`](mobile/README.md). Hechas B-004, B-005 y B-001 (mapa por rol, pestañas, componentes compartidos y área pública), en la rama `eric/sesion-2026-11-21-movil-b001`, pendiente de mezclar | 🟡 En curso. Sigue B-006: registro, sesión y perfil |
+| **Base de datos + API** | Catálogo, profesionales, clínica, cuentas y sesiones, animales, turnos con bloqueo de agenda, consulta con firma atómica, carnet, inventario, consentimiento, cobro, administración, internación, comunicaciones y asistencia. Más de 970 métodos de prueba y CI. Ver [`api/README.md`](api/README.md) | ✅ Completa. Derechos del titular, tareas automáticas, correo por SMTP, avisos en tiempo real con SignalR y verificación en dos pasos (TOTP) del Administrador. Falta cargar la cuenta de correo (`Correo` en `appsettings.Development.json`) |
+| **B — Móvil** | Proyecto Expo con la paleta de VITALIA (claro y oscuro) y el primer recorrido del Visitante (inicio, servicios, detalle). Ver [`mobile/README.md`](mobile/README.md). Hechas B-001, B-004, B-005 (mapa por rol, pestañas, componentes y área pública) y B-006 (ingreso, registro, verificación, recuperación y Mi cuenta, sin probar con Expo Go) | 🟡 En curso. Sigue B-007: animales del Cliente |
 | **C — Integración** | Conectar Blazor y la app móvil a la API | ⏳ Pendiente |
 | **Diseño** | Opciones A y B en [`design/vitalia/`](design/vitalia/README.md) | ⏳ Falta elegir una |
 
