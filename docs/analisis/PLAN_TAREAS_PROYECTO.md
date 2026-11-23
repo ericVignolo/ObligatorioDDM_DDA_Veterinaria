@@ -96,7 +96,7 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 - [x] **A-029 — Aplicar accesibilidad y adaptación de escritorio.** Teclado, foco, contraste, etiquetas, mensajes y puntos de corte aplicables; documentar limitaciones del prototipo.
 - [x] **A-030 — Integrar recorridos demostrativos de escritorio.** Preparar datos sintéticos y recorridos de Visitante, Cliente, Recepción, Veterinario y Administrador con resultados repetibles y marca de simulación.
 - [x] **A-031 — Revisar sección A y preparar integración.** Revisar requisitos asignados, estados, navegación, errores, requisitos de privacidad y evidencia; no marcar backend/seguridad como completos.
-- [ ] **A-032 — Aplicar el sistema de diseño de VITALIA a Blazor.** Diego elige la Opción A o la B (`design/vitalia/`); copiar tokens, componentes y fuentes a `wwwroot`, migrar `MainLayout` y los componentes comunes y luego cada recorrido (una rama por sesión, con prueba). Preparar los mismos valores para React Native.
+- [ ] **A-032 — Aplicar el sistema de diseño de VITALIA a Blazor.** Opción A elegida el 2026-11-23 (DT-DIS-01, `design/vitalia/opcion-a/`); copiar tokens, componentes y fuentes a `wwwroot`, migrar `MainLayout` y los componentes comunes y luego cada recorrido (una rama por sesión, con prueba). Preparar los mismos valores para React Native.
 
 ## 6. Sección B — Aplicación móvil
 

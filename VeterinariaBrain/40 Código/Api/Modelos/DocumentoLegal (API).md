@@ -25,3 +25,4 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## En las otras aplicaciones
 - [[DocumentoLegal]]
+- [[DocumentoLegal (Móvil)]]

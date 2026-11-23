@@ -6,6 +6,8 @@ import type { Usuario } from '../types/Usuario';
 type Sesion = {
   usuario: Usuario | null;
   ingresar: (usuario: Usuario) => void;
+  // Cambia los datos de quien ya ingresó (por ejemplo, el nombre al editar «Mi cuenta»).
+  actualizar: (usuario: Usuario) => void;
   salir: () => void;
 };
 
@@ -15,7 +17,7 @@ export function SesionProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
 
   const valor = useMemo<Sesion>(
-    () => ({ usuario, ingresar: setUsuario, salir: () => setUsuario(null) }),
+    () => ({ usuario, ingresar: setUsuario, actualizar: setUsuario, salir: () => setUsuario(null) }),
     [usuario],
   );
 

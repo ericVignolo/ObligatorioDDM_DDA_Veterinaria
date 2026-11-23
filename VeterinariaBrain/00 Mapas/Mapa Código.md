@@ -81,7 +81,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[RequiereSesion]]
 - [[TurnoMostrador]]
 
-### Servicios (25)
+### Servicios (26)
 - [[AdministracionService]]
 - [[AgendaService]]
 - [[AnimalService]]
@@ -92,6 +92,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[ClinicaService]]
 - [[CobroService]]
 - [[ComunicacionesService]]
+- [[ConjuntoDemoService]]
 - [[ConsentimientoService]]
 - [[ConsultaService]]
 - [[CuentaService]]
@@ -324,4 +325,67 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Mobile — [[Carpeta mobile]]
 
-Todavía sin código.
+### Pantallas (19)
+- [[Veterinaria.Movil-app-(tabs)-_layout (Móvil)]]
+- [[Veterinaria.Movil-app-(tabs)-index (Móvil)]]
+- [[Veterinaria.Movil-app-_layout (Móvil)]]
+- [[Veterinaria.Movil-app-profesionales-index (Móvil)]]
+- [[[codigo] (Móvil)]]
+- [[[id] (Móvil)]]
+- [[agenda (Móvil)]]
+- [[animales (Móvil)]]
+- [[asistencias (Móvil)]]
+- [[avisos (Móvil)]]
+- [[ingresar (Móvil)]]
+- [[mi-cuenta (Móvil)]]
+- [[perfil (Móvil)]]
+- [[recuperar (Móvil)]]
+- [[registro (Móvil)]]
+- [[servicios (Móvil)]]
+- [[turnos (Móvil)]]
+- [[urgencias (Móvil)]]
+- [[verificar (Móvil)]]
+
+### Componentes (14)
+- [[Boton (Móvil)]]
+- [[Campo (Móvil)]]
+- [[Casilla (Móvil)]]
+- [[Esqueleto (Móvil)]]
+- [[Fila (Móvil)]]
+- [[Icono (Móvil)]]
+- [[Insignia (Móvil)]]
+- [[Pantalla (Móvil)]]
+- [[Proximamente (Móvil)]]
+- [[Selector (Móvil)]]
+- [[Tarjeta (Móvil)]]
+- [[TarjetaPrestacion (Móvil)]]
+- [[Textos (Móvil)]]
+- [[Vacio (Móvil)]]
+
+### Servicios (6)
+- [[clinicaService (Móvil)]]
+- [[cuentaService (Móvil)]]
+- [[intencionService (Móvil)]]
+- [[legalService (Móvil)]]
+- [[prestacionService (Móvil)]]
+- [[profesionalService (Móvil)]]
+
+### Modelos (6)
+- [[Clinica (Móvil)]]
+- [[Cuenta (Móvil)]]
+- [[DocumentoLegal (Móvil)]]
+- [[Prestacion (Móvil)]]
+- [[Profesional (Móvil)]]
+- [[Usuario (Móvil)]]
+
+### Otros (10)
+- [[AvisoContext (Móvil)]]
+- [[SesionContext (Móvil)]]
+- [[Veterinaria.Movil-tema-index (Móvil)]]
+- [[clinica (Móvil)]]
+- [[cuentasDemo (Móvil)]]
+- [[legales (Móvil)]]
+- [[paleta (Móvil)]]
+- [[prestaciones (Móvil)]]
+- [[profesionales (Móvil)]]
+- [[validacion (Móvil)]]

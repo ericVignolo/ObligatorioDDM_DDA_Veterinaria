@@ -1,6 +1,6 @@
 // Paleta de VITALIA, copiada de design/vitalia/opcion-*/vars.json.
 // Los nombres son los mismos que en el diseño y en Blazor; el tema oscuro lleva el sufijo -oscuro.
-// Diego todavía elige entre la opción A (Eric) y la B (Claude): para cambiar, editar OPCION_ACTIVA.
+// Opción A elegida el 2026-11-23 (DT-DIS-01). La B se conserva por si se reabre la decisión: para cambiar, editar OPCION_ACTIVA.
 // Este archivo lo usan tailwind.config.js (clases de NativeWind) y tema/index.ts (colores en código).
 
 const OPCION_ACTIVA = 'a';

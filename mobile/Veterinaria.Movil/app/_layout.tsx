@@ -56,6 +56,10 @@ export default function RootLayout() {
             <Stack.Screen name="profesionales/[id]" options={{ title: 'Profesional' }} />
             <Stack.Screen name="clinica" options={{ title: 'La clínica' }} />
             <Stack.Screen name="legales/[codigo]" options={{ title: 'Documento' }} />
+            <Stack.Screen name="registro" options={{ title: 'Crear cuenta' }} />
+            <Stack.Screen name="verificar" options={{ title: 'Verificar correo' }} />
+            <Stack.Screen name="recuperar" options={{ title: 'Recuperar contraseña' }} />
+            <Stack.Screen name="mi-cuenta" options={{ title: 'Mi cuenta' }} />
           </Stack>
         </AvisoProvider>
       </SesionProvider>

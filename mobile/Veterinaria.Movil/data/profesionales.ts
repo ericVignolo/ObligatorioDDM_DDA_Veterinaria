@@ -25,7 +25,7 @@ export const profesionales: Profesional[] = [
     jornada: [...franjas(LUN_A_VIE, '14:00', '19:00'), ...franjas([6], '09:00', '13:00')],
     descansos: franjas(LUN_A_VIE, '16:30', '17:00'),
     especies: ['Vaca', 'Oveja', 'Cabra', 'Cerdo'],
-    prestacionIds: [1, 2, 3],
+    prestacionIds: [1, 2, 3, 4],
     publicado: true,
   },
   {
@@ -36,7 +36,7 @@ export const profesionales: Profesional[] = [
     jornada: franjas([2, 4], '09:00', '17:00'),
     descansos: franjas([2, 4], '12:30', '13:30'),
     especies: ['Caballo'],
-    prestacionIds: [1],
+    prestacionIds: [1, 5],
     publicado: true,
   },
   {

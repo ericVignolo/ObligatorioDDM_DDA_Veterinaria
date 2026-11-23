@@ -31,13 +31,19 @@ mobile/Veterinaria.Movil/
 │   │                          animales, turnos, agenda, asistencias, avisos, perfil
 │   ├── servicios/[id].tsx     detalle de servicio
 │   ├── profesionales/         lista y detalle con horarios
+│   ├── registro.tsx           crear cuenta (siete datos y dos aceptaciones, D-REG-01/04)
+│   ├── verificar.tsx          código de 6 números al correo (D-REG-02)
+│   ├── recuperar.tsx          recuperar la contraseña con código (D-REG-03)
+│   ├── mi-cuenta.tsx          datos y cambio de contraseña del Cliente
 │   ├── clinica.tsx            datos de la clínica
 │   └── legales/[codigo].tsx   Privacidad y Términos
 ├── components/                Boton, Campo, Insignia, Tarjeta, Fila, Textos, Icono, Esqueleto, Vacio,
-│                              Pantalla, Proximamente, TarjetaPrestacion
+│                              Pantalla, Proximamente, TarjetaPrestacion, Selector, Casilla
 ├── context/                   SesionContext (sesión simulada) y AvisoContext (avisos flotantes)
 ├── data/                      datos ficticios (los mismos que los Services de Blazor)
 ├── services/                  funciones que leen los datos; en la sección C pasan a llamar a la API
+│                              (cuentaService: cuentas en memoria; intencionService: acción pendiente, 30 min)
+├── utils/                     validacion.ts: cédula, documento, teléfono E.164 y correo
 ├── types/                     tipos de TypeScript (mismos nombres que Models/ de Blazor)
 ├── hooks/                     hooks propios (por ahora vacía)
 └── tema/                      paleta de VITALIA (paleta.js) y useColor() para colores en código
@@ -53,7 +59,7 @@ El mapa completo está en [`docs/analisis/MAPA_MOVIL.md`](../docs/analisis/MAPA_
 | Cliente | Inicio · Animales · Turnos · Avisos · Perfil |
 | Veterinario | Agenda · Asistencias · Avisos · Perfil |
 
-Recepción y Administrador trabajan en escritorio. Mientras no esté el formulario de ingreso (B-006), la pestaña **Ingresar** tiene botones de demostración: Ana Rodríguez (Cliente), Dra. Lucía Ferreira (Veterinario) y Laura Benítez (Recepción, que muestra el aviso de escritorio). La sesión vive en memoria: al recargar la app se pierde.
+Recepción y Administrador trabajan en escritorio. Mientras no esté el formulario de ingreso (B-006), la pestaña **Ingresar** tiene botones de demostración: Ana Rodríguez (Cliente), Dra. Lucía Ferreira (Veterinario) y Laura Benítez (Recepción, que muestra el aviso de escritorio). La sesión vive en memoria: al recargar la app se pierde. Con B-006 el ingreso es un formulario real contra cuentas de demostración (contraseña de las cuentas de prueba: la misma de Blazor); los botones de prueba solo completan el formulario.
 
 ## Componentes compartidos
 

@@ -17,7 +17,7 @@ const TEMAS = [
   { valor: 'dark', texto: 'Oscuro' },
 ] as const;
 
-// Perfil mínimo (B-004): quién ingresó, tema y cerrar sesión. Datos y cambio de contraseña: B-006.
+// Perfil (B-004, B-006): quién ingresó, Mi cuenta (Cliente), tema y cerrar sesión. El perfil del Veterinario llega en B-017.
 export default function Perfil() {
   const router = useRouter();
   const avisar = useAviso();
@@ -35,6 +35,12 @@ export default function Perfil() {
         <Nota>{usuario.correo}</Nota>
         <Insignia texto={usuario.rol} tipo="info" />
       </View>
+
+      {usuario.rol === 'Cliente' ? (
+        <Tarjeta>
+          <Fila icono="person-outline" texto="Mi cuenta" detalle="Tus datos y tu contraseña" onPress={() => router.push('/mi-cuenta')} />
+        </Tarjeta>
+      ) : null}
 
       <Tarjeta>
         <Subtitulo>Apariencia</Subtitulo>
