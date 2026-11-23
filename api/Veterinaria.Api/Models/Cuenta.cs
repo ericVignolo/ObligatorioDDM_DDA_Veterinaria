@@ -47,6 +47,14 @@ public class Cuenta
     // Cambio de correo (D-PER-04): el nuevo queda aparte hasta verificarlo con un código (CodigosCuenta, tipo "CambioCorreo").
     [MaxLength(150)] public string CorreoNuevoPendiente { get; set; } = "";
 
+    // Verificación en dos pasos con app autenticadora (RNF-SEG-04): obligatoria para el Administrador.
+    // El secreto se guarda cifrado con la protección de datos de ASP.NET Core, nunca en claro.
+    public bool SegundoFactorActivo { get; set; }
+    [MaxLength(512)] public string SecretoSegundoFactor { get; set; } = "";
+
+    // Último intervalo de 30 s usado: el mismo código no sirve dos veces.
+    public long UltimoPasoSegundoFactor { get; set; }
+
     public List<CuentaRol> Roles { get; set; } = new();
     public List<AceptacionLegal> Aceptaciones { get; set; } = new();
     public List<Responsabilidad> Responsabilidades { get; set; } = new();

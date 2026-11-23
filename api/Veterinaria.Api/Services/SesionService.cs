@@ -14,14 +14,17 @@ public class SesionService : ISesionService
     private readonly OpcionesCuentas _cuentas;
     private readonly OpcionesJwt _jwt;
 
+    private readonly ProteccionSecretos? _proteccion;
+
     public SesionService(ICuentaRepository repository, ITokenService tokens, TimeProvider reloj,
-        IOptions<OpcionesCuentas> cuentas, IOptions<OpcionesJwt> jwt)
+        IOptions<OpcionesCuentas> cuentas, IOptions<OpcionesJwt> jwt, ProteccionSecretos? proteccion = null)
     {
         _repository = repository;
         _tokens = tokens;
         _reloj = reloj;
         _cuentas = cuentas.Value;
         _jwt = jwt.Value;
+        _proteccion = proteccion;
     }
 
     private DateTime Ahora => _reloj.GetUtcNow().UtcDateTime;
@@ -45,17 +48,7 @@ public class SesionService : ISesionService
 
         if (!Seguridad.ContrasenaCoincide(datos.Contrasena, cuenta.HashContrasena))
         {
-            // Bloqueo temporal progresivo (RNF-SEG-09): desde el quinto fallo, 1, 2, 4… minutos, hasta 30.
-            cuenta.IntentosFallidos++;
-            var excedidos = cuenta.IntentosFallidos - _cuentas.IntentosAntesDeBloquear;
-            if (excedidos >= 0)
-            {
-                var minutos = Math.Min(Math.Pow(2, Math.Min(excedidos, 10)), _cuentas.MinutosBloqueoMaximo);
-                cuenta.BloqueadaHasta = ahora.AddMinutes(minutos);
-            }
-
-            await _repository.GuardarAsync();
-            return cuenta.BloqueadaHasta > ahora ? Bloqueada(cuenta.BloqueadaHasta!.Value, ahora) : CredencialesInvalidas();
+            return await FalloAsync(cuenta, ahora, CredencialesInvalidas());
         }
 
         // Se informa recién con la contraseña correcta, para no revelar qué cuentas existen (REG-05).
@@ -65,12 +58,47 @@ public class SesionService : ISesionService
                 "Tenés que verificar tu correo antes de ingresar. Revisá el código que te enviamos.");
         }
 
+        // RNF-SEG-04: con la verificación en dos pasos activa, falta el código de la app.
+        if (cuenta.SegundoFactorActivo)
+        {
+            if (string.IsNullOrWhiteSpace(datos.CodigoSegundoFactor))
+            {
+                return Resultado<SesionReadDto>.Ok(new SesionReadDto { RequiereSegundoFactor = true });
+            }
+
+            var secreto = _proteccion?.Descifrar(cuenta.SecretoSegundoFactor);
+            var paso = secreto == null ? null : Totp.Verificar(secreto, datos.CodigoSegundoFactor, ahora, cuenta.UltimoPasoSegundoFactor);
+            if (paso == null)
+            {
+                // Cuenta como un intento fallido: el mismo bloqueo progresivo que la contraseña.
+                return await FalloAsync(cuenta, ahora, Resultado<SesionReadDto>.Error(401, "CODIGO_SEGUNDO_FACTOR_INVALIDO", "Código incorrecto",
+                    "El código de la app no coincide. Revisá que la hora del teléfono esté bien y probá con el código nuevo."));
+            }
+
+            cuenta.UltimoPasoSegundoFactor = paso.Value;
+        }
+
         cuenta.IntentosFallidos = 0;
         cuenta.BloqueadaHasta = null;
 
         var sesion = NuevaSesion(cuenta, ahora, origen);
         await _repository.GuardarAsync();
         return Resultado<SesionReadDto>.Ok(sesion);
+    }
+
+    // Bloqueo temporal progresivo (RNF-SEG-09): desde el quinto fallo, 1, 2, 4… minutos, hasta 30.
+    private async Task<Resultado<SesionReadDto>> FalloAsync(Cuenta cuenta, DateTime ahora, Resultado<SesionReadDto> error)
+    {
+        cuenta.IntentosFallidos++;
+        var excedidos = cuenta.IntentosFallidos - _cuentas.IntentosAntesDeBloquear;
+        if (excedidos >= 0)
+        {
+            var minutos = Math.Min(Math.Pow(2, Math.Min(excedidos, 10)), _cuentas.MinutosBloqueoMaximo);
+            cuenta.BloqueadaHasta = ahora.AddMinutes(minutos);
+        }
+
+        await _repository.GuardarAsync();
+        return cuenta.BloqueadaHasta > ahora ? Bloqueada(cuenta.BloqueadaHasta!.Value, ahora) : error;
     }
 
     public async Task<Resultado<SesionReadDto>> RefrescarAsync(string tokenRefresco, string origen)
@@ -142,7 +170,8 @@ public class SesionService : ISesionService
             VenceTokenRefresco = venceRefresco,
             CuentaId = cuenta.Id,
             Nombre = $"{cuenta.Nombre} {cuenta.Apellido}".Trim(),
-            Roles = roles
+            Roles = roles,
+            DebeConfigurarSegundoFactor = roles.Contains("Administrador") && !cuenta.SegundoFactorActivo
         };
     }
 

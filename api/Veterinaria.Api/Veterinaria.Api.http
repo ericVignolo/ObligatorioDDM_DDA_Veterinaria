@@ -749,3 +749,54 @@ Content-Type: application/json
 
 GET {{api}}/asistencias/1
 Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### ---------- 18. Derechos del titular ----------
+
+GET {{api}}/privacidad/politicas
+
+### Descargar mis datos (Ana)
+
+GET {{api}}/privacidad/exportacion
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Qué falta para poder eliminar la cuenta
+
+GET {{api}}/privacidad/obstaculos
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Pedidos (admin)
+
+GET {{api}}/admin/derechos
+Authorization: Bearer {{ingresoPersonal.response.body.$.tokenAcceso}}
+
+### ---------- 19. Verificación en dos pasos ----------
+### Estado (con el token de Ana o del admin)
+
+GET {{api}}/cuentas/yo/segundo-factor
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Configurar: copiá el "secreto" en la app autenticadora («Ingresar una clave»)
+
+POST {{api}}/cuentas/yo/segundo-factor/configuracion
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+
+### Activar con el código de 6 cifras que muestra la app
+
+POST {{api}}/cuentas/yo/segundo-factor/activacion
+Authorization: Bearer {{ingreso.response.body.$.tokenAcceso}}
+Content-Type: application/json
+
+{
+  "codigo": "123456"
+}
+
+### Ingresar de nuevo con el código (cambiar el código por el que muestra la app en ese momento)
+
+POST {{api}}/sesiones
+Content-Type: application/json
+
+{
+  "correo": "ana@correo.uy",
+  "contrasena": "Secreta123",
+  "codigoSegundoFactor": "123456"
+}

@@ -246,6 +246,29 @@ public class ApiInternacionTests
     }
 
     [Fact]
+    public async Task Tiempo_real_avisa_al_cliente_solo_lo_visible_y_al_tablero_todo()
+    {
+        var d = Datos();
+        var aviso = new NotificadorDePrueba();
+        var s = new InternacionService(d, new Reloj(), aviso);
+
+        await s.AdmitirAsync(Recepcion, Admision(1));
+        Assert.Contains(aviso.Enviados, e => e.Destino == $"cuenta-{Ana}" && e.Evento == InternacionService.EventoCliente);
+        Assert.Contains(aviso.Enviados, e => e.Destino == "rol-Veterinario" && e.Evento == InternacionService.EventoTablero);
+
+        await s.IngresarAsync(Ferreira, 1, new IngresoClinicoDto { BoxId = 1, PlanTerapeutico = "Fluidoterapia" });
+        aviso.Enviados.Clear();
+        await s.PublicarAsync(Ferreira, 1, new NovedadCreateDto { Texto = "FC 90.", Visible = false });
+        Assert.DoesNotContain(aviso.Enviados, e => e.Destino == $"cuenta-{Ana}");
+        Assert.Equal(3, aviso.Enviados.Count); // solo el tablero del personal
+
+        aviso.Enviados.Clear();
+        await s.PublicarAsync(Ferreira, 1, new NovedadCreateDto { Texto = "Comió bien.", Visible = true });
+        var alCliente = Assert.Single(aviso.Enviados, e => e.Destino == $"cuenta-{Ana}");
+        Assert.DoesNotContain("Texto", NotificadorDePrueba.Campos(alCliente.Datos)); // el texto se pide a la API
+    }
+
+    [Fact]
     public void Controladores_tienen_los_roles_correctos()
     {
         Assert.Equal("Recepcionista,Veterinario,Administrador", typeof(InternacionesController).GetCustomAttribute<AuthorizeAttribute>()!.Roles);

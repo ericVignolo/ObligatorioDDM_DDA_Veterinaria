@@ -23,4 +23,5 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## Usado por (si cambia, revisar estos)
 - [[CuentaService (API)]]
+- [[SegundoFactor (API)]]
 - [[SesionService (API)]]

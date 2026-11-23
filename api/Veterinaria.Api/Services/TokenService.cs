@@ -44,6 +44,12 @@ public class TokenService : ITokenService
         };
         datos.AddRange(roles.Select(r => new Claim(ClaimRol, r)));
 
+        // RNF-SEG-04: las sesiones de una cuenta con dos pasos activos solo se abren con el código de la app.
+        if (cuenta.SegundoFactorActivo)
+        {
+            datos.Add(new Claim(ExigirSegundoFactorFiltro.ClaimMetodo, ExigirSegundoFactorFiltro.ConSegundoFactor));
+        }
+
         var descriptor = new SecurityTokenDescriptor
         {
             Issuer = _opciones.Emisor,
