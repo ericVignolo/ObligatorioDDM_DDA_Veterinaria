@@ -22,3 +22,4 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## En las otras aplicaciones
 - [[DocumentoLegal (API)]]
+- [[DocumentoLegal (Móvil)]]

@@ -49,7 +49,7 @@ public class ProfesionalService
                 Descansos = Franjas(LunesAViernes, 16, 30, 17, 0),
                 Ausencias = new() { new() { Desde = hoy.AddDays(18), Hasta = hoy.AddDays(22), Motivo = "Licencia" } },
                 Especies = new() { "Vaca", "Oveja", "Cabra", "Cerdo" },
-                PrestacionIds = new() { 1, 2, 3 }
+                PrestacionIds = new() { 1, 2, 3, 4 }
             },
             new()
             {
@@ -62,7 +62,7 @@ public class ProfesionalService
                 Jornada = Franjas(new[] { DayOfWeek.Tuesday, DayOfWeek.Thursday }, 9, 0, 17, 0),
                 Descansos = Franjas(new[] { DayOfWeek.Tuesday, DayOfWeek.Thursday }, 12, 30, 13, 30),
                 Especies = new() { "Caballo" },
-                PrestacionIds = new() { 1 }
+                PrestacionIds = new() { 1, 5 }
             },
             new()
             {

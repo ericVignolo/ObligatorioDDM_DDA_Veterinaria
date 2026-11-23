@@ -17,9 +17,14 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
 - [[Boton (Móvil)]]
+- [[Insignia (Móvil)]]
 - [[Prestacion (Móvil)]]
+- [[Tarjeta (Móvil)]]
+- [[Textos (Móvil)]]
 - [[clinica (Móvil)]]
+- [[clinicaService (Móvil)]]
 - [[prestacionService (Móvil)]]
 
 ## Usado por (si cambia, revisar estos)
-- [[Veterinaria.Movil-app-servicios-index (Móvil)]]
+- [[Veterinaria.Movil-app-(tabs)-index (Móvil)]]
+- [[servicios (Móvil)]]

@@ -9,7 +9,7 @@ generado: true
 
 > Fuente: `mobile/Veterinaria.Movil/data/clinica.ts` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
-Clínica ficticia (mismos datos que ClinicaService de Blazor). En la sección C: GET /api/v1/clinica.
+Clínica ficticia: los mismos datos que ClinicaService de Blazor. En la sección C: GET /api/v1/clinica.
 
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
@@ -18,4 +18,4 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
 - [[TarjetaPrestacion (Móvil)]]
-- [[Veterinaria.Movil-app-index (Móvil)]]
+- [[clinicaService (Móvil)]]

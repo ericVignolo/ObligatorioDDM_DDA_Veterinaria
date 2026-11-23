@@ -21,6 +21,7 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
 - [[TarjetaPrestacion (Móvil)]]
-- [[Veterinaria.Movil-app-servicios-index (Móvil)]]
+- [[Veterinaria.Movil-app-(tabs)-index (Móvil)]]
 - [[[id] (Móvil)]]
-- [[acceso (Móvil)]]
+- [[ingresar (Móvil)]]
+- [[servicios (Móvil)]]
