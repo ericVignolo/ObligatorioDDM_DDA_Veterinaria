@@ -1,0 +1,28 @@
+@* Foto del animal (RF-CLI-01) o, si no tiene, la huella como marcador.
+   Decorativa: en una lista con el nombre al lado, el lector de pantalla la saltea (RNF-USA-06). *@
+@if (string.IsNullOrEmpty(Foto))
+{
+    <div class="foto-animal foto-animal-@Tamano foto-animal-vacia" role="@(Decorativa ? null : "img")"
+         aria-label="@(Decorativa ? null : $"{Nombre} todavía no tiene foto")" aria-hidden="@(Decorativa ? "true" : null)">
+        <span aria-hidden="true">🐾</span>
+    </div>
+}
+else
+{
+    <img class="foto-animal foto-animal-@Tamano" src="@Foto" alt="@(Decorativa ? "" : $"Foto de {Nombre}")" />
+}
+
+@code {
+    [Parameter]
+    public string Foto { get; set; } = "";
+
+    [Parameter]
+    public string Nombre { get; set; } = "";
+
+    // "chica" (listas y encabezados) o "grande" (ficha y formulario).
+    [Parameter]
+    public string Tamano { get; set; } = "chica";
+
+    [Parameter]
+    public bool Decorativa { get; set; }
+}

@@ -23,6 +23,7 @@ export const datosVacios = (): DatosAnimal => ({
   cantidadGrupo: '',
   senasParticulares: '',
   antecedentes: '',
+  foto: '',
 });
 
 // RN-18: solo los animales del responsable, por nombre.
@@ -118,6 +119,7 @@ export function paraEditar(animal: Animal): DatosAnimal {
     cantidadGrupo: animal.cantidadGrupo ? String(animal.cantidadGrupo) : '',
     senasParticulares: animal.senasParticulares,
     antecedentes: animal.antecedentes,
+    foto: animal.foto,
   };
 }
 
@@ -156,4 +158,5 @@ function copiarDatos(datos: DatosAnimal, animal: Animal): void {
   animal.cantidadGrupo = datos.esGrupo ? Number(datos.cantidadGrupo.trim()) : null;
   animal.senasParticulares = datos.senasParticulares.trim();
   animal.antecedentes = datos.antecedentes.trim();
+  animal.foto = datos.foto;
 }

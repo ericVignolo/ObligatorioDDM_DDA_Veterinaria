@@ -16,7 +16,10 @@
     }
     else
     {
-        <h1>Historia clínica de @animal.Nombre</h1>
+        <div class="d-flex align-items-center gap-3 mb-2">
+            <FotoAnimal Foto="@animal.Foto" Nombre="@animal.Nombre" />
+            <h1 class="mb-0">Historia clínica de @animal.Nombre</h1>
+        </div>
         <p class="text-muted">@animal.Especie · responsable: @NombreResponsable</p>
 
         @if (!acceso)

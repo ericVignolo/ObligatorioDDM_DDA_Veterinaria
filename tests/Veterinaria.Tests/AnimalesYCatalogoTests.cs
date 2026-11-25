@@ -66,4 +66,23 @@ public class AnimalesYCatalogoTests
         Assert.Equal("", majada.Microchip);
         Assert.Equal(10, majada.CantidadGrupo);
     }
+
+    [Fact]
+    public void Foto_se_guarda_se_edita_y_se_quita()
+    {
+        var f = new Fabrica();
+        const string foto = "data:image/jpeg;base64,AAAA";
+
+        f.Animales.Crear(new() { Nombre = "Rocco", Especie = "Perro", Sexo = "Macho", Foto = foto }, 1);
+        var rocco = f.Animales.ObtenerDe(1).Single();
+        Assert.Equal(foto, rocco.Foto);
+
+        // Al editar se conserva la foto que ya tenía.
+        var datos = f.Animales.ParaEditar(rocco);
+        Assert.Equal(foto, datos.Foto);
+
+        datos.Foto = "";
+        f.Animales.Editar(rocco.Id, datos, 1);
+        Assert.Equal("", f.Animales.ObtenerPorId(rocco.Id, 1)!.Foto);
+    }
 }

@@ -20,7 +20,11 @@
     }
     else
     {
-        <h1>Consulta de @animal.Nombre</h1>
+        @* La foto ayuda a confirmar que es el paciente correcto (RF-CLI-01). *@
+        <div class="d-flex align-items-center gap-3 mb-2">
+            <FotoAnimal Foto="@animal.Foto" Nombre="@animal.Nombre" />
+            <h1 class="mb-0">Consulta de @animal.Nombre</h1>
+        </div>
         <p class="text-muted">
             @EspecieYRaza
             · responsable: @NombreResponsable

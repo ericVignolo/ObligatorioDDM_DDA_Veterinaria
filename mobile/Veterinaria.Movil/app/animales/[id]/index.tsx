@@ -2,6 +2,7 @@ import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 import { Boton } from '../../../components/Boton';
+import { FotoAnimal } from '../../../components/FotoAnimal';
 import { Insignia } from '../../../components/Insignia';
 import { Pantalla } from '../../../components/Pantalla';
 import { Tarjeta } from '../../../components/Tarjeta';
@@ -43,6 +44,7 @@ export default function FichaAnimal() {
 
   return (
     <Pantalla>
+      <FotoAnimal uri={animal.foto} nombre={animal.nombre} tamano="grande" />
       <View className="gap-2">
         <Titulo>{animal.nombre}</Titulo>
         <View className="flex-row flex-wrap items-center gap-2">

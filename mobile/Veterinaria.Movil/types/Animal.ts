@@ -16,6 +16,9 @@ export type Animal = {
   cantidadGrupo: number | null;
   senasParticulares: string;
   antecedentes: string;
+  // Foto para reconocerlo en la ficha y en la consulta (RF-CLI-01). Vacía si no tiene.
+  // En la sección B es la dirección local de la imagen; en la C, la que devuelve la API al subirla.
+  foto: string;
   fechaAlta: number;
 };
 
@@ -32,4 +35,5 @@ export type DatosAnimal = {
   cantidadGrupo: string;
   senasParticulares: string;
   antecedentes: string;
+  foto: string;
 };

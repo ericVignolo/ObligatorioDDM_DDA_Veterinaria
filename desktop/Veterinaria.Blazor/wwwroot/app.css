@@ -171,3 +171,33 @@ main:focus {
 @media print {
     .demo-banner { display: none; }
 }
+
+/* Foto del animal (RF-CLI-01): miniatura redonda en listas y encabezados, cuadrada en la ficha y el formulario. */
+.foto-animal {
+    object-fit: cover;
+    flex-shrink: 0;
+    background-color: #e8f3ec;
+}
+
+.foto-animal-chica {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+}
+
+.foto-animal-grande {
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+}
+
+.foto-animal-vacia {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+}
+
+.foto-animal-grande.foto-animal-vacia {
+    font-size: 3.5rem;
+}

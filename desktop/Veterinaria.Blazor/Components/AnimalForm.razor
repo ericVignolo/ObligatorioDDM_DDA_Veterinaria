@@ -7,6 +7,30 @@
     <DataAnnotationsValidator />
 
     <fieldset class="mb-4">
+        <legend class="h5">Foto <span class="text-muted fs-6">(opcional)</span></legend>
+        <div class="d-flex flex-wrap align-items-start gap-3">
+            <FotoAnimal Foto="@Datos.Foto" Nombre="@(string.IsNullOrWhiteSpace(Datos.Nombre) ? "Tu animal" : Datos.Nombre)" Tamano="grande" />
+            <div>
+                <label class="form-label" for="foto">@(string.IsNullOrEmpty(Datos.Foto) ? "Elegí una foto" : "Cambiar la foto")</label>
+                <InputFile id="foto" class="form-control" accept="image/jpeg,image/png,image/webp" OnChange="CargarFoto" />
+                <div class="form-text">JPG, PNG o WebP, hasta 5 MB. Ayuda a la clínica a reconocerlo y evita confusiones en la ficha y en la historia clínica.</div>
+                @if (cargandoFoto)
+                {
+                    <div class="small text-muted mt-1" role="status">Cargando la foto…</div>
+                }
+                @if (!string.IsNullOrEmpty(errorFoto))
+                {
+                    <div class="text-danger small mt-1" role="alert">@errorFoto</div>
+                }
+                @if (!string.IsNullOrEmpty(Datos.Foto))
+                {
+                    <button type="button" class="btn btn-outline-danger btn-sm mt-2" @onclick="QuitarFoto">Quitar foto</button>
+                }
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-4">
         <legend class="h5">Datos principales</legend>
         <div class="form-check mb-3">
             <InputCheckbox id="esGrupo" class="form-check-input" @bind-Value="Datos.EsGrupo" />
@@ -98,7 +122,6 @@
             <div class="form-text">Por ejemplo, alergias, operaciones o tratamientos anteriores. El veterinario los revisa en la consulta.</div>
             <ValidationMessage For="() => Datos.Antecedentes" />
         </div>
-        <p class="text-muted small">La foto del animal se agrega cuando exista la API, que guarda los archivos.</p>
     </fieldset>
 
     <button type="submit" class="btn btn-primary">@TextoBoton</button>
@@ -119,8 +142,58 @@
     [Parameter]
     public EventCallback<AnimalFormulario> OnGuardar { get; set; }
 
+    // CU-CLI-01 A2: si la foto no sirve se rechaza solo el archivo y se explica el formato o el tamaño permitido.
+    private const long TamanoMaximoFoto = 5 * 1024 * 1024;
+    private static readonly string[] FormatosFoto = { "image/jpeg", "image/png", "image/webp" };
+
+    private string errorFoto = "";
+    private bool cargandoFoto;
+
     private async Task Guardar()
     {
         await OnGuardar.InvokeAsync(Datos);
+    }
+
+    private async Task CargarFoto(InputFileChangeEventArgs e)
+    {
+        errorFoto = "";
+        var archivo = e.File;
+
+        if (!FormatosFoto.Contains(archivo.ContentType))
+        {
+            errorFoto = "Esa imagen no es JPG, PNG ni WebP. Elegí otra.";
+            return;
+        }
+
+        if (archivo.Size > TamanoMaximoFoto)
+        {
+            errorFoto = "La foto pesa más de 5 MB. Elegí otra más liviana.";
+            return;
+        }
+
+        cargandoFoto = true;
+        try
+        {
+            // El navegador la achica a 800 px como máximo, para que pese poco (en la sección C se sube a la API).
+            var reducida = await archivo.RequestImageFileAsync("image/jpeg", 800, 800);
+            using var lectura = reducida.OpenReadStream(TamanoMaximoFoto);
+            using var memoria = new MemoryStream();
+            await lectura.CopyToAsync(memoria);
+            Datos.Foto = $"data:image/jpeg;base64,{Convert.ToBase64String(memoria.ToArray())}";
+        }
+        catch (Exception)
+        {
+            errorFoto = "No pudimos leer la foto. Probá con otra.";
+        }
+        finally
+        {
+            cargandoFoto = false;
+        }
+    }
+
+    private void QuitarFoto()
+    {
+        Datos.Foto = "";
+        errorFoto = "";
     }
 }

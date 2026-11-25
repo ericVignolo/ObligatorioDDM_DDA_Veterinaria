@@ -7,6 +7,7 @@ import { Boton } from './Boton';
 import { Campo } from './Campo';
 import { Casilla } from './Casilla';
 import { Selector } from './Selector';
+import { SelectorFoto } from './SelectorFoto';
 import { Tarjeta } from './Tarjeta';
 import { Nota, Parrafo, Subtitulo } from './Textos';
 
@@ -43,6 +44,13 @@ export function FormularioAnimal({ inicial, textoBoton, onGuardar }: Props) {
 
   return (
     <>
+      <Tarjeta>
+        <Subtitulo>
+          Foto <Text className="font-nunito text-base text-texto-suave dark:text-texto-suave-oscuro">(opcional)</Text>
+        </Subtitulo>
+        <SelectorFoto foto={datos.foto} nombre={datos.nombre.trim()} onCambio={(uri) => cambiar('foto', uri)} />
+      </Tarjeta>
+
       <Tarjeta>
         <Subtitulo>Datos básicos</Subtitulo>
         <Campo etiqueta="Nombre" value={datos.nombre} onChangeText={(v) => cambiar('nombre', v)} error={errores.nombre} autoCapitalize="words" maxLength={60} />

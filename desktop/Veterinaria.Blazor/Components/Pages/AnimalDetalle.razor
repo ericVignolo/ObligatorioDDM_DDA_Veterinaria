@@ -22,7 +22,10 @@
             <div class="alert alert-success" role="status">@Mensaje</div>
         }
 
-        <h1>@animal.Nombre</h1>
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-2">
+            <FotoAnimal Foto="@animal.Foto" Nombre="@animal.Nombre" Tamano="grande" />
+            <h1 class="mb-0">@animal.Nombre</h1>
+        </div>
         <p class="lead">
             @animal.Especie
             @if (animal.EsGrupo)

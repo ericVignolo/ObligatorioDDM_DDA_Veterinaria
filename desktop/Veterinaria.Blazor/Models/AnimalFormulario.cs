@@ -38,6 +38,9 @@ public class AnimalFormulario : IValidatableObject
     [StringLength(500, ErrorMessage = "Los antecedentes pueden tener hasta 500 caracteres.")]
     public string Antecedentes { get; set; } = "";
 
+    // Foto opcional (RF-CLI-01). La valida y la achica AnimalForm al cargarla (CU-CLI-01 A2).
+    public string Foto { get; set; } = "";
+
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (FechaNacimiento is not null && FechaNacimiento > DateOnly.FromDateTime(DateTime.Today))

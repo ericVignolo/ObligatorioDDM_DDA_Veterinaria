@@ -2,6 +2,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { Boton } from '../../components/Boton';
+import { FotoAnimal } from '../../components/FotoAnimal';
 import { Icono } from '../../components/Icono';
 import { Insignia } from '../../components/Insignia';
 import { Pantalla } from '../../components/Pantalla';
@@ -54,9 +55,7 @@ export default function Animales() {
         animales.map((a) => (
           <Tarjeta key={a.id} onPress={() => router.push(`/animales/${a.id}`)} etiqueta={`${a.nombre}, ${a.especie}. Ver ficha`}>
             <View className="flex-row items-center gap-3">
-              <View className="rounded-full bg-primario-suave p-3 dark:bg-primario-suave-oscuro">
-                <Icono nombre="paw-outline" color="primario" tamano={22} />
-              </View>
+              <FotoAnimal uri={a.foto} nombre={a.nombre} decorativa />
               <View className="flex-1 gap-1">
                 <Subtitulo>{a.nombre}</Subtitulo>
                 <Parrafo suave>{[a.especie, a.raza].filter(Boolean).join(' · ')}</Parrafo>

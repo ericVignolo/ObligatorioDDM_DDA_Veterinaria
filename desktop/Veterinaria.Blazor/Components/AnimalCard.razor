@@ -3,7 +3,10 @@
 @* Tarjeta de un animal en «Mis animales» (A-012). *@
 <div class="card mb-3 h-100">
     <div class="card-body">
-        <h2 class="h5 card-title">@Animal.Nombre</h2>
+        <div class="d-flex align-items-center gap-3 mb-2">
+            <FotoAnimal Foto="@Animal.Foto" Nombre="@Animal.Nombre" Decorativa="true" />
+            <h2 class="h5 card-title mb-0">@Animal.Nombre</h2>
+        </div>
         <p class="card-subtitle text-muted mb-2">
             @EspecieYRaza
             @if (Animal.EsGrupo)

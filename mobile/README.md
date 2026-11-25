@@ -63,7 +63,7 @@ Recepción y Administrador trabajan en escritorio. Mientras no esté el formular
 
 ## Animales del Cliente (B-007)
 
-Pestaña **Animales** (solo Cliente): lista, ficha (`app/animales/[id]/index.tsx`), alta (`app/animales/nuevo.tsx`) y edición (`app/animales/[id]/editar.tsx`) con el formulario compartido `components/FormularioAnimal.tsx`. Las reglas están en `services/animalService.ts` y son las mismas que `AnimalService` de Blazor (microchip de 15 números y único, grupos de 2 a 10.000, fecha no futura). Los datos viven en memoria.
+Pestaña **Animales** (solo Cliente): lista, ficha (`app/animales/[id]/index.tsx`), alta (`app/animales/nuevo.tsx`) y edición (`app/animales/[id]/editar.tsx`) con el formulario compartido `components/FormularioAnimal.tsx`. Las reglas están en `services/animalService.ts` y son las mismas que `AnimalService` de Blazor (microchip de 15 números y único, grupos de 2 a 10.000, fecha no futura). Foto opcional con `expo-image-picker` (cámara o galería, JPG/PNG/WebP hasta 5 MB) en `components/SelectorFoto.tsx` y `components/FotoAnimal.tsx`. Los datos viven en memoria.
 
 ## Componentes compartidos
 
