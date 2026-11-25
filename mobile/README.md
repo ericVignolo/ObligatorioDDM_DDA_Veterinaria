@@ -61,6 +61,10 @@ El mapa completo está en [`docs/analisis/MAPA_MOVIL.md`](../docs/analisis/MAPA_
 
 Recepción y Administrador trabajan en escritorio. Mientras no esté el formulario de ingreso (B-006), la pestaña **Ingresar** tiene botones de demostración: Ana Rodríguez (Cliente), Dra. Lucía Ferreira (Veterinario) y Laura Benítez (Recepción, que muestra el aviso de escritorio). La sesión vive en memoria: al recargar la app se pierde. Con B-006 el ingreso es un formulario real contra cuentas de demostración (contraseña de las cuentas de prueba: la misma de Blazor); los botones de prueba solo completan el formulario.
 
+## Animales del Cliente (B-007)
+
+Pestaña **Animales** (solo Cliente): lista, ficha (`app/animales/[id]/index.tsx`), alta (`app/animales/nuevo.tsx`) y edición (`app/animales/[id]/editar.tsx`) con el formulario compartido `components/FormularioAnimal.tsx`. Las reglas están en `services/animalService.ts` y son las mismas que `AnimalService` de Blazor (microchip de 15 números y único, grupos de 2 a 10.000, fecha no futura). Foto opcional con `expo-image-picker` (cámara o galería, JPG/PNG/WebP hasta 5 MB) en `components/SelectorFoto.tsx` y `components/FotoAnimal.tsx`. Los datos viven en memoria.
+
 ## Componentes compartidos
 
 | Componente | Para qué |

@@ -25,5 +25,10 @@ public class Animal
 
     public string SenasParticulares { get; set; } = "";
     public string Antecedentes { get; set; } = "";
+
+    // Foto para reconocerlo en la ficha y en la consulta (RF-CLI-01). Vacía si no tiene.
+    // En la demostración es la imagen achicada en formato data URL; en la sección C la guarda la API y esto es su dirección.
+    public string Foto { get; set; } = "";
+
     public DateTime FechaAlta { get; set; }
 }

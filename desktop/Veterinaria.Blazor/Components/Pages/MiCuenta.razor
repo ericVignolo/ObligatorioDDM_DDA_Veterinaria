@@ -10,6 +10,7 @@
 @inject VacunaService Vacunas
 @inject CobroService Cobro
 @inject ConsentimientoService Consentimientos
+@inject NavigationManager Navegacion
 
 @* Perfil del Cliente (A-009): datos personales con quién ve cada uno, animales con su historia,
    turnos y servicios usados con «Reservar de nuevo». Los datos son de demostración. *@
@@ -201,6 +202,8 @@
                                 <label class="form-label" for="contrasena-actual">Contraseña actual</label>
                                 <InputText id="contrasena-actual" type="password" class="form-control" @bind-Value="cambioContrasena.ContrasenaActual" autocomplete="current-password" />
                                 <ValidationMessage For="() => cambioContrasena.ContrasenaActual" />
+                                @* Si no la recuerda, se usa la recuperación por código con el correo de la cuenta (D-REG-03). *@
+                                <button type="button" class="btn btn-link btn-sm px-0" @onclick="RecuperarContrasena">¿No recordás tu contraseña actual?</button>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label" for="contrasena-nueva">Contraseña nueva</label>
@@ -565,6 +568,19 @@
 
         exitoSeguridad = false;
         mensajeSeguridad = resultado.Mensaje;
+    }
+
+    // Manda el código al correo de la cuenta y lleva a crear la contraseña nueva.
+    // Restablecer cierra la sesión al terminar (D-REG-03).
+    private void RecuperarContrasena()
+    {
+        if (cuenta is null)
+        {
+            return;
+        }
+
+        CuentaService.SolicitarRecuperacion(cuenta.Correo);
+        Navegacion.NavigateTo("restablecer");
     }
 
     // Por seguridad, después de cambiar correo o contraseña se vuelve a ingresar.

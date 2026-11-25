@@ -1,5 +1,8 @@
-import { View } from 'react-native';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { useLayoutEffect } from 'react';
+import { Pressable, Text, View } from 'react-native';
 import { Boton } from '../../components/Boton';
+import { Icono } from '../../components/Icono';
 import { Insignia, type TipoInsignia } from '../../components/Insignia';
 import { Pantalla } from '../../components/Pantalla';
 import { Tarjeta } from '../../components/Tarjeta';
@@ -25,8 +28,39 @@ const NIVELES: { nombre: string; tipo: TipoInsignia; significado: string; horari
   { nombre: 'Verde', tipo: 'exito', significado: 'Situación estable o que se puede programar.', horario: 'En el horario de la clínica, después de los niveles anteriores.' },
 ];
 
+// Desde dónde se abrió Urgencias con un botón (no desde la barra de pestañas), para mostrar «Volver».
+const ORIGENES: Record<string, '/' | '/clinica'> = { inicio: '/', clinica: '/clinica' };
+
 export default function Urgencias() {
   const clinica = obtenerClinica();
+  const router = useRouter();
+  const navigation = useNavigation();
+  const { desde } = useLocalSearchParams<{ desde?: string }>();
+  const destino = desde ? ORIGENES[desde] : undefined;
+
+  // Urgencias es una pestaña: al abrirla desde un botón no hay flecha de volver, así que se agrega una en el encabezado.
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: destino
+        ? () => (
+            <Pressable
+              onPress={() => {
+                // Se limpia el origen para que, si después se entra por la pestaña, no aparezca «Volver».
+                router.setParams({ desde: undefined });
+                router.navigate(destino);
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="Volver"
+              hitSlop={8}
+              className="min-h-12 min-w-12 flex-row items-center gap-1 pl-3 pr-2 active:opacity-70"
+            >
+              <Icono nombre="chevron-back-outline" color="primario" tamano={24} />
+              <Text className="font-nunito-semi text-base text-primario dark:text-primario-oscuro">Volver</Text>
+            </Pressable>
+          )
+        : undefined,
+    });
+  }, [navigation, router, destino]);
 
   return (
     <Pantalla>

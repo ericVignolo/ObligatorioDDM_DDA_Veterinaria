@@ -109,7 +109,8 @@ public class AnimalService
             EsGrupo = animal.EsGrupo,
             CantidadGrupo = animal.CantidadGrupo,
             SenasParticulares = animal.SenasParticulares,
-            Antecedentes = animal.Antecedentes
+            Antecedentes = animal.Antecedentes,
+            Foto = animal.Foto
         };
     }
 
@@ -157,5 +158,6 @@ public class AnimalService
         animal.CantidadGrupo = datos.EsGrupo ? datos.CantidadGrupo : null;
         animal.SenasParticulares = datos.SenasParticulares.Trim();
         animal.Antecedentes = datos.Antecedentes.Trim();
+        animal.Foto = datos.Foto;
     }
 }

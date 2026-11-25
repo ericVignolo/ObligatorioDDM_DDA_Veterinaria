@@ -23,7 +23,15 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "VITALIA usa tus fotos para que puedas elegir una imagen de tu animal y la clínica lo reconozca.",
+          "cameraPermission": "VITALIA usa la cámara para que puedas sacarle una foto a tu animal y la clínica lo reconozca.",
+          "microphonePermission": false
+        }
+      ]
     ],
     "scheme": "vitalia"
   }

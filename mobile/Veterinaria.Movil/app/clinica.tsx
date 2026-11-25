@@ -27,7 +27,7 @@ export default function LaClinica() {
         <Subtitulo>Horario</Subtitulo>
         <Parrafo>{clinica.horario}</Parrafo>
         <Nota>Las urgencias graves se atienden en todo horario por la guardia.</Nota>
-        <Boton texto="Ver urgencias" variante="secundario" onPress={() => router.push('/urgencias')} />
+        <Boton texto="Ver urgencias" variante="secundario" onPress={() => router.push('/urgencias?desde=clinica')} />
       </Tarjeta>
 
       <Tarjeta>

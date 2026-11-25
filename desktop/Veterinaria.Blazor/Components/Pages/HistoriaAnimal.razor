@@ -16,7 +16,10 @@
     else
     {
         <PageTitle>Historia clínica de @animal.Nombre — VITALIA</PageTitle>
-        <h1>Historia clínica de @animal.Nombre</h1>
+        <div class="d-flex align-items-center gap-3 mb-2">
+            <FotoAnimal Foto="@animal.Foto" Nombre="@animal.Nombre" />
+            <h1 class="mb-0">Historia clínica de @animal.Nombre</h1>
+        </div>
         <p class="text-muted">Consultas firmadas por la clínica, de la más reciente a la más antigua. Las enmiendas se muestran debajo del registro original.</p>
 
         @if (historia.Count == 0)
