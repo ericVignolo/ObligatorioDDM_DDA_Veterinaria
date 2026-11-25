@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { Boton } from '../components/Boton';
 import { Campo } from '../components/Campo';
 import { Pantalla } from '../components/Pantalla';
@@ -146,6 +146,10 @@ export default function MiCuenta() {
       <Tarjeta>
         <Subtitulo>Cambiar contraseña</Subtitulo>
         <Campo etiqueta="Contraseña actual" value={actual} onChangeText={setActual} error={erroresClave.actual} secureTextEntry autoCapitalize="none" autoComplete="current-password" />
+        {/* Si no la recuerda, se usa la recuperación por código con el correo de la cuenta (D-REG-03). */}
+        <Pressable accessibilityRole="link" onPress={() => router.push('/recuperar?desde=cuenta')} className="min-h-12 justify-center self-start active:opacity-70">
+          <Text className="font-nunito-semi text-base text-primario underline dark:text-primario-oscuro">¿No recordás tu contraseña actual?</Text>
+        </Pressable>
         <Campo etiqueta="Contraseña nueva" value={nueva} onChangeText={setNueva} error={erroresClave.nueva} secureTextEntry autoCapitalize="none" autoComplete="new-password" ayuda="Entre 8 y 64 caracteres." />
         <Campo etiqueta="Repetir contraseña" value={repetir} onChangeText={setRepetir} error={erroresClave.repetir} secureTextEntry autoCapitalize="none" autoComplete="new-password" />
         {mensajeClave ? error(mensajeClave) : null}

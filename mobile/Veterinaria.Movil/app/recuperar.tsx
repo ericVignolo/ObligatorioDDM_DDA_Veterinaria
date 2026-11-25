@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { Boton } from '../components/Boton';
@@ -8,7 +8,8 @@ import { Pantalla } from '../components/Pantalla';
 import { Tarjeta } from '../components/Tarjeta';
 import { Nota, Parrafo, Titulo } from '../components/Textos';
 import { useAviso } from '../context/AvisoContext';
-import { codigoRecuperacionDemo, obtenerCorreoRecuperacion, restablecer, solicitarRecuperacion } from '../services/cuentaService';
+import { useSesion } from '../context/SesionContext';
+import { codigoRecuperacionDemo, obtenerCorreoRecuperacion, obtenerPorId, restablecer, solicitarRecuperacion } from '../services/cuentaService';
 import { correoValido } from '../utils/validacion';
 
 // Recuperar la contraseña con un código por correo (A-007, D-REG-03). La respuesta es siempre la misma,
@@ -16,8 +17,13 @@ import { correoValido } from '../utils/validacion';
 export default function Recuperar() {
   const router = useRouter();
   const avisar = useAviso();
+  const { usuario, salir } = useSesion();
+  // Desde «Mi cuenta» (sesión abierta) el correo es el de la cuenta y no se cambia acá.
+  // Se pasa solo el origen, nunca el correo, para no dejar datos personales en la dirección.
+  const { desde } = useLocalSearchParams<{ desde?: string }>();
+  const correoCuenta = desde === 'cuenta' && usuario?.rol === 'Cliente' ? (obtenerPorId(usuario.id)?.correo ?? '') : '';
   const [paso, setPaso] = useState<'pedir' | 'restablecer'>('pedir');
-  const [correo, setCorreo] = useState('');
+  const [correo, setCorreo] = useState(correoCuenta);
   const [codigo, setCodigo] = useState('');
   const [nueva, setNueva] = useState('');
   const [repetir, setRepetir] = useState('');
@@ -52,6 +58,8 @@ export default function Recuperar() {
       setCodigo('');
       return;
     }
+    // D-REG-03: al cambiar la contraseña se cierra la sesión abierta de esa cuenta (como en Blazor).
+    if (usuario) salir();
     avisar(r.mensaje, 'exito');
     router.replace('/ingresar');
   };
@@ -60,11 +68,16 @@ export default function Recuperar() {
     return (
       <Pantalla>
         <Titulo>Recuperar contraseña</Titulo>
-        <Parrafo suave>Escribí el correo de tu cuenta y te enviamos un código para crear una contraseña nueva.</Parrafo>
+        <Parrafo suave>
+          {correoCuenta
+            ? 'Te enviamos un código al correo de tu cuenta para crear una contraseña nueva. Al cambiarla, volvés a ingresar con la nueva.'
+            : 'Escribí el correo de tu cuenta y te enviamos un código para crear una contraseña nueva.'}
+        </Parrafo>
         <Campo
           etiqueta="Correo electrónico"
           value={correo}
           onChangeText={setCorreo}
+          editable={!correoCuenta}
           error={errores.correo}
           keyboardType="email-address"
           autoCapitalize="none"
@@ -73,7 +86,7 @@ export default function Recuperar() {
           onSubmitEditing={pedir}
         />
         <Boton texto="Enviarme un código" icono="mail-outline" onPress={pedir} />
-        <Boton texto="Volver a ingresar" variante="secundario" onPress={() => router.back()} />
+        <Boton texto={correoCuenta ? 'Volver a Mi cuenta' : 'Volver a ingresar'} variante="secundario" onPress={() => router.back()} />
       </Pantalla>
     );
   }
