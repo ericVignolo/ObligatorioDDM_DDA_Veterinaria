@@ -34,7 +34,7 @@ export default function Inicio() {
         <Subtitulo>¿Es una urgencia?</Subtitulo>
         <Parrafo>Si tu animal está en peligro, llamá a la guardia: {clinica.telefonoGuardia}</Parrafo>
         <Boton texto="Llamar a la guardia" icono="call-outline" variante="peligro" onPress={() => llamar(clinica.telefonoGuardia)} />
-        <Boton texto="Cómo saber si es urgente" variante="secundario" onPress={() => router.push('/urgencias')} />
+        <Boton texto="Cómo saber si es urgente" variante="secundario" onPress={() => router.push('/urgencias?desde=inicio')} />
       </View>
 
       {usuario ? (
