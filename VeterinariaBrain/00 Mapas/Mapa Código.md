@@ -326,7 +326,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Mobile — [[Carpeta mobile]]
 
-### Pantallas (25)
+### Pantallas (27)
 - [[Veterinaria.Movil-app-(tabs)-_layout (Móvil)]]
 - [[Veterinaria.Movil-app-(tabs)-index (Móvil)]]
 - [[Veterinaria.Movil-app-_layout (Móvil)]]
@@ -335,6 +335,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[[adjuntoId] (Móvil)]]
 - [[[codigo] (Móvil)]]
 - [[[id] (Móvil)]]
+- [[[turnoId] (Móvil)]]
 - [[agenda (Móvil)]]
 - [[animales (Móvil)]]
 - [[asistencias (Móvil)]]
@@ -345,6 +346,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[mi-cuenta (Móvil)]]
 - [[nuevo (Móvil)]]
 - [[perfil (Móvil)]]
+- [[preferencias (Móvil)]]
 - [[recuperar (Móvil)]]
 - [[registro (Móvil)]]
 - [[reservar (Móvil)]]
@@ -353,12 +355,13 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[urgencias (Móvil)]]
 - [[verificar (Móvil)]]
 
-### Componentes (24)
+### Componentes (25)
 - [[Boton (Móvil)]]
 - [[Campo (Móvil)]]
 - [[CarnetSanitario (Móvil)]]
 - [[Casilla (Móvil)]]
 - [[Esqueleto (Móvil)]]
+- [[EstadoConsentimiento (Móvil)]]
 - [[EstadoRefuerzo (Móvil)]]
 - [[EstadoTurno (Móvil)]]
 - [[Fila (Móvil)]]
@@ -379,10 +382,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Textos (Móvil)]]
 - [[Vacio (Móvil)]]
 
-### Servicios (11)
+### Servicios (13)
 - [[agendaService (Móvil)]]
 - [[animalService (Móvil)]]
 - [[clinicaService (Móvil)]]
+- [[comunicacionesService (Móvil)]]
+- [[consentimientoService (Móvil)]]
 - [[cuentaService (Móvil)]]
 - [[historiaService (Móvil)]]
 - [[intencionService (Móvil)]]
@@ -392,9 +397,11 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[profesionalService (Móvil)]]
 - [[vacunaService (Móvil)]]
 
-### Modelos (11)
+### Modelos (13)
 - [[Animal (Móvil)]]
 - [[Clinica (Móvil)]]
+- [[Comunicacion (Móvil)]]
+- [[Consentimiento (Móvil)]]
 - [[Consulta (Móvil)]]
 - [[Cuenta (Móvil)]]
 - [[DocumentoLegal (Móvil)]]
@@ -405,12 +412,13 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Usuario (Móvil)]]
 - [[Vacuna (Móvil)]]
 
-### Otros (15)
+### Otros (17)
 - [[AvisoContext (Móvil)]]
 - [[SesionContext (Móvil)]]
 - [[Veterinaria.Movil-tema-index (Móvil)]]
 - [[animalesDemo (Móvil)]]
 - [[clinica (Móvil)]]
+- [[consentimientoDemo (Móvil)]]
 - [[consultasDemo (Móvil)]]
 - [[cuentasDemo (Móvil)]]
 - [[fechas (Móvil)]]
@@ -420,4 +428,5 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[prestaciones (Móvil)]]
 - [[productosSanitarios (Móvil)]]
 - [[profesionales (Móvil)]]
+- [[sha256 (Móvil)]]
 - [[validacion (Móvil)]]

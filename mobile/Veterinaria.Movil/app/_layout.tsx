@@ -60,6 +60,8 @@ export default function RootLayout() {
             <Stack.Screen name="verificar" options={{ title: 'Verificar correo' }} />
             <Stack.Screen name="recuperar" options={{ title: 'Recuperar contraseña' }} />
             <Stack.Screen name="mi-cuenta" options={{ title: 'Mi cuenta' }} />
+            <Stack.Screen name="preferencias" options={{ title: 'Preferencias y privacidad' }} />
+            <Stack.Screen name="consentimiento/[turnoId]" options={{ title: 'Consentimiento' }} />
             <Stack.Screen name="reservar" options={{ title: 'Reservar turno' }} />
             <Stack.Screen name="animales/nuevo" options={{ title: 'Registrar animal' }} />
             <Stack.Screen name="animales/[id]/index" options={{ title: 'Ficha del animal' }} />

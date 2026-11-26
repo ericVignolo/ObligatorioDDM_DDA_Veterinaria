@@ -9,16 +9,17 @@ generado: true
 
 > Fuente: `mobile/Veterinaria.Movil/app/(tabs)/avisos.tsx` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
-Avisos del Cliente (B-010, RF-CLI-07): alertas sanitarias de refuerzos próximos o vencidos de sus animales.
+Avisos del Cliente: consentimientos sin firmar (B-012, CU-CLI-10, paso 1) y alertas sanitarias de refuerzos
 
-**Tareas:** A-028, B-010, B-017
+**Tareas:** A-028, B-010, B-012, B-017
 
-**Requisitos y decisiones:** RF-CLI-07
+**Requisitos y decisiones:** CU-CLI-10, RF-CLI-07
 
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
 - [[Boton (Móvil)]]
+- [[EstadoConsentimiento (Móvil)]]
 - [[EstadoRefuerzo (Móvil)]]
 - [[FotoAnimal (Móvil)]]
 - [[Pantalla (Móvil)]]
@@ -26,6 +27,10 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 - [[SesionContext (Móvil)]]
 - [[Tarjeta (Móvil)]]
 - [[Textos (Móvil)]]
+- [[Turno (Móvil)]]
 - [[Vacio (Móvil)]]
+- [[animalService (Móvil)]]
+- [[consentimientoService (Móvil)]]
 - [[fechas (Móvil)]]
+- [[prestacionService (Móvil)]]
 - [[vacunaService (Móvil)]]

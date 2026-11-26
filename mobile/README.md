@@ -81,6 +81,10 @@ En la ficha del animal, el **carné de vacunas y antiparasitarios** (`components
 
 En la ficha del animal, arriba del carné (`components/SeguimientoInternacion.tsx`, como el bloque de `AnimalDetalle.razor`): estado, ingreso, motivo y **solo las novedades visibles** (RN-23), con las correcciones señaladas (RN-24); al alta, evolución final e indicaciones para casa. «Actualizar novedades» reemplaza al tiempo real (RNF-DIS-04). `services/internacionService.ts` nunca entrega notas internas ni el plan terapéutico. Datos en `data/internacionesDemo.ts`: Canela (Pedro) en curso y Mishi (Ana) con alta.
 
+## Consentimiento y preferencias (B-012)
+
+**Consentimiento** (`app/consentimiento/[turnoId].tsx`, como `FirmarConsentimiento.razor`): se llega desde **Turnos** y **Avisos** en los servicios que lo piden; firma con casilla y nombre completo, rechazo, retiro antes del procedimiento e historial. Reglas en `services/consentimientoService.ts` (`ESPECIFICACION_CONSENTIMIENTO.md`), huella con `utils/sha256.ts`. **Preferencias y privacidad** (`app/preferencias.tsx`, desde Perfil): canal por tipo de comunicación (`services/comunicacionesService.ts`), aceptaciones obligatorias y consentimientos respondidos. Todo vive en memoria.
+
 ## Componentes compartidos
 
 | Componente | Para qué |

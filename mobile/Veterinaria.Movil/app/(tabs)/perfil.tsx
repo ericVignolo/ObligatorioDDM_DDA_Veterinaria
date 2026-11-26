@@ -39,6 +39,7 @@ export default function Perfil() {
       {usuario.rol === 'Cliente' ? (
         <Tarjeta>
           <Fila icono="person-outline" texto="Mi cuenta" detalle="Tus datos y tu contraseña" onPress={() => router.push('/mi-cuenta')} />
+          <Fila icono="options-outline" texto="Preferencias y privacidad" detalle="Avisos, aceptaciones y consentimientos" onPress={() => router.push('/preferencias')} />
         </Tarjeta>
       ) : null}
 

@@ -25,3 +25,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[EstadoConsentimiento]]
 - [[FirmarConsentimiento]]
 - [[RegistroAuditoria]]
+
+## En las otras aplicaciones
+- [[Consentimiento (Móvil)]]

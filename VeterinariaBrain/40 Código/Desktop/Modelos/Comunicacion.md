@@ -21,3 +21,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[Comunicaciones]]
 - [[ComunicacionesService]]
 - [[MisComunicaciones]]
+
+## En las otras aplicaciones
+- [[Comunicacion (Móvil)]]

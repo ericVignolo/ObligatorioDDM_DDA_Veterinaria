@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Boton } from '../../components/Boton';
 import { Campo } from '../../components/Campo';
+import { EstadoConsentimiento } from '../../components/EstadoConsentimiento';
 import { EstadoTurno } from '../../components/EstadoTurno';
 import { Pantalla } from '../../components/Pantalla';
 import { Tarjeta } from '../../components/Tarjeta';
@@ -13,6 +14,7 @@ import { useSesion } from '../../context/SesionContext';
 import { cancelar, HORAS_PARA_CANCELAR, historialDe, obtenerDe, proximosDe, puedeGestionar, resumen } from '../../services/agendaService';
 import { obtenerPorId as obtenerAnimal } from '../../services/animalService';
 import { llamar, obtenerClinica } from '../../services/clinicaService';
+import { estadoDe as estadoConsentimiento } from '../../services/consentimientoService';
 import type { Turno } from '../../types/Turno';
 import { diaCorto, diaLargo, hora } from '../../utils/fechas';
 
@@ -116,7 +118,16 @@ export default function Turnos() {
               </Subtitulo>
               <Parrafo>{nombre(t)}</Parrafo>
               <EstadoTurno estado={t.estado} />
+              <EstadoConsentimiento estado={estadoConsentimiento(t)} />
               {t.estado === 'Pendiente de seña' ? <Nota>Se confirma cuando pagues la seña en Recepción. El consentimiento se firma antes del día del turno.</Nota> : null}
+              {estadoConsentimiento(t) !== 'No requiere' ? (
+                <Boton
+                  texto={estadoConsentimiento(t) === 'Firmado' ? 'Ver el consentimiento firmado' : 'Leer y firmar el consentimiento'}
+                  icono="document-text-outline"
+                  variante={estadoConsentimiento(t) === 'Firmado' ? 'secundario' : 'acento'}
+                  onPress={() => router.push({ pathname: '/consentimiento/[turnoId]', params: { turnoId: String(t.id) } })}
+                />
+              ) : null}
 
               {cancelandoId === t.id ? (
                 // Confirmación antes de cancelar, con motivo opcional (A-016).

@@ -28,5 +28,7 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 - [[profesionales (Móvil)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[[turnoId] (Móvil)]]
+- [[consentimientoService (Móvil)]]
 - [[reservar (Móvil)]]
 - [[turnos (Móvil)]]

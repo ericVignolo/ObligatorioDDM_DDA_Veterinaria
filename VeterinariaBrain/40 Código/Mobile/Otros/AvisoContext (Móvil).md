@@ -18,11 +18,13 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Veterinaria.Movil-app-_layout (Móvil)]]
+- [[[turnoId] (Móvil)]]
 - [[editar (Móvil)]]
 - [[ingresar (Móvil)]]
 - [[mi-cuenta (Móvil)]]
 - [[nuevo (Móvil)]]
 - [[perfil (Móvil)]]
+- [[preferencias (Móvil)]]
 - [[recuperar (Móvil)]]
 - [[registro (Móvil)]]
 - [[turnos (Móvil)]]

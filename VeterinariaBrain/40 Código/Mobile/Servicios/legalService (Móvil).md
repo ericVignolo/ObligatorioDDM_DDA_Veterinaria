@@ -17,3 +17,4 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 ## Usado por (si cambia, revisar estos)
 - [[[codigo] (Móvil)]]
 - [[cuentaService (Móvil)]]
+- [[preferencias (Móvil)]]

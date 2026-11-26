@@ -26,3 +26,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AgendaRecepcion]]
 - [[AgendaVeterinario]]
 - [[Turnos]]
+
+## En las otras aplicaciones
+- [[EstadoConsentimiento (Móvil)]]

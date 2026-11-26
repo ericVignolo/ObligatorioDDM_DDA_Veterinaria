@@ -19,7 +19,11 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
 - [[EstadoTurno (Móvil)]]
+- [[[turnoId] (Móvil)]]
 - [[agendaService (Móvil)]]
+- [[avisos (Móvil)]]
+- [[consentimientoService (Móvil)]]
+- [[preferencias (Móvil)]]
 - [[turnos (Móvil)]]
 
 ## En las otras aplicaciones

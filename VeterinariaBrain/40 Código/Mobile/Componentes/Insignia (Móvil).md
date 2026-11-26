@@ -14,6 +14,7 @@ Insignia de estado (S4): turnos, vacunas, niveles de asistencia. Siempre con tex
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
+- [[EstadoConsentimiento (Móvil)]]
 - [[EstadoRefuerzo (Móvil)]]
 - [[EstadoTurno (Móvil)]]
 - [[RegistroClinico (Móvil)]]

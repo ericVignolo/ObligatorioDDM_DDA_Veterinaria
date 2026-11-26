@@ -15,5 +15,6 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
 - [[AvisoContext (Móvil)]]
+- [[Consentimiento (Móvil)]]
 - [[Profesional (Móvil)]]
 - [[SesionContext (Móvil)]]

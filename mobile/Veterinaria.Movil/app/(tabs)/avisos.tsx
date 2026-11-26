@@ -2,6 +2,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 import { Boton } from '../../components/Boton';
+import { EstadoConsentimiento } from '../../components/EstadoConsentimiento';
 import { EstadoRefuerzo } from '../../components/EstadoRefuerzo';
 import { FotoAnimal } from '../../components/FotoAnimal';
 import { Pantalla } from '../../components/Pantalla';
@@ -10,10 +11,15 @@ import { Tarjeta } from '../../components/Tarjeta';
 import { Nota, Parrafo, Titulo } from '../../components/Textos';
 import { Vacio } from '../../components/Vacio';
 import { useSesion } from '../../context/SesionContext';
+import { obtenerPorId as obtenerAnimal } from '../../services/animalService';
+import { estadoDe as estadoConsentimiento, pendientesDe } from '../../services/consentimientoService';
+import { obtenerPorId as obtenerPrestacion } from '../../services/prestacionService';
 import { alertasDe, DIAS_AVISO_REFUERZO, servicioPara, textoAlerta } from '../../services/vacunaService';
-import { diaCorto } from '../../utils/fechas';
+import type { Turno } from '../../types/Turno';
+import { diaCorto, hora } from '../../utils/fechas';
 
-// Avisos del Cliente (B-010, RF-CLI-07): alertas sanitarias de refuerzos próximos o vencidos de sus animales.
+// Avisos del Cliente: consentimientos sin firmar (B-012, CU-CLI-10, paso 1) y alertas sanitarias de refuerzos
+// próximos o vencidos de sus animales (B-010, RF-CLI-07).
 // Las notificaciones push y del Veterinario se completan en B-017; el correo lo manda la API (A-028).
 export default function Avisos() {
   const router = useRouter();
@@ -21,8 +27,11 @@ export default function Avisos() {
   const clienteId = usuario?.rol === 'Cliente' ? usuario.id : null;
   const [alertas, setAlertas] = useState<ReturnType<typeof alertasDe>>([]);
 
+  const [pendientes, setPendientes] = useState<Turno[]>([]);
+
   useFocusEffect(
     useCallback(() => {
+      setPendientes(clienteId === null ? [] : pendientesDe(clienteId));
       setAlertas(clienteId === null ? [] : alertasDe(clienteId));
     }, [clienteId]),
   );
@@ -39,9 +48,22 @@ export default function Avisos() {
   return (
     <Pantalla>
       <Titulo>Avisos</Titulo>
-      <Nota>Refuerzos de vacunas y antiparasitarios de tus animales: vencidos o en los próximos {DIAS_AVISO_REFUERZO} días.</Nota>
+      <Nota>Consentimientos sin firmar y refuerzos de vacunas y antiparasitarios vencidos o en los próximos {DIAS_AVISO_REFUERZO} días.</Nota>
 
-      {alertas.length === 0 ? (
+      {pendientes.map((t) => (
+        <Tarjeta key={`consentimiento-${t.id}`}>
+          <Text className="font-nunito-negrita text-base text-texto dark:text-texto-oscuro">
+            {obtenerAnimal(t.animalId, clienteId)?.nombre} · {obtenerPrestacion(t.prestacionId)?.nombre}
+          </Text>
+          <EstadoConsentimiento estado={estadoConsentimiento(t)} />
+          <Parrafo>
+            Turno del {diaCorto(t.inicio)} a las {hora(t.inicio)}: sin tu consentimiento la cirugía no se puede empezar.
+          </Parrafo>
+          <Boton texto="Leer y responder" icono="document-text-outline" onPress={() => router.push({ pathname: '/consentimiento/[turnoId]', params: { turnoId: String(t.id) } })} />
+        </Tarjeta>
+      ))}
+
+      {alertas.length === 0 && pendientes.length > 0 ? null : alertas.length === 0 ? (
         <Vacio icono="shield-checkmark-outline" titulo="Todo al día" texto="Ningún animal tiene refuerzos vencidos ni próximos." />
       ) : (
         alertas.map(({ animal, item }) => (
@@ -71,7 +93,8 @@ export default function Avisos() {
           </Tarjeta>
         ))
       )}
-      <Nota>Con la API también te llegan por correo, según lo que elijas en tus preferencias de comunicación.</Nota>
+      <Nota>Con la API los refuerzos también te llegan por correo, según lo que elijas en tus preferencias.</Nota>
+      <Boton texto="Preferencias de avisos" icono="options-outline" variante="secundario" onPress={() => router.push('/preferencias')} />
     </Pantalla>
   );
 }
