@@ -65,6 +65,10 @@ Recepción y Administrador trabajan en escritorio. Mientras no esté el formular
 
 Pestaña **Animales** (solo Cliente): lista, ficha (`app/animales/[id]/index.tsx`), alta (`app/animales/nuevo.tsx`) y edición (`app/animales/[id]/editar.tsx`) con el formulario compartido `components/FormularioAnimal.tsx`. Las reglas están en `services/animalService.ts` y son las mismas que `AnimalService` de Blazor (microchip de 15 números y único, grupos de 2 a 10.000, fecha no futura). Foto opcional con `expo-image-picker` (cámara o galería, JPG/PNG/WebP hasta 5 MB) en `components/SelectorFoto.tsx` y `components/FotoAnimal.tsx`. Los datos viven en memoria.
 
+## Reserva y turnos (B-008)
+
+**Reservar** (`app/reservar.tsx`) en cuatro pasos, como `Reservar.razor`: animal, servicio y profesional (solo quien hace ese servicio y atiende esa especie; si hay uno solo se elige solo), fecha y hora (fichas de días con los próximos 60 días y horarios cada 15 minutos) y confirmación. Se llega desde **Turnos**, el detalle de un servicio, la ficha del animal y después de ingresar o verificar la cuenta si había un servicio elegido. **Turnos** (`app/(tabs)/turnos.tsx`): próximos e historial, cancelar con motivo opcional y reprogramar (más de 24 h antes; si no, llamar a Recepción). Las reglas están en `services/agendaService.ts`, iguales a `AgendaService` de Blazor (anticipación de 2 h, descansos, superposición de profesional y animal, seña de las cirugías, ausencias RN-08). Los turnos viven en memoria.
+
 ## Componentes compartidos
 
 | Componente | Para qué |

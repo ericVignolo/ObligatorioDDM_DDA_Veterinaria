@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { FormularioAnimal } from '../../components/FormularioAnimal';
 import { Pantalla } from '../../components/Pantalla';
 import { Nota, Titulo } from '../../components/Textos';
@@ -12,6 +12,8 @@ export default function NuevoAnimal() {
   const router = useRouter();
   const avisar = useAviso();
   const { usuario } = useSesion();
+  // Si se llegó desde la reserva (P-RC-01), al registrar se vuelve a ella con el animal elegido.
+  const { volver, servicio } = useLocalSearchParams<{ volver?: string; servicio?: string }>();
 
   if (!usuario || usuario.rol !== 'Cliente') {
     return (
@@ -32,8 +34,12 @@ export default function NuevoAnimal() {
           const r = crear(datos, usuario.id);
           if (r.exito && r.id) {
             avisar(r.mensaje, 'exito');
-            // Se reemplaza el formulario por la ficha: «Volver» lleva a la lista, no al formulario vacío.
-            router.replace(`/animales/${r.id}`);
+            if (volver === 'reservar') {
+              router.replace({ pathname: '/reservar', params: { animal: String(r.id), ...(servicio ? { servicio } : {}) } });
+            } else {
+              // Se reemplaza el formulario por la ficha: «Volver» lleva a la lista, no al formulario vacío.
+              router.replace(`/animales/${r.id}`);
+            }
           }
           return r;
         }}

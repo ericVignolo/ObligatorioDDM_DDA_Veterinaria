@@ -67,7 +67,7 @@ export default function Verificar() {
   const continuar = () => {
     const pendiente = intencionVigente();
     router.replace('/');
-    if (pendiente !== null) router.push({ pathname: '/servicios/[id]', params: { id: String(pendiente) } });
+    if (pendiente !== null) router.push({ pathname: '/reservar', params: { servicio: String(pendiente) } });
   };
 
   if (cuenta.verificada) {

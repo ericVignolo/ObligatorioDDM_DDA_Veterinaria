@@ -20,6 +20,7 @@ export function Casilla({ marcada, onCambio, children, error, etiqueta }: Props)
           accessibilityRole="checkbox"
           accessibilityLabel={etiqueta}
           accessibilityState={{ checked: marcada }}
+          aria-checked={marcada}
           hitSlop={8}
           className="h-12 w-8 items-center justify-center"
         >

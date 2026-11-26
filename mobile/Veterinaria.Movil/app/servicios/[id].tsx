@@ -7,7 +7,6 @@ import { Pantalla } from '../../components/Pantalla';
 import { Tarjeta } from '../../components/Tarjeta';
 import { Nota, Parrafo, Subtitulo, Titulo } from '../../components/Textos';
 import { Vacio } from '../../components/Vacio';
-import { useAviso } from '../../context/AvisoContext';
 import { useSesion } from '../../context/SesionContext';
 import { llamar, obtenerClinica } from '../../services/clinicaService';
 import { formatearPrecio, obtenerPorId } from '../../services/prestacionService';
@@ -16,7 +15,6 @@ import { obtenerPublicos } from '../../services/profesionalService';
 export default function DetalleServicio() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const avisar = useAviso();
   const { usuario } = useSesion();
   const prestacion = obtenerPorId(Number(id));
 
@@ -35,7 +33,7 @@ export default function DetalleServicio() {
       router.push({ pathname: '/ingresar', params: { servicio: String(prestacion.id) } });
       return;
     }
-    avisar('La reserva en 4 pasos se construye en B-008.', 'info');
+    router.push({ pathname: '/reservar', params: { servicio: String(prestacion.id) } });
   };
 
   return (

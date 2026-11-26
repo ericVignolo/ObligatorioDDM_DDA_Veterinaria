@@ -43,6 +43,7 @@ export function Selector({ etiqueta, valor, opciones, onCambio, error, marcador 
                 key={o}
                 accessibilityRole="radio"
                 accessibilityState={{ checked: activa }}
+                aria-checked={activa}
                 onPress={() => {
                   onCambio(o);
                   setAbierto(false);

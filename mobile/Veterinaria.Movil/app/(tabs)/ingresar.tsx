@@ -71,10 +71,10 @@ export default function Ingresar() {
       router.replace('/agenda');
       return;
     }
-    // Vuelve a la acción interrumpida, con el inicio debajo para poder volver. La reserva en 4 pasos llega en B-008.
+    // Vuelve a la acción interrumpida (la reserva de ese servicio), con el inicio debajo para poder volver (A-011).
     const pendiente = intencionVigente();
     router.replace('/');
-    if (pendiente !== null) router.push({ pathname: '/servicios/[id]', params: { id: String(pendiente) } });
+    if (pendiente !== null) router.push({ pathname: '/reservar', params: { servicio: String(pendiente) } });
   };
 
   return (
