@@ -73,6 +73,10 @@ Pestaña **Animales** (solo Cliente): lista, ficha (`app/animales/[id]/index.tsx
 
 Desde la ficha del animal, **Historia clínica** (`app/animales/[id]/historia.tsx`): solo lectura y solo consultas firmadas de los animales del Cliente, de la más reciente a la más antigua, con la firma y las enmiendas debajo del original (`components/RegistroClinico.tsx`, como `RegistroClinico.razor`, sin la huella). Los **adjuntos** (`app/animales/[id]/adjunto/[adjuntoId].tsx`) son de demostración: una imagen claramente falsa (`assets/demo/estudio-demo.png`), un PDF sin vista previa y uno retirado; se abren con un acceso temporal simulado de 5 minutos. Datos en `data/consultasDemo.ts` y reglas en `services/historiaService.ts`.
 
+## Vacunas y alertas (B-010)
+
+En la ficha del animal, el **carné de vacunas y antiparasitarios** (`components/CarnetSanitario.tsx`, como `CarnetSanitario.razor`): última aplicación de cada producto con lote, refuerzo y estado (Vigente, Refuerzo próximo dentro de 5 días o Vencida), alertas arriba con «Reservar turno» y el historial completo plegado. La pestaña **Avisos** del Cliente reúne las alertas de todos sus animales, y el Inicio muestra cuántas hay. Reglas en `services/vacunaService.ts` (iguales a `VacunaService`; la fecha de refuerzo la calcula el producto, RN-19) y catálogo en `data/productosSanitarios.ts`.
+
 ## Componentes compartidos
 
 | Componente | Para qué |

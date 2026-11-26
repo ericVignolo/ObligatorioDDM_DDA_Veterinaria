@@ -2,6 +2,7 @@ import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 import { Boton } from '../../../components/Boton';
+import { CarnetSanitario } from '../../../components/CarnetSanitario';
 import { FotoAnimal } from '../../../components/FotoAnimal';
 import { Insignia } from '../../../components/Insignia';
 import { Pantalla } from '../../../components/Pantalla';
@@ -76,10 +77,12 @@ export default function FichaAnimal() {
 
       <Boton texto="Historia clínica" icono="document-text-outline" variante="secundario" onPress={() => router.push(`/animales/${animal.id}/historia`)} />
 
-      {/* Carné sanitario (B-010) e internación (B-011) se suman en sus tareas. */}
+      <CarnetSanitario animalId={animal.id} clienteId={usuario.id} nombre={animal.nombre} />
+
+      {/* La internación (B-011) se suma en su tarea. */}
       <Tarjeta>
-        <Subtitulo>Vacunas e internaciones</Subtitulo>
-        <Nota>El carné de vacunas y las internaciones se agregan en las próximas tareas (B-010 y B-011).</Nota>
+        <Subtitulo>Internaciones</Subtitulo>
+        <Nota>El seguimiento de internaciones se agrega en B-011.</Nota>
       </Tarjeta>
     </Pantalla>
   );

@@ -11,6 +11,7 @@ import { Nota, Parrafo, Subtitulo, Titulo } from '../../components/Textos';
 import { Vacio } from '../../components/Vacio';
 import { useSesion } from '../../context/SesionContext';
 import { cargarEjemplos, obtenerDe } from '../../services/animalService';
+import { cargarCarnetEjemplo } from '../../services/vacunaService';
 import type { Animal } from '../../types/Animal';
 
 // «Mis animales» del Cliente (B-007, RF-CLI-01). Solo ve los animales de los que es responsable (RN-18).
@@ -37,6 +38,7 @@ export default function Animales() {
 
   const ejemplos = () => {
     cargarEjemplos(cuentaId);
+    cargarCarnetEjemplo(cuentaId);
     setAnimales(obtenerDe(cuentaId));
   };
 

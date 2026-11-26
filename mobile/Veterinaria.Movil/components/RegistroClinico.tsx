@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 import { signosVitales } from '../services/historiaService';
+import { deConsulta } from '../services/vacunaService';
 import type { Adjunto, Consulta } from '../types/Consulta';
 import { diaCorto, hora } from '../utils/fechas';
 import { Fila } from './Fila';
@@ -43,6 +44,17 @@ export function RegistroClinico({ consulta, onAbrirAdjunto }: Props) {
       {dato('Diagnóstico', `${consulta.diagnostico} (${consulta.tipoDiagnostico.toLowerCase()})`)}
       {dato('Tratamiento', consulta.tratamiento)}
       {dato('Indicaciones', consulta.indicaciones)}
+
+      {deConsulta(consulta.id).length > 0 ? (
+        <View className="gap-0.5">
+          <Text className="font-nunito-semi text-sm text-texto-suave dark:text-texto-suave-oscuro">Vacunas y antiparasitarios aplicados</Text>
+          {deConsulta(consulta.id).map((a) => (
+            <Parrafo key={a.id}>
+              • {a.producto} · {a.laboratorio} · lote {a.lote} · refuerzo {diaCorto(a.fechaRefuerzo)}
+            </Parrafo>
+          ))}
+        </View>
+      ) : null}
 
       {/* Enmiendas: el original nunca cambia; cada corrección queda fechada y firmada debajo (RN-12). */}
       {[...consulta.enmiendas]

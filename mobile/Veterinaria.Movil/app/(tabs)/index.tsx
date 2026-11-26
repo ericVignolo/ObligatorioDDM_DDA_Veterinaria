@@ -9,6 +9,7 @@ import { Nota, Parrafo, Subtitulo, Titulo } from '../../components/Textos';
 import { useSesion } from '../../context/SesionContext';
 import { llamar, obtenerClinica } from '../../services/clinicaService';
 import { obtenerPublicas } from '../../services/prestacionService';
+import { alertasDe } from '../../services/vacunaService';
 
 // Inicio del Visitante y del Cliente (RF-VIS-01, RF-VIS-06). El Veterinario empieza en su agenda.
 export default function Inicio() {
@@ -36,6 +37,13 @@ export default function Inicio() {
         <Boton texto="Llamar a la guardia" icono="call-outline" variante="peligro" onPress={() => llamar(clinica.telefonoGuardia)} />
         <Boton texto="Cómo saber si es urgente" variante="secundario" onPress={() => router.push('/urgencias?desde=inicio')} />
       </View>
+
+      {usuario?.rol === 'Cliente' && alertasDe(usuario.id).length > 0 ? (
+        <Tarjeta onPress={() => router.push('/avisos')} etiqueta={`Alertas sanitarias: ${alertasDe(usuario.id).length}. Ver avisos`}>
+          <Subtitulo>Alertas sanitarias ({alertasDe(usuario.id).length})</Subtitulo>
+          <Parrafo>Hay refuerzos de vacunas o antiparasitarios vencidos o próximos. Tocá para verlos.</Parrafo>
+        </Tarjeta>
+      ) : null}
 
       {usuario ? (
         <Tarjeta>

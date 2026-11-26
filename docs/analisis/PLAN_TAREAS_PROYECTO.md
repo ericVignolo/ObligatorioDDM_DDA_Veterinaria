@@ -111,7 +111,7 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 - [x] **B-007 — Implementar animales del Cliente.** Listado, fichas, altas, edición, identificadores permitidos e historia autorizada en modo de presentación.
 - [x] **B-008 — Implementar reserva y turnos.** Consulta de horarios ficticios, flujo de cuatro pasos, próximos turnos, historial, cancelación/reprogramación y estados.
 - [x] **B-009 — Implementar historia clínica móvil.** Lectura autorizada simulada, adjuntos con enlaces de demostración no sensibles y representación de firma/enmienda.
-- [ ] **B-010 — Implementar vacunas y alertas.** Carnet/fechas/recordatorios conforme a reglas aprobadas y estados sin datos, vigentes y vencidos.
+- [x] **B-010 — Implementar vacunas y alertas.** Carnet/fechas/recordatorios conforme a reglas aprobadas y estados sin datos, vigentes y vencidos.
 - [ ] **B-011 — Implementar internación del Cliente.** Estado y novedades visibles; notas internas no se muestran.
 - [ ] **B-012 — Implementar consentimiento y preferencias.** Documentos/versiones, decisiones obligatorias y opcionales, privacidad y accesibilidad.
 - [ ] **B-013 — Implementar solicitud móvil de asistencia.** Animal/grupo/especie, modalidad, síntomas y gravedad percibida; cuestionarios solo tras aprobación profesional.
