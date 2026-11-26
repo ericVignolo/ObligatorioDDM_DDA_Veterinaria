@@ -13,7 +13,7 @@ generado: true
 
 **Tareas:** A-009, B-006
 
-**Requisitos y decisiones:** D-PER-04, D-PER-05, RN-42
+**Requisitos y decisiones:** D-PER-04, D-PER-05, D-REG-03, RN-42
 
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 

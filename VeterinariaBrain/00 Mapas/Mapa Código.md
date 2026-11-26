@@ -57,7 +57,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Urgencias]] · `/urgencias`
 - [[Verificar]] · `/verificar`
 
-### Componentes (22)
+### Componentes (23)
 - [[AnimalCard]]
 - [[AnimalForm]]
 - [[Atajo]]
@@ -67,6 +67,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[EstadoConsentimiento]]
 - [[EstadoRefuerzo]]
 - [[EstadoTurno]]
+- [[FotoAnimal]]
 - [[MainLayout]]
 - [[MisComunicaciones]]
 - [[MisDerechos]]
@@ -325,67 +326,98 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Mobile — [[Carpeta mobile]]
 
-### Pantallas (19)
+### Pantallas (25)
 - [[Veterinaria.Movil-app-(tabs)-_layout (Móvil)]]
 - [[Veterinaria.Movil-app-(tabs)-index (Móvil)]]
 - [[Veterinaria.Movil-app-_layout (Móvil)]]
+- [[Veterinaria.Movil-app-animales-[id]-index (Móvil)]]
 - [[Veterinaria.Movil-app-profesionales-index (Móvil)]]
+- [[[adjuntoId] (Móvil)]]
 - [[[codigo] (Móvil)]]
 - [[[id] (Móvil)]]
 - [[agenda (Móvil)]]
 - [[animales (Móvil)]]
 - [[asistencias (Móvil)]]
 - [[avisos (Móvil)]]
+- [[editar (Móvil)]]
+- [[historia (Móvil)]]
 - [[ingresar (Móvil)]]
 - [[mi-cuenta (Móvil)]]
+- [[nuevo (Móvil)]]
 - [[perfil (Móvil)]]
 - [[recuperar (Móvil)]]
 - [[registro (Móvil)]]
+- [[reservar (Móvil)]]
 - [[servicios (Móvil)]]
 - [[turnos (Móvil)]]
 - [[urgencias (Móvil)]]
 - [[verificar (Móvil)]]
 
-### Componentes (14)
+### Componentes (24)
 - [[Boton (Móvil)]]
 - [[Campo (Móvil)]]
+- [[CarnetSanitario (Móvil)]]
 - [[Casilla (Móvil)]]
 - [[Esqueleto (Móvil)]]
+- [[EstadoRefuerzo (Móvil)]]
+- [[EstadoTurno (Móvil)]]
 - [[Fila (Móvil)]]
+- [[FormularioAnimal (Móvil)]]
+- [[FotoAnimal (Móvil)]]
 - [[Icono (Móvil)]]
 - [[Insignia (Móvil)]]
+- [[Opcion (Móvil)]]
 - [[Pantalla (Móvil)]]
+- [[PasosReserva (Móvil)]]
 - [[Proximamente (Móvil)]]
+- [[RegistroClinico (Móvil)]]
+- [[SeguimientoInternacion (Móvil)]]
 - [[Selector (Móvil)]]
+- [[SelectorFoto (Móvil)]]
 - [[Tarjeta (Móvil)]]
 - [[TarjetaPrestacion (Móvil)]]
 - [[Textos (Móvil)]]
 - [[Vacio (Móvil)]]
 
-### Servicios (6)
+### Servicios (11)
+- [[agendaService (Móvil)]]
+- [[animalService (Móvil)]]
 - [[clinicaService (Móvil)]]
 - [[cuentaService (Móvil)]]
+- [[historiaService (Móvil)]]
 - [[intencionService (Móvil)]]
+- [[internacionService (Móvil)]]
 - [[legalService (Móvil)]]
 - [[prestacionService (Móvil)]]
 - [[profesionalService (Móvil)]]
+- [[vacunaService (Móvil)]]
 
-### Modelos (6)
+### Modelos (11)
+- [[Animal (Móvil)]]
 - [[Clinica (Móvil)]]
+- [[Consulta (Móvil)]]
 - [[Cuenta (Móvil)]]
 - [[DocumentoLegal (Móvil)]]
+- [[Internacion (Móvil)]]
 - [[Prestacion (Móvil)]]
 - [[Profesional (Móvil)]]
+- [[Turno (Móvil)]]
 - [[Usuario (Móvil)]]
+- [[Vacuna (Móvil)]]
 
-### Otros (10)
+### Otros (15)
 - [[AvisoContext (Móvil)]]
 - [[SesionContext (Móvil)]]
 - [[Veterinaria.Movil-tema-index (Móvil)]]
+- [[animalesDemo (Móvil)]]
 - [[clinica (Móvil)]]
+- [[consultasDemo (Móvil)]]
 - [[cuentasDemo (Móvil)]]
+- [[fechas (Móvil)]]
+- [[internacionesDemo (Móvil)]]
 - [[legales (Móvil)]]
 - [[paleta (Móvil)]]
 - [[prestaciones (Móvil)]]
+- [[productosSanitarios (Móvil)]]
 - [[profesionales (Móvil)]]
 - [[validacion (Móvil)]]

@@ -1,13 +1,13 @@
 ---
 tipo: dto
 app: api
-fuente: "api/Veterinaria.Api/DTOs/SaludDtos.cs"
+fuente: "api/Veterinaria.Api/Dtos/SaludDtos.cs"
 tags: [codigo, dto, api]
 generado: true
 ---
 # SaludDtos (API)
 
-> Fuente: `api/Veterinaria.Api/DTOs/SaludDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
+> Fuente: `api/Veterinaria.Api/Dtos/SaludDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
 ---------- Carnet y avisos de refuerzo (A-021, RF-CLI-06, RF-CLI-07) ----------
 

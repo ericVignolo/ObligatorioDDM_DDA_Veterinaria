@@ -1,13 +1,13 @@
 ---
 tipo: dto
 app: api
-fuente: "api/Veterinaria.Api/DTOs/ClinicaReadDto.cs"
+fuente: "api/Veterinaria.Api/Dtos/ClinicaReadDto.cs"
 tags: [codigo, dto, api]
 generado: true
 ---
 # ClinicaReadDto (API)
 
-> Fuente: `api/Veterinaria.Api/DTOs/ClinicaReadDto.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
+> Fuente: `api/Veterinaria.Api/Dtos/ClinicaReadDto.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
 Datos públicos de la clínica (RF-VIS-03, RF-VIS-06): contacto, guardia, horario y cobertura.
 

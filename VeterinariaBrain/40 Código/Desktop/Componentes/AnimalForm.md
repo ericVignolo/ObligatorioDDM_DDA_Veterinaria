@@ -20,6 +20,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usa
 - [[AnimalFormulario]]
 - [[AnimalService]]
+- [[FotoAnimal]]
 
 ## Usado por (si cambia, revisar estos)
 - [[AnimalEditar]]

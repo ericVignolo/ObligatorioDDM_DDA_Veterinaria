@@ -17,6 +17,8 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 - [[Icono (Móvil)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[RegistroClinico (Móvil)]]
 - [[Veterinaria.Movil-app-(tabs)-index (Móvil)]]
 - [[[id] (Móvil)]]
 - [[perfil (Móvil)]]
+- [[reservar (Móvil)]]

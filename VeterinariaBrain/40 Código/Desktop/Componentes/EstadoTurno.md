@@ -20,3 +20,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AgendaVeterinario]]
 - [[AtencionConsulta]]
 - [[Turnos]]
+
+## En las otras aplicaciones
+- [[EstadoTurno (Móvil)]]

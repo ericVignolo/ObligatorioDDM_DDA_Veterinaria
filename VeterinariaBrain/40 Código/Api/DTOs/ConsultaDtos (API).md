@@ -1,13 +1,13 @@
 ---
 tipo: dto
 app: api
-fuente: "api/Veterinaria.Api/DTOs/ConsultaDtos.cs"
+fuente: "api/Veterinaria.Api/Dtos/ConsultaDtos.cs"
 tags: [codigo, dto, api]
 generado: true
 ---
 # ConsultaDtos (API)
 
-> Fuente: `api/Veterinaria.Api/DTOs/ConsultaDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
+> Fuente: `api/Veterinaria.Api/Dtos/ConsultaDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
 Lo que el veterinario completa en la consulta (A-019, RF-VET-02). Mismas reglas que ConsultaFormulario de Blazor.
 

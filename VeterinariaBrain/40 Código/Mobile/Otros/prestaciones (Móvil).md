@@ -14,6 +14,7 @@ Datos ficticios de la sección B: los mismos que PrestacionService de Blazor.
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
+- [[Consulta (Móvil)]]
 - [[Prestacion (Móvil)]]
 
 ## Usado por (si cambia, revisar estos)

@@ -1,13 +1,13 @@
 ---
 tipo: dto
 app: api
-fuente: "api/Veterinaria.Api/DTOs/InternacionDtos.cs"
+fuente: "api/Veterinaria.Api/Dtos/InternacionDtos.cs"
 tags: [codigo, dto, api]
 generado: true
 ---
 # InternacionDtos (API)
 
-> Fuente: `api/Veterinaria.Api/DTOs/InternacionDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
+> Fuente: `api/Veterinaria.Api/Dtos/InternacionDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
 ---------- Internación (A-024, RF-VET-09 a RF-VET-11, RF-CLI-09, RN-21 a RN-25) ----------
 

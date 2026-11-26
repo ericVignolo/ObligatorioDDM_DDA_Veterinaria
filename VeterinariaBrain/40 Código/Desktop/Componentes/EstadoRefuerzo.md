@@ -18,3 +18,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usado por (si cambia, revisar estos)
 - [[CarnetSanitario]]
 - [[MiCuenta]]
+
+## En las otras aplicaciones
+- [[EstadoRefuerzo (Móvil)]]

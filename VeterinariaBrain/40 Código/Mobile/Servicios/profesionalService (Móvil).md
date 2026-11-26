@@ -20,3 +20,4 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 ## Usado por (si cambia, revisar estos)
 - [[Veterinaria.Movil-app-profesionales-index (Móvil)]]
 - [[[id] (Móvil)]]
+- [[agendaService (Móvil)]]

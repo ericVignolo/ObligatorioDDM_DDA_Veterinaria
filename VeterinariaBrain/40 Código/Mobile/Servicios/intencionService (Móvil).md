@@ -19,4 +19,5 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
 - [[ingresar (Móvil)]]
+- [[reservar (Móvil)]]
 - [[verificar (Móvil)]]

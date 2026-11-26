@@ -13,7 +13,7 @@ Datos del formulario de alta y edición de un animal (A-013, CU-CLI-01).
 
 **Tareas:** A-013
 
-**Requisitos y decisiones:** CU-CLI-01
+**Requisitos y decisiones:** CU-CLI-01, RF-CLI-01
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 

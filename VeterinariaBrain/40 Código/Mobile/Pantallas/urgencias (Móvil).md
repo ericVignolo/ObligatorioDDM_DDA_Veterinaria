@@ -17,6 +17,7 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
 - [[Boton (Móvil)]]
+- [[Icono (Móvil)]]
 - [[Insignia (Móvil)]]
 - [[Pantalla (Móvil)]]
 - [[Tarjeta (Móvil)]]

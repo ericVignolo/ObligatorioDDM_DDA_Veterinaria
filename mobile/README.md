@@ -77,6 +77,10 @@ Desde la ficha del animal, **Historia clínica** (`app/animales/[id]/historia.ts
 
 En la ficha del animal, el **carné de vacunas y antiparasitarios** (`components/CarnetSanitario.tsx`, como `CarnetSanitario.razor`): última aplicación de cada producto con lote, refuerzo y estado (Vigente, Refuerzo próximo dentro de 5 días o Vencida), alertas arriba con «Reservar turno» y el historial completo plegado. La pestaña **Avisos** del Cliente reúne las alertas de todos sus animales, y el Inicio muestra cuántas hay. Reglas en `services/vacunaService.ts` (iguales a `VacunaService`; la fecha de refuerzo la calcula el producto, RN-19) y catálogo en `data/productosSanitarios.ts`.
 
+## Internación (B-011)
+
+En la ficha del animal, arriba del carné (`components/SeguimientoInternacion.tsx`, como el bloque de `AnimalDetalle.razor`): estado, ingreso, motivo y **solo las novedades visibles** (RN-23), con las correcciones señaladas (RN-24); al alta, evolución final e indicaciones para casa. «Actualizar novedades» reemplaza al tiempo real (RNF-DIS-04). `services/internacionService.ts` nunca entrega notas internas ni el plan terapéutico. Datos en `data/internacionesDemo.ts`: Canela (Pedro) en curso y Mishi (Ana) con alta.
+
 ## Componentes compartidos
 
 | Componente | Para qué |

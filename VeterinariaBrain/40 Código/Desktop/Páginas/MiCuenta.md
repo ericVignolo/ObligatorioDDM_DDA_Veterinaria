@@ -15,7 +15,7 @@ Perfil del Cliente (A-009): datos personales con quién ve cada uno, animales co
 
 **Tareas:** A-009, A-021, A-023, A-025, A-028
 
-**Requisitos y decisiones:** CU-CLI-10, D-PER-04, D-PER-05, RF-CLI-07, RF-CLI-12
+**Requisitos y decisiones:** CU-CLI-10, D-PER-04, D-PER-05, D-REG-03, RF-CLI-07, RF-CLI-12
 
 Parte de [[Mapa Código]] · [[Carpeta desktop]]
 

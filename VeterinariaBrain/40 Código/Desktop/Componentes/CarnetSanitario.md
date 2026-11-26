@@ -26,3 +26,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usado por (si cambia, revisar estos)
 - [[AnimalDetalle]]
 - [[HistoriaClinica]]
+
+## En las otras aplicaciones
+- [[CarnetSanitario (Móvil)]]

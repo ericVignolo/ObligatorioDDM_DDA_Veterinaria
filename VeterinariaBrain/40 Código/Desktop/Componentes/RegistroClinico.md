@@ -26,3 +26,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 - [[AtencionConsulta]]
 - [[HistoriaAnimal]]
 - [[HistoriaClinica]]
+
+## En las otras aplicaciones
+- [[RegistroClinico (Móvil)]]

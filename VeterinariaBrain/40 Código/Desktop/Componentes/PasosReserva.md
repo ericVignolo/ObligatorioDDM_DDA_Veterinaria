@@ -18,3 +18,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Reservar]]
+
+## En las otras aplicaciones
+- [[PasosReserva (Móvil)]]

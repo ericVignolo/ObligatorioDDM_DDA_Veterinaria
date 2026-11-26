@@ -9,9 +9,26 @@ generado: true
 
 > Fuente: `mobile/Veterinaria.Movil/app/(tabs)/turnos.tsx` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
-**Tareas:** B-008
+«Mis turnos» del Cliente (B-008, RF-CLI-04, A-016): próximos e historial, cancelar y reprogramar, como Turnos.razor.
+
+**Tareas:** A-015, A-016, B-008
+
+**Requisitos y decisiones:** RF-CLI-04, RN-06
 
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
-- [[Proximamente (Móvil)]]
+- [[AvisoContext (Móvil)]]
+- [[Boton (Móvil)]]
+- [[Campo (Móvil)]]
+- [[EstadoTurno (Móvil)]]
+- [[Pantalla (Móvil)]]
+- [[SesionContext (Móvil)]]
+- [[Tarjeta (Móvil)]]
+- [[Textos (Móvil)]]
+- [[Turno (Móvil)]]
+- [[Vacio (Móvil)]]
+- [[agendaService (Móvil)]]
+- [[animalService (Móvil)]]
+- [[clinicaService (Móvil)]]
+- [[fechas (Móvil)]]

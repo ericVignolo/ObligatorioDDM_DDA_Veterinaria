@@ -6,8 +6,9 @@ import { CarnetSanitario } from '../../../components/CarnetSanitario';
 import { FotoAnimal } from '../../../components/FotoAnimal';
 import { Insignia } from '../../../components/Insignia';
 import { Pantalla } from '../../../components/Pantalla';
+import { SeguimientoInternacion } from '../../../components/SeguimientoInternacion';
 import { Tarjeta } from '../../../components/Tarjeta';
-import { Nota, Parrafo, Subtitulo, Titulo } from '../../../components/Textos';
+import { Parrafo, Subtitulo, Titulo } from '../../../components/Textos';
 import { Vacio } from '../../../components/Vacio';
 import { useSesion } from '../../../context/SesionContext';
 import { mostrarFecha, obtenerPorId } from '../../../services/animalService';
@@ -77,13 +78,9 @@ export default function FichaAnimal() {
 
       <Boton texto="Historia clínica" icono="document-text-outline" variante="secundario" onPress={() => router.push(`/animales/${animal.id}/historia`)} />
 
-      <CarnetSanitario animalId={animal.id} clienteId={usuario.id} nombre={animal.nombre} />
+      <SeguimientoInternacion key={animal.id} animalId={animal.id} clienteId={usuario.id} nombre={animal.nombre} />
 
-      {/* La internación (B-011) se suma en su tarea. */}
-      <Tarjeta>
-        <Subtitulo>Internaciones</Subtitulo>
-        <Nota>El seguimiento de internaciones se agrega en B-011.</Nota>
-      </Tarjeta>
+      <CarnetSanitario animalId={animal.id} clienteId={usuario.id} nombre={animal.nombre} />
     </Pantalla>
   );
 }

@@ -1,13 +1,13 @@
 ---
 tipo: dto
 app: api
-fuente: "api/Veterinaria.Api/DTOs/AsistenciaDtos.cs"
+fuente: "api/Veterinaria.Api/Dtos/AsistenciaDtos.cs"
 tags: [codigo, dto, api]
 generado: true
 ---
 # AsistenciaDtos (API)
 
-> Fuente: `api/Veterinaria.Api/DTOs/AsistenciaDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
+> Fuente: `api/Veterinaria.Api/Dtos/AsistenciaDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
 ---------- Asistencia veterinaria (A-026, ESPECIFICACION_ALERTAS_ASISTENCIA, RN-46 a RN-59) ----------
 

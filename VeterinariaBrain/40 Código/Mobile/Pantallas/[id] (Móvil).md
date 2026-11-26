@@ -9,12 +9,9 @@ generado: true
 
 > Fuente: `mobile/Veterinaria.Movil/app/servicios/[id].tsx` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
-**Tareas:** B-008
-
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
-- [[AvisoContext (Móvil)]]
 - [[Boton (Móvil)]]
 - [[Fila (Móvil)]]
 - [[Insignia (Móvil)]]

@@ -1,13 +1,13 @@
 ---
 tipo: dto
 app: api
-fuente: "api/Veterinaria.Api/DTOs/TurnoDtos.cs"
+fuente: "api/Veterinaria.Api/Dtos/TurnoDtos.cs"
 tags: [codigo, dto, api]
 generado: true
 ---
 # TurnoDtos (API)
 
-> Fuente: `api/Veterinaria.Api/DTOs/TurnoDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
+> Fuente: `api/Veterinaria.Api/Dtos/TurnoDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
 Reserva del cliente en cuatro pasos (CU-CLI-02, RNF-USA-01). La duración la pone la API según el servicio.
 

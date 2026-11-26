@@ -19,7 +19,5 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
 - [[agenda (Móvil)]]
-- [[animales (Móvil)]]
 - [[asistencias (Móvil)]]
 - [[avisos (Móvil)]]
-- [[turnos (Móvil)]]

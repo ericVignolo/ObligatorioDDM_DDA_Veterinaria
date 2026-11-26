@@ -17,6 +17,7 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 
 ## Usa
 - [[Animal]]
+- [[FotoAnimal]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Animales]]

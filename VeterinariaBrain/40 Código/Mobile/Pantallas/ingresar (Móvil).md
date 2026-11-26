@@ -11,7 +11,7 @@ generado: true
 
 Cuentas de prueba para la demostración: completan el formulario, no lo saltean.
 
-**Tareas:** A-008, A-011, B-006, B-008
+**Tareas:** A-008, A-011, B-006
 
 **Requisitos y decisiones:** D-REG-05
 

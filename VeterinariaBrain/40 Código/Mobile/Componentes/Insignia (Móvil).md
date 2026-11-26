@@ -14,10 +14,17 @@ Insignia de estado (S4): turnos, vacunas, niveles de asistencia. Siempre con tex
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
+- [[EstadoRefuerzo (Móvil)]]
+- [[EstadoTurno (Móvil)]]
+- [[RegistroClinico (Móvil)]]
+- [[SeguimientoInternacion (Móvil)]]
 - [[TarjetaPrestacion (Móvil)]]
+- [[Veterinaria.Movil-app-animales-[id]-index (Móvil)]]
 - [[Veterinaria.Movil-app-profesionales-index (Móvil)]]
+- [[[adjuntoId] (Móvil)]]
 - [[[codigo] (Móvil)]]
 - [[[id] (Móvil)]]
+- [[animales (Móvil)]]
 - [[ingresar (Móvil)]]
 - [[perfil (Móvil)]]
 - [[recuperar (Móvil)]]

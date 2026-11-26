@@ -15,8 +15,10 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
 - [[Veterinaria.Movil-app-_layout (Móvil)]]
+- [[agendaService (Móvil)]]
 - [[profesionalService (Móvil)]]
 - [[profesionales (Móvil)]]
+- [[reservar (Móvil)]]
 
 ## En las otras aplicaciones
 - [[Profesional]]

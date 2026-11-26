@@ -30,3 +30,4 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 
 ## En las otras aplicaciones
 - [[Internacion]]
+- [[Internacion (Móvil)]]

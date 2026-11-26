@@ -16,6 +16,9 @@ Cuenta de Cliente de demostración (mismos campos que Models/Cuenta.cs de Blazor
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
+- [[FormularioAnimal (Móvil)]]
+- [[agendaService (Móvil)]]
+- [[animalService (Móvil)]]
 - [[cuentaService (Móvil)]]
 - [[legales (Móvil)]]
 - [[mi-cuenta (Móvil)]]

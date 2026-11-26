@@ -1,13 +1,13 @@
 ---
 tipo: dto
 app: api
-fuente: "api/Veterinaria.Api/DTOs/CobroDtos.cs"
+fuente: "api/Veterinaria.Api/Dtos/CobroDtos.cs"
 tags: [codigo, dto, api]
 generado: true
 ---
 # CobroDtos (API)
 
-> Fuente: `api/Veterinaria.Api/DTOs/CobroDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
+> Fuente: `api/Veterinaria.Api/Dtos/CobroDtos.cs` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
 ---------- Cobro (A-023, RF-REC-05, RN-32 a RN-36) ----------
 
