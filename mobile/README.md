@@ -69,6 +69,10 @@ Pestaña **Animales** (solo Cliente): lista, ficha (`app/animales/[id]/index.tsx
 
 **Reservar** (`app/reservar.tsx`) en cuatro pasos, como `Reservar.razor`: animal, servicio y profesional (solo quien hace ese servicio y atiende esa especie; si hay uno solo se elige solo), fecha y hora (fichas de días con los próximos 60 días y horarios cada 15 minutos) y confirmación. Se llega desde **Turnos**, el detalle de un servicio, la ficha del animal y después de ingresar o verificar la cuenta si había un servicio elegido. **Turnos** (`app/(tabs)/turnos.tsx`): próximos e historial, cancelar con motivo opcional y reprogramar (más de 24 h antes; si no, llamar a Recepción). Las reglas están en `services/agendaService.ts`, iguales a `AgendaService` de Blazor (anticipación de 2 h, descansos, superposición de profesional y animal, seña de las cirugías, ausencias RN-08). Los turnos viven en memoria.
 
+## Historia clínica (B-009)
+
+Desde la ficha del animal, **Historia clínica** (`app/animales/[id]/historia.tsx`): solo lectura y solo consultas firmadas de los animales del Cliente, de la más reciente a la más antigua, con la firma y las enmiendas debajo del original (`components/RegistroClinico.tsx`, como `RegistroClinico.razor`, sin la huella). Los **adjuntos** (`app/animales/[id]/adjunto/[adjuntoId].tsx`) son de demostración: una imagen claramente falsa (`assets/demo/estudio-demo.png`), un PDF sin vista previa y uno retirado; se abren con un acceso temporal simulado de 5 minutos. Datos en `data/consultasDemo.ts` y reglas en `services/historiaService.ts`.
+
 ## Componentes compartidos
 
 | Componente | Para qué |

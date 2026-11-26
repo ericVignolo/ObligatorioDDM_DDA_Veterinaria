@@ -64,6 +64,8 @@ export default function RootLayout() {
             <Stack.Screen name="animales/nuevo" options={{ title: 'Registrar animal' }} />
             <Stack.Screen name="animales/[id]/index" options={{ title: 'Ficha del animal' }} />
             <Stack.Screen name="animales/[id]/editar" options={{ title: 'Editar animal' }} />
+            <Stack.Screen name="animales/[id]/historia" options={{ title: 'Historia clínica' }} />
+            <Stack.Screen name="animales/[id]/adjunto/[adjuntoId]" options={{ title: 'Archivo' }} />
           </Stack>
         </AvisoProvider>
       </SesionProvider>

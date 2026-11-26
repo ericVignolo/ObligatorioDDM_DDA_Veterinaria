@@ -74,10 +74,12 @@ export default function FichaAnimal() {
       <Boton texto={`Reservar turno para ${animal.nombre}`} icono="calendar-outline" onPress={() => router.push({ pathname: '/reservar', params: { animal: String(animal.id) } })} />
       <Boton texto="Editar" icono="create-outline" variante="secundario" onPress={() => router.push(`/animales/${animal.id}/editar`)} />
 
-      {/* Historia clínica (B-009), carné sanitario (B-010) e internación (B-011) se suman en sus tareas. */}
+      <Boton texto="Historia clínica" icono="document-text-outline" variante="secundario" onPress={() => router.push(`/animales/${animal.id}/historia`)} />
+
+      {/* Carné sanitario (B-010) e internación (B-011) se suman en sus tareas. */}
       <Tarjeta>
-        <Subtitulo>Historia clínica y vacunas</Subtitulo>
-        <Nota>La historia clínica, el carné de vacunas y las internaciones se agregan en las próximas tareas (B-009 a B-011).</Nota>
+        <Subtitulo>Vacunas e internaciones</Subtitulo>
+        <Nota>El carné de vacunas y las internaciones se agregan en las próximas tareas (B-010 y B-011).</Nota>
       </Tarjeta>
     </Pantalla>
   );
