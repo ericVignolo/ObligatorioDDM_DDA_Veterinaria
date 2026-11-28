@@ -12,13 +12,15 @@ import { Nota, Parrafo, Titulo } from '../../components/Textos';
 import { Vacio } from '../../components/Vacio';
 import { useSesion } from '../../context/SesionContext';
 import { obtenerPorId as obtenerAnimal } from '../../services/animalService';
+import { reevaluacionesPendientes } from '../../services/asistenciaService';
+import type { SolicitudAsistencia } from '../../types/Asistencia';
 import { estadoDe as estadoConsentimiento, pendientesDe } from '../../services/consentimientoService';
 import { obtenerPorId as obtenerPrestacion } from '../../services/prestacionService';
 import { alertasDe, DIAS_AVISO_REFUERZO, servicioPara, textoAlerta } from '../../services/vacunaService';
 import type { Turno } from '../../types/Turno';
 import { diaCorto, hora } from '../../utils/fechas';
 
-// Avisos del Cliente: consentimientos sin firmar (B-012, CU-CLI-10, paso 1) y alertas sanitarias de refuerzos
+// Avisos del Cliente: reevaluaciones de asistencia de 24 horas (B-014, RN-50), consentimientos sin firmar (B-012, CU-CLI-10, paso 1) y alertas sanitarias de refuerzos
 // próximos o vencidos de sus animales (B-010, RF-CLI-07).
 // Las notificaciones push y del Veterinario se completan en B-017; el correo lo manda la API (A-028).
 export default function Avisos() {
@@ -28,10 +30,12 @@ export default function Avisos() {
   const [alertas, setAlertas] = useState<ReturnType<typeof alertasDe>>([]);
 
   const [pendientes, setPendientes] = useState<Turno[]>([]);
+  const [reevaluar, setReevaluar] = useState<SolicitudAsistencia[]>([]);
 
   useFocusEffect(
     useCallback(() => {
       setPendientes(clienteId === null ? [] : pendientesDe(clienteId));
+      setReevaluar(clienteId === null ? [] : reevaluacionesPendientes(clienteId));
       setAlertas(clienteId === null ? [] : alertasDe(clienteId));
     }, [clienteId]),
   );
@@ -49,6 +53,14 @@ export default function Avisos() {
     <Pantalla>
       <Titulo>Avisos</Titulo>
       <Nota>Consentimientos sin firmar y refuerzos de vacunas y antiparasitarios vencidos o en los próximos {DIAS_AVISO_REFUERZO} días.</Nota>
+
+      {reevaluar.map((s) => (
+        <Tarjeta key={`asistencia-${s.id}`}>
+          <Text className="font-nunito-negrita text-base text-texto dark:text-texto-oscuro">Solicitud de asistencia n.º {s.id}</Text>
+          <Parrafo>Pasaron 24 horas y sigue pendiente. ¿El estado se mantuvo o empeoró?</Parrafo>
+          <Boton texto="Responder" icono="medkit-outline" onPress={() => router.push({ pathname: '/asistencia/[id]', params: { id: String(s.id) } })} />
+        </Tarjeta>
+      ))}
 
       {pendientes.map((t) => (
         <Tarjeta key={`consentimiento-${t.id}`}>

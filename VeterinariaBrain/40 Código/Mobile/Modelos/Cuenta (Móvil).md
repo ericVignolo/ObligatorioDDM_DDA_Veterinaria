@@ -17,6 +17,7 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
 - [[FormularioAnimal (Móvil)]]
+- [[InformarEmpeoramiento (Móvil)]]
 - [[agendaService (Móvil)]]
 - [[animalService (Móvil)]]
 - [[asistenciaService (Móvil)]]

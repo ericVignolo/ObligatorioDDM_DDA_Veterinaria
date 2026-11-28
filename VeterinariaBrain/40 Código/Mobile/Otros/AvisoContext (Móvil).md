@@ -17,6 +17,7 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 - [[Icono (Móvil)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[InformarEmpeoramiento (Móvil)]]
 - [[Veterinaria.Movil-app-_layout (Móvil)]]
 - [[[turnoId] (Móvil)]]
 - [[editar (Móvil)]]

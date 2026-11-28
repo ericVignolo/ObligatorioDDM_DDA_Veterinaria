@@ -357,7 +357,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[urgencias (Móvil)]]
 - [[verificar (Móvil)]]
 
-### Componentes (27)
+### Componentes (30)
 - [[Boton (Móvil)]]
 - [[Campo (Móvil)]]
 - [[CarnetSanitario (Móvil)]]
@@ -370,8 +370,10 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[FormularioAnimal (Móvil)]]
 - [[FotoAnimal (Móvil)]]
 - [[Icono (Móvil)]]
+- [[InformarEmpeoramiento (Móvil)]]
 - [[Insignia (Móvil)]]
 - [[LlamarGuardia (Móvil)]]
+- [[MapaDemo (Móvil)]]
 - [[NivelAsistencia (Móvil)]]
 - [[Opcion (Móvil)]]
 - [[Pantalla (Móvil)]]
@@ -384,6 +386,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Tarjeta (Móvil)]]
 - [[TarjetaPrestacion (Móvil)]]
 - [[Textos (Móvil)]]
+- [[UbicacionGps (Móvil)]]
 - [[Vacio (Móvil)]]
 
 ### Servicios (14)

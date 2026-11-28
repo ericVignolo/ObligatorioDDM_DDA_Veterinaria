@@ -1,15 +1,23 @@
 import { cuentasDemo } from '../data/cuentasDemo';
 import { profesionales } from '../data/profesionales';
 import type { Errores, Resultado } from '../types/Cuenta';
-import type { DatosSolicitud, EventoAsistencia, Modalidad, NivelUrgencia, SolicitudAsistencia } from '../types/Asistencia';
+import type {
+  DatosEmpeoramiento,
+  DatosSolicitud,
+  EstadoAsistencia,
+  EventoAsistencia,
+  Modalidad,
+  NivelUrgencia,
+  SolicitudAsistencia,
+} from '../types/Asistencia';
 import { normalizarTelefono } from '../utils/validacion';
 import { especies, obtenerPorId as obtenerAnimal } from './animalService';
 import { obtenerPorId as obtenerCuenta } from './cuentaService';
 
-// Solicitudes de asistencia del Cliente en memoria (B-013, ESPECIFICACION_ALERTAS_ASISTENCIA, RN-46 a RN-59),
-// con las mismas reglas de creación que AsistenciaService de Blazor. El seguimiento, los plazos (10 minutos y 24 horas)
-// y el empeoramiento llegan en B-014.
-// En la sección C: POST y GET /api/v1/asistencias; la API valida, clasifica, calcula la distancia y activa la guardia.
+// Solicitudes de asistencia del Cliente en memoria (B-013 y B-014, ESPECIFICACION_ALERTAS_ASISTENCIA, RN-46 a RN-59),
+// con las mismas reglas que AsistenciaService de Blazor: creación, plazos de 10 minutos y 24 horas, empeoramiento.
+// En la sección C: POST y GET /api/v1/asistencias y POST /api/v1/asistencias/{id}/empeoramiento; la API valida,
+// clasifica, calcula la distancia, ejecuta los plazos con una tarea programada y avisa por notificaciones.
 
 export const NIVELES: { nombre: NivelUrgencia; simbolo: string; descripcion: string }[] = [
   { nombre: 'Rojo', simbolo: '‼', descripcion: 'Posible riesgo vital: guardia inmediata' },
@@ -25,11 +33,13 @@ export const MODALIDADES: { nombre: Modalidad; detalle: string }[] = [
 
 // Parámetros por defecto (decisiones del 31/10); los edita el Administrador.
 export const COBERTURA_KM = 30;
+export const MINUTOS_ESCALAR_ROJO = 10;
+export const HORAS_REEVALUAR = 24;
 export const TARIFA_BASE = 1500;
 export const TARIFA_POR_KM = 40;
 export const TARIFA_POR_ANIMAL_EXTRA = 300;
 export const CANTIDAD_MAXIMA = 1000;
-export const LARGOS = { sintomas: 1000, inicioSintomas: 100, pesoAproximado: 40, riesgos: 300, direccion: 200, referencias: 300, telefono: 30 };
+export const LARGOS = { sintomas: 1000, inicioSintomas: 100, pesoAproximado: 40, riesgos: 300, direccion: 200, referencias: 300, telefono: 30, motivo: 300 };
 
 // Veterinario de guardia de demostración (id de personal): Dra. Ferreira.
 const GUARDIA_ID = 2;
@@ -38,6 +48,9 @@ const solicitudes: SolicitudAsistencia[] = [];
 const eventos: EventoAsistencia[] = [];
 let ultimaSolicitud = 0;
 let ultimoEvento = 0;
+
+// 0 = máxima prioridad.
+export const prioridad = (nivel: NivelUrgencia) => NIVELES.findIndex((n) => n.nombre === nivel);
 
 // RN-58: base + distancia + animales extra; la orientación no tiene costo.
 export const calcularCosto = (modalidad: Modalidad, distanciaKm: number, cantidad: number) =>
@@ -54,12 +67,21 @@ export function enHorarioClinica(momento: number): boolean {
   return horas >= 9 && horas < (d.getDay() === 6 ? 13 : 19);
 }
 
-const sinAceptar = (s: SolicitudAsistencia) => s.estado === 'Pendiente de asignación' || s.estado === 'Ofrecida' || s.estado === 'Requiere coordinación de Recepción';
+export const sinAceptar = (s: SolicitudAsistencia) =>
+  s.estado === 'Pendiente de asignación' || s.estado === 'Ofrecida' || s.estado === 'Requiere coordinación de Recepción';
 
 // RN-48: fuera del horario, lo no rojo y sin aceptar queda para el próximo día de atención.
 export const paraProximoDia = (s: SolicitudAsistencia, ahora = Date.now()) => s.nivel !== 'Rojo' && sinAceptar(s) && !enHorarioClinica(ahora);
 
 export const estaActiva = (s: SolicitudAsistencia) => !['Finalizada', 'Cancelada por la clínica', 'No concretada'].includes(s.estado);
+
+// RN-57: la ubicación del veterinario se comparte solo durante el traslado.
+export const compartiendoUbicacion = (s: SolicitudAsistencia) => s.estado === 'En camino';
+
+// RN-50: pasaron 24 horas sin aceptar y el cliente todavía no respondió la reevaluación.
+export const pideReevaluacion = (s: SolicitudAsistencia) => estaActiva(s) && s.reevaluacionPedida && !s.reevaluacionRespondida;
+
+const fueraDeCobertura = (s: SolicitudAsistencia) => s.estado === 'Requiere coordinación de Recepción' && s.motivoCoordinacion.startsWith('Fuera de cobertura');
 
 // RN-54: especie y, para un rojo, además de guardia o dentro de su jornada. La cercanía no vuelve elegible a nadie.
 // En la demostración todas las matrículas están vigentes.
@@ -74,9 +96,9 @@ function elegibles(s: SolicitudAsistencia, ahora: number) {
   });
 }
 
-function evento(s: SolicitudAsistencia, fecha: number, tipo: string, texto: string, autor: string) {
+function evento(s: SolicitudAsistencia, fecha: number, tipo: string, texto: string, autor: string, extra: Partial<EventoAsistencia> = {}) {
   ultimoEvento++;
-  eventos.push({ id: ultimoEvento, solicitudId: s.id, fecha, tipo, texto, autor });
+  eventos.push({ id: ultimoEvento, solicitudId: s.id, fecha, tipo, texto, autor, ...extra });
 }
 
 // RN-55: sin nadie elegible o fuera de cobertura, la solicitud no se descarta: pasa a Recepción.
@@ -98,7 +120,24 @@ function activarGuardia(s: SolicitudAsistencia, ahora: number) {
   evento(s, ahora, 'Ofrecida', `Ofrecida a ${lista.map((u) => u.nombre).join(', ')}.`, 'Sistema');
 }
 
-type Nueva = Omit<SolicitudAsistencia, 'id' | 'estado' | 'nivel' | 'fechaCreacion' | 'ofrecidaA' | 'fechaOferta' | 'costo' | 'motivoCoordinacion'>;
+type Nueva = Omit<
+  SolicitudAsistencia,
+  | 'id'
+  | 'estado'
+  | 'nivel'
+  | 'fechaCreacion'
+  | 'ofrecidaA'
+  | 'fechaOferta'
+  | 'costo'
+  | 'motivoCoordinacion'
+  | 'motivoCierre'
+  | 'veterinarioId'
+  | 'veterinarioNombre'
+  | 'fechaAceptacion'
+  | 'etaMinutos'
+  | 'reevaluacionPedida'
+  | 'reevaluacionRespondida'
+>;
 
 function agregar(datos: Nueva, ahora: number, autor: string): SolicitudAsistencia {
   ultimaSolicitud++;
@@ -111,8 +150,15 @@ function agregar(datos: Nueva, ahora: number, autor: string): SolicitudAsistenci
     fechaCreacion: ahora,
     ofrecidaA: [],
     fechaOferta: null,
+    veterinarioId: 0,
+    veterinarioNombre: '',
+    fechaAceptacion: null,
+    etaMinutos: null,
     costo: calcularCosto(datos.modalidad, datos.distanciaKm, datos.cantidad),
+    reevaluacionPedida: false,
+    reevaluacionRespondida: false,
     motivoCoordinacion: '',
+    motivoCierre: '',
   };
   solicitudes.push(s);
   evento(s, ahora, 'Recibida', `${s.canal === 'App' ? 'Desde la app' : 'Por teléfono'}. Nivel indicado: ${s.nivel}.`, autor);
@@ -138,12 +184,28 @@ function cargarDemo() {
   for (const [clienteId, animalId, especie, cantidad, sintomas, nivel, modalidad, direccion, distanciaKm, minutos] of demo) {
     agregar(
       {
-        clienteId, animalId, especie, cantidad, sintomas, inicioSintomas: '', pesoAproximado: '', riesgos: '', modalidad, direccion, referencias: '', distanciaKm,
+        clienteId, animalId, especie, cantidad, sintomas, inicioSintomas: '', pesoAproximado: '', riesgos: '', modalidad, direccion, referencias: '',
+        ubicacionGps: false, latitud: null, longitud: null, distanciaKm,
         telefonoContacto: clienteId === 100 ? '+59899111222' : '+59899333444', canal: 'Teléfono', claveIdempotencia: '', nivelCliente: nivel,
       },
       ahora - minutos * 60 * 1000,
       'Sistema (demo)',
     );
+  }
+  revisarPlazos(ahora);
+}
+
+// Lo que en la API hace una tarea programada (RN-50, RN-55): rojos ofrecidos sin aceptar en 10 minutos pasan a
+// Recepción y lo pendiente de 24 horas pide una reevaluación. Sin respuesta no se cierra ni baja el nivel.
+export function revisarPlazos(ahora = Date.now()) {
+  for (const s of solicitudes.filter(estaActiva)) {
+    if (s.nivel === 'Rojo' && s.estado === 'Ofrecida' && s.fechaOferta !== null && ahora - s.fechaOferta >= MINUTOS_ESCALAR_ROJO * 60 * 1000) {
+      escalar(s, ahora, `Nadie aceptó el rojo en ${MINUTOS_ESCALAR_ROJO} minutos: contactar al cliente.`);
+    }
+    if (sinAceptar(s) && !s.reevaluacionPedida && ahora - s.fechaCreacion >= HORAS_REEVALUAR * 60 * 60 * 1000) {
+      s.reevaluacionPedida = true;
+      evento(s, ahora, 'Reevaluación pedida', 'Pasaron 24 horas: ¿el estado se mantuvo o empeoró?', 'Sistema');
+    }
   }
 }
 
@@ -153,10 +215,11 @@ export const nuevaClave = () => `app-${Date.now()}-${Math.random().toString(36).
 
 export const datosVacios = (telefono: string): DatosSolicitud => ({
   modalidad: '', animalId: null, especie: '', cantidad: '1', sintomas: '', inicioSintomas: '', pesoAproximado: '', riesgos: '',
-  nivel: '', direccion: '', referencias: '', telefonoContacto: telefono, aceptaCosto: false, claveIdempotencia: nuevaClave(),
+  nivel: '', direccion: '', referencias: '', latitud: null, longitud: null, telefonoContacto: telefono, aceptaCosto: false, claveIdempotencia: nuevaClave(),
 });
 
 const cantidadDe = (texto: string) => (/^\d+$/.test(texto.trim()) ? Number(texto.trim()) : 0);
+const tieneGps = (d: Pick<DatosSolicitud, 'latitud' | 'longitud'>) => d.latitud !== null && d.longitud !== null;
 
 export function validar(datos: DatosSolicitud, clienteId: number): Errores<DatosSolicitud> {
   const e: Errores<DatosSolicitud> = {};
@@ -169,15 +232,16 @@ export function validar(datos: DatosSolicitud, clienteId: number): Errores<Datos
     if (n < 1 || n > CANTIDAD_MAXIMA) e.cantidad = `La cantidad debe estar entre 1 y ${CANTIDAD_MAXIMA}.`;
     else if (animal?.cantidadGrupo && n > animal.cantidadGrupo) e.cantidad = `El grupo tiene ${animal.cantidadGrupo} animales.`;
   }
-  const largo = (campo: 'sintomas' | 'inicioSintomas' | 'pesoAproximado' | 'riesgos' | 'direccion' | 'referencias') => {
+  (['sintomas', 'inicioSintomas', 'pesoAproximado', 'riesgos', 'direccion', 'referencias'] as const).forEach((campo) => {
     if (datos[campo].trim().length > LARGOS[campo]) e[campo] = `Puede tener hasta ${LARGOS[campo]} caracteres.`;
-  };
-  (['sintomas', 'inicioSintomas', 'pesoAproximado', 'riesgos', 'direccion', 'referencias'] as const).forEach(largo);
+  });
   if (!datos.sintomas.trim()) e.sintomas = 'Describí los síntomas.';
   if (!datos.inicioSintomas.trim()) e.inicioSintomas = 'Contá desde cuándo pasa.';
   if (!datos.nivel) e.nivel = 'Elegí qué tan grave lo ves.';
-  // RN-56: una visita necesita destino.
-  if (datos.modalidad === 'Visita' && !datos.direccion.trim()) e.direccion = 'Una visita necesita la dirección. Sin ubicación podés pedir orientación y traslado.';
+  // RN-56: una visita necesita destino: la ubicación del celular o la dirección escrita.
+  if (datos.modalidad === 'Visita' && !datos.direccion.trim() && !tieneGps(datos)) {
+    e.direccion = 'Una visita necesita tu ubicación o la dirección. Sin ninguna podés pedir orientación y traslado.';
+  }
   if (!normalizarTelefono(datos.telefonoContacto)) e.telefonoContacto = 'Escribí un teléfono de contacto válido.';
   if (pideAceptarCosto(datos.modalidad, datos.nivel) && !datos.aceptaCosto) e.aceptaCosto = 'Para confirmar la visita aceptá el criterio de costo.';
   return e;
@@ -196,6 +260,7 @@ export function crear(datos: DatosSolicitud, clienteId: number): Resultado & { i
 
   const animal = datos.animalId ? obtenerAnimal(datos.animalId, clienteId) : undefined;
   const visita = datos.modalidad === 'Visita';
+  const gps = visita && tieneGps(datos);
   const s = agregar(
     {
       clienteId,
@@ -210,6 +275,10 @@ export function crear(datos: DatosSolicitud, clienteId: number): Resultado & { i
       modalidad: datos.modalidad,
       direccion: visita ? datos.direccion.trim() : '',
       referencias: visita ? datos.referencias.trim() : '',
+      // Para orientación no se guarda ninguna ubicación.
+      ubicacionGps: gps,
+      latitud: gps ? datos.latitud : null,
+      longitud: gps ? datos.longitud : null,
       distanciaKm: 0,
       telefonoContacto: normalizarTelefono(datos.telefonoContacto) as string,
       canal: 'App',
@@ -223,14 +292,153 @@ export function crear(datos: DatosSolicitud, clienteId: number): Resultado & { i
 }
 
 // Solo las solicitudes del propio cliente (RN-18), las activas primero y de la más reciente a la más antigua.
-export const deCliente = (clienteId: number) =>
-  solicitudes
+export function deCliente(clienteId: number) {
+  revisarPlazos();
+  return solicitudes
     .filter((s) => s.clienteId === clienteId)
     .sort((a, b) => Number(estaActiva(b)) - Number(estaActiva(a)) || b.fechaCreacion - a.fechaCreacion);
+}
 
-export const obtenerDe = (id: number, clienteId: number) => solicitudes.find((s) => s.id === id && s.clienteId === clienteId);
+export function obtenerDe(id: number, clienteId: number) {
+  revisarPlazos();
+  return solicitudes.find((s) => s.id === id && s.clienteId === clienteId);
+}
 
-// Qué significa cada estado para el cliente: nunca se promete profesional ni horario (RN-53).
+export const reevaluacionesPendientes = (clienteId: number) => deCliente(clienteId).filter(pideReevaluacion);
+
+// Lo que el cliente ve del historial: sin los veterinarios a los que se ofreció ni los motivos de rechazo.
+const PARA_CLIENTE: Record<string, (e: EventoAsistencia) => string> = {
+  Recibida: (e) => e.texto,
+  Ofrecida: () => 'Se ofreció a un veterinario disponible.',
+  'Escalada a Recepción': (e) => e.texto,
+  Aceptada: (e) => e.texto,
+  'En camino': () => 'El veterinario salió hacia tu dirección.',
+  'En el lugar': () => 'El veterinario llegó.',
+  'En atención': () => 'Comenzó la atención.',
+  Finalizada: () => 'La asistencia terminó.',
+  'Cancelada por la clínica': (e) => e.texto,
+  'No concretada': (e) => e.texto,
+  'Empeoramiento informado': (e) => e.texto,
+  'Nivel elevado por empeoramiento': (e) => `De ${e.nivelAnterior} a ${e.nivelNuevo}.`,
+  'Nivel cambiado por el veterinario': (e) => `De ${e.nivelAnterior} a ${e.nivelNuevo}. ${e.texto}`,
+  'Nivel confirmado': (e) => e.texto,
+  'Reevaluación pedida': (e) => e.texto,
+  'Reevaluación respondida': (e) => e.texto,
+};
+
+export function historialDe(id: number, clienteId: number) {
+  if (!obtenerDe(id, clienteId)) return [];
+  return eventos
+    .filter((e) => e.solicitudId === id && PARA_CLIENTE[e.tipo])
+    .sort((a, b) => b.id - a.id)
+    .map((e) => ({ id: e.id, fecha: e.fecha, tipo: e.tipo, texto: PARA_CLIENTE[e.tipo](e) }));
+}
+
+function aplicarNivel(s: SolicitudAsistencia, nuevo: NivelUrgencia, tipo: string, motivo: string, autor: string, ahora: number) {
+  const anterior = s.nivel;
+  s.nivel = nuevo;
+  evento(s, ahora, tipo, motivo, autor, { nivelAnterior: anterior, nivelNuevo: nuevo });
+  // Si sube a rojo y nadie la aceptó, la guardia se activa de inmediato; fuera de cobertura sigue en Recepción (D-ASI-07).
+  if (nuevo === 'Rojo' && sinAceptar(s) && !fueraDeCobertura(s)) activarGuardia(s, ahora);
+}
+
+export const empeoramientoVacio = (): DatosEmpeoramiento => ({ nivel: '', motivo: '', claveIdempotencia: nuevaClave() });
+
+export function validarEmpeoramiento(d: DatosEmpeoramiento): Errores<DatosEmpeoramiento> {
+  const e: Errores<DatosEmpeoramiento> = {};
+  if (!d.nivel) e.nivel = 'Elegí qué tan grave lo ves ahora.';
+  if (!d.motivo.trim()) e.motivo = 'Contá qué cambió.';
+  else if (d.motivo.trim().length > LARGOS.motivo) e.motivo = `Puede tener hasta ${LARGOS.motivo} caracteres.`;
+  return e;
+}
+
+// RN-51, sección 10: el evento queda siempre y el nivel nuevo es el mayor entre el actual y el informado.
+// El cliente no puede bajarlo: solo un veterinario, con motivo (RN-52). Un reintento con la misma clave no duplica.
+export function informarEmpeoramiento(id: number, clienteId: number, datos: DatosEmpeoramiento): Resultado {
+  const s = obtenerDe(id, clienteId);
+  if (!s) return { exito: false, mensaje: 'No encontramos esa solicitud entre las tuyas.' };
+  if (eventos.some((e) => e.solicitudId === id && e.claveIdempotencia && e.claveIdempotencia === datos.claveIdempotencia)) {
+    return { exito: true, mensaje: 'Ese aviso ya estaba registrado.' };
+  }
+  if (!estaActiva(s)) return { exito: false, mensaje: 'Esta solicitud ya está cerrada. Si es grave, llamá a la guardia.' };
+  if (Object.keys(validarEmpeoramiento(datos)).length > 0 || !datos.nivel) return { exito: false, mensaje: 'Elegí el nivel y contá qué cambió.' };
+
+  const cuenta = obtenerCuenta(clienteId);
+  const autor = `${cuenta?.nombre} ${cuenta?.apellido} (cliente)`;
+  const ahora = Date.now();
+  evento(s, ahora, 'Empeoramiento informado', `Nivel informado: ${datos.nivel}. ${datos.motivo.trim()}`, autor, { claveIdempotencia: datos.claveIdempotencia });
+  // Responder la reevaluación de las 24 horas con un empeoramiento también la cierra (sección 11).
+  if (s.reevaluacionPedida) s.reevaluacionRespondida = true;
+
+  if (prioridad(datos.nivel) > prioridad(s.nivel)) {
+    return { exito: true, mensaje: `Registrado. El nivel sigue en ${s.nivel}: solo un veterinario puede bajarlo.` };
+  }
+  if (datos.nivel !== s.nivel) {
+    aplicarNivel(s, datos.nivel, 'Nivel elevado por empeoramiento', datos.motivo.trim(), autor, ahora);
+    return { exito: true, mensaje: `Empeoramiento registrado: la solicitud pasó a ${s.nivel}.` };
+  }
+  return { exito: true, mensaje: 'Empeoramiento registrado; el nivel se mantiene.' };
+}
+
+// Sección 11: el cliente responde que el estado se mantuvo. No cambia el nivel ni el estado.
+export function responderSeMantiene(id: number, clienteId: number): Resultado {
+  const s = obtenerDe(id, clienteId);
+  if (!s || !pideReevaluacion(s)) return { exito: false, mensaje: 'Esta solicitud no tiene una reevaluación pendiente.' };
+  s.reevaluacionRespondida = true;
+  const cuenta = obtenerCuenta(clienteId);
+  evento(s, Date.now(), 'Reevaluación respondida', 'El cliente indica que el estado se mantuvo.', `${cuenta?.nombre} ${cuenta?.apellido} (cliente)`);
+  return { exito: true, mensaje: 'Gracias. La solicitud sigue con el mismo nivel.' };
+}
+
+// RNF-LEG-09: al cerrar la asistencia se dejan de usar y se descartan las coordenadas del cliente.
+function cerrar(s: SolicitudAsistencia) {
+  s.latitud = null;
+  s.longitud = null;
+}
+
+// SOLO DEMOSTRACIÓN: hace lo que en la versión final hacen Recepción y el veterinario desde sus pantallas
+// (asignar, aceptar, salir, llegar, atender, finalizar), para poder ver el seguimiento en la app.
+export function simularAvance(id: number, clienteId: number): Resultado {
+  const s = obtenerDe(id, clienteId);
+  if (!s || !estaActiva(s)) return { exito: false, mensaje: 'Esta solicitud ya está cerrada.' };
+  const ahora = Date.now();
+
+  if (sinAceptar(s)) {
+    // Para la demostración se acepta aunque esté fuera de horario o pase por Recepción.
+    const veterinario = elegibles({ ...s, nivel: 'Verde' }, ahora)[0];
+    if (!veterinario) return { exito: false, mensaje: `Ningún veterinario de la demostración atiende ${s.especie}.` };
+    if (s.modalidad === 'Visita' && s.distanciaKm === 0) {
+      // D-ASI-11: la distancia la carga Recepción; con la API la calcula el mapa.
+      s.distanciaKm = 8;
+      s.costo = calcularCosto(s.modalidad, s.distanciaKm, s.cantidad);
+    }
+    s.estado = 'Aceptada';
+    s.veterinarioId = veterinario.id;
+    s.veterinarioNombre = veterinario.nombre;
+    s.fechaAceptacion = ahora;
+    s.ofrecidaA = [];
+    // RN-53: estimación recién ahora (15 min + 2 min por km, D-ASI-10).
+    s.etaMinutos = s.modalidad === 'Visita' ? 15 + s.distanciaKm * 2 : null;
+    evento(s, ahora, 'Aceptada', s.etaMinutos === null ? `${veterinario.nombre} te va a contactar.` : `${veterinario.nombre} aceptó. Llegada estimada en ${s.etaMinutos} minutos.`, veterinario.nombre);
+    return { exito: true, mensaje: 'Demostración: un veterinario aceptó la solicitud.' };
+  }
+
+  const siguiente: Partial<Record<EstadoAsistencia, EstadoAsistencia>> =
+    s.modalidad === 'Visita'
+      ? { Aceptada: 'En camino', 'En camino': 'En el lugar', 'En el lugar': 'En atención', 'En atención': 'Finalizada' }
+      : { Aceptada: 'En atención', 'En atención': 'Finalizada' };
+  const nuevo = siguiente[s.estado];
+  if (!nuevo) return { exito: false, mensaje: 'No hay un paso siguiente.' };
+  s.estado = nuevo;
+  evento(s, ahora, nuevo, nuevo === 'Finalizada' ? 'Atención registrada por el veterinario.' : '', s.veterinarioNombre);
+  if (nuevo === 'Finalizada') cerrar(s);
+  return { exito: true, mensaje: `Demostración: ${nuevo}.` };
+}
+
+// Momento en que el veterinario salió, para el mapa de demostración.
+export const salidaDe = (id: number) => eventos.find((e) => e.solicitudId === id && e.tipo === 'En camino')?.fecha ?? null;
+
+// Qué significa cada estado para el cliente: nunca se promete profesional ni horario antes de aceptar (RN-53).
 export function explicacionEstado(s: SolicitudAsistencia): string {
   switch (s.estado) {
     case 'Pendiente de asignación':
@@ -241,7 +449,17 @@ export function explicacionEstado(s: SolicitudAsistencia): string {
       return 'Se ofreció a un veterinario y estamos esperando que acepte. Todavía no está confirmada.';
     case 'Requiere coordinación de Recepción':
       return 'Recepción tiene que contactarte para coordinar. La visita no está confirmada.';
+    case 'Aceptada':
+      return s.modalidad === 'Visita' ? `${s.veterinarioNombre} aceptó y se está preparando para salir.` : `${s.veterinarioNombre} aceptó y te va a contactar.`;
+    case 'En camino':
+      return `${s.veterinarioNombre} está en camino. Mientras dure el traslado podés ver su ubicación.`;
+    case 'En el lugar':
+      return `${s.veterinarioNombre} llegó.`;
+    case 'En atención':
+      return `${s.veterinarioNombre} está atendiendo.`;
+    case 'Finalizada':
+      return s.modalidad === 'Visita' ? 'La asistencia terminó. El cargo queda pendiente en Recepción.' : 'La orientación terminó.';
     default:
-      return 'Consultá el detalle con Recepción.';
+      return s.motivoCierre || 'La solicitud se cerró sin atención. Consultá con Recepción.';
   }
 }

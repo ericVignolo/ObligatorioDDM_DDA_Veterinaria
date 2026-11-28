@@ -25,6 +25,12 @@
       "expo-router",
       "expo-font",
       [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "VITALIA usa tu ubicación solo si la compartís al pedir una visita, para que el veterinario llegue al lugar."
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "VITALIA usa tus fotos para que puedas elegir una imagen de tu animal y la clínica lo reconozca.",

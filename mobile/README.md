@@ -87,7 +87,11 @@ En la ficha del animal, arriba del carné (`components/SeguimientoInternacion.ts
 
 ## Solicitud de asistencia (B-013)
 
-**Pedir asistencia** (`app/asistencia/nueva.tsx`) desde Inicio, Urgencias o la ficha del animal: modalidad, animal, grupo o especie, síntomas, gravedad percibida, dirección para la visita y criterio de costo. `app/asistencia/index.tsx` lista las propias y `[id].tsx` muestra nivel, estado y datos enviados. Reglas en `services/asistenciaService.ts` (iguales a `AsistenciaService`, `ESPECIFICACION_ALERTAS_ASISTENCIA.md`); sin cuestionario clínico. Seguimiento, empeoramiento y ubicación: B-014.
+**Pedir asistencia** (`app/asistencia/nueva.tsx`) desde Inicio, Urgencias o la ficha del animal: modalidad, animal, grupo o especie, síntomas, gravedad percibida, dirección para la visita y criterio de costo. `app/asistencia/index.tsx` lista las propias y `[id].tsx` muestra nivel, estado y datos enviados. Reglas en `services/asistenciaService.ts` (iguales a `AsistenciaService`, `ESPECIFICACION_ALERTAS_ASISTENCIA.md`); sin cuestionario clínico.
+
+## Seguimiento de asistencia (B-014)
+
+En `app/asistencia/[id].tsx`: estado, veterinario y llegada estimada después de aceptar, mapa de demostración durante «En camino» (`components/MapaDemo.tsx`), reevaluación de 24 horas (también en **Avisos**), **Informar empeoramiento** (`components/InformarEmpeoramiento.tsx`, solo puede subir el nivel) e historial. La ubicación del celular se comparte con consentimiento al pedir una visita (`components/UbicacionGps.tsx`, con `expo-location`); si no, dirección escrita. «Simular el siguiente paso» es solo para la demostración, hasta que el Veterinario tenga su agenda (B-015).
 
 ## Componentes compartidos
 

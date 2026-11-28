@@ -9,7 +9,7 @@ generado: true
 
 > Fuente: `mobile/Veterinaria.Movil/app/asistencia/index.tsx` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
-Solicitudes de asistencia del Cliente (B-013). El seguimiento con avance y mapa llega en B-014.
+Solicitudes de asistencia del Cliente (B-013, B-014): las que piden reevaluación se marcan.
 
 **Tareas:** B-013, B-014
 

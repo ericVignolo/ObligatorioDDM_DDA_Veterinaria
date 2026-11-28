@@ -8,11 +8,11 @@ import { Tarjeta } from '../../components/Tarjeta';
 import { Nota, Parrafo, Titulo } from '../../components/Textos';
 import { Vacio } from '../../components/Vacio';
 import { useSesion } from '../../context/SesionContext';
-import { deCliente } from '../../services/asistenciaService';
+import { deCliente, pideReevaluacion } from '../../services/asistenciaService';
 import type { SolicitudAsistencia } from '../../types/Asistencia';
 import { diaCorto, hora } from '../../utils/fechas';
 
-// Solicitudes de asistencia del Cliente (B-013). El seguimiento con avance y mapa llega en B-014.
+// Solicitudes de asistencia del Cliente (B-013, B-014): las que piden reevaluación se marcan.
 export default function MisAsistencias() {
   const router = useRouter();
   const { usuario } = useSesion();
@@ -48,6 +48,7 @@ export default function MisAsistencias() {
             <Parrafo>{s.sintomas}</Parrafo>
             <NivelAsistencia nivel={s.nivel} />
             <Insignia texto={s.estado} tipo="info" />
+            {pideReevaluacion(s) ? <Insignia texto="Responder reevaluación de 24 h" tipo="aviso" /> : null}
           </Tarjeta>
         ))
       )}

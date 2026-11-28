@@ -17,6 +17,7 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 - [[Icono (Móvil)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[InformarEmpeoramiento (Móvil)]]
 - [[nueva (Móvil)]]
 - [[preferencias (Móvil)]]
 - [[reservar (Móvil)]]

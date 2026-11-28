@@ -9,6 +9,7 @@ import { Opcion } from '../../components/Opcion';
 import { Pantalla } from '../../components/Pantalla';
 import { Selector } from '../../components/Selector';
 import { Tarjeta } from '../../components/Tarjeta';
+import { UbicacionGps } from '../../components/UbicacionGps';
 import { Nota, Parrafo, Subtitulo, Titulo } from '../../components/Textos';
 import { Vacio } from '../../components/Vacio';
 import { useAviso } from '../../context/AvisoContext';
@@ -35,7 +36,7 @@ import type { DatosSolicitud } from '../../types/Asistencia';
 import type { Errores } from '../../types/Cuenta';
 
 // Pedir orientación o asistencia (B-013, RF-CLI-21, 22 y 25, CU-CLI-19). Un solo formulario en el orden del caso de uso:
-// modalidad, animales, síntomas y gravedad, destino, costo y confirmación. La ubicación por GPS llega en B-014.
+// modalidad, animales, síntomas y gravedad, destino (GPS consentido o dirección, B-014), costo y confirmación.
 export default function NuevaAsistencia() {
   const router = useRouter();
   const avisar = useAviso();
@@ -155,10 +156,18 @@ export default function NuevaAsistencia() {
         <Subtitulo>5. Dónde y cómo contactarte</Subtitulo>
         {datos.modalidad === 'Visita' ? (
           <>
-            <Campo etiqueta="Dirección de la visita" value={datos.direccion} onChangeText={(direccion) => cambiar({ direccion })} error={errores.direccion} maxLength={LARGOS.direccion} autoComplete="street-address" />
+            <UbicacionGps
+              latitud={datos.latitud}
+              longitud={datos.longitud}
+              onCambio={(ubicacion) => {
+                cambiar(ubicacion);
+                setErrores((e) => ({ ...e, direccion: undefined }));
+              }}
+            />
+            <Campo etiqueta="Dirección de la visita" opcional={datos.latitud !== null} value={datos.direccion} onChangeText={(direccion) => cambiar({ direccion })} error={errores.direccion} maxLength={LARGOS.direccion} autoComplete="street-address" />
             <Campo etiqueta="Referencias para llegar" opcional value={datos.referencias} onChangeText={(referencias) => cambiar({ referencias })} error={errores.referencias} maxLength={LARGOS.referencias} />
             <Nota>
-              La dirección se usa solo para coordinar esta visita; la ven Recepción y el veterinario asignado. Cubrimos hasta {COBERTURA_KM} km: Recepción lo confirma.
+              La dirección también se usa solo para esta visita. Cubrimos hasta {COBERTURA_KM} km: Recepción lo confirma.
             </Nota>
           </>
         ) : datos.modalidad ? (

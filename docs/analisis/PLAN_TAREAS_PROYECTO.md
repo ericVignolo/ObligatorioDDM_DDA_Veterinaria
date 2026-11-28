@@ -115,7 +115,7 @@ Desde DT-ORG-03, la puerta H0 se aplica **por recorrido**: un recorrido se progr
 - [x] **B-011 — Implementar internación del Cliente.** Estado y novedades visibles; notas internas no se muestran.
 - [x] **B-012 — Implementar consentimiento y preferencias.** Documentos/versiones, decisiones obligatorias y opcionales, privacidad y accesibilidad.
 - [x] **B-013 — Implementar solicitud móvil de asistencia.** Animal/grupo/especie, modalidad, síntomas y gravedad percibida; cuestionarios solo tras aprobación profesional.
-- [ ] **B-014 — Implementar seguimiento e informes de cambio.** Estado, empeoramiento, reevaluación, ubicación consentida, ausencia de ubicación/datos y mapa como experiencia demostrativa.
+- [x] **B-014 — Implementar seguimiento e informes de cambio.** Estado, empeoramiento, reevaluación, ubicación consentida, ausencia de ubicación/datos y mapa como experiencia demostrativa.
 - [ ] **B-015 — Implementar agenda móvil del Veterinario.** Turnos/asistencias, detalle de paciente autorizado, aceptación/rechazo y estados de traslado según permisos.
 - [ ] **B-016 — Implementar captura clínica móvil del Veterinario.** Registro/consulta, vacunación, internación o asistencia según el mapa; mostrar límites de borrador si no hay API.
 - [ ] **B-017 — Implementar notificaciones y perfil del Veterinario.** Estados, preferencias permitidas, perfil y manejo de permisos del dispositivo.
