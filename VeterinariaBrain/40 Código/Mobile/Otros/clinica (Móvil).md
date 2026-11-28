@@ -14,6 +14,7 @@ Clínica ficticia: los mismos datos que ClinicaService de Blazor. En la sección
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
+- [[Asistencia (Móvil)]]
 - [[Clinica (Móvil)]]
 
 ## Usado por (si cambia, revisar estos)

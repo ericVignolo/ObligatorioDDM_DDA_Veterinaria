@@ -38,6 +38,13 @@ export default function Inicio() {
         <Boton texto="Cómo saber si es urgente" variante="secundario" onPress={() => router.push('/urgencias?desde=inicio')} />
       </View>
 
+      {usuario?.rol === 'Cliente' ? (
+        <Tarjeta>
+          <Fila icono="medkit-outline" texto="Pedir asistencia" detalle="Visita u orientación para tus animales" onPress={() => router.push('/asistencia/nueva')} />
+          <Fila icono="list-outline" texto="Mis solicitudes" detalle="Nivel y estado" onPress={() => router.push('/asistencia')} />
+        </Tarjeta>
+      ) : null}
+
       {usuario?.rol === 'Cliente' && alertasDe(usuario.id).length > 0 ? (
         <Tarjeta onPress={() => router.push('/avisos')} etiqueta={`Alertas sanitarias: ${alertasDe(usuario.id).length}. Ver avisos`}>
           <Subtitulo>Alertas sanitarias ({alertasDe(usuario.id).length})</Subtitulo>

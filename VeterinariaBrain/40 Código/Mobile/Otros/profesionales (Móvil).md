@@ -20,4 +20,5 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
 - [[agendaService (Móvil)]]
+- [[asistenciaService (Móvil)]]
 - [[profesionalService (Móvil)]]

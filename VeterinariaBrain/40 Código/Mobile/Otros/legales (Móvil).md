@@ -16,6 +16,7 @@ Textos generados desde Privacidad.razor y Terminos.razor de Blazor (versión 1.0
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
+- [[Asistencia (Móvil)]]
 - [[Cuenta (Móvil)]]
 - [[DocumentoLegal (Móvil)]]
 

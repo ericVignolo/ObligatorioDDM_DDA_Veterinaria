@@ -10,7 +10,7 @@ import { Nota, Parrafo, Titulo } from '../components/Textos';
 import { useAviso } from '../context/AvisoContext';
 import { useSesion } from '../context/SesionContext';
 import { codigoDemo, obtenerCorreoPendiente, obtenerPorCorreo, reenviarCodigo, usuarioDe, verificar } from '../services/cuentaService';
-import { intencionVigente } from '../services/intencionService';
+import { rutaPendiente } from '../services/intencionService';
 
 // Verificación del correo con un código de 6 números (A-007, D-REG-02). Verificada la cuenta, se ingresa sin pedir la contraseña
 // otra vez y se retoma la acción interrumpida (A-011).
@@ -63,11 +63,11 @@ export default function Verificar() {
     refrescar((n) => n + 1);
   };
 
-  // Vuelve al servicio que había elegido antes de registrarse, si sigue vigente (A-011, REG-09).
+  // Vuelve a lo que quería hacer antes de registrarse, si sigue vigente (A-011, REG-09).
   const continuar = () => {
-    const pendiente = intencionVigente();
+    const pendiente = rutaPendiente();
     router.replace('/');
-    if (pendiente !== null) router.push({ pathname: '/reservar', params: { servicio: String(pendiente) } });
+    if (pendiente !== null) router.push(pendiente);
   };
 
   if (cuenta.verificada) {

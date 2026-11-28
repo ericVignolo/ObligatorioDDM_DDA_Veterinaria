@@ -7,6 +7,7 @@ import { Insignia, type TipoInsignia } from '../../components/Insignia';
 import { Pantalla } from '../../components/Pantalla';
 import { Tarjeta } from '../../components/Tarjeta';
 import { Nota, Parrafo, Subtitulo } from '../../components/Textos';
+import { useSesion } from '../../context/SesionContext';
 import { llamar, obtenerClinica } from '../../services/clinicaService';
 
 // Mismo contenido que Urgencias.razor (HU-VIS-06, RF-VIS-06): primero el teléfono, sin formularios ni sesión.
@@ -36,6 +37,7 @@ export default function Urgencias() {
   const router = useRouter();
   const navigation = useNavigation();
   const { desde } = useLocalSearchParams<{ desde?: string }>();
+  const { usuario } = useSesion();
   const destino = desde ? ORIGENES[desde] : undefined;
 
   // Urgencias es una pestaña: al abrirla desde un botón no hay flecha de volver, así que se agrega una en el encabezado.
@@ -93,8 +95,15 @@ export default function Urgencias() {
 
       <Subtitulo>Asistencia a domicilio</Subtitulo>
       <Parrafo>
-        {clinica.cobertura} Para pedirla desde la aplicación vas a necesitar una cuenta. Si es grave, no esperes: llamá a la guardia.
+        {clinica.cobertura} Para pedirla desde la aplicación necesitás una cuenta. Si es grave, no esperes: llamá a la guardia.
       </Parrafo>
+      {usuario?.rol === 'Veterinario' ? null : (
+        <Boton
+          texto="Pedir asistencia"
+          icono="medkit-outline"
+          onPress={() => (usuario ? router.push('/asistencia/nueva') : router.push({ pathname: '/ingresar', params: { asistencia: '1' } }))}
+        />
+      )}
     </Pantalla>
   );
 }

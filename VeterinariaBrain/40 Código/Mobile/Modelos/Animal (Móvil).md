@@ -27,6 +27,7 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 - [[animalesDemo (Móvil)]]
 - [[editar (Móvil)]]
 - [[historia (Móvil)]]
+- [[nueva (Móvil)]]
 - [[reservar (Móvil)]]
 - [[vacunaService (Móvil)]]
 

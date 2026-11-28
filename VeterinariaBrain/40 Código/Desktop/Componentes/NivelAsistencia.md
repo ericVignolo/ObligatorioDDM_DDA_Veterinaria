@@ -18,3 +18,6 @@ Parte de [[Mapa Código]] · [[Carpeta desktop]]
 ## Usado por (si cambia, revisar estos)
 - [[AsistenciaDetalle]]
 - [[Asistencias]]
+
+## En las otras aplicaciones
+- [[NivelAsistencia (Móvil)]]

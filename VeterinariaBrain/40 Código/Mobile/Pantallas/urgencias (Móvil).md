@@ -16,10 +16,12 @@ Mismo contenido que Urgencias.razor (HU-VIS-06, RF-VIS-06): primero el teléfono
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
+- [[Asistencia (Móvil)]]
 - [[Boton (Móvil)]]
 - [[Icono (Móvil)]]
 - [[Insignia (Móvil)]]
 - [[Pantalla (Móvil)]]
+- [[SesionContext (Móvil)]]
 - [[Tarjeta (Móvil)]]
 - [[Textos (Móvil)]]
 - [[clinicaService (Móvil)]]

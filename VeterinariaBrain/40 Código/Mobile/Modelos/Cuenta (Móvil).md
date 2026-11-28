@@ -19,11 +19,13 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 - [[FormularioAnimal (Móvil)]]
 - [[agendaService (Móvil)]]
 - [[animalService (Móvil)]]
+- [[asistenciaService (Móvil)]]
 - [[comunicacionesService (Móvil)]]
 - [[consentimientoService (Móvil)]]
 - [[cuentaService (Móvil)]]
 - [[legales (Móvil)]]
 - [[mi-cuenta (Móvil)]]
+- [[nueva (Móvil)]]
 - [[registro (Móvil)]]
 
 ## En las otras aplicaciones

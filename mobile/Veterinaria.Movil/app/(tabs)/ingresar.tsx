@@ -11,7 +11,7 @@ import { useAviso } from '../../context/AvisoContext';
 import { useSesion } from '../../context/SesionContext';
 import { CONTRASENA_DEMO } from '../../data/cuentasDemo';
 import { marcarPendiente, validarCredenciales } from '../../services/cuentaService';
-import { guardarIntencion, intencionVigente } from '../../services/intencionService';
+import { asistenciaPendiente, guardarIntencion, intencionVigente, rutaPendiente } from '../../services/intencionService';
 import { obtenerPorId } from '../../services/prestacionService';
 import { correoValido } from '../../utils/validacion';
 
@@ -27,7 +27,7 @@ export default function Ingresar() {
   const router = useRouter();
   const avisar = useAviso();
   const { ingresar } = useSesion();
-  const { servicio } = useLocalSearchParams<{ servicio?: string }>();
+  const { servicio, asistencia } = useLocalSearchParams<{ servicio?: string; asistencia?: string }>();
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [errores, setErrores] = useState<{ correo?: string; contrasena?: string }>({});
@@ -35,6 +35,7 @@ export default function Ingresar() {
 
   // La intención se guarda en el cliente y dura 30 minutos (REG-09).
   if (servicio) guardarIntencion(Number(servicio));
+  if (asistencia) guardarIntencion('asistencia');
   const elegido = intencionVigente() !== null ? obtenerPorId(intencionVigente() as number) : undefined;
 
   const entrar = () => {
@@ -71,16 +72,19 @@ export default function Ingresar() {
       router.replace('/agenda');
       return;
     }
-    // Vuelve a la acción interrumpida (la reserva de ese servicio), con el inicio debajo para poder volver (A-011).
-    const pendiente = intencionVigente();
+    // Vuelve a la acción interrumpida (reserva o asistencia), con el inicio debajo para poder volver (A-011).
+    const pendiente = rutaPendiente();
+    // Se limpia el parámetro para que la pestaña no vuelva a guardar la intención al redibujarse.
+    router.setParams({ servicio: undefined, asistencia: undefined });
     router.replace('/');
-    if (pendiente !== null) router.push({ pathname: '/reservar', params: { servicio: String(pendiente) } });
+    if (pendiente !== null) router.push(pendiente);
   };
 
   return (
     <Pantalla>
       <Titulo>Ingresá o creá tu cuenta</Titulo>
       {elegido ? <Parrafo>Para reservar «{elegido.nombre}» necesitás ingresar.</Parrafo> : null}
+      {asistenciaPendiente() ? <Parrafo>Para pedir asistencia necesitás ingresar. Si es grave, llamá a la guardia.</Parrafo> : null}
 
       <Tarjeta>
         <Campo

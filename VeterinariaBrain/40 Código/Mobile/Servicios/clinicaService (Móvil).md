@@ -17,6 +17,7 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 - [[clinica (Móvil)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[LlamarGuardia (Móvil)]]
 - [[TarjetaPrestacion (Móvil)]]
 - [[Veterinaria.Movil-app-(tabs)-index (Móvil)]]
 - [[[id] (Móvil)]]

@@ -19,5 +19,6 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 - [[Usuario (Móvil)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[asistenciaService (Móvil)]]
 - [[cuentaService (Móvil)]]
 - [[ingresar (Móvil)]]

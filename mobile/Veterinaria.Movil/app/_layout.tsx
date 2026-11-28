@@ -63,6 +63,9 @@ export default function RootLayout() {
             <Stack.Screen name="preferencias" options={{ title: 'Preferencias y privacidad' }} />
             <Stack.Screen name="consentimiento/[turnoId]" options={{ title: 'Consentimiento' }} />
             <Stack.Screen name="reservar" options={{ title: 'Reservar turno' }} />
+            <Stack.Screen name="asistencia/index" options={{ title: 'Asistencia' }} />
+            <Stack.Screen name="asistencia/nueva" options={{ title: 'Pedir asistencia' }} />
+            <Stack.Screen name="asistencia/[id]" options={{ title: 'Solicitud' }} />
             <Stack.Screen name="animales/nuevo" options={{ title: 'Registrar animal' }} />
             <Stack.Screen name="animales/[id]/index" options={{ title: 'Ficha del animal' }} />
             <Stack.Screen name="animales/[id]/editar" options={{ title: 'Editar animal' }} />

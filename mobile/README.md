@@ -85,6 +85,10 @@ En la ficha del animal, arriba del carné (`components/SeguimientoInternacion.ts
 
 **Consentimiento** (`app/consentimiento/[turnoId].tsx`, como `FirmarConsentimiento.razor`): se llega desde **Turnos** y **Avisos** en los servicios que lo piden; firma con casilla y nombre completo, rechazo, retiro antes del procedimiento e historial. Reglas en `services/consentimientoService.ts` (`ESPECIFICACION_CONSENTIMIENTO.md`), huella con `utils/sha256.ts`. **Preferencias y privacidad** (`app/preferencias.tsx`, desde Perfil): canal por tipo de comunicación (`services/comunicacionesService.ts`), aceptaciones obligatorias y consentimientos respondidos. Todo vive en memoria.
 
+## Solicitud de asistencia (B-013)
+
+**Pedir asistencia** (`app/asistencia/nueva.tsx`) desde Inicio, Urgencias o la ficha del animal: modalidad, animal, grupo o especie, síntomas, gravedad percibida, dirección para la visita y criterio de costo. `app/asistencia/index.tsx` lista las propias y `[id].tsx` muestra nivel, estado y datos enviados. Reglas en `services/asistenciaService.ts` (iguales a `AsistenciaService`, `ESPECIFICACION_ALERTAS_ASISTENCIA.md`); sin cuestionario clínico. Seguimiento, empeoramiento y ubicación: B-014.
+
 ## Componentes compartidos
 
 | Componente | Para qué |

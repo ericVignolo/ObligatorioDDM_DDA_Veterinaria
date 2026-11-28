@@ -9,7 +9,7 @@ generado: true
 
 > Fuente: `mobile/Veterinaria.Movil/services/intencionService.ts` · Nota generada por `_scripts/actualizar_codigo.py`; no editar a mano.
 
-Acción protegida interrumpida (D-REG-05, A-011): solo se guarda el servicio elegido y la hora, nunca en el servidor.
+Acción protegida interrumpida (D-REG-05, A-011): solo se guarda el servicio elegido (o que quería pedir asistencia)
 
 **Tareas:** A-011
 
@@ -19,5 +19,6 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
 - [[ingresar (Móvil)]]
+- [[nueva (Móvil)]]
 - [[reservar (Móvil)]]
 - [[verificar (Móvil)]]

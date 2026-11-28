@@ -20,6 +20,7 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 ## Usado por (si cambia, revisar estos)
 - [[RegistroClinico (Móvil)]]
 - [[agendaService (Móvil)]]
+- [[asistenciaService (Móvil)]]
 - [[consultasDemo (Móvil)]]
 - [[historiaService (Móvil)]]
 - [[prestaciones (Móvil)]]

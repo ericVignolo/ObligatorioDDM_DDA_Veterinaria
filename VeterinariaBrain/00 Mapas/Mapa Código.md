@@ -326,11 +326,12 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 
 ## Mobile — [[Carpeta mobile]]
 
-### Pantallas (27)
+### Pantallas (29)
 - [[Veterinaria.Movil-app-(tabs)-_layout (Móvil)]]
 - [[Veterinaria.Movil-app-(tabs)-index (Móvil)]]
 - [[Veterinaria.Movil-app-_layout (Móvil)]]
 - [[Veterinaria.Movil-app-animales-[id]-index (Móvil)]]
+- [[Veterinaria.Movil-app-asistencia-index (Móvil)]]
 - [[Veterinaria.Movil-app-profesionales-index (Móvil)]]
 - [[[adjuntoId] (Móvil)]]
 - [[[codigo] (Móvil)]]
@@ -344,6 +345,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[historia (Móvil)]]
 - [[ingresar (Móvil)]]
 - [[mi-cuenta (Móvil)]]
+- [[nueva (Móvil)]]
 - [[nuevo (Móvil)]]
 - [[perfil (Móvil)]]
 - [[preferencias (Móvil)]]
@@ -355,7 +357,7 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[urgencias (Móvil)]]
 - [[verificar (Móvil)]]
 
-### Componentes (25)
+### Componentes (27)
 - [[Boton (Móvil)]]
 - [[Campo (Móvil)]]
 - [[CarnetSanitario (Móvil)]]
@@ -369,6 +371,8 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[FotoAnimal (Móvil)]]
 - [[Icono (Móvil)]]
 - [[Insignia (Móvil)]]
+- [[LlamarGuardia (Móvil)]]
+- [[NivelAsistencia (Móvil)]]
 - [[Opcion (Móvil)]]
 - [[Pantalla (Móvil)]]
 - [[PasosReserva (Móvil)]]
@@ -382,9 +386,10 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[Textos (Móvil)]]
 - [[Vacio (Móvil)]]
 
-### Servicios (13)
+### Servicios (14)
 - [[agendaService (Móvil)]]
 - [[animalService (Móvil)]]
+- [[asistenciaService (Móvil)]]
 - [[clinicaService (Móvil)]]
 - [[comunicacionesService (Móvil)]]
 - [[consentimientoService (Móvil)]]
@@ -397,8 +402,9 @@ Volver a [[Inicio]]. Una sección por aplicación; cada nota lista qué usa, qui
 - [[profesionalService (Móvil)]]
 - [[vacunaService (Móvil)]]
 
-### Modelos (13)
+### Modelos (14)
 - [[Animal (Móvil)]]
+- [[Asistencia (Móvil)]]
 - [[Clinica (Móvil)]]
 - [[Comunicacion (Móvil)]]
 - [[Consentimiento (Móvil)]]

@@ -28,3 +28,6 @@ Parte de [[Mapa Código]] · [[Carpeta api]]
 - [[AsistenciaService (API)]]
 - [[ConfiguracionModulos (API)]]
 - [[IAsistenciaService (API)]]
+
+## En las otras aplicaciones
+- [[Asistencia (Móvil)]]

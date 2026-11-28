@@ -14,6 +14,7 @@ Si se abre un detalle directamente (enlace), las pestañas quedan debajo para po
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usa
+- [[Asistencia (Móvil)]]
 - [[AvisoContext (Móvil)]]
 - [[Consentimiento (Móvil)]]
 - [[Profesional (Móvil)]]

@@ -25,10 +25,12 @@ Parte de [[Mapa Código]] · [[Carpeta mobile]]
 - [[validacion (Móvil)]]
 
 ## Usado por (si cambia, revisar estos)
+- [[asistenciaService (Móvil)]]
 - [[comunicacionesService (Móvil)]]
 - [[consentimientoService (Móvil)]]
 - [[ingresar (Móvil)]]
 - [[mi-cuenta (Móvil)]]
+- [[nueva (Móvil)]]
 - [[preferencias (Móvil)]]
 - [[recuperar (Móvil)]]
 - [[registro (Móvil)]]

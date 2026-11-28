@@ -74,6 +74,7 @@ export default function FichaAnimal() {
       </Tarjeta>
 
       <Boton texto={`Reservar turno para ${animal.nombre}`} icono="calendar-outline" onPress={() => router.push({ pathname: '/reservar', params: { animal: String(animal.id) } })} />
+      <Boton texto={`Pedir asistencia para ${animal.nombre}`} icono="medkit-outline" variante="acento" onPress={() => router.push({ pathname: '/asistencia/nueva', params: { animal: String(animal.id) } })} />
       <Boton texto="Editar" icono="create-outline" variante="secundario" onPress={() => router.push(`/animales/${animal.id}/editar`)} />
 
       <Boton texto="Historia clínica" icono="document-text-outline" variante="secundario" onPress={() => router.push(`/animales/${animal.id}/historia`)} />

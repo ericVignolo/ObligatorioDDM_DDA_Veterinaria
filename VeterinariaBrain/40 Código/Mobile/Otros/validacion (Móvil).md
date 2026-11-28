@@ -16,6 +16,7 @@ Formatos de D-REG-01 (mismos que ValidacionDatos de Blazor): documento por tipo 
 Parte de [[Mapa Código]] · [[Carpeta mobile]]
 
 ## Usado por (si cambia, revisar estos)
+- [[asistenciaService (Móvil)]]
 - [[cuentaService (Móvil)]]
 - [[ingresar (Móvil)]]
 - [[mi-cuenta (Móvil)]]
